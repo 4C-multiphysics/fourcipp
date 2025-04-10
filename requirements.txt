@@ -18,6 +18,8 @@ jsonschema-specifications==2024.10.1
     # via jsonschema
 loguru==0.7.3
     # via -r requirements.in
+numpy==2.2.4
+    # via -r requirements.in
 packaging==24.2
     # via deprecation
 rapidyaml==0.8.0

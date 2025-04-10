@@ -358,3 +358,20 @@ def test_load_from_yaml_header_only(
     fourc_input_with_legacy_section.dump(path_to_yaml)
 
     assert fourc_input == FourCInput.from_4C_yaml(path_to_yaml, header_only=True)
+
+
+def test_compare(fourc_input):
+    """Test compare function."""
+    copy_input = fourc_input.copy()
+    assert fourc_input.compare(copy_input)
+
+
+def test_compare_failure(fourc_input, fourc_input_2):
+    """Test compare function failure."""
+    assert not fourc_input.compare(fourc_input_2)
+
+
+def test_compare_failure_with_exception(fourc_input, fourc_input_2):
+    """Test compare function failure."""
+    with pytest.raises(AssertionError):
+        fourc_input.compare(fourc_input_2, raise_exception=True)

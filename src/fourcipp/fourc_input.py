@@ -31,6 +31,7 @@ from fourcipp.legacy_io import (
     inline_legacy_sections,
     interpret_legacy_section,
 )
+from fourcipp.utils.dict_utils import compare_nested_dicts_or_lists
 from fourcipp.utils.validation import validate_using_json_schema
 from fourcipp.utils.yaml_io import dump_yaml, load_yaml
 
@@ -386,6 +387,8 @@ class FourCInput:
     def __eq__(self, other):
         """Define equal operator.
 
+        This comparison is strict, if tolerances are desired use `compare`.
+
         Args:
             other (FourCInput): Other input to check
         """
@@ -393,6 +396,40 @@ class FourCInput:
             raise TypeError(f"Can not compare types {type(self)} and {type(other)}")
 
         return self.sections == other.sections
+
+    def compare(
+        self,
+        other,
+        allow_int_as_float=False,
+        rtol=1.0e-5,
+        atol=1.0e-8,
+        equal_nan=False,
+        raise_exception=False,
+    ):
+        """Compare inputs with tolerances.
+
+        Args:
+            other (FourCInput): Input to compare
+            allow_int_as_float (bool): Allow the use of ints instead of floats
+            rtol (float): The relative tolerance parameter for numpy.isclose
+            atol (float): The absolute tolerance parameter for numpy.isclose
+            equal_nan (bool): Whether to compare NaN's as equal for numpy.isclose
+            raise_exception (bool): If true raise exception
+
+            Returns:
+                bool: True if within tolerance
+        """
+        try:
+            return compare_nested_dicts_or_lists(
+                other.sections, self.sections, allow_int_as_float, rtol, atol, equal_nan
+            )
+        except AssertionError as exception:
+            if raise_exception:
+                raise AssertionError(
+                    "Inputs are not equal or within tolerances"
+                ) from exception
+
+            return False
 
     def extract_header(self):
         """Extract the header sections, i.e., all non-legacy sections.

@@ -3,3 +3,4 @@ jsonschema
 loguru
 ruamel.yaml
 jsonschema-rs
+numpy
