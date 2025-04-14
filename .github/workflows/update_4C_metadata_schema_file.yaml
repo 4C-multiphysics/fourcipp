@@ -3,6 +3,9 @@ name: Update 4C metadata and schema file
 on:
   schedule:
     - cron: '0 5 * * *' # run each night at 5AM. Current nightly 4C test should be completed by then
+  workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 permissions:
   contents: write
