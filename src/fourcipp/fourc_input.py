@@ -173,8 +173,9 @@ class FourCInput:
         elif key in self._legacy_sections:
             return self._legacy_sections[key]
         else:
+            sections = "\n - ".join(self.get_section_names())
             raise UnknownSectionException(
-                f"Section '{key}' not set. Did out mean '{difflib.get_close_matches(key.upper(), ALL_SECTIONS, n=1, cutoff=0.3)[0]}'? The set sections are:\n - {'\n - '.join(self.get_section_names())}"
+                f"Section '{key}' not set. Did out mean '{difflib.get_close_matches(key.upper(), ALL_SECTIONS, n=1, cutoff=0.3)[0]}'? The set sections are:\n - {sections}"
             )
 
     def pop(self, key, default_value=NotSet):

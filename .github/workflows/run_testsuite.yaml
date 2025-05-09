@@ -9,9 +9,42 @@ on:
       - opened
       - reopened
       - synchronize
+  schedule:
+    - cron: "30 5 * * *" # Run after metadata file update
 
 jobs:
   run_pytest:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ["3.10", "3.13"]
+    defaults:
+      run:
+        shell: bash -l {0}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Set up virtual environment
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          auto-update-conda: true
+          conda-remove-defaults: true
+          activate-environment: fourcipp
+          python-version: ${{ matrix.python-version }}
+      - name: Install requirements
+        shell: bash -el {0}
+        run: |
+          conda activate fourcipp
+          pip install -e .[dev]
+      - name: Run pytest
+        shell: bash -el {0}
+        run: |
+          conda activate fourcipp
+          pytest --color=yes -v
+
+  run_pytest_with_4C:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/4c-multiphysics/4c:main
@@ -27,7 +60,7 @@ jobs:
           auto-update-conda: true
           conda-remove-defaults: true
           activate-environment: fourcipp
-          python-version: 3.12
+          python-version: 3.13
       - name: Install requirements
         shell: bash -el {0}
         run: |

@@ -39,12 +39,13 @@ def fixture_readme_example(tmp_path):
     fourc_input.dump(input_file_path)
 
     readme = pathlib.Path(__file__).parents[2] / "README.md"
-    example = readme.read_text()
+    example = readme.read_text(encoding="utf-8")
     example_marker = "<!--example, do not remove this comment-->"
     example = example.split(example_marker)[1]
 
     # Add missing path
-    example = [f"input_file_path = '{input_file_path}'"] + [
+    escaped_path = repr(str(input_file_path))  # For windows compatibility
+    example = [f"input_file_path = {escaped_path}"] + [
         line for line in example.split("\n") if not "```" in line
     ]
     example = "\n".join(example)
@@ -64,5 +65,5 @@ def test_readme_example(readme_example, tmp_path):
     # Exit code -> script failed
     if return_code:
         raise Exception(
-            f"Example run failed: {command}\n\nOutput: {(tmp_path / 'output.log').read_text()}"
+            f"Example run failed: {command}\n\nOutput: {(tmp_path / 'output.log').read_text(encoding='utf-8')}"
         )

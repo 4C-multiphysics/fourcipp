@@ -12,23 +12,25 @@ deprecation==2.1.0
     # via rapidyaml
 jsonschema==4.23.0
     # via -r requirements.in
-jsonschema-rs==0.29.1
+jsonschema-rs==0.30.0
     # via -r requirements.in
-jsonschema-specifications==2024.10.1
+jsonschema-specifications==2025.4.1
     # via jsonschema
 loguru==0.7.3
     # via -r requirements.in
-numpy==2.2.4
+numpy==2.2.5
     # via -r requirements.in
-packaging==24.2
+packaging==25.0
     # via deprecation
-rapidyaml==0.8.0
-    # via -r requirements.in
+rapidyaml
+    # TODO update requirements file
+    # manually removed version because on macos 0.9.0.post2 is latest
+    # and on linux/windows 0.9.0 is latest
 referencing==0.36.2
     # via
     #   jsonschema
     #   jsonschema-specifications
-rpds-py==0.23.1
+rpds-py==0.24.0
     # via
     #   jsonschema
     #   referencing
@@ -36,5 +38,5 @@ ruamel-yaml==0.18.10
     # via -r requirements.in
 ruamel-yaml-clib==0.2.12
     # via ruamel-yaml
-typing-extensions==4.12.2
+typing-extensions==4.13.2
     # via referencing
