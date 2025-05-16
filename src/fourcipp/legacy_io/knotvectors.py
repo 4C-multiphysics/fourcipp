@@ -27,7 +27,6 @@ from fourcipp.legacy_io.inline_dat import _extract_entry, _extract_enum, _extrac
 
 NURBS_PATCH_CASTING = {
     "ID": partial(_extract_entry, entry_type=int),
-    "NURBS_DIMENSION": partial(_extract_entry, entry_type=int),
 }
 
 KNOT_VECTORS_CASTING = {
@@ -47,6 +46,7 @@ def read_knotvectors(list_of_lines):
         list: List of patch dicts
     """
 
+    patch_dimension = None
     patch_data = {}
     knots_data = {}
     patches = []
@@ -65,14 +65,17 @@ def read_knotvectors(list_of_lines):
             key = line_list.pop(0)
 
             # Begin reading in patch
-            if key == "BEGIN":
+            if key == "NURBS_DIMENSION":
+                patch_dimension = partial(_extract_entry, entry_type=int)(line_list)
+
+            elif key == "BEGIN":
                 patch_data["knot_vectors"] = []
 
             # End reading in patch
             elif key == "END":
                 # Check dimension
                 if (nurbs_dimension := len(patch_data["knot_vectors"])) != (
-                    nurbs_dimension_expected := patch_data.pop("NURBS_DIMENSION")
+                    nurbs_dimension_expected := patch_dimension
                 ):
                     raise ValueError(
                         f"Expected {nurbs_dimension_expected} knot vectors, got {nurbs_dimension}"

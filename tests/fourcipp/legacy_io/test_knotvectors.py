@@ -91,6 +91,74 @@ def test_knotvectors_read_and_write(reference_knotvector_lines):
         assert reference_knotvector_lines[k].split() == lines[k].split()
 
 
+@pytest.fixture(name="reference_knotvector_lines_single_dimension")
+def fixture_reference_knotvector_lines_single_dimension():
+    """Reference lines."""
+    return [
+        "NURBS_DIMENSION                       2",
+        "BEGIN                                 NURBSPATCH",
+        "ID                                    1",
+        "NUMKNOTS                              7",
+        "DEGREE                                2",
+        "TYPE                                  Interpolated",
+        "0.0",
+        "0.0",
+        "0.0",
+        "0.5",
+        "1.0",
+        "1.0",
+        "1.0",
+        "",
+        "NUMKNOTS                              8",
+        "DEGREE                                2",
+        "TYPE                                  Interpolated",
+        "0.0",
+        "0.0",
+        "0.0",
+        "0.3333333333333333",
+        "0.6666666666666666",
+        "1.0",
+        "1.0",
+        "1.0",
+        "END                                   NURBSPATCH",
+        "BEGIN                                 NURBSPATCH",
+        "ID                                    2",
+        "NUMKNOTS                              7",
+        "DEGREE                                2",
+        "TYPE                                  Interpolated",
+        "0.0",
+        "0.0",
+        "0.0",
+        "0.5",
+        "1.0",
+        "1.0",
+        "1.0",
+        "NUMKNOTS                              8",
+        "DEGREE                                2",
+        "TYPE                                  Interpolated",
+        "0.0",
+        "0.0",
+        "0.0",
+        "0.3333333333333333",
+        "0.6666666666666666",
+        "1.0",
+        "1.0",
+        "1.0",
+        "END                                   NURBSPATCH",
+    ]
+
+
+def test_knotvectors_single_dimension_read_and_write(
+    fixture_reference_knotvector_lines_single_dimension, reference_knotvector_lines
+):
+    """Test read and write knotvectors."""
+    lines = write_knotvectors(
+        read_knotvectors(fixture_reference_knotvector_lines_single_dimension)
+    )
+    for k in range(len(reference_knotvector_lines)):
+        assert reference_knotvector_lines[k].split() == lines[k].split()
+
+
 def test_wrong_knotvectors_dimension_mismatch():
     """Test knotvectors with mismatching dimension."""
     invalid_knotvectors = [
