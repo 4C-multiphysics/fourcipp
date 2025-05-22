@@ -22,6 +22,7 @@
 """Read inline dat strings."""
 
 from functools import partial
+from typing import Any, Type
 
 from fourcipp.utils.metadata import METADATA_TO_PYTHON
 
@@ -29,13 +30,13 @@ from fourcipp.utils.metadata import METADATA_TO_PYTHON
 SUPPORTED_METADATA_TYPES = list(METADATA_TO_PYTHON.keys()) + ["vector", "enum"]
 
 
-def to_dat_string(object):
+def to_dat_string(object: Any) -> str:
     """Convert object to dat style string.
     Args:
-        data (object): Object to be casted
+        data: Object to be casted
 
     Returns:
-        str: Object as dict
+        Object as dict
     """
     if isinstance(object, list):
         return " ".join([str(d) for d in object])
@@ -44,70 +45,70 @@ def to_dat_string(object):
     return str(object)
 
 
-def _left_pop(line_list, n_entries):
+def _left_pop(line_list: list[str], n_entries: int) -> list[str]:
     """Pop entries the beginning of a list.
 
     Args:
-        line_list (list): List to extract the entries
-        n_entries (int): Number of entries starting from the beginning of the list
+        line_list: List to extract the entries
+        n_entries: Number of entries starting from the beginning of the list
 
     Returns:
-        list: Extracted entries
+        Extracted entries
     """
     entries = line_list[:n_entries]
     del line_list[:n_entries]
     return entries
 
 
-def _extract_entry(line_list, entry_type):
+def _extract_entry(line_list: list[str], entry_type: Type) -> Type:
     """Extract a single entry from a line list.
 
     Args:
-        line_list (list): List to extract the entries
-        entry_type (callable): Function to cast the string into the desired object
+        line_list: List to extract the entries
+        entry_type: Function to cast the string into the desired object
 
     Returns:
-        object: Casted object
+        Casted object
     """
     return entry_type(_left_pop(line_list, 1)[0])
 
 
-def _extract_vector(line_list, entry_type, size):
+def _extract_vector(line_list: list[str], entry_type: Type, size: int) -> list:
     """Extract a vector entry from a line list.
 
     Args:
-        line_list (list): List to extract the entries
-        entry_type (callable): Function to cast the string into the desired object
-        size (int): Vector size
+        line_list: List to extract the entries
+        entry_type: Function to cast the string into the desired object
+        size: Vector size
 
     Returns:
-        list: Casted vector object
+        Casted vector object
     """
     return [entry_type(e) for e in _left_pop(line_list, size)]
 
 
-def _extract_all(line_list, entry_type):
+def _extract_all(line_list: list[str], entry_type: Type) -> list:
     """Extract all the entries from a line list.
 
     Args:
-        line_list (list): List to extract the entries
-        entry_type (callable): Function to cast the string into the desired object
+        line_list: List to extract the entries
+        entry_type: Function to cast the string into the desired object
 
     Returns:
-        list: Casted vector object
+        Casted vector object
     """
     return [entry_type(e) for e in _left_pop(line_list, len(line_list))]
 
 
-def _extract_enum(line_list, choices):
+def _extract_enum(line_list: list[str], choices: list[str]) -> str:
     """Extract enum entry from a line list.
 
     Args:
-        line_list (list): List to extract the entries
-        choices (list): Choices for the enum
+        line_list: List to extract the entries
+        choices: Choices for the enum
 
     Returns:
-        str: Valid enum entry
+        Valid enum entry
     """
     entry = _left_pop(line_list, 1)[0]
     if not entry in choices:
@@ -115,14 +116,14 @@ def _extract_enum(line_list, choices):
     return entry
 
 
-def _entry_casting_factory(spec):
+def _entry_casting_factory(spec: dict):
     """Create the casting function for a spec.
 
     Args:
-        spec (dict): 4C metadata style object description
+        spec: 4C metadata style object description
 
     Returns:
-        callable: Casting function for the spec
+        Casting function for the spec
     """
     if spec["type"] in METADATA_TO_PYTHON:
         return partial(_extract_entry, entry_type=METADATA_TO_PYTHON[spec["type"]])
@@ -136,14 +137,14 @@ def _entry_casting_factory(spec):
         raise NotImplementedError(f"Entry type {spec['type']} not supported.")
 
 
-def casting_factory(fourc_metadata):
+def casting_factory(fourc_metadata: dict):
     """Create casting object for the specs.
 
     Args:
-        fourc_metadata (dict): 4C metadata style object description
+        fourc_metadata: 4C metadata style object description
 
     Returns:
-        dict: Casting object for the specs by name
+        Casting object for the specs by name
     """
     if fourc_metadata["type"] in SUPPORTED_METADATA_TYPES:
         return {fourc_metadata["name"]: _entry_casting_factory(fourc_metadata)}
@@ -162,17 +163,17 @@ def casting_factory(fourc_metadata):
         raise NotImplementedError(f"Entry type {fourc_metadata['type']} not supported.")
 
 
-def inline_dat_read(line_list, keyword_casting):
+def inline_dat_read(line_list: list, keyword_casting: dict) -> dict:
     """Read inline dat to dict.
 
     Args:
-        line_list (list): List to extract the entries
-        keyword_casting (dict): Dict with the casting
+        line_list: List to extract the entries
+        keyword_casting: Dict with the casting
 
     Returns:
-        dict: Entry as dict
+        Entry as dict
     """
-    entry = {}
+    entry: dict = {}
     while line_list:
         key = line_list.pop(0)
         # Raises Error if an entry was provided twice

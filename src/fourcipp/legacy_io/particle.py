@@ -25,6 +25,8 @@ Once this section is implemented in 4C using InputSpec, this file can be
 simplified.
 """
 
+from typing import Optional
+
 from fourcipp import CONFIG
 from fourcipp.legacy_io.inline_dat import (
     casting_factory,
@@ -32,32 +34,32 @@ from fourcipp.legacy_io.inline_dat import (
     to_dat_string,
 )
 
-_PARTICLE_CASTING = None
+_PARTICLE_CASTING: dict = {}
 if CONFIG["4C_metadata"] is not None:
     _PARTICLE_CASTING = casting_factory(CONFIG["4C_metadata"]["legacy_particle_specs"])
 
 
-def read_particle(line, particle_casting=_PARTICLE_CASTING):
+def read_particle(line: str, particle_casting: dict = _PARTICLE_CASTING) -> dict:
     """Read particle.
 
     Args:
-        line (str): Inline dat description of the particle
-        particle_casting (dict): Particle casting dict.
+        line: Inline dat description of the particle
+        particle_casting: Particle casting dict.
 
     Returns:
-        dict: Domain section as dict
+        Domain section as dict
     """
     return inline_dat_read(line.split(), particle_casting)
 
 
-def write_particle(particle):
+def write_particle(particle: dict) -> str:
     """Write domain section.
 
     Args:
-        particle (dict): Particle as dict
+        particle: Particle as dict
 
     Returns:
-        list: Particle line
+        Particle line
     """
     line = ""
 

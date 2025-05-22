@@ -28,20 +28,20 @@ from fourcipp.legacy_io.inline_dat import (
     to_dat_string,
 )
 
-_ELEMENT_CASTING = None
+_ELEMENT_CASTING: dict = {}
 if CONFIG["4C_metadata"] is not None:
     _ELEMENT_CASTING = casting_factory(CONFIG["4C_metadata"]["legacy_element_specs"])
 
 
-def read_element(line, elements_casting=_ELEMENT_CASTING):
+def read_element(line: str, elements_casting: dict = _ELEMENT_CASTING) -> dict:
     """Read a element line.
 
     Args:
-        line (str): Inline dat description of the element
-        elements_casting (dict): Element casting dict.
+        line: Inline dat description of the element
+        elements_casting: Element casting dict.
 
     Returns:
-        dict: element as dict
+        element as dict
     """
     line_list = line.split()
 
@@ -68,14 +68,14 @@ def read_element(line, elements_casting=_ELEMENT_CASTING):
     return element
 
 
-def write_element(element):
+def write_element(element: dict) -> str:
     """Write element as inline dat style.
 
     Args:
-        element (dict): Element description
+        element: Element description
 
     Returns:
-        str: element line
+        element line
     """
     line = " ".join(
         [

@@ -21,19 +21,23 @@
 # THE SOFTWARE.
 """Dict utils."""
 
+from typing import Any, Callable, Iterator, Optional, TypeAlias
+
 import numpy as np
 from loguru import logger
 
+Keys: TypeAlias = list | tuple
+
 
 def compare_nested_dicts_or_lists(
-    obj,
-    reference_obj,
-    allow_int_vs_float_comparison=False,
-    rtol=1.0e-5,
-    atol=1.0e-8,
-    equal_nan=False,
-    custom_compare=None,
-):
+    obj: Any,
+    reference_obj: Any,
+    allow_int_vs_float_comparison: bool = False,
+    rtol: float = 1.0e-5,
+    atol: float = 1.0e-8,
+    equal_nan: bool = False,
+    custom_compare: Optional[Callable] = None,
+) -> bool:
     """Recursively compare two nested dictionaries or lists.
 
     In case objects are not within the provided tolerance an `AssertionError` is raised.
@@ -44,17 +48,17 @@ def compare_nested_dicts_or_lists(
         - Raises AssertionError if the objects are not equal
 
     Args:
-        obj (object): Object for comparison
-        reference_obj (object): Reference object
-        allow_int_vs_float_comparison (bool): Allow a tolerance based comparison between int and
+        obj: Object for comparison
+        reference_obj: Reference object
+        allow_int_vs_float_comparison: Allow a tolerance based comparison between int and
                                               float
-        rtol (float): The relative tolerance parameter for numpy.isclose
-        atol (float): The absolute tolerance parameter for numpy.isclose
-        equal_nan (bool): Whether to compare NaN's as equal for numpy.isclose
-        custom_compare (callable): Callable to compare objects within this nested framework
+        rtol: The relative tolerance parameter for numpy.isclose
+        atol: The absolute tolerance parameter for numpy.isclose
+        equal_nan: Whether to compare NaN's as equal for numpy.isclose
+        custom_compare: Callable to compare objects within this nested framework
 
     Returns:
-        bool: True if the dictionaries are equal
+        True if the dictionaries are equal
     """
     # Compare non-standard python objects
     if custom_compare is not None:
@@ -129,18 +133,20 @@ def compare_nested_dicts_or_lists(
     return True
 
 
-def _get_dict(nested_dict, keys, optional=True):
+def _get_dict(
+    nested_dict: dict | list, keys: Keys, optional: bool = True
+) -> Iterator[dict]:
     """Return dict entry within a nested dict by keys.
 
     In case a list is encountered, this function yields over every entry.
 
     Args:
-        nested_dict (dict, list): Dict to iterate. Due to recursiveness, this can also be a list
-        keys (list): List of keys to access
-        optional (bool): If the entry is part of a collection that does no exist as it is optional
+        nested_dict: dict to iterate. Due to recursiveness, this can also be a list
+        keys: List of keys to access
+        optional: If the entry is part of a collection that does no exist as it is optional
 
     Yields:
-        dict: Desired data
+        Desired data
     """
     # Start with the original data
     sub_data = nested_dict
@@ -173,7 +179,7 @@ def _get_dict(nested_dict, keys, optional=True):
                 return
 
     # Check the last entry type
-    # Dict: nothing to do
+    # dict: nothing to do
     if isinstance(sub_data, dict):
         yield sub_data
     # List: jump in an do it all over
@@ -200,17 +206,22 @@ def _get_dict(nested_dict, keys, optional=True):
     return
 
 
-def _split_off_last_key(nested_dict, keys, optional=True, yield_dict_if_missing=False):
+def _split_off_last_key(
+    nested_dict: dict,
+    keys: Keys,
+    optional: bool = True,
+    yield_dict_if_missing: bool = False,
+) -> Iterator[Any]:
     """Utility to return the last key and its parent entry.
 
     Args:
-        nested_dict (dict, list): Dict to iterate. Due to recursiveness, this can also be a list
-        keys (list): List of keys to access
-        optional (bool): If the entry is part of a collection that does no exist as it is optional
-        yield_dict_if_missing (bool): Return parent entry even if the entry is not provided
+        nested_dict: dict to iterate. Due to recursiveness, this can also be a list
+        keys: List of keys to access
+        optional: If the entry is part of a collection that does no exist as it is optional
+        yield_dict_if_missing: Return parent entry even if the entry is not provided
 
     Yields:
-        dict: Parent entry
+        Parent entry
     """
     last_key = keys[-1]
 
@@ -231,53 +242,68 @@ def _split_off_last_key(nested_dict, keys, optional=True, yield_dict_if_missing=
         yield entry, last_key
 
 
-def get_entry(nested_dict, keys, optional=True):
+def get_entry(
+    nested_dict: dict,
+    keys: Keys,
+    optional: bool = True,
+) -> Iterator[Any]:
     """Get entry by a list of keys.
 
     Args:
-        nested_dict (dict): Nested data dict
-        keys (list): List of keys to get the entry
-        optional (bool): If the entry is part of a collection that does no exist as it is optional
+        nested_dict: Nested data dict
+        keys: List of keys to get the entry
+        optional: If the entry is part of a collection that does no exist as it is optional
 
     Yields:
-        obj: Entry
+        Entry
     """
     for entry, last_key in _split_off_last_key(nested_dict, keys, optional):
         yield entry[last_key]
 
 
-def remove(nested_dict, keys):
+def remove(
+    nested_dict: dict,
+    keys: Keys,
+):
     """Remove entry.
 
     Args:
-        nested_dict (dict): Nested data dict
-        keys (list): List of keys to the entry
-        optional (bool): If the entry is part of a collection that does no exist as it is optional
+        nested_dict: Nested data dict
+        keys: List of keys to the entry
+        optional: If the entry is part of a collection that does no exist as it is optional
     """
     for entry, last_key in _split_off_last_key(nested_dict, keys):
         entry.pop(last_key)
 
 
-def replace_value(nested_dict, keys, new_value):
+def replace_value(
+    nested_dict: dict,
+    keys: Keys,
+    new_value: Any,
+):
     """Replace value.
 
     Args:
-        nested_dict (dict): Nested data dict
-        keys (list): List of keys to the entry
-        new_value (obj): New value to set
+        nested_dict: Nested data dict
+        keys: List of keys to the entry
+        new_value: New value to set
     """
     for entry, last_key in _split_off_last_key(nested_dict, keys):
         logger.debug(f"Replacing {last_key}: from {entry[last_key]} to {new_value}")
         entry[last_key] = new_value
 
 
-def make_default_explicit(nested_dict, keys, default_value):
+def make_default_explicit(
+    nested_dict: dict,
+    keys: Keys,
+    default_value: Any,
+):
     """Make default explicit, i.e. set the value in the input.
 
     Args:
-        nested_dict (dict): Nested data dict
-        keys (list): List of keys to the entry
-        default_value (obj): Default value to set
+        nested_dict: Nested data dict
+        keys: List of keys to the entry
+        default_value: Default value to set
     """
     for entry, last_key in _split_off_last_key(
         nested_dict, keys, yield_dict_if_missing=True
@@ -286,14 +312,18 @@ def make_default_explicit(nested_dict, keys, default_value):
             entry[last_key] = default_value
 
 
-def make_default_implicit(nested_dict, keys, default_value):
+def make_default_implicit(
+    nested_dict: dict,
+    keys: Keys,
+    default_value: Any,
+):
     """Make default implicit, i.e., removed it if set with the default value in
     the input.
 
     Args:
-        nested_dict (dict): Nested data dict
-        keys (list): List of keys to the entry
-        default_value (obj): Default value to set
+        nested_dict: Nested data dict
+        keys: List of keys to the entry
+        default_value: Default value to set
     """
 
     for entry, last_key in _split_off_last_key(nested_dict, keys):
@@ -301,16 +331,21 @@ def make_default_implicit(nested_dict, keys, default_value):
             entry.pop(last_key)
 
 
-def change_default(nested_dict, keys, old_default, new_default):
+def change_default(
+    nested_dict: dict,
+    keys: Keys,
+    old_default: Any,
+    new_default: Any,
+):
     """Change default value.
 
     If default value is not provided the old default is set. Entries where the value equals the new default value is removed.
 
     Args:
-        nested_dict (dict): Nested data dict
-        keys (list): List of keys to the entry
-        old_default (obj): Old default value to set
-        new_default (obj): New default value
+        nested_dict: Nested data dict
+        keys: List of keys to the entry
+        old_default: Old default value to set
+        new_default: New default value
     """
     for entry, last_key in _split_off_last_key(
         nested_dict, keys, yield_dict_if_missing=True
@@ -324,13 +359,17 @@ def change_default(nested_dict, keys, old_default, new_default):
                 entry.pop(last_key)
 
 
-def rename_parameter(nested_dict, keys, new_name):
+def rename_parameter(
+    nested_dict: dict,
+    keys: Keys,
+    new_name: str,
+):
     """Rename parameter.
 
     Args:
-        nested_dict (dict): Nested data dict
-        keys (list): List of keys to the entry
-        new_name (str): New name of the parameter
+        nested_dict: Nested data dict
+        keys: List of keys to the entry
+        new_name: New name of the parameter
     """
 
     for entry, last_key in _split_off_last_key(nested_dict, keys):

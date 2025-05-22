@@ -23,6 +23,7 @@
 
 import copy
 import difflib
+from typing import Any, Optional, Union
 
 from loguru import logger
 
@@ -34,6 +35,7 @@ from fourcipp.legacy_io import (
 from fourcipp.utils.converter import Converter
 from fourcipp.utils.dict_utils import compare_nested_dicts_or_lists
 from fourcipp.utils.not_set import NotSet, check_if_set
+from fourcipp.utils.type_hinting import Path
 from fourcipp.utils.validation import validate_using_json_schema
 from fourcipp.utils.yaml_io import dump_yaml, load_yaml
 
@@ -42,16 +44,16 @@ class UnknownSectionException(Exception):
     """Unknown section exception."""
 
 
-def is_section_known(section_name):
+def is_section_known(section_name: str) -> bool:
     """Returns if section in known.
 
     Does not apply to legacy sections.
 
     Args:
-        section_name (str): Name of the section to check
+        section_name: Name of the section to check
 
     Returns:
-        bool: True if section is known.
+        True if section is known.
     """
     return section_name in SECTIONS or section_name.startswith("FUNCT")
 
@@ -63,19 +65,22 @@ CONVERTER = Converter()
 class FourCInput:
     """4C inout file object."""
 
-    known_sections = ALL_SECTIONS
-    type_converter = CONVERTER
+    known_sections: list = ALL_SECTIONS
+    type_converter: Converter = CONVERTER
 
     def convert_to_native_types(self):
         """Convert all sections to native Python types."""
         self._sections = self.type_converter(self._sections)
         self._legacy_sections = self.type_converter(self._legacy_sections)
 
-    def __init__(self, sections=None):
+    def __init__(
+        self,
+        sections: Optional[dict] = None,
+    ):
         """Initialise object.
 
         Args:
-            sections (dict): Sections to be added
+            sections: Sections to be added
         """
         self._sections = {}
         self._legacy_sections = {}
@@ -85,15 +90,17 @@ class FourCInput:
                 self.__setitem__(k, v)
 
     @classmethod
-    def from_4C_yaml(cls, input_file_path, header_only=False):
+    def from_4C_yaml(
+        cls, input_file_path: Path, header_only: bool = False
+    ) -> "FourCInput":
         """Load 4C yaml file.
 
         Args:
-            input_file_path (str): Path to yaml file
-            header_only (bool): Only extract header, i.e., all sections except the legacy ones
+            input_file_path: Path to yaml file
+            header_only: Only extract header, i.e., all sections except the legacy ones
 
         Returns:
-            FourCInputFile: Initialised object
+            Initialised object
         """
         data = load_yaml(input_file_path)
         if header_only:
@@ -102,7 +109,7 @@ class FourCInput:
         return cls(data)
 
     @property
-    def inlined(self):
+    def inlined(self) -> dict:
         """Get as dict with inlined legacy sections.
 
         Returns:
@@ -110,7 +117,7 @@ class FourCInput:
         """
         return self._sections | inline_legacy_sections(self._legacy_sections.copy())
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Representation string.
 
         Returns:
@@ -121,7 +128,7 @@ class FourCInput:
         string += "\n  - ".join(self.get_section_names()) + "\n"
         return string
 
-    def __str__(self):
+    def __str__(self) -> str:
         """To string method,
 
         Returns:
@@ -132,12 +139,16 @@ class FourCInput:
         string += "\n  - ".join(self.get_section_names()) + "\n"
         return string
 
-    def __setitem__(self, key, value):
+    def __setitem__(
+        self,
+        key: str,
+        value: Any,
+    ):
         """Set section.
 
         Args:
-            key (str): Section name
-            value (dict): Section entry
+            key: Section name
+            value: Section entry
         """
         value = self.type_converter(value)
         # Warn if complete section is overwritten
@@ -152,7 +163,7 @@ class FourCInput:
             if isinstance(value, list):
                 if not any([isinstance(v, dict) for v in value]):
                     logger.debug(f"Interpreting section {key}")
-                    self._legacy_sections[key] = interpret_legacy_section(key, value)
+                    self._legacy_sections[key] = interpret_legacy_section(key, value)  # type: ignore
                 else:
                     # Sections are in dict form
                     self._legacy_sections[key] = value
@@ -169,14 +180,14 @@ class FourCInput:
                 " Call FourCInputFile.known_sections for a complete list."
             )
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: str) -> Any:
         """Get section.
 
         Args:
-            key (str): Section name
+            key: Section name
 
         Returns:
-            dict: Section value
+            Section value
         """
         # Nice sections
         if is_section_known(key):
@@ -190,15 +201,15 @@ class FourCInput:
                 f"Section '{key}' not set. Did out mean '{difflib.get_close_matches(key.upper(), ALL_SECTIONS, n=1, cutoff=0.3)[0]}'? The set sections are:\n - {sections}"
             )
 
-    def pop(self, key, default_value=NotSet):
+    def pop(self, key: str, default_value: Optional[Any] = NotSet) -> Any:
         """Pop entry.
 
         Args:
-            key (str): Section name
-            default_value (obj): Default value if section is not set
+            key: Section name
+            default_value: Default value if section is not set
 
         Returns:
-            obj: Desired section or default value
+            Desired section or default value
         """
         # Section is set
         if key in self._sections:
@@ -225,15 +236,15 @@ class FourCInput:
                     " Call FourCInputFile.known_sections for a complete list."
                 )
 
-    def combine_sections(self, other):
+    def combine_sections(self, other: Union[dict, "FourCInput"]):
         """Combine input files together.
 
         Note: Every sections can only be defined in self or in other.
 
         Args:
-            other (dict, FourCInput): Sections to be combine
+            other: Sections to be combine
         """
-        other_sections_names = None
+        other_sections_names: Any = None
 
         if isinstance(other, dict):
             other_sections_names = other.keys()
@@ -246,7 +257,7 @@ class FourCInput:
 
         # Sections that can be found in both
         if doubled_defined_sections := set(self.get_section_names()) & set(
-            other_sections_names
+            other_sections_names  # type: ignore
         ):
             raise ValueError(
                 f"Section(s) {', '.join(list(doubled_defined_sections))} are defined in both {type(self).__name__} objects. In order to join the {type(self).__name__} objects remove the section(s) in one of them."
@@ -254,7 +265,7 @@ class FourCInput:
 
         self.overwrite_sections(other)
 
-    def overwrite_sections(self, other):
+    def overwrite_sections(self, other: Union[dict, "FourCInput"]):
         """Overwrite sections from dict or FourCInput.
 
         This function always overwrites complete sections. Combining parameters within this
@@ -262,7 +273,7 @@ class FourCInput:
 
 
         Args:
-            other (dict, FourCInput): Sections to be updated
+            other: Sections to be updated
         """
         if isinstance(other, (dict, FourCInput)):
             for key, value in other.items():
@@ -271,7 +282,9 @@ class FourCInput:
             raise TypeError(f"Cannot overwrite sections from {type(other)}.")
 
     @property
-    def sections(self):
+    def sections(
+        self,
+    ) -> dict:
         """All the set sections.
 
         Returns:
@@ -279,7 +292,7 @@ class FourCInput:
         """
         return self._sections | self._legacy_sections
 
-    def get_section_names(self):
+    def get_section_names(self) -> list:
         """Get set section names.
 
         Returns:
@@ -287,7 +300,7 @@ class FourCInput:
         """
         return sorted(list(self._legacy_sections) + list(self._sections))
 
-    def items(self):
+    def items(self) -> Any:
         """Get items.
 
         Similar to items method of python dicts.
@@ -297,35 +310,35 @@ class FourCInput:
         """
         return (self.sections).items()
 
-    def __contains__(self, item):
+    def __contains__(self, item: str) -> bool:
         """Contains function.
 
         Allows to use the `in` operator.
 
         Args:
-            item (string): Section name to check if it is set
+            item: Section name to check if it is set
 
         Returns:
-            bool: True if section is set
+            True if section is set
         """
         return item in (list(self._legacy_sections) + list(self._sections))
 
-    def __add__(self, other):
+    def __add__(self, other: "FourCInput") -> "FourCInput":
         """Add two input file objects together.
 
         In contrast to `join` a copy is created.
 
         Args:
-            other (FourCInputFile): Input file object to join.
+            other: Input file object to join.
 
         Returns:
-            FourCInputFile: Joined input file
+            Joined input file
         """
         copied_object = self.copy()
         copied_object.combine_sections(other)
         return copied_object
 
-    def copy(self):
+    def copy(self) -> "FourCInput":
         """Copy itself.
 
         Returns:
@@ -340,13 +353,18 @@ class FourCInput:
                 logger.debug(f"Gather data from {partial_file}")
                 self.combine_sections(self.from_4C_yaml(partial_file))
 
-    def dump(self, input_file_path, sort_sections=False, validate=False):
+    def dump(
+        self,
+        input_file_path: Path,
+        sort_sections: bool = False,
+        validate: bool = False,
+    ):
         """Dump object to yaml.
 
         Args:
-            input_file_path (str): Path to dump the data to
-            sort_sections (bool): Sort the sections alphabetically
-            validate (bool): Validate input data before dumping
+            input_file_path: Path to dump the data to
+            sort_sections: Sort the sections alphabetically
+            validate: Validate input data before dumping
         """
 
         if validate:
@@ -355,12 +373,16 @@ class FourCInput:
         self.convert_to_native_types()
         dump_yaml(self.inlined, input_file_path, sort_sections)
 
-    def validate(self, json_schema=CONFIG["json_schema"], sections_only=False):
+    def validate(
+        self,
+        json_schema: dict = CONFIG["json_schema"],
+        sections_only: bool = False,
+    ) -> bool:
         """Validate input file.
 
         Args:
-            json_schema (dict): Schema to check the data
-            sections_only (bool): Validate each section independently. Requiredness of the sections
+            json_schema: Schema to check the data
+            sections_only: Validate each section independently. Requiredness of the sections
                                   themselves is ignored.
         """
         validation_schema = json_schema
@@ -373,14 +395,14 @@ class FourCInput:
         self.convert_to_native_types()
         return validate_using_json_schema(self.inlined, validation_schema)
 
-    def split(self, section_names):
+    def split(self, section_names: tuple | list) -> tuple["FourCInput", "FourCInput"]:
         """Split input into two using sections names.
 
         Args:
-            section_names (list): List of sections to split
+            section_names: List of sections to split
 
         Returns:
-            tuple: root and split input objects
+            root and split input objects
         """
         root_input = self.copy()
         spiltted_input = FourCInput()
@@ -392,22 +414,22 @@ class FourCInput:
 
     def dump_with_includes(
         self,
-        section_names,
-        root_input_file_path,
-        split_input_file_path,
-        invert_sections=False,
-        sort_sections=False,
-        validate=False,
+        section_names: tuple | list,
+        root_input_file_path: Path,
+        split_input_file_path: Path,
+        invert_sections: bool = False,
+        sort_sections: bool = False,
+        validate: bool = False,
     ):
         """Dump input and split using the includes function.
 
         Args:
-            section_names (list): List of sections to split
-            root_input_file_path (str): Directory with the INCLUDES section
-            split_input_file_path (str): Remaining sections
-            invert_sections (bool): Switch sections in root and split file
-            sort_sections (bool): Sort the sections alphabetically
-            validate (bool): Validate input data before dumping
+            section_names: List of sections to split
+            root_input_file_path: Directory with the INCLUDES section
+            split_input_file_path: Remaining sections
+            invert_sections: Switch sections in root and split file
+            sort_sections: Sort the sections alphabetically
+            validate: Validate input data before dumping
         """
         # Split the inout
         first_input, second_input = self.split(section_names)
@@ -431,13 +453,13 @@ class FourCInput:
         input_with_includes.dump(root_input_file_path, sort_sections, validate)
         split_input.dump(split_input_file_path, sort_sections, validate)
 
-    def __eq__(self, other):
+    def __eq__(self, other: object) -> bool:
         """Define equal operator.
 
         This comparison is strict, if tolerances are desired use `compare`.
 
         Args:
-            other (FourCInput): Other input to check
+            other: Other input to check
         """
         if not isinstance(other, type(self)):
             raise TypeError(f"Can not compare types {type(self)} and {type(other)}")
@@ -446,25 +468,25 @@ class FourCInput:
 
     def compare(
         self,
-        other,
-        allow_int_as_float=False,
-        rtol=1.0e-5,
-        atol=1.0e-8,
-        equal_nan=False,
-        raise_exception=False,
-    ):
+        other: "FourCInput",
+        allow_int_as_float: bool = False,
+        rtol: float = 1.0e-5,
+        atol: float = 1.0e-8,
+        equal_nan: bool = False,
+        raise_exception: bool = False,
+    ) -> bool:
         """Compare inputs with tolerances.
 
         Args:
-            other (FourCInput): Input to compare
-            allow_int_as_float (bool): Allow the use of ints instead of floats
-            rtol (float): The relative tolerance parameter for numpy.isclose
-            atol (float): The absolute tolerance parameter for numpy.isclose
-            equal_nan (bool): Whether to compare NaN's as equal for numpy.isclose
-            raise_exception (bool): If true raise exception
+            other: Input to compare
+            allow_int_as_float: Allow the use of ints instead of floats
+            rtol: The relative tolerance parameter for numpy.isclose
+            atol: The absolute tolerance parameter for numpy.isclose
+            equal_nan: Whether to compare NaN's as equal for numpy.isclose
+            raise_exception: If true raise exception
 
             Returns:
-                bool: True if within tolerance
+            True if within tolerance
         """
         try:
             return compare_nested_dicts_or_lists(
@@ -478,7 +500,7 @@ class FourCInput:
 
             return False
 
-    def extract_header(self):
+    def extract_header(self) -> "FourCInput":
         """Extract the header sections, i.e., all non-legacy sections.
 
         Returns:

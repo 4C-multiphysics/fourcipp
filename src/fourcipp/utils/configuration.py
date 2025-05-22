@@ -29,20 +29,20 @@ from loguru import logger
 
 from fourcipp.utils.yaml_io import dump_yaml, load_yaml
 
-CONFIG_PACKAGE = pathlib.Path(__file__).parents[1] / "config"
-CONFIG_FILE = CONFIG_PACKAGE / "config.yaml"
+CONFIG_PACKAGE: pathlib.Path = pathlib.Path(__file__).parents[1] / "config"
+CONFIG_FILE: pathlib.Path = CONFIG_PACKAGE / "config.yaml"
 
-CONFIG = load_yaml(CONFIG_FILE)
+CONFIG: dict = load_yaml(CONFIG_FILE)
 
 
-def load_config():
+def load_config() -> dict:
     """Set config profile.
 
     Args:
-        profile (str): Config profile to be set.
+        profile: Config profile to be set.
 
     Returns:
-        dict: user config.
+        user config.
     """
 
     profile = CONFIG["profile"]
@@ -70,21 +70,21 @@ def load_config():
     return config
 
 
-def list_profiles():
+def list_profiles() -> str:
     """List all config profiles.
 
     Returns:
-        str: Fancy listing of profiles
+        Fancy listing of profiles
     """
     profiles = [f"\t{k}: {v['description']}" for k, v in CONFIG["profiles"].items()]
     return "\n" + "\n".join(profiles)
 
 
-def profile_description():
+def profile_description() -> str:
     """Config profile description.
 
     Returns:
-        str: Fancy description
+        Fancy description
     """
     string = f"FourCIPP\n\n  with config profile {CONFIG['profile']}:"
     for k, v in CONFIG["profiles"][CONFIG["profile"]].items():
@@ -93,11 +93,11 @@ def profile_description():
     return string
 
 
-def _change_profile(profile):
+def _change_profile(profile: str):
     """Change config profile.
 
     Args:
-        profile (str): Profil name to set
+        profile: Profil name to set
     """
     if profile not in CONFIG["profiles"]:
         raise Exception(

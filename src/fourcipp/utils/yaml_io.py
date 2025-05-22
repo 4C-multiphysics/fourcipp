@@ -27,8 +27,10 @@ import pathlib
 import ruamel.yaml
 import ryml
 
+from fourcipp.utils.type_hinting import Path
 
-def load_yaml(path_to_yaml_file):
+
+def load_yaml(path_to_yaml_file: Path) -> dict:
     """Load yaml files.
 
     rapidyaml is the fastest yaml parsing library we could find. Since it returns custom objects we
@@ -36,10 +38,10 @@ def load_yaml(path_to_yaml_file):
     This is still two orders of magnitude faster compared to other yaml libraries.
 
     Args:
-        path_to_yaml_file (str): Path to yaml file
+        path_to_yaml_file: Path to yaml file
 
     Returns:
-        dict: Loaded data
+       Loaded data
     """
 
     data = json.loads(
@@ -50,13 +52,13 @@ def load_yaml(path_to_yaml_file):
     return data
 
 
-def dump_yaml(data, path_to_yaml_file, sort_keys=False):
+def dump_yaml(data: dict, path_to_yaml_file: Path, sort_keys: bool = False):
     """Dump yaml to file.
 
     Args:
-        data (dict): Data to dump.
-        path_to_yaml_file (str): Yaml file path
-        sort_keys (bool): If true sort the sections by section name
+        data: Data to dump.
+        path_to_yaml_file: Yaml file path
+        sort_keys: If true sort the sections by section name
     """
     # Ignore alias or anchors in dumps
     ruamel.yaml.representer.RoundTripRepresenter.ignore_aliases = lambda x, y: True
