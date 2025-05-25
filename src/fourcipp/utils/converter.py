@@ -23,7 +23,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Callable
+from typing import Any, Callable, Type, Union
 
 import numpy as np
 
@@ -35,8 +35,10 @@ class Converter:
         self._custom_converters = {}
 
     def register_type(
-        self, custom_type, converter_function: Callable[[Converter, Any], Any]
-    ):
+        self,
+        custom_type: Type[Any],
+        converter_function: Callable[[Converter, Any], Any],
+    ) -> Converter:
         """Register a custom type and its converter function.
 
         The first argument of the converter_function is a converter object.
@@ -45,40 +47,40 @@ class Converter:
         The second argument is the object to be converted.
 
         Args:
-            custom_type (type): Custom class to register
-            converter_function (Callable): Converter function
+            custom_type: Custom class to register
+            converter_function: Converter function
         """
         self._custom_converters[custom_type] = converter_function
         return self
 
-    def register_types(self, types_dict):
+    def register_types(self, types_dict: dict):
         """Register multiple custom types and their converter functions.
 
         Args:
-            types_dict (dict): Dictionary with custom types as keys and
+            types_dict: Dictionary with custom types as keys and
             converter functions as values
         """
         self._custom_converters.update(types_dict)
         return self
 
-    def register_numpy_types(self):
+    def register_numpy_types(self) -> Converter:
         """Register NumPy types and their converter functions."""
 
-        def convert_ndarray(converter, obj):
+        def convert_ndarray(converter: Converter, obj: np.ndarray):
             """Convert a NumPy ndarray to a list.
 
             Args:
-                converter (Converter): Converter object
-                obj (np.ndarray): NumPy ndarray to convert
+                converter: Converter object
+                obj: NumPy ndarray to convert
             """
             return converter(obj.tolist())
 
-        def convert_generic(converter, obj):
+        def convert_generic(converter: Converter, obj: np.generic):
             """Convert a NumPy generic type to a native Python type.
 
             Args:
-                converter (Converter): Converter object
-                obj (np.generic): NumPy generic type to convert
+                converter: Converter object
+                obj: NumPy generic type to convert
             """
             return obj.item()
 
@@ -86,11 +88,11 @@ class Converter:
         self.register_type(np.ndarray, convert_ndarray)
         return self
 
-    def __call__(self, obj):
+    def __call__(self, obj: Any) -> Any:
         """Convert the object to a native Python type.
 
         Args:
-            obj (Any): Object to convert
+            obj: Object to convert
         """
         # If no custom converters are present, no need to do a conversion
         if not self._custom_converters:

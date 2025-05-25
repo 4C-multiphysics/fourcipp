@@ -45,14 +45,14 @@ DOMAIN_CASTING = {
 }
 
 
-def read_domain(lines):
+def read_domain(lines: list[str]) -> dict:
     """Read domain section.
 
     Args:
-        lines (list): List of lines.
+        lines: List of lines.
 
     Returns:
-        dict: Domain section as dict
+        Domain section as dict
     """
     data = {}
     for line in lines:
@@ -60,14 +60,14 @@ def read_domain(lines):
     return data
 
 
-def write_domain(domain):
+def write_domain(domain: dict) -> list[str]:
     """Write domain section.
 
     Args:
-        domain (dict): Domain section as dict
+        domain: Domain section as dict
 
     Returns:
-        list: Domain as list of lines
+        Domain as list of lines
     """
     new_lines = []
     for k, v in domain.items():

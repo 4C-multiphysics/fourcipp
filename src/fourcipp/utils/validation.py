@@ -25,15 +25,15 @@ import jsonschema_rs
 from jsonschema_rs import ValidationError as FourCIPPValidationError
 
 
-def validate_using_json_schema(data, json_schema):
+def validate_using_json_schema(data: dict, json_schema: dict) -> bool:
     """Validate data using a JSON schema.
 
     Args:
-        data (dict): Data to validate
-        json_schema (dict): Schema for validation
+        data: Data to validate
+        json_schema: Schema for validation
 
     Returns:
-        bool: True if successful
+        True if successful
     """
     validator = jsonschema_rs.validator_for(json_schema)
     validator.validate(data)

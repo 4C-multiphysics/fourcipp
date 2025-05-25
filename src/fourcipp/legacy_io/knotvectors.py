@@ -22,39 +22,41 @@
 """Knotvectors io."""
 
 from functools import partial
+from typing import Any
 
 from fourcipp.legacy_io.inline_dat import _extract_entry, _extract_enum, _extract_vector
 
-NURBS_PATCH_CASTING = {
+NURBS_PATCH_CASTING: dict = {
     "ID": partial(_extract_entry, entry_type=int),
     "NURBS_DIMENSION": partial(_extract_entry, entry_type=int),
 }
 
-KNOT_VECTORS_CASTING = {
+KNOT_VECTORS_CASTING: dict = {
     "NUMKNOTS": partial(_extract_entry, entry_type=int),
     "DEGREE": partial(_extract_entry, entry_type=int),
     "TYPE": partial(_extract_enum, choices=["Interpolated", "Periodic"]),
 }
 
 
-def read_knotvectors(list_of_lines):
+def read_knotvectors(list_of_lines: list) -> list[dict]:
     """Read knotvectors section.
 
     Args:
-        list_of_lines (list): List of section lines
+        list_of_lines: List of section lines
 
     Returns:
-        list: List of patch dicts
+        List of patch dicts
     """
 
-    patch_data = {}
-    knots_data = {}
-    patches = []
+    patch_data: dict = {}
+    knots_data: dict = {}
+    patches: list = []
 
     latest_nurb_dimension = None
     while list_of_lines:
         line = list_of_lines.pop(0)
 
+        line_list: list = []
         if isinstance(line, str):
             if not line.strip():
                 # Skip empty line
@@ -123,24 +125,24 @@ def read_knotvectors(list_of_lines):
     return patches
 
 
-def write_knotvectors(patches):
+def write_knotvectors(patches: list) -> list[str]:
     """Read knotvectors sections.
 
     Args:
-        patches (dict): Patches list
+        patches: Patches list
 
     Returns:
-        list: List of lines
+        List of lines
     """
 
     def write_patch(patch):
         """Write patch lines.
 
         Args:
-            patch (dict): Patch dict
+            patch: Patch dict
 
         Returns:
-            list: List of lines
+            List of lines
         """
 
         # Patch data

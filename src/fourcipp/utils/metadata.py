@@ -23,7 +23,7 @@
 
 import pathlib
 
-METADATA_TO_PYTHON = {
+METADATA_TO_PYTHON: dict = {
     "int": int,
     "double": float,
     "string": str,

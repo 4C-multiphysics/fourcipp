@@ -26,10 +26,11 @@ simplified.
 """
 
 from functools import partial
+from typing import Callable
 
 from fourcipp.legacy_io.inline_dat import _extract_entry, _extract_vector, to_dat_string
 
-_FNODE_CASTING = {
+_FNODE_CASTING: dict[str, Callable] = {
     "CIR": partial(_extract_vector, entry_type=float, size=3),
     "TAN": partial(_extract_vector, entry_type=float, size=3),
     "RAD": partial(_extract_vector, entry_type=float, size=3),
@@ -38,14 +39,14 @@ _FNODE_CASTING = {
 }
 
 
-def read_node(line):
+def read_node(line: str) -> dict:
     """Read node.
 
     Args:
-        line (str): Inline dat description of the element
+        line: Inline dat description of the element
 
     Returns:
-        dict: Node as dict
+        Node as dict
     """
     line_list = line.split()
 
@@ -65,30 +66,29 @@ def read_node(line):
         return node
 
     if node_type == "CP":
-        node["data"]["weight"] = float(line_list[0])
+        node["data"]["weight"] = float(line_list[0])  # type: ignore [index]
         return node
 
     if node_type == "FNODE":
         while line_list:
             key = line_list.pop(0)
             if key.startswith("FIBER"):
-                node["data"][key] = _extract_vector(line_list, entry_type=float, size=3)
+                node["data"][key] = _extract_vector(line_list, entry_type=float, size=3)  # type: ignore
                 continue
-
-            node["data"][key] = _FNODE_CASTING[key](line_list)
+            node["data"][key] = _FNODE_CASTING[key](line_list)  # type: ignore [index]
         return node
 
     raise ValueError(f"Unknown node type {node_type}")
 
 
-def write_node(node):
+def write_node(node: dict) -> str:
     """Write node as line.
 
     Args:
-        node (dict): Node as dict
+        node: Node as dict
 
     Returns:
-        str: Node as line
+        Node as line
     """
     node_type = node["data"]["type"]
     line = f"{node_type} {node['id']} COORD {to_dat_string(node['COORD'])}"
