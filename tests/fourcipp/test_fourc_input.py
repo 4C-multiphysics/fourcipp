@@ -24,12 +24,18 @@
 import contextlib
 import pathlib
 import subprocess
+import time
+from typing import Callable
 
 import pytest
 
 from fourcipp import CONFIG
 from fourcipp.fourc_input import FourCInput, UnknownSectionException
 from fourcipp.utils.validation import FourCIPPValidationError
+
+from ..fourcipp.legacy_io.test_element import (  # noqa: TID252
+    generate_elements_from_metadatafile,
+)
 
 
 @pytest.fixture(name="section_names")
@@ -491,3 +497,59 @@ def test_validation(fourc_input, error_context, sections_only):
     """Test the validation."""
     with error_context:
         fourc_input.validate(sections_only=sections_only)
+
+
+def assert_execution_time(fct: Callable, args: dict, execution_time: float) -> None:
+    """Assert execution time of a function.
+
+    Args:
+        fct: Function to test.
+        args: Arguments to pass to the function.
+        execution_time: Maximum allowed execution time in seconds.
+    """
+
+    start_time = time.time()
+    fct(**args)
+    end_time = time.time()
+
+    if end_time - start_time > execution_time:
+        pytest.fail(
+            f"Execution time of {fct.__name__} took {end_time - start_time} and exceeded {execution_time} seconds."
+        )
+
+
+def test_performance(tmp_path):
+    """Test performance of core functions of FourCInput."""
+
+    dummy_reference_element = generate_elements_from_metadatafile()[0]
+
+    dummy_elements = {"STRUCTURE ELEMENTS": []}
+
+    for i in range(int(1e6)):
+        dummy_elements["STRUCTURE ELEMENTS"].append(dummy_reference_element)
+
+    input = FourCInput()
+
+    # Test performance of adding data to input file
+    assert_execution_time(
+        input.combine_sections, args={"other": dummy_elements}, execution_time=11.0
+    )
+
+    # Test performance of validating the input file
+    assert_execution_time(
+        input.validate, args={"sections_only": True}, execution_time=7.0
+    )
+
+    # Test performance of dumping the input file
+    assert_execution_time(
+        input.dump,
+        args={"input_file_path": tmp_path / "performance_test.4C.yaml"},
+        execution_time=6.5,
+    )
+
+    # Test performance of loading the input file
+    assert_execution_time(
+        FourCInput.from_4C_yaml,
+        args={"input_file_path": tmp_path / "performance_test.4C.yaml"},
+        execution_time=6.5,
+    )
