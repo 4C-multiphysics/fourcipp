@@ -250,29 +250,50 @@ def test_combine_sections_failure_doubled_data_dict(fourc_input):
 
 
 def test_overwrite_sections_new_section_dict(fourc_input):
-    """Test overwriting sections that does not exits."""
+    """Test overwriting sections that does not exist."""
     fourc_input.overwrite_sections({"TITLE": "new title"})
-    fourc_input["TITLE"] == "new title"
+    assert fourc_input["TITLE"] == "new title"
 
 
 def test_overwrite_sections_existing_section_dict(fourc_input):
-    """Test overwriting sections that already exits."""
+    """Test overwriting sections that already exist."""
     fourc_input["TITLE"] = "new title"
     fourc_input.overwrite_sections({"TITLE": "super new title"})
     assert fourc_input["TITLE"] == "super new title"
 
 
 def test_overwrite_sections_new_section_input(fourc_input):
-    """Test overwriting sections that does not exits."""
+    """Test overwriting sections that does not exist."""
     fourc_input.overwrite_sections(FourCInput({"TITLE": "new title"}))
-    fourc_input["TITLE"] == "new title"
+    assert fourc_input["TITLE"] == "new title"
 
 
 def test_overwrite_sections_existing_section_input(fourc_input):
-    """Test overwriting sections that already exits."""
+    """Test overwriting sections that already exist."""
     fourc_input["TITLE"] = "new title"
     fourc_input.overwrite_sections(FourCInput({"TITLE": "super new title"}))
     assert fourc_input["TITLE"] == "super new title"
+
+
+def test_overwrite_values_new_section_dict(fourc_input):
+    """Test overwriting a complete section that does not exist."""
+    fourc_input.overwrite_values({"TITLE": "new title"})
+    assert fourc_input["TITLE"] == "new title"
+
+
+def test_overwrite_values_existing_section_dict(fourc_input):
+    """Test overwriting one value in an existing section."""
+    fourc_input["PROBLEM TYPE"] = {"PROBLEMTYPE": "old problemtype"}
+    fourc_input.overwrite_values({"PROBLEM TYPE": {"PROBLEMTYPE": "new problemtype"}})
+    assert fourc_input["PROBLEM TYPE"] == {"PROBLEMTYPE": "new problemtype"}
+
+
+def test_add_values_existing_section_dict(fourc_input):
+    """Test add a value in an existing section."""
+    fourc_input["PROBLEM TYPE"] = {"PROBLEMTYPE": "old problemtype"}
+    fourc_input.overwrite_values({"PROBLEM TYPE": {"RESTART": 1}})
+    assert fourc_input["PROBLEM TYPE"]["PROBLEMTYPE"] == "old problemtype"
+    assert fourc_input["PROBLEM TYPE"]["RESTART"] == 1
 
 
 def test_add(fourc_input, fourc_input_2, fourc_input_combined):

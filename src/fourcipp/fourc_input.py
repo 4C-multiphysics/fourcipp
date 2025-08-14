@@ -242,10 +242,10 @@ class FourCInput:
     def combine_sections(self, other: dict | FourCInput) -> None:
         """Combine input files together.
 
-        Note: Every sections can only be defined in self or in other.
+        Note: Every section can only be defined in self or in other.
 
         Args:
-            other: Sections to be combine
+            other: Sections to be combined
         """
         other_sections_names: Any = None
 
@@ -283,6 +283,52 @@ class FourCInput:
                 self[key] = value
         else:
             raise TypeError(f"Cannot overwrite sections from {type(other)}.")
+
+    def overwrite_values(self, other: dict | FourCInput) -> None:
+        """Combines two Inputs by overwriting current values by the other dict
+        or FourCInput.
+
+        This function checks whether values exist in both objects and overwrites the current by the other.
+
+        Args:
+            other: dict/FourCInput to overwrite values from.
+        """
+
+        def _check_common_keys(dict1: dict, dict2: dict) -> dict:
+            """Recursive routine to check common keys/values between two
+            dictionaries.
+
+            If values are different, dict2 is the significant one to
+            overrule dict1.
+            """
+
+            common_dict = {}
+            for dkey in dict1:
+                if dkey in dict2:
+                    if type(dict1[dkey]) == dict:
+                        common_dict[dkey] = _check_common_keys(dict1[dkey], dict2[dkey])
+                    else:
+                        common_dict[dkey] = dict2[dkey]
+                else:
+                    common_dict[dkey] = dict1[dkey]
+            for dkey in dict2:
+                if dkey in dict1:
+                    continue
+                common_dict[dkey] = dict2[dkey]
+            return common_dict
+
+        if isinstance(other, FourCInput):
+            other_sec = other.sections
+        elif isinstance(other, dict):
+            other_sec = other
+        else:
+            raise TypeError(f"Cannot overwrite sections from {type(other)}.")
+
+        common_dict = _check_common_keys(self.sections, other_sec)
+
+        self.overwrite_sections(common_dict)
+
+        return
 
     @property
     def sections(self) -> dict:
