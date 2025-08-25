@@ -23,10 +23,10 @@
 
 import pytest
 
-from fourcipp.utils.configuration import _change_profile
+from fourcipp.utils.configuration import change_profile
 
 
 def test_change_profile_failure():
     """Test for change profile failure."""
     with pytest.raises(Exception, match="Profile"):
-        _change_profile("non-existing")
+        change_profile("non-existing")

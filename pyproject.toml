@@ -14,7 +14,7 @@ requires-python = ">=3.10"
 dynamic = ["dependencies", "version"]
 
 [project.scripts]
-fourcipp-switch-profile = "fourcipp.utils.configuration:change_profile_cli"
+fourcipp = "fourcipp.utils.cli:main"
 
 [tool.setuptools.dynamic]
 dependencies = { file = ["requirements.in"] } # No versions fixed
@@ -38,6 +38,7 @@ local_scheme = "no-local-version"
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-p pytest_cov --cov-report=term --cov-report=html --cov-fail-under=90 --cov=src/fourcipp/"
-markers = [
-    "performance: mark test as a performance test"
-]
+markers = ["performance: mark test as a performance test"]
+
+[tool.coverage.run]
+omit = ["src/fourcipp/utils/cli.py"]

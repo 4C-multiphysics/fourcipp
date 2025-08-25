@@ -42,7 +42,7 @@ jobs:
         shell: bash -el {0}
         run: |
           conda activate fourcipp
-          pytest --color=yes -v --performance-tests
+          pytest --color=yes -v --performance-tests --no-cov
           cat timings.md >> $GITHUB_STEP_SUMMARY
 
   run_pytest_with_4C:
@@ -69,9 +69,11 @@ jobs:
           pip install -e .[dev,safe]
       - name: Run pytest using 4C_docker_main config
         run: |
-          fourcipp-switch-profile 4C_docker_main
+          fourcipp switch-config-profile 4C_docker_main
           pytest --color=yes -v
       - name: Run pytest using default config
+        # For this job coverage is turned off, otherwise the checks would fail.
+        # Coverage is done in the 4C docker job, as here 4C test input files are available.
         run: |
-          fourcipp-switch-profile default
-          pytest --color=yes -v
+          fourcipp switch-config-profile default
+          pytest --color=yes -v --no-cov
