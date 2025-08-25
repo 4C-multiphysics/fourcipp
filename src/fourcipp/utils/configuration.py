@@ -21,9 +21,7 @@
 # THE SOFTWARE.
 """Configuration utils."""
 
-import argparse
 import pathlib
-import sys
 
 from loguru import logger
 
@@ -93,14 +91,16 @@ def profile_description() -> str:
     return string
 
 
-def _change_profile(profile: str) -> None:
+def change_profile(profile: str) -> None:
     """Change config profile.
 
     Args:
         profile: Profil name to set
     """
+    logger.info(profile_description())
+
     if profile not in CONFIG["profiles"]:
-        raise Exception(
+        raise KeyError(
             f"Profile {profile} is not known provided. Known profiles are: {list_profiles()}"
         )
     CONFIG["profile"] = profile
@@ -108,21 +108,16 @@ def _change_profile(profile: str) -> None:
     dump_yaml(CONFIG, CONFIG_FILE)
 
 
-def change_profile_cli() -> None:
-    """Change Config profile using CLI."""
-    parser = argparse.ArgumentParser()
+def change_user_defaults_path(user_defaults_path: str) -> None:
+    """Replace user defaults path."""
+    logger.info(f"Setting user defaults path to '{user_defaults_path}'")
+    CONFIG["user_defaults_path"] = user_defaults_path
+    dump_yaml(CONFIG, CONFIG_FILE)
 
-    parser.add_argument(
-        "profile",
-        help=f"FourCIPP config profile",
-        type=str,
-    )
-    logger.enable("fourcipp")
-    logger.remove()
-    logger.add(sys.stdout, format="{message}")
 
-    logger.info(profile_description())
-    args = parser.parse_args()
-
-    if "profile" in args:
-        _change_profile(args.profile)
+def show_config() -> None:
+    """Show FourCIPP config."""
+    logger.info("Fourcipp configuration")
+    logger.info(f"  Config file: {CONFIG_FILE.resolve()}")
+    logger.info("  Contents:")
+    logger.info("    " + "\n    ".join(CONFIG_FILE.read_text().split("\n")))

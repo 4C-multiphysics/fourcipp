@@ -8,3 +8,4 @@ profiles:
     4C_metadata_path: /home/user/4C/build/4C_metadata.yaml
     json_schema_path: /home/user/4C/build/4C_schema.json
     description: 4C metadata in the main 4C docker image
+user_defaults_path: Null

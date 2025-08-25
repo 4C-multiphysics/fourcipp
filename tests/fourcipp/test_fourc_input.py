@@ -334,7 +334,7 @@ def test_dump_with_includes(
 
 
 def test_dump_with_includes_invert_sections(
-    fourc_input_combined, tmp_path, section_names, section_names_2
+    fourc_input_combined, tmp_path, section_names
 ):
     """Test dump with includes with invert sections."""
     path_1 = tmp_path / "path_1.4C.yaml"
@@ -370,6 +370,7 @@ def get_4C_test_input_files():
         "solid_ele_tet4_Standard_linear.4C.yaml",
         "tsi_meshtying_nurbs.4C.yaml",
         "xfsi_comp_struct_fsi_2D_mono_slip.4C.yaml",
+        "xfsi_3D_boxes.4C.yaml",  # test domain
     ]
 
     return [str(test_files_directory / file) for file in files]
@@ -578,7 +579,7 @@ def save_timings(timings: dict, file: str) -> None:
     if not file.endswith(".md"):
         raise ValueError("File must be a markdown file ending with .md!")
 
-    with open(file, "w") as f:
+    with open(file, "w", encoding="utf-8") as f:
         f.write("# Performance Timings :rocket:\n\n")
         f.write("| Operation         | Time (seconds)  |\n")
         f.write("|-------------------|-----------------|\n")
@@ -593,26 +594,27 @@ def test_performance(tmp_path) -> None:
     dummy_elements = create_dummy_elements()
     dummy_knotvectors = create_dummy_knotvectors()
 
-    input = FourCInput()
+    fourc_input = FourCInput()
 
     timings = {}
 
     # Evaluate execution time of adding elements and knotvectors to input file
     timings["add_elements"] = evaluate_execution_time(
-        input.combine_sections, args={"other": dummy_elements}
+        fourc_input.combine_sections, args={"other": dummy_elements}
     )
     timings["add_knotvectors"] = evaluate_execution_time(
-        input.combine_sections, args={"other": dummy_knotvectors}
+        fourc_input.combine_sections, args={"other": dummy_knotvectors}
     )
 
     # Evaluate execution time of validating the input file
     timings["validate"] = evaluate_execution_time(
-        input.validate, args={"sections_only": True}
+        fourc_input.validate, args={"sections_only": True}
     )
 
     # Evaluate performance of dumping the input file
     timings["dump"] = evaluate_execution_time(
-        input.dump, args={"input_file_path": tmp_path / "performance_test.4C.yaml"}
+        fourc_input.dump,
+        args={"input_file_path": tmp_path / "performance_test.4C.yaml"},
     )
 
     # Evaluate performance of loading the input file
