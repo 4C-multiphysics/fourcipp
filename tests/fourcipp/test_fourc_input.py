@@ -250,29 +250,62 @@ def test_combine_sections_failure_doubled_data_dict(fourc_input):
 
 
 def test_overwrite_sections_new_section_dict(fourc_input):
-    """Test overwriting sections that does not exits."""
+    """Test overwriting sections that does not exist."""
     fourc_input.overwrite_sections({"TITLE": "new title"})
-    fourc_input["TITLE"] == "new title"
+    assert fourc_input["TITLE"] == "new title"
 
 
 def test_overwrite_sections_existing_section_dict(fourc_input):
-    """Test overwriting sections that already exits."""
+    """Test overwriting sections that already exist."""
     fourc_input["TITLE"] = "new title"
     fourc_input.overwrite_sections({"TITLE": "super new title"})
     assert fourc_input["TITLE"] == "super new title"
 
 
 def test_overwrite_sections_new_section_input(fourc_input):
-    """Test overwriting sections that does not exits."""
+    """Test overwriting sections that does not exist."""
     fourc_input.overwrite_sections(FourCInput({"TITLE": "new title"}))
-    fourc_input["TITLE"] == "new title"
+    assert fourc_input["TITLE"] == "new title"
 
 
 def test_overwrite_sections_existing_section_input(fourc_input):
-    """Test overwriting sections that already exits."""
+    """Test overwriting sections that already exist."""
     fourc_input["TITLE"] = "new title"
     fourc_input.overwrite_sections(FourCInput({"TITLE": "super new title"}))
     assert fourc_input["TITLE"] == "super new title"
+
+
+def test_apply_default(tmp_path):
+    """Test using a default file.
+
+    4C default file with a section that is not in the input file and one
+    that is. A section containing a list should not be added.
+    """
+
+    # Creating the default file
+    path_to_default = tmp_path / "default.4C.yaml"
+    default_input = FourCInput({"PROBLEM TYPE": {"PROBLEMTYPE": "default problemtype"}})
+    default_input["PROBLEM SIZE"] = {"DIM": 3}
+    default_input["MATERIALS"] = [
+        {"MAT": 1, "MAT_Struct_StVenantKirchhoff": {"YOUNG": 1, "NUE": 0.3}}
+    ]
+    default_input.dump(path_to_default)
+
+    # writing some entries to the current fourc_input
+    fourc_input = FourCInput({"SOLVER 1": {"NAME": "current title"}})
+    fourc_input["PROBLEM TYPE"] = {"PROBLEMTYPE": "current problemtype"}
+
+    # Applying the defaults
+    fourc_input.apply_user_defaults(path_to_default)
+
+    # Only in current input
+    assert fourc_input["SOLVER 1"] == {"NAME": "current title"}
+    # Defined in default, overwritten by current input
+    assert fourc_input["PROBLEM TYPE"] == {"PROBLEMTYPE": "current problemtype"}
+    # Defined in default, not in current input -> should be taken
+    assert fourc_input["PROBLEM SIZE"] == {"DIM": 3}
+    # should not be taken even though it is in the default file, because it is a list
+    assert not "MATERIALS" in fourc_input
 
 
 def test_add(fourc_input, fourc_input_2, fourc_input_combined):
