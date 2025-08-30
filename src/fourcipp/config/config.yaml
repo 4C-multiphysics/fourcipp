@@ -1,11 +1,12 @@
 profile: "default"
 profiles:
   default:
-    4C_metadata_path: "4C_metadata.yaml"
-    json_schema_path: "4C_schema.json"
-    description: "4C metadata from the latest successful nightly 4C build"
+    fourc_metadata_path: "4C_metadata.yaml"
+    fourc_json_schema_path: "4C_schema.json"
+    description: "Profile for the latest successful nightly 4C build"
+    user_defaults_path: null
   4C_docker_main:
-    4C_metadata_path: "/home/user/4C/build/4C_metadata.yaml"
-    json_schema_path: "/home/user/4C/build/4C_schema.json"
-    description: "4C metadata in the main 4C docker image"
-user_defaults_path: null
+    fourc_metadata_path: "/home/user/4C/build/4C_metadata.yaml"
+    fourc_json_schema_path: "/home/user/4C/build/4C_schema.json"
+    description: "Profile for the 4C docker build main"
+    user_defaults_path: null

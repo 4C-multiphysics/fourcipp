@@ -31,12 +31,12 @@ from fourcipp import CONFIG
 from fourcipp.fourc_input import FourCInput
 from fourcipp.utils.configuration import (
     change_profile,
-    change_user_defaults_path,
     show_config,
 )
+from fourcipp.utils.typing import Path
 
 
-def modify_input_with_defaults(input_path: pathlib.Path, overwrite: bool) -> None:
+def modify_input_with_defaults(input_path: Path, overwrite: bool) -> None:
     """Apply user defaults to an input file located at input_path.
 
     Args:
@@ -46,10 +46,11 @@ def modify_input_with_defaults(input_path: pathlib.Path, overwrite: bool) -> Non
     """
     output_appendix = "_mod"
 
+    input_path = pathlib.Path(input_path)
     if not input_path.is_file():
         raise FileNotFoundError(f"Input file '{input_path}' does not exist.")
     input_data = FourCInput.from_4C_yaml(input_path)
-    user_defaults_string = CONFIG["user_defaults_path"]
+    user_defaults_string = CONFIG.user_defaults_path
     input_data.apply_user_defaults(user_defaults_string)
     if overwrite:
         output_filename = input_path
@@ -90,16 +91,6 @@ def main() -> None:
         type=str,
     )
 
-    # Switch user defaults parser
-    switch_user_defaults_path_parser = subparsers.add_parser(
-        "switch-user-defaults-path", help="Switch user defaults path config profile."
-    )
-    switch_user_defaults_path_parser.add_argument(
-        "user-defaults-path",
-        help=f"FourCIPP user defaults path.",
-        type=str,
-    )
-
     # Apply user defaults parser
     apply_user_defaults_parser = subparsers.add_parser(
         "apply-user-defaults",
@@ -131,8 +122,6 @@ def main() -> None:
             show_config()
         case "switch-config-profile":
             change_profile(**kwargs)
-        case "switch-user-defaults-path":
-            change_user_defaults_path(**kwargs)
         case "apply-user-defaults":
             input_path = pathlib.Path(kwargs.pop("input_file"))
             overwrite = kwargs.pop("overwrite")

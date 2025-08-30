@@ -59,11 +59,11 @@ def element_data_casting_factory(
 
 
 _element_data_casting: ElementCastingDict = element_data_casting_factory(
-    CONFIG["4C_metadata"]["legacy_element_specs"]
+    CONFIG.fourc_metadata["legacy_element_specs"]
 )
 
 
-CELL_TYPES = CONFIG["4C_metadata"]["cell_types"]
+CELL_TYPES = CONFIG.fourc_metadata["cell_types"]
 
 
 def read_element(

@@ -31,7 +31,7 @@ from typing import Any
 
 from loguru import logger
 
-from fourcipp.constants import ALL_SECTIONS, CONFIG, LEGACY_SECTIONS, SECTIONS
+from fourcipp import CONFIG
 from fourcipp.legacy_io import (
     inline_legacy_sections,
     interpret_legacy_section,
@@ -43,33 +43,41 @@ from fourcipp.utils.typing import Path
 from fourcipp.utils.validation import ValidationError, validate_using_json_schema
 from fourcipp.utils.yaml_io import dump_yaml, load_yaml
 
+# Converter for the FourCInput
+CONVERTER = Converter()
+
 
 class UnknownSectionException(Exception):
     """Unknown section exception."""
 
 
-def is_section_known(section_name: str) -> bool:
+def is_section_known(section_name: str, known_section_names: list[str]) -> bool:
     """Returns if section in known.
 
     Does not apply to legacy sections.
 
     Args:
         section_name: Name of the section to check
+        known_section_names: Names of known sections
 
     Returns:
         True if section is known.
     """
-    return section_name in SECTIONS or section_name.startswith("FUNCT")
-
-
-# Converter for the FourCInput
-CONVERTER = Converter()
+    return section_name in known_section_names or section_name.startswith("FUNCT")
 
 
 class FourCInput:
     """4C inout file object."""
 
-    known_sections: list = ALL_SECTIONS
+    # All known sections
+    all_sections_names: list[str] = CONFIG.sections.all_sections
+
+    # Legacy sections, these are not supported in the 4C JSON schema
+    legacy_sections_names: list[str] = CONFIG.sections.legacy_sections
+
+    # All sections for which the types are known, aka, non-legacy
+    typed_sections_names: list[str] = CONFIG.sections.typed_sections
+
     type_converter: Converter = CONVERTER
 
     def convert_to_native_types(self) -> None:
@@ -108,7 +116,7 @@ class FourCInput:
         """
         data = load_yaml(input_file_path)
         if header_only:
-            for section in LEGACY_SECTIONS:
+            for section in cls.legacy_sections_names:
                 data.pop(section, None)
         return cls(data)
 
@@ -119,7 +127,9 @@ class FourCInput:
         Returns:
             dict: With all set sections in inline dat style
         """
-        return self._sections | inline_legacy_sections(self._legacy_sections.copy())
+        return self._sections | inline_legacy_sections(
+            self._legacy_sections.copy(), self.legacy_sections_names
+        )
 
     def __repr__(self) -> str:
         """Representation string.
@@ -159,15 +169,17 @@ class FourCInput:
         if key in self.sections:
             logger.warning(f"Section {key} was overwritten.")
         # Nice sections
-        if is_section_known(key):
+        if is_section_known(key, self.typed_sections_names):
             self._sections[key] = value
         # Legacy sections
-        elif key in LEGACY_SECTIONS:
+        elif key in self.legacy_sections_names:
             # Is a list needs to be interpreted to dict
             if isinstance(value, list):
                 if not any([isinstance(v, dict) for v in value]):
                     logger.debug(f"Interpreting section {key}")
-                    self._legacy_sections[key] = interpret_legacy_section(key, value)
+                    self._legacy_sections[key] = interpret_legacy_section(
+                        key, value, self.legacy_sections_names
+                    )
                 else:
                     # Sections are in dict form
                     self._legacy_sections[key] = value
@@ -180,7 +192,7 @@ class FourCInput:
             # Fancy error message
             raise UnknownSectionException(
                 f"Unknown section '{key}'. Did you mean "
-                f"'{difflib.get_close_matches(key.upper(), ALL_SECTIONS, n=1, cutoff=0.3)[0]}'?"
+                f"'{difflib.get_close_matches(key.upper(), self.all_sections_names, n=1, cutoff=0.3)[0]}'?"
                 " Call FourCInputFile.known_sections for a complete list."
             )
 
@@ -194,7 +206,7 @@ class FourCInput:
             Section value
         """
         # Nice sections
-        if is_section_known(key):
+        if is_section_known(key, self.typed_sections_names):
             return self._sections[key]
         # Legacy sections
         elif key in self._legacy_sections:
@@ -202,7 +214,7 @@ class FourCInput:
         else:
             sections = "\n - ".join(self.get_section_names())
             raise UnknownSectionException(
-                f"Section '{key}' not set. Did out mean '{difflib.get_close_matches(key.upper(), ALL_SECTIONS, n=1, cutoff=0.3)[0]}'? The set sections are:\n - {sections}"
+                f"Section '{key}' not set. Did out mean '{difflib.get_close_matches(key.upper(), self.all_sections_names, n=1, cutoff=0.3)[0]}'? The set sections are:\n - {sections}"
             )
 
     def pop(self, key: str, default_value: Any = NotSet) -> Any:
@@ -223,7 +235,7 @@ class FourCInput:
         # Section is not set
         else:
             # Known section
-            if key in self.known_sections:
+            if key in self.all_sections_names:
                 # Default value was provided
                 if check_if_set(default_value):
                     return default_value
@@ -236,7 +248,7 @@ class FourCInput:
             else:
                 raise UnknownSectionException(
                     f"Unknown section '{key}'. Did you mean "
-                    f"'{difflib.get_close_matches(key.upper(), ALL_SECTIONS, n=1, cutoff=0.3)[0]}'?"
+                    f"'{difflib.get_close_matches(key.upper(), self.all_sections_names, n=1, cutoff=0.3)[0]}'?"
                     " Call FourCInputFile.known_sections for a complete list."
                 )
 
@@ -286,7 +298,7 @@ class FourCInput:
             raise TypeError(f"Cannot overwrite sections from {type(other)}.")
 
     def apply_user_defaults(
-        self, default_path: str = CONFIG["user_defaults_path"]
+        self, default_path: Path | None = CONFIG.user_defaults_path
     ) -> None:
         """Combines two Inputs by overwriting current values by a file
         containing user defaults.
@@ -298,7 +310,7 @@ class FourCInput:
             default_path: String containing the path to the YAML file with user defaults
         """
         if default_path is None:
-            raise ValueError("User defaults path is not set in the config.")
+            raise ValueError(f"User defaults path is not set in the config: {CONFIG}")
         logger.info(f"Applying user defaults from '{default_path}''.")
         user_defaults_path = pathlib.Path(default_path)
         default_input = FourCInput.from_4C_yaml(user_defaults_path, header_only=True)
@@ -440,7 +452,7 @@ class FourCInput:
 
     def validate(
         self,
-        json_schema: dict = CONFIG["json_schema"],
+        json_schema: dict = CONFIG.fourc_json_schema,
         sections_only: bool = False,
         convert_to_native_types: bool = True,
     ) -> bool:
@@ -467,7 +479,7 @@ class FourCInput:
 
         # Legacy sections are only checked if they are of type string
         for section_name, section in inline_legacy_sections(
-            self._legacy_sections.copy()
+            self._legacy_sections.copy(), self.legacy_sections_names
         ).items():
             for i, k in enumerate(section):
                 if not isinstance(k, str):

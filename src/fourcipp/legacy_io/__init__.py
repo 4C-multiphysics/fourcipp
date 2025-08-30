@@ -23,7 +23,6 @@
 
 from collections.abc import Callable, Sequence
 
-from fourcipp.constants import LEGACY_SECTIONS
 from fourcipp.legacy_io.element import read_element, write_element
 from fourcipp.legacy_io.node import read_node, write_node
 from fourcipp.legacy_io.node_topology import read_node_topology, write_node_topology
@@ -44,7 +43,9 @@ def _iterate_and_evaluate(function: Callable[..., T], iterable: Sequence) -> lis
     return [function(line) for line in iterable]
 
 
-def interpret_legacy_section(legacy_section: str, section_data: list) -> dict | list:
+def interpret_legacy_section(
+    legacy_section: str, section_data: list, known_legacy_sections: list
+) -> dict | list:
     """Interpret legacy section.
 
     Transform line into usable data.
@@ -52,13 +53,14 @@ def interpret_legacy_section(legacy_section: str, section_data: list) -> dict | 
     Args:
         legacy_section: Section name
         section_data: Section data
+        known_legacy_sections: Known legacy sections
 
     Returns:
         Interpreted data
     """
-    if legacy_section not in LEGACY_SECTIONS:
+    if legacy_section not in known_legacy_sections:
         raise ValueError(
-            f"Section {legacy_section} is not a known legacy section. Current legacy sections are {', '.join(LEGACY_SECTIONS)}"
+            f"Section {legacy_section} is not a known legacy section. Current legacy sections are {', '.join(known_legacy_sections)}"
         )
 
     match legacy_section:
@@ -80,23 +82,28 @@ def interpret_legacy_section(legacy_section: str, section_data: list) -> dict | 
             )
 
 
-def interpret_legacy_sections(legacy_sections: dict) -> dict:
+def interpret_legacy_sections(
+    legacy_sections: dict, known_legacy_sections: list
+) -> dict:
     """Interpret all legacy sections.
 
     Args:
         legacy_sections: Legacy sections and data
+        known_legacy_sections: Known legacy sections
 
     Returns:
         Interpreted legacy sections
     """
     for legacy_section, section in legacy_sections.items():
         legacy_sections[legacy_section] = interpret_legacy_section(
-            legacy_section, section
+            legacy_section, section, known_legacy_sections
         )
     return legacy_sections
 
 
-def inline_legacy_section(legacy_section: str, section_data: dict | list) -> list:
+def inline_legacy_section(
+    legacy_section: str, section_data: dict | list, known_legacy_sections: list
+) -> list:
     """Inline legacy section.
 
     Transform dict form of the section into the inline dat style.
@@ -104,6 +111,7 @@ def inline_legacy_section(legacy_section: str, section_data: dict | list) -> lis
     Args:
         legacy_section: Section name
         section_data: Section data
+        known_legacy_sections: Known legacy sections
 
     Returns:
         Inlined data
@@ -132,20 +140,23 @@ def inline_legacy_section(legacy_section: str, section_data: dict | list) -> lis
 
         case _:
             raise ValueError(
-                f"Section {legacy_section} is not a known legacy section. Current legacy sections are {', '.join(LEGACY_SECTIONS)}"
+                f"Section {legacy_section} is not a known legacy section. Current legacy sections are {', '.join(known_legacy_sections)}"
             )
 
 
-def inline_legacy_sections(legacy_sections: dict) -> dict:
+def inline_legacy_sections(legacy_sections: dict, known_legacy_sections: list) -> dict:
     """Inline all legacy sections.
 
     Args:
         legacy_sections: Legacy sections and data
+        known_legacy_sections: Known legacy sections
 
     Returns:
         Inline legacy sections
     """
 
     for legacy_section, section in legacy_sections.items():
-        legacy_sections[legacy_section] = inline_legacy_section(legacy_section, section)
+        legacy_sections[legacy_section] = inline_legacy_section(
+            legacy_section, section, known_legacy_sections
+        )
     return legacy_sections

@@ -21,19 +21,121 @@
 # THE SOFTWARE.
 """Configuration utils."""
 
+from __future__ import annotations
+
 import pathlib
+from dataclasses import dataclass, field
 
 from loguru import logger
 
+from fourcipp.utils.typing import Path
 from fourcipp.utils.yaml_io import dump_yaml, load_yaml
 
 CONFIG_PACKAGE: pathlib.Path = pathlib.Path(__file__).parents[1] / "config"
 CONFIG_FILE: pathlib.Path = CONFIG_PACKAGE / "config.yaml"
 
-CONFIG: dict = load_yaml(CONFIG_FILE)
+
+class Sections:
+    def __init__(self, legacy_sections: list[str], typed_sections: list[str]):
+        """Sections data container.
+
+        Args:
+            legacy_sections: Legacy sections, i.e., their information is not provided in the schema file
+            typed_sections: Typed sections, non-legacy sections natively supported by the schema
+        """
+        self.legacy_sections: list[str] = legacy_sections
+        self.typed_sections: list[str] = typed_sections
+        self.all_sections: list[str] = legacy_sections + typed_sections
+
+    @classmethod
+    def from_metadata(cls, fourc_metadata: dict) -> Sections:
+        """Get section names from metadata.
+
+        Args:
+            fourc_metadata (dict): 4C metadata
+
+        Returns:
+            Sections: sections object
+        """
+        description_section = fourc_metadata["metadata"]["description_section_name"]
+        sections = [
+            section["name"] for section in fourc_metadata["sections"]["specs"]
+        ] + [description_section]
+        legacy_sections = list(fourc_metadata["legacy_string_sections"])
+
+        return cls(legacy_sections, sections)
 
 
-def load_config() -> dict:
+@dataclass
+class ConfigProfile:
+    """Fourcipp configuration profile.
+
+    Attributes:
+        name: Name of the configuration profile
+        description: Description of the profile
+        fourc_metadata_path: Path to metadata yaml file
+        json_schema_path: Path to json schema path
+        user_defaults_path: Path to user specific defaults
+    """
+
+    name: str
+    description: str
+    fourc_metadata_path: Path
+    fourc_json_schema_path: Path
+    user_defaults_path: Path | None = None
+    fourc_metadata: dict = field(init=False)
+    fourc_json_schema: dict = field(init=False)
+    sections: Sections = field(init=False)
+
+    def __post_init__(self) -> None:
+        """Update stuff."""
+        self.fourc_metadata_path = pathlib.Path(self.fourc_metadata_path)
+        self.fourc_metadata = ConfigProfile._load_data_from_path(
+            self.fourc_metadata_path
+        )
+        self.sections = Sections.from_metadata(self.fourc_metadata)
+
+        self.fourc_json_schema_path = pathlib.Path(self.fourc_json_schema_path)
+        self.fourc_json_schema = ConfigProfile._load_data_from_path(
+            self.fourc_json_schema_path
+        )
+
+        if self.user_defaults_path is not None:
+            self.user_defaults_path = pathlib.Path(self.user_defaults_path)
+            if not self.user_defaults_path.is_file():
+                raise FileNotFoundError(
+                    f"User defaults file '{self.user_defaults_path}' does not exist."
+                )
+
+    @staticmethod
+    def _load_data_from_path(path: Path) -> dict:
+        """Load data from path."""
+        if not pathlib.Path(path).is_absolute():
+            # Assumption: Path is relative to FourCIPP config package
+            logger.debug(
+                f"Path {path} is a relative path. The absolute path is set to {CONFIG_PACKAGE / path}"
+            )
+            path = CONFIG_PACKAGE / path
+        return load_yaml(path)
+
+    def __str__(self) -> str:
+        """String method for the config."""
+
+        def add_keyword(name: str, data: object) -> str:
+            """Create keyword description line."""
+            return f"\n - {name}: {data}"
+
+        s = f"FourCIPP configuration '{self.name}'"
+        s += add_keyword("Configuration file", CONFIG_FILE)
+        s += add_keyword("Description", self.description)
+        s += add_keyword("4C metadata path", self.fourc_json_schema_path)
+        s += add_keyword("4C JSON schema path", self.fourc_json_schema_path)
+        s += add_keyword("User default path", self.user_defaults_path)
+
+        return s
+
+
+def load_config() -> ConfigProfile:
     """Set config profile.
 
     Args:
@@ -42,60 +144,14 @@ def load_config() -> dict:
     Returns:
         user config.
     """
-
-    profile = CONFIG["profile"]
+    config_data: dict = load_yaml(CONFIG_FILE)
+    profile_name = config_data["profile"]
+    profile = config_data["profiles"][profile_name]
     logger.debug(f"Reading config profile {profile}")
 
-    config = {"profile": profile}
-
-    def load_yaml_for_config(config_data_name: str) -> None:
-        """Load data from paths in config."""
-        data = CONFIG["profiles"][profile][config_data_name + "_path"]
-
-        if data is not None:
-            if not pathlib.Path(data).is_absolute():
-                # Assumption: Path is relative to FourCIPP config package
-                data = CONFIG_PACKAGE / data
-
-            config[config_data_name + "_path"] = data
-            config[config_data_name] = load_yaml(data)
-        else:
-            logger.warning(f"Config path {config_data_name}_path was not set.")
-
-    load_yaml_for_config("4C_metadata")
-    load_yaml_for_config("json_schema")
-
-    user_defaults_string = CONFIG["user_defaults_path"]
-    if (user_defaults_string) and (not pathlib.Path(user_defaults_string).is_file()):
-        raise FileNotFoundError(
-            f"User defaults file '{user_defaults_string}' does not exist."
-        )
-    config["user_defaults_path"] = CONFIG["user_defaults_path"]
-
+    config = ConfigProfile(name=profile_name, **profile)
+    logger.debug(config)
     return config
-
-
-def list_profiles() -> str:
-    """List all config profiles.
-
-    Returns:
-        Fancy listing of profiles
-    """
-    profiles = [f"\t{k}: {v['description']}" for k, v in CONFIG["profiles"].items()]
-    return "\n" + "\n".join(profiles)
-
-
-def profile_description() -> str:
-    """Config profile description.
-
-    Returns:
-        Fancy description
-    """
-    string = f"FourCIPP\n\n  with config profile {CONFIG['profile']}:"
-    for k, v in CONFIG["profiles"][CONFIG["profile"]].items():
-        string += f"\n   - {k}: {v}"
-    string += "\n"
-    return string
 
 
 def change_profile(profile: str) -> None:
@@ -104,24 +160,16 @@ def change_profile(profile: str) -> None:
     Args:
         profile: Profil name to set
     """
-    logger.info(profile_description())
+    config_data: dict = load_yaml(CONFIG_FILE)
 
-    if profile not in CONFIG["profiles"]:
+    if profile not in config_data["profiles"]:
+        known_profiles = ", ".join(config_data["profiles"])
         raise KeyError(
-            f"Profile {profile} is not known provided. Known profiles are: {list_profiles()}"
+            f"Profile {profile} unknown. Known profiles are: {known_profiles}"
         )
-    CONFIG["profile"] = profile
+    config_data["profile"] = profile
     logger.info(f"Changing to config profile '{profile}'")
-    dump_yaml(CONFIG, CONFIG_FILE)
-
-
-def change_user_defaults_path(user_defaults_path: str) -> None:
-    """Replace user defaults path."""
-    if not pathlib.Path(user_defaults_path).is_file():
-        raise FileNotFoundError(f"Input file '{user_defaults_path}' does not exist.")
-    logger.info(f"Setting user defaults path to '{user_defaults_path}'")
-    CONFIG["user_defaults_path"] = user_defaults_path
-    dump_yaml(CONFIG, CONFIG_FILE)
+    dump_yaml(config_data, CONFIG_FILE)
 
 
 def show_config() -> None:

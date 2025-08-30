@@ -33,7 +33,7 @@ from fourcipp.legacy_io.inline_dat import (
 )
 from fourcipp.utils.typing import LineCastingDict
 
-_particle_casting = casting_factory(CONFIG["4C_metadata"]["legacy_particle_specs"])
+_particle_casting = casting_factory(CONFIG.fourc_metadata["legacy_particle_specs"])
 
 
 def read_particle(

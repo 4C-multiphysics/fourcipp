@@ -30,4 +30,8 @@ from fourcipp.legacy_io import inline_legacy_section, interpret_legacy_section
 def test_unknown_section(function):
     """Test unknown section."""
     with pytest.raises(ValueError, match="Section "):
-        function("unknown_section", {"dummy": "data"})
+        function(
+            "unknown_section",
+            {"dummy": "data"},
+            known_legacy_sections=["the", "known", "sections"],
+        )

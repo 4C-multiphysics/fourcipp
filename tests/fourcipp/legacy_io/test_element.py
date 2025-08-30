@@ -29,7 +29,7 @@ from fourcipp.legacy_io.element import (
     write_element,
 )
 
-CELL_TYPES = CONFIG["4C_metadata"]["cell_types"]
+CELL_TYPES = CONFIG.fourc_metadata["cell_types"]
 from .utils import reference_value_from_all_of
 
 
@@ -60,7 +60,7 @@ def generate_elements_from_metadatafile():
     Returns:
         list: list of inline elements
     """
-    data = CONFIG["4C_metadata"]["legacy_element_specs"]
+    data = CONFIG.fourc_metadata["legacy_element_specs"]
 
     elements = []
     # Loop over element types

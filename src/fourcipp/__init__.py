@@ -23,7 +23,7 @@
 
 from loguru import logger
 
-from fourcipp.utils.configuration import load_config, profile_description
+from fourcipp.utils.configuration import load_config
 
 # Disable FourCIPP logging by default if desired enable it in your own project
 logger.disable("fourcipp")
@@ -31,4 +31,4 @@ logger.disable("fourcipp")
 # Load the config
 CONFIG = load_config()
 
-logger.info(profile_description())
+logger.info(CONFIG)

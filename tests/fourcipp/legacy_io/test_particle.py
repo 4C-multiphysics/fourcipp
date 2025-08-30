@@ -34,7 +34,7 @@ def fixture_reference_particle_line():
     """Reference particle."""
 
     particle = reference_value_from_all_of(
-        CONFIG["4C_metadata"]["legacy_particle_specs"]
+        CONFIG.fourc_metadata["legacy_particle_specs"]
     )
     return particle
 

@@ -45,16 +45,16 @@ from ..fourcipp.legacy_io.test_element import (  # noqa: TID252
 @pytest.fixture(name="section_names")
 def fixture_section_names():
     """Section names."""
-    section_name_1 = CONFIG["4C_metadata"]["sections"]["specs"][0]["name"]
-    section_name_2 = CONFIG["4C_metadata"]["sections"]["specs"][1]["name"]
+    section_name_1 = CONFIG.fourc_metadata["sections"]["specs"][0]["name"]
+    section_name_2 = CONFIG.fourc_metadata["sections"]["specs"][1]["name"]
     return section_name_1, section_name_2
 
 
 @pytest.fixture(name="section_names_2")
 def fixture_section_names_2():
     """More section names."""
-    section_name_3 = CONFIG["4C_metadata"]["sections"]["specs"][2]["name"]
-    section_name_4 = CONFIG["4C_metadata"]["sections"]["specs"][3]["name"]
+    section_name_3 = CONFIG.fourc_metadata["sections"]["specs"][2]["name"]
+    section_name_4 = CONFIG.fourc_metadata["sections"]["specs"][3]["name"]
     return section_name_3, section_name_4
 
 
@@ -316,7 +316,7 @@ def test_apply_user_defaults(
 
     # change user_default_path to tmp_path/user_defaults.4C.yaml
     # This cannot be done using the cli function change_user_defaults_path
-    CONFIG["user_defaults_path"] = str(tmp_path / "user_defaults.4C.yaml")
+    CONFIG.user_defaults_path = tmp_path / "user_defaults.4C.yaml"
     # dump fourc_input to tmp_path/current_input.4C.yaml
     fourc_input.dump(tmp_path / "current_input.4C.yaml")
     # dump fourc_input_2 to user_default_path
@@ -437,9 +437,7 @@ class SubprocessError(Exception):
     """Subprocess failure."""
 
 
-@pytest.mark.skipif(
-    CONFIG["profile"] != "4C_docker_main", reason="Not using docker config."
-)
+@pytest.mark.skipif(CONFIG.name != "4C_docker_main", reason="Not using docker config.")
 @pytest.mark.parametrize("fourc_file", FOURC_TEST_INPUT_FILES)
 def test_roundtrip_test(fourc_file, tmp_path):
     """Roundtrip test."""
