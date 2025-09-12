@@ -28,7 +28,7 @@ from dataclasses import dataclass, field
 
 from loguru import logger
 
-from fourcipp.utils.typing import Path
+from fourcipp.utils.type_hinting import Path
 from fourcipp.utils.yaml_io import dump_yaml, load_yaml
 
 CONFIG_PACKAGE: pathlib.Path = pathlib.Path(__file__).parents[1] / "config"

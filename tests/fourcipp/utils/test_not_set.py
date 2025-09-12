@@ -23,11 +23,11 @@
 
 import pytest
 
-from fourcipp.utils.not_set import NotSet, check_if_set, pop_arguments
+from fourcipp.utils.not_set import NOT_SET, NotSet, check_if_set, pop_arguments
 
 
 @pytest.mark.parametrize(
-    "obj, expected_result", [("a", True), (2, True), ({2: 3}, True), (NotSet, False)]
+    "obj, expected_result", [("a", True), (2, True), ({2: 3}, True), (NOT_SET, False)]
 )
 def test_check_if_set(obj, expected_result):
     """Test check if set."""
@@ -42,3 +42,9 @@ def test_pop_arguments_without_default():
 def test_pop_arguments_with_default():
     """Assert pop arguments with default."""
     assert pop_arguments("key", "default") == ("key", "default")
+
+
+def test_expected():
+    """Test expected."""
+    a = NotSet(int)
+    assert a.expected == int

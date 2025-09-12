@@ -27,7 +27,7 @@ from fourcipp.legacy_io.element import read_element, write_element
 from fourcipp.legacy_io.node import read_node, write_node
 from fourcipp.legacy_io.node_topology import read_node_topology, write_node_topology
 from fourcipp.legacy_io.particle import read_particle, write_particle
-from fourcipp.utils.typing import T
+from fourcipp.utils.type_hinting import T
 
 
 def _iterate_and_evaluate(function: Callable[..., T], iterable: Sequence) -> list[T]:

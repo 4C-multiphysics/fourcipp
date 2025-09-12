@@ -33,7 +33,7 @@ from fourcipp.utils.configuration import (
     change_profile,
     show_config,
 )
-from fourcipp.utils.typing import Path
+from fourcipp.utils.type_hinting import Path
 from fourcipp.utils.yaml_io import dump_yaml, load_yaml
 
 

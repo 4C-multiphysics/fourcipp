@@ -31,7 +31,7 @@ from fourcipp.legacy_io.inline_dat import (
     inline_dat_read,
     to_dat_string,
 )
-from fourcipp.utils.typing import LineCastingDict
+from fourcipp.utils.type_hinting import LineCastingDict
 
 _particle_casting = casting_factory(CONFIG.fourc_metadata["legacy_particle_specs"])
 

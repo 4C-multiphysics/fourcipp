@@ -25,6 +25,8 @@ import pathlib
 from collections.abc import Callable
 from typing import TypeAlias, TypeVar
 
+from fourcipp.utils.not_set import NotSet
+
 # Generic type variable
 T = TypeVar("T")
 
@@ -37,3 +39,6 @@ Extractor: TypeAlias = Callable[[str], T]
 LineListExtractor: TypeAlias = Callable[[list[str]], T]
 LineCastingDict: TypeAlias = dict[str, LineListExtractor]
 NestedCastingDict: TypeAlias = dict[str, LineCastingDict | LineListExtractor]
+
+# NotSet
+NotSetAlias: TypeAlias = NotSet | T

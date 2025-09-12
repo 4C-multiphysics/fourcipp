@@ -41,8 +41,8 @@ from fourcipp.utils.dict_utils import (
     compare_nested_dicts_or_lists,
     sort_by_key_order,
 )
-from fourcipp.utils.not_set import NotSet, check_if_set
-from fourcipp.utils.typing import Path
+from fourcipp.utils.not_set import NOT_SET, check_if_set
+from fourcipp.utils.type_hinting import Path
 from fourcipp.utils.validation import ValidationError, validate_using_json_schema
 from fourcipp.utils.yaml_io import dump_yaml, load_yaml
 
@@ -289,7 +289,7 @@ class FourCInput:
                 f"Section '{key}' not set. Did out mean '{difflib.get_close_matches(key.upper(), self.all_sections_names, n=1, cutoff=0.3)[0]}'? The set sections are:\n - {sections}"
             )
 
-    def pop(self, key: str, default_value: Any = NotSet) -> Any:
+    def pop(self, key: str, default_value: Any = NOT_SET) -> Any:
         """Pop entry.
 
         Args:

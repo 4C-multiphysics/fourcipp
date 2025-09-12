@@ -30,7 +30,7 @@ from fourcipp.legacy_io.inline_dat import (
     nested_casting_factory,
     to_dat_string,
 )
-from fourcipp.utils.typing import LineCastingDict
+from fourcipp.utils.type_hinting import LineCastingDict
 
 ElementCastingDict: TypeAlias = dict[str, dict[str, LineCastingDict]]
 

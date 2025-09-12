@@ -24,8 +24,8 @@
 from functools import partial
 from typing import Any
 
-from fourcipp.utils.metadata import METADATA_TO_PYTHON
-from fourcipp.utils.typing import (
+from fourcipp.utils.metadata import Primitive
+from fourcipp.utils.type_hinting import (
     Extractor,
     LineCastingDict,
     LineListExtractor,
@@ -34,7 +34,7 @@ from fourcipp.utils.typing import (
 )
 
 # Metadata types currently supported
-SUPPORTED_METADATA_TYPES = list(METADATA_TO_PYTHON.keys()) + ["vector", "enum"]
+SUPPORTED_METADATA_TYPES = Primitive.PRIMITIVE_TYPES + ["enum", "vector"]
 
 
 def to_dat_string(object: Any) -> str:
@@ -121,10 +121,12 @@ def _entry_casting_factory(spec: dict) -> LineListExtractor:
     Returns:
         Casting function for the spec
     """
-    if spec["type"] in METADATA_TO_PYTHON:
-        return partial(_extract_entry, extractor=METADATA_TO_PYTHON[spec["type"]])
+    if spec["type"] in Primitive.PRIMITIVE_TYPES_TO_PYTHON:
+        return partial(
+            _extract_entry, extractor=Primitive.PRIMITIVE_TYPES_TO_PYTHON[spec["type"]]
+        )
     elif spec["type"] == "vector":
-        value_type = METADATA_TO_PYTHON[spec["value_type"]["type"]]
+        value_type = Primitive.PRIMITIVE_TYPES_TO_PYTHON[spec["value_type"]["type"]]
         return partial(_extract_vector, extractor=value_type, size=spec["size"])
     elif spec["type"] == "enum":
         choices = [s["name"] for s in spec["choices"]]
