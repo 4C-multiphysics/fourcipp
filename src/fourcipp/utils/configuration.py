@@ -23,12 +23,13 @@
 
 from __future__ import annotations
 
+import copy
 import pathlib
 from dataclasses import dataclass, field
 
 from loguru import logger
 
-from fourcipp.utils.type_hinting import Path
+from fourcipp.utils.type_hinting import Path, T
 from fourcipp.utils.yaml_io import dump_yaml, load_yaml
 
 CONFIG_PACKAGE: pathlib.Path = pathlib.Path(__file__).parents[1] / "config"
@@ -91,8 +92,8 @@ class ConfigProfile:
     def __post_init__(self) -> None:
         """Update stuff."""
         self.fourc_metadata_path = pathlib.Path(self.fourc_metadata_path)
-        self.fourc_metadata = ConfigProfile._load_data_from_path(
-            self.fourc_metadata_path
+        self.fourc_metadata = ConfigProfile._resolve_references(
+            ConfigProfile._load_data_from_path(self.fourc_metadata_path)
         )
         self.sections = Sections.from_metadata(self.fourc_metadata)
 
@@ -118,6 +119,46 @@ class ConfigProfile:
             )
             path = CONFIG_PACKAGE / path
         return load_yaml(path)
+
+    @staticmethod
+    def _resolve_references(metadata_dict: dict) -> dict:
+        """Resolve references in the 4C metadata file.
+
+        Args:
+            metadata_dict: 4C metadata
+
+        Returns:
+            metadata_dict without references
+        """
+
+        references = metadata_dict.pop("$references")
+
+        def insert_references(metadata: T, references: dict) -> T:
+            """Iterate nested dict and insert references.
+
+            Args:
+                metadata: Metadata to check for references
+                references: Dict with all the references
+
+            Returns:
+                metadata with resolved references
+            """
+            if isinstance(metadata, dict):
+                if "$ref" in metadata:
+                    # Add an actual copy of the data
+                    metadata = copy.deepcopy(references[metadata.pop("$ref")])
+                else:
+                    for k in metadata:
+                        metadata[k] = insert_references(metadata[k], references)
+            elif isinstance(metadata, list):
+                for i, e in enumerate(metadata):
+                    metadata[i] = insert_references(e, references)
+
+            return metadata
+
+        metadata_dict = insert_references(metadata_dict, references)
+
+        return metadata_dict
 
     def __str__(self) -> str:
         """String method for the config."""
