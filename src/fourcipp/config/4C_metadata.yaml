@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: ee4313a77ed83505dc871e7fee17db5b1e8e6ced
+  commit_hash: 54d84f3839b758a5df1fbf1c3cf066a7eebd544d
   version: 2025.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -27233,7 +27233,7 @@ sections:
               default: true
             - name: STRUCT_STRESS
               type: enum
-              description: "Output of stress"
+              description: "Output of stress. This is only possible in the new vtk-based output. Make sure to set INTERVAL_STEPS accordingly."
               required: false
               default: "NO"
               choices:
@@ -27249,7 +27249,7 @@ sections:
                 - name: "yes"
             - name: STRUCT_STRAIN
               type: enum
-              description: "Output of strains"
+              description: "Output of strains. This is only possible in the new vtk-based output. Make sure to set INTERVAL_STEPS accordingly."
               required: false
               default: "NO"
               choices:
@@ -27364,7 +27364,7 @@ sections:
               default: true
             - name: WRITE_FINAL_STATE
               type: bool
-              description: "Enforce to write output/restart data at the final state regardless of the other output/restart intervals"
+              description: "Enforce to write restart data at the final state regardless of the other output or restart intervals"
               required: false
               default: false
             - name: PREFIX_GROUP_ID
@@ -42347,7 +42347,7 @@ sections:
               default: 0
             - name: RESULTSEVERY
               type: int
-              description: "save displacements and contact forces every RESULTSEVERY steps"
+              description: "Write old HDF5-based output every RESULTSEVERY steps. Used for old structure time integration and Contact quantities."
               required: false
               default: 1
             - name: RESEVERYERGY
