@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 54d84f3839b758a5df1fbf1c3cf066a7eebd544d
+  commit_hash: 99de7bce313133dc91671515f4e686fdbe49cadc
   version: 2025.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -37009,11 +37009,10 @@ sections:
               type: enum
               description: "type of (random) surface energy distribution"
               required: false
-              default: ConstantSurfaceEnergy
+              default: Constant
               choices:
-                - name: ConstantSurfaceEnergy
-                - name: NormalSurfaceEnergyDistribution
-                - name: LogNormalSurfaceEnergyDistribution
+                - name: Constant
+                - name: Normal
             - name: MIN_RADIUS
               type: double
               description: "minimum allowed particle radius"
@@ -37136,14 +37135,14 @@ sections:
               description: "adhesion surface energy for the calculation of the pull-out force"
               required: false
               default: -1
-            - name: ADHESION_SURFACE_ENERGY_DISTRIBUTION_VAR
+            - name: ADHESION_SURFACE_ENERGY_DISTRIBUTION_STDDEV
               type: double
-              description: "variance of adhesion surface energy distribution"
+              description: "standard deviation of adhesion surface energy distribution"
               required: false
               default: -1
             - name: ADHESION_SURFACE_ENERGY_DISTRIBUTION_CUTOFF_FACTOR
               type: double
-              description: "adhesion surface energy distribution limited by multiple of variance"
+              description: "adhesion surface energy distribution limited by multiple of standard deviation"
               required: false
               default: -1
             - name: ADHESION_SURFACE_ENERGY_FACTOR
