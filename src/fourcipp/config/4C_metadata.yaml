@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 99de7bce313133dc91671515f4e686fdbe49cadc
+  commit_hash: 158a69acd4bf23752b81cc3445999f7f2edcefc2
   version: 2025.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -28759,10 +28759,38 @@ sections:
                     specs:
                       - type: all_of
                         specs:
-                          - name: FIBER_ID
-                            type: int
-                            description: "Id of the fiber"
+                          - name: ORIENTATION
+                            type: selection
+                            description: "A unit vector field pointing in the direction of the fiber in the reference configuration."
                             required: true
+                            choices:
+                              - name: constant
+                                spec:
+                                  name: constant
+                                  type: vector
+                                  size: 3
+                                  value_type:
+                                    type: double
+                                  description: "Constant value for the field."
+                                  required: true
+                              - name: from_file
+                                spec:
+                                  name: from_file
+                                  type: path
+                                  description: "Path to a file containing the input field data."
+                                  required: true
+                              - name: field_reference
+                                spec:
+                                  name: field_reference
+                                  type: string
+                                  description: "Refer to a globally defined field by a name."
+                                  required: true
+                              - name: from_mesh
+                                spec:
+                                  name: from_mesh
+                                  type: string
+                                  description: "Refer to a field defined in the input mesh by a name."
+                                  required: true
                           - name: FIBER_MATERIAL_ID
                             type: int
                             description: "Id of fiber material"
@@ -28794,10 +28822,6 @@ sections:
                             description: "Id of the time function to scale the deposition stretch (Default: 0=None)"
                             required: false
                             default: 0
-                          - name: INIT
-                            type: int
-                            description: "Initialization mode for fibers (1=element fibers, 2=nodal fibers)"
-                            required: true
               - type: all_of
                 specs:
                   - name: MAT
@@ -28810,11 +28834,38 @@ sections:
                     specs:
                       - type: all_of
                         specs:
-                          - name: FIBER_ID
-                            type: int
-                            description: "Id of the fiber"
-                            required: false
-                            default: 1
+                          - name: ORIENTATION
+                            type: selection
+                            description: "A unit vector field pointing in the direction of the fiber in the reference configuration."
+                            required: true
+                            choices:
+                              - name: constant
+                                spec:
+                                  name: constant
+                                  type: vector
+                                  size: 3
+                                  value_type:
+                                    type: double
+                                  description: "Constant value for the field."
+                                  required: true
+                              - name: from_file
+                                spec:
+                                  name: from_file
+                                  type: path
+                                  description: "Path to a file containing the input field data."
+                                  required: true
+                              - name: field_reference
+                                spec:
+                                  name: field_reference
+                                  type: string
+                                  description: "Refer to a globally defined field by a name."
+                                  required: true
+                              - name: from_mesh
+                                spec:
+                                  name: from_mesh
+                                  type: string
+                                  description: "Refer to a field defined in the input mesh by a name."
+                                  required: true
                           - name: FIBER_MATERIAL_ID
                             type: int
                             description: "Id of fiber material"
@@ -28851,10 +28902,6 @@ sections:
                             description: "Mixture rule has inelastic growth (default false)"
                             required: false
                             default: false
-                          - name: INIT
-                            type: int
-                            description: "Initialization mode for fibers (1=element fibers, 2=nodal fibers)"
-                            required: true
                           - name: GAMMA
                             type: double
                             description: "Angle of fiber alignment in degree (default = 0.0 degrees)"
@@ -28872,10 +28919,38 @@ sections:
                     specs:
                       - type: all_of
                         specs:
-                          - name: FIBER_ID
-                            type: int
-                            description: "Id of the fiber"
+                          - name: ORIENTATION
+                            type: selection
+                            description: "A unit vector field pointing in the direction of the fiber in the reference configuration."
                             required: true
+                            choices:
+                              - name: constant
+                                spec:
+                                  name: constant
+                                  type: vector
+                                  size: 3
+                                  value_type:
+                                    type: double
+                                  description: "Constant value for the field."
+                                  required: true
+                              - name: from_file
+                                spec:
+                                  name: from_file
+                                  type: path
+                                  description: "Path to a file containing the input field data."
+                                  required: true
+                              - name: field_reference
+                                spec:
+                                  name: field_reference
+                                  type: string
+                                  description: "Refer to a globally defined field by a name."
+                                  required: true
+                              - name: from_mesh
+                                spec:
+                                  name: from_mesh
+                                  type: string
+                                  description: "Refer to a field defined in the input mesh by a name."
+                                  required: true
                           - name: FIBER_MATERIAL_ID
                             type: int
                             description: "Id of fiber material"
@@ -28907,10 +28982,6 @@ sections:
                             description: "Id of the time function to scale the deposition stretch (Default: 0=None)"
                             required: false
                             default: 0
-                          - name: INIT
-                            type: int
-                            description: "Initialization mode for fibers (1=element fibers, 3=nodal fibers)"
-                            required: true
                           - name: ADAPTIVE_HISTORY_STRATEGY
                             type: string
                             description: "Strategy for adaptive history integration (none, model_equation, higher_order)"
@@ -28974,6 +29045,102 @@ sections:
                             type: double
                             description: "Pressure in the inner of the cylinder"
                             required: true
+                          - name: RADIAL
+                            type: selection
+                            description: "A unit vector field pointing in radial direction."
+                            required: true
+                            choices:
+                              - name: constant
+                                spec:
+                                  name: constant
+                                  type: vector
+                                  size: 3
+                                  value_type:
+                                    type: double
+                                  description: "Constant value for the field."
+                                  required: true
+                              - name: from_file
+                                spec:
+                                  name: from_file
+                                  type: path
+                                  description: "Path to a file containing the input field data."
+                                  required: true
+                              - name: field_reference
+                                spec:
+                                  name: field_reference
+                                  type: string
+                                  description: "Refer to a globally defined field by a name."
+                                  required: true
+                              - name: from_mesh
+                                spec:
+                                  name: from_mesh
+                                  type: string
+                                  description: "Refer to a field defined in the input mesh by a name."
+                                  required: true
+                          - name: AXIAL
+                            type: selection
+                            description: "A unit vector field pointing in axial direction."
+                            required: true
+                            choices:
+                              - name: constant
+                                spec:
+                                  name: constant
+                                  type: vector
+                                  size: 3
+                                  value_type:
+                                    type: double
+                                  description: "Constant value for the field."
+                                  required: true
+                              - name: from_file
+                                spec:
+                                  name: from_file
+                                  type: path
+                                  description: "Path to a file containing the input field data."
+                                  required: true
+                              - name: field_reference
+                                spec:
+                                  name: field_reference
+                                  type: string
+                                  description: "Refer to a globally defined field by a name."
+                                  required: true
+                              - name: from_mesh
+                                spec:
+                                  name: from_mesh
+                                  type: string
+                                  description: "Refer to a field defined in the input mesh by a name."
+                                  required: true
+                          - name: CIRCUMFERENTIAL
+                            type: selection
+                            description: "A unit vector field pointing in circumferential direction."
+                            required: true
+                            choices:
+                              - name: constant
+                                spec:
+                                  name: constant
+                                  type: vector
+                                  size: 3
+                                  value_type:
+                                    type: double
+                                  description: "Constant value for the field."
+                                  required: true
+                              - name: from_file
+                                spec:
+                                  name: from_file
+                                  type: path
+                                  description: "Path to a file containing the input field data."
+                                  required: true
+                              - name: field_reference
+                                spec:
+                                  name: field_reference
+                                  type: string
+                                  description: "Refer to a globally defined field by a name."
+                                  required: true
+                              - name: from_mesh
+                                spec:
+                                  name: from_mesh
+                                  type: string
+                                  description: "Refer to a field defined in the input mesh by a name."
+                                  required: true
               - type: all_of
                 specs:
                   - name: MAT
@@ -29044,16 +29211,38 @@ sections:
                     specs:
                       - type: all_of
                         specs:
-                          - name: INIT
-                            type: int
-                            description: "initialization modus for growth direction alignment"
-                            required: false
-                            default: 1
-                          - name: FIBER_ID
-                            type: int
-                            description: "Id of the fiber to point the growth direction (1 for first fiber, default)"
-                            required: false
-                            default: 1
+                          - name: GROWTH_DIRECTION
+                            type: selection
+                            description: "A unit vector field pointing in the direction of growth."
+                            required: true
+                            choices:
+                              - name: constant
+                                spec:
+                                  name: constant
+                                  type: vector
+                                  size: 3
+                                  value_type:
+                                    type: double
+                                  description: "Constant value for the field."
+                                  required: true
+                              - name: from_file
+                                spec:
+                                  name: from_file
+                                  type: path
+                                  description: "Path to a file containing the input field data."
+                                  required: true
+                              - name: field_reference
+                                spec:
+                                  name: field_reference
+                                  type: string
+                                  description: "Refer to a globally defined field by a name."
+                                  required: true
+                              - name: from_mesh
+                                spec:
+                                  name: from_mesh
+                                  type: string
+                                  description: "Refer to a field defined in the input mesh by a name."
+                                  required: true
               - type: all_of
                 specs:
                   - name: MAT
@@ -29094,6 +29283,38 @@ sections:
                     specs:
                       - type: all_of
                         specs:
+                          - name: MEMBRANE_NORMAL
+                            type: selection
+                            description: "A unit vector field pointing in the direction of the membrane normal."
+                            required: true
+                            choices:
+                              - name: constant
+                                spec:
+                                  name: constant
+                                  type: vector
+                                  size: 3
+                                  value_type:
+                                    type: double
+                                  description: "Constant value for the field."
+                                  required: true
+                              - name: from_file
+                                spec:
+                                  name: from_file
+                                  type: path
+                                  description: "Path to a file containing the input field data."
+                                  required: true
+                              - name: field_reference
+                                spec:
+                                  name: field_reference
+                                  type: string
+                                  description: "Refer to a globally defined field by a name."
+                                  required: true
+                              - name: from_mesh
+                                spec:
+                                  name: from_mesh
+                                  type: string
+                                  description: "Refer to a field defined in the input mesh by a name."
+                                  required: true
                           - name: NUMMAT
                             type: int
                             description: "number of summands"
