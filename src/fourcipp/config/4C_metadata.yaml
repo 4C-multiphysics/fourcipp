@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 158a69acd4bf23752b81cc3445999f7f2edcefc2
+  commit_hash: edfd653314abc722fc3c1208e949f43c00f0d59a
   version: 2025.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -27712,6 +27712,11 @@ sections:
               choices:
                 - name: "No"
                 - name: "membranethickness"
+            - name: OUTPUT_CONTACT
+              type: bool
+              description: "Flag, defining if contact related quantities should be written to output."
+              required: false
+              default: false
     - name: IO/RUNTIME VTP OUTPUT STRUCTURE
       type: group
       required: false
