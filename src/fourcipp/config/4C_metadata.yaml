@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: edfd653314abc722fc3c1208e949f43c00f0d59a
+  commit_hash: 1e8480ca7ac03584d421b80cf35771a370083bb9
   version: 2025.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -7604,6 +7604,19 @@ sections:
                     description: "Factor multiplied with sum of cross section radii to define valid projection distance"
                     required: false
                     default: 2
+                  - name: MAX_NUMBER_OF_PAIRS_PER_ELEMENT
+                    type: int
+                    description: "How many Lagrange multipliers shall be allocated per beam element"
+                    required: false
+                    default: 0
+                  - name: CONSTRAINT_ENFORCEMENT
+                    type: enum
+                    description: "How the constraints for this condition shall be enforced"
+                    required: false
+                    default: penalty_direct
+                    choices:
+                      - name: penalty_direct
+                      - name: penalty_indirect
     - name: BEAM INTERACTION/BEAM TO SOLID EDGE CONTACT
       type: group
       description: Parameters for beam-to-solid edge contact.
