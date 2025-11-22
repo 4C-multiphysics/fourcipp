@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 1e8480ca7ac03584d421b80cf35771a370083bb9
+  commit_hash: 032da514792e3fd6ee89cb4466d0dad532177280
   version: 2025.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -45234,6 +45234,14 @@ sections:
                       description: "Relative tolerance for finite difference check"
                       required: false
                       default: 1e-06
+            - name: body_force
+              noneable: true
+              type: vector
+              value_type:
+                type: double
+              description: "External body force contribution vector. The vector must have the same dimension as the problem (2D/3D)."
+              required: false
+              default: null
             - name: calculate_error_to_analytical_solution
               type: group
               required: false
