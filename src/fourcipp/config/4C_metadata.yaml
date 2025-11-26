@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 032da514792e3fd6ee89cb4466d0dad532177280
+  commit_hash: 594b4f29bdeef5970a4d6ecfcd63c4c88cf3aa19
   version: 2025.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -7280,7 +7280,7 @@ sections:
               type: bool
               description: "choose between original or enhanced gapfunction"
               required: false
-              default: false
+              default: true
             - name: BEAMS_SEGCON
               type: bool
               description: "choose between beam contact with and without subsegment generation"
