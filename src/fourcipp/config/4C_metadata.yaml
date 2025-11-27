@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 594b4f29bdeef5970a4d6ecfcd63c4c88cf3aa19
+  commit_hash: 9e8bb66ef462434dce69d35bfc0ea1a26c46cd93
   version: 2025.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -42587,7 +42587,7 @@ sections:
               type: int
               description: "Write old HDF5-based output every RESULTSEVERY steps. Used for old structure time integration and Contact quantities."
               required: false
-              default: 1
+              default: 0
             - name: RESEVERYERGY
               type: int
               description: "write system energies every requested step"
@@ -42597,7 +42597,7 @@ sections:
               type: int
               description: "write restart possibility every RESTARTEVERY steps"
               required: false
-              default: 1
+              default: 0
             - name: CALC_ACC_ON_RESTART
               type: bool
               description: "Compute the initial state for a restart dynamics analysis"
