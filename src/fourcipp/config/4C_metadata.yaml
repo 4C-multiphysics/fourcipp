@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 9e8bb66ef462434dce69d35bfc0ea1a26c46cd93
+  commit_hash: 6ab70b784ce325b9c08c98b0840e2482adccaaa9
   version: 2025.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -7256,26 +7256,6 @@ sections:
       specs:
         - type: all_of
           specs:
-            - name: BEAMS_STRATEGY
-              type: enum
-              description: "Type of employed solving strategy"
-              required: false
-              default: "None"
-              choices:
-                - name: "None"
-                - name: "Penalty"
-                - name: "none"
-                - name: "penalty"
-            - name: MODELEVALUATOR
-              type: enum
-              description: "Type of model evaluator"
-              required: false
-              default: "Old"
-              choices:
-                - name: "Old"
-                - name: "Standard"
-                - name: "old"
-                - name: "standard"
             - name: BEAMS_NEWGAP
               type: bool
               description: "choose between original or enhanced gapfunction"
@@ -7286,39 +7266,9 @@ sections:
               description: "choose between beam contact with and without subsegment generation"
               required: false
               default: false
-            - name: BEAMS_DEBUG
-              type: bool
-              description: "This flag can be used for testing purposes. When it is switched on, some sanity checks are not performed!"
-              required: false
-              default: false
-            - name: BEAMS_INACTIVESTIFF
-              type: bool
-              description: "Always apply contact stiffness in first Newton step for pairs which have active in last time step"
-              required: false
-              default: false
-            - name: BEAMS_BTSOL
-              type: bool
-              description: "decide, if also the contact between beams and solids is possible"
-              required: false
-              default: false
             - name: BEAMS_ENDPOINTPENALTY
               type: bool
               description: "Additional consideration of endpoint-line and endpoint-endpoint contacts"
-              required: false
-              default: false
-            - name: BEAMS_SMOOTHING
-              type: enum
-              description: "Application of smoothed tangent field"
-              required: false
-              default: "None"
-              choices:
-                - name: "Cpp"
-                - name: "None"
-                - name: "cpp"
-                - name: "none"
-            - name: BEAMS_DAMPING
-              type: bool
-              description: "Application of a contact damping force"
               required: false
               default: false
             - name: BEAMS_BTBPENALTYPARAM
@@ -7331,36 +7281,6 @@ sections:
               description: "Penalty parameter per unit length for beam-to-beam line contact"
               required: false
               default: -1
-            - name: BEAMS_BTSPENALTYPARAM
-              type: double
-              description: "Penalty parameter for beam-to-solid contact"
-              required: false
-              default: 0
-            - name: BEAMS_DAMPINGPARAM
-              type: double
-              description: "Damping parameter for contact damping force"
-              required: false
-              default: -1000
-            - name: BEAMS_DAMPREGPARAM1
-              type: double
-              description: "First (at gap1, with gap1>gap2) regularization parameter for contact damping force"
-              required: false
-              default: -1000
-            - name: BEAMS_DAMPREGPARAM2
-              type: double
-              description: "Second (at gap2, with gap1>gap2) regularization parameter for contact damping force"
-              required: false
-              default: -1000
-            - name: BEAMS_MAXDISISCALEFAC
-              type: double
-              description: "Scale factor in order to limit maximal iterative displacement increment (resiudal displacement)"
-              required: false
-              default: -1
-            - name: BEAMS_MAXDELTADISSCALEFAC
-              type: double
-              description: "Scale factor in order to limit maximal displacement per time step"
-              required: false
-              default: 1
             - name: BEAMS_PERPSHIFTANGLE1
               type: double
               description: "Lower shift angle (in degrees) for penalty scaling of large-angle-contact"
@@ -7429,37 +7349,6 @@ sections:
               description: "For gaps > -BEAMS_BASICSTIFFGAP, only the basic part of the contact linearization is applied!"
               required: false
               default: -1
-            - name: BEAMS_OCTREE
-              type: enum
-              description: "octree and bounding box type for octree search routine"
-              required: false
-              default: "None"
-              choices:
-                - name: "None"
-                - name: "none"
-                - name: "octree_axisaligned"
-                - name: "octree_cylorient"
-                - name: "octree_spherical"
-            - name: BEAMS_ADDITEXT
-              type: bool
-              description: "Switch between No==multiplicative extrusion factor and Yes==additive extrusion factor"
-              required: false
-              default: true
-            - name: BEAMS_EXTVAL
-              type: string
-              description: "extrusion value(s) of the bounding box, Depending on BEAMS_ADDITIVEEXTFAC is either  additive or multiplicative. Give one or two values."
-              required: false
-              default: "-1.0"
-            - name: BEAMS_TREEDEPTH
-              type: int
-              description: "max. tree depth of the octree"
-              required: false
-              default: 6
-            - name: BEAMS_BOXESINOCT
-              type: int
-              description: "max number of bounding boxes in any leaf octant"
-              required: false
-              default: 8
     - name: BEAM CONTACT/RUNTIME VTK OUTPUT
       type: group
       required: false
