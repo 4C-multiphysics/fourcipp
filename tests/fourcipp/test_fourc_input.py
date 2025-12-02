@@ -448,15 +448,15 @@ def test_roundtrip_test(fourc_file, tmp_path):
     # Load 4C input test file
     fourc_input = FourCInput.from_4C_yaml(fourc_file)
 
-    # Delete the original file (we need to dump the file in the original location to ensure that associated files, i.e., xml solver files, are still present)
-    fourc_file.unlink()
+    # Create new file to keep original file (necessary for parallel test execution)
+    fourcipp_file = fourc_file.parent / (fourc_file.stem + "_fourcipp.4C.yaml")
 
     # Dump out again
-    fourc_input.dump(fourc_file, validate=True)
+    fourc_input.dump(fourcipp_file, validate=True)
 
     # Command
     command = (
-        f"/home/user/4C/build/4C {fourc_file} xxx > {tmp_path / 'output.log'} 2>&1"
+        f"/home/user/4C/build/4C {fourcipp_file} xxx > {tmp_path / 'output.log'} 2>&1"
     )
 
     # Run 4C with the dumped input
@@ -465,7 +465,7 @@ def test_roundtrip_test(fourc_file, tmp_path):
     # Exit code -> 4C failed
     if return_code:
         raise SubprocessError(
-            f"Input file failed for {fourc_file}.\n\n4C command: {command}\n\nOutput: {(tmp_path / 'output.log').read_text()}"
+            f"Input file failed for {fourcipp_file}.\n\n4C command: {command}\n\nOutput: {(tmp_path / 'output.log').read_text()}"
         )
 
 
