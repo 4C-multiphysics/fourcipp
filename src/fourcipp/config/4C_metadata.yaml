@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 6ab70b784ce325b9c08c98b0840e2482adccaaa9
+  commit_hash: 06d4d904c17421c86b75ff8b31abf86ea88d6f45
   version: 2025.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -7250,7 +7250,31 @@ sections:
         - type: all_of
           specs:
             - $ref: "2"
-    - name: BEAM CONTACT
+    - name: BEAM INTERACTION
+      type: group
+      required: false
+      specs:
+        - type: all_of
+          specs:
+            - name: REPARTITIONSTRATEGY
+              type: enum
+              description: "Type of employed repartitioning strategy"
+              required: false
+              default: "Adaptive"
+              choices:
+                - name: "Adaptive"
+                - name: "Everydt"
+                - name: "adaptive"
+                - name: "everydt"
+            - name: SEARCH_STRATEGY
+              type: enum
+              description: "Type of search strategy used for finding coupling pairs"
+              required: false
+              default: bruteforce_with_binning
+              choices:
+                - name: bruteforce_with_binning
+                - name: bounding_volume_hierarchy
+    - name: BEAM INTERACTION/BEAM TO BEAM CONTACT
       type: group
       required: false
       specs:
@@ -7349,7 +7373,30 @@ sections:
               description: "For gaps > -BEAMS_BASICSTIFFGAP, only the basic part of the contact linearization is applied!"
               required: false
               default: -1
-    - name: BEAM CONTACT/RUNTIME VTK OUTPUT
+    - name: BEAM INTERACTION/BEAM TO BEAM CONTACT CONDITIONS
+      type: list
+      description: Beam-to-beam contact conditions
+      required: false
+      spec:
+        type: all_of
+        specs:
+          - name: E
+            type: int
+            description: "ID of the condition. This ID refers to the respective topological entity of the condition."
+            required: true
+          - name: ENTITY_TYPE
+            type: enum
+            description: "The type of entity that E refers to."
+            required: false
+            default: legacy_id
+            choices:
+              - name: legacy_id
+              - name: node_set_id
+              - name: element_block_id
+          - name: COUPLING_ID
+            type: int
+            required: true
+    - name: BEAM INTERACTION/BEAM TO BEAM CONTACT/RUNTIME VTK OUTPUT
       type: group
       required: false
       specs:
@@ -7390,69 +7437,6 @@ sections:
               description: "write visualization output to indicate which different penalty values are active.Explanation: 0 corresponds to btb point contact;1 corresponds to active btb line contact;2 indicates active end point contact "
               required: false
               default: false
-    - name: BEAM INTERACTION
-      type: group
-      required: false
-      specs:
-        - type: all_of
-          specs:
-            - name: REPARTITIONSTRATEGY
-              type: enum
-              description: "Type of employed repartitioning strategy"
-              required: false
-              default: "Adaptive"
-              choices:
-                - name: "Adaptive"
-                - name: "Everydt"
-                - name: "adaptive"
-                - name: "everydt"
-            - name: SEARCH_STRATEGY
-              type: enum
-              description: "Type of search strategy used for finding coupling pairs"
-              required: false
-              default: bruteforce_with_binning
-              choices:
-                - name: bruteforce_with_binning
-                - name: bounding_volume_hierarchy
-    - name: BEAM INTERACTION/BEAM TO BEAM CONTACT
-      type: group
-      required: false
-      specs:
-        - type: all_of
-          specs:
-            - name: STRATEGY
-              type: enum
-              description: "Type of employed solving strategy"
-              required: false
-              default: "None"
-              choices:
-                - name: "None"
-                - name: "Penalty"
-                - name: "none"
-                - name: "penalty"
-    - name: BEAM INTERACTION/BEAM TO BEAM CONTACT CONDITIONS
-      type: list
-      description: Beam-to-beam contact conditions
-      required: false
-      spec:
-        type: all_of
-        specs:
-          - name: E
-            type: int
-            description: "ID of the condition. This ID refers to the respective topological entity of the condition."
-            required: true
-          - name: ENTITY_TYPE
-            type: enum
-            description: "The type of entity that E refers to."
-            required: false
-            default: legacy_id
-            choices:
-              - name: legacy_id
-              - name: node_set_id
-              - name: element_block_id
-          - name: COUPLING_ID
-            type: int
-            required: true
     - name: BEAM INTERACTION/BEAM TO BEAM POINT COUPLING CONDITIONS
       type: list
       description: Coupling conditions between beams based on closest point projections.
