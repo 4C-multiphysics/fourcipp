@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 06d4d904c17421c86b75ff8b31abf86ea88d6f45
+  commit_hash: 36ff9159dce9030d3e3edf21dd442b22d98f18ca
   version: 2025.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -12523,6 +12523,82 @@ sections:
               type: int
             description: "curve"
             required: true
+    - name: DESIGN LINE ROBIN SPRING DASHPOT CONDITIONS
+      type: list
+      description: Robin Spring Dashpot
+      required: false
+      spec:
+        type: all_of
+        specs:
+          - name: E
+            type: int
+            description: "ID of the condition. This ID refers to the respective topological entity of the condition."
+            required: true
+          - name: ENTITY_TYPE
+            type: enum
+            description: "The type of entity that E refers to."
+            required: false
+            default: legacy_id
+            choices:
+              - name: legacy_id
+              - name: node_set_id
+              - name: element_block_id
+          - name: NUMDOF
+            type: int
+            required: true
+          - name: ONOFF
+            type: vector
+            value_type:
+              type: int
+            required: true
+          - name: STIFF
+            type: vector
+            value_type:
+              type: double
+            required: true
+          - name: TIMEFUNCTSTIFF
+            type: vector
+            value_type:
+              type: int
+            required: true
+          - name: VISCO
+            type: vector
+            value_type:
+              type: double
+            required: true
+          - name: TIMEFUNCTVISCO
+            type: vector
+            value_type:
+              type: int
+            required: true
+          - name: DISPLOFFSET
+            type: vector
+            value_type:
+              type: double
+            required: true
+          - name: TIMEFUNCTDISPLOFFSET
+            type: vector
+            value_type:
+              type: int
+            required: true
+          - name: FUNCTNONLINSTIFF
+            type: vector
+            value_type:
+              type: int
+            required: true
+          - name: DIRECTION
+            type: enum
+            description: "Direction of the spring-dashpot boundary conditions"
+            required: true
+            choices:
+              - name: xyz
+              - name: refsurfnormal
+              - name: cursurfnormal
+          - name: COUPLING
+            noneable: true
+            type: int
+            required: false
+            default: null
     - name: DESIGN LINE SLIP SUPPLEMENTAL CURVED BOUNDARY CONDITIONS
       type: list
       description: LineSlipSupp
