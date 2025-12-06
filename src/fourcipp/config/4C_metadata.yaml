@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 36ff9159dce9030d3e3edf21dd442b22d98f18ca
+  commit_hash: e24441297bcd6d7be0061f44362ee6fafae04423
   version: 2025.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -29113,7 +29113,7 @@ sections:
                   - name: MAT
                     type: int
                     required: true
-                  - name: MIX_Prestress_Strategy_Constant
+                  - name: MIX_Prestress_Strategy_Prescribed
                     type: group
                     description: Simple predefined prestress
                     required: true
@@ -29121,15 +29121,40 @@ sections:
                       - type: all_of
                         specs:
                           - name: PRESTRETCH
-                            type: vector
-                            size: 3
-                            value_type:
-                              type: vector
-                              size: 3
-                              value_type:
-                                type: double
-                            description: "Definition of the (symmetric) prestretch tensor"
+                            type: selection
+                            description: "Field of a symmetric prestretch tensor."
                             required: true
+                            choices:
+                              - name: constant
+                                spec:
+                                  name: constant
+                                  type: vector
+                                  size: 3
+                                  value_type:
+                                    type: vector
+                                    size: 3
+                                    value_type:
+                                      type: double
+                                  description: "Constant value for the field."
+                                  required: true
+                              - name: from_file
+                                spec:
+                                  name: from_file
+                                  type: path
+                                  description: "Path to a file containing the input field data."
+                                  required: true
+                              - name: field_reference
+                                spec:
+                                  name: field_reference
+                                  type: string
+                                  description: "Refer to a globally defined field by a name."
+                                  required: true
+                              - name: from_mesh
+                                spec:
+                                  name: from_mesh
+                                  type: string
+                                  description: "Refer to a field defined in the input mesh by a name."
+                                  required: true
               - type: all_of
                 specs:
                   - name: MAT
