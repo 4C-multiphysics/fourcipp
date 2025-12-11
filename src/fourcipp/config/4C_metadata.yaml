@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: e24441297bcd6d7be0061f44362ee6fafae04423
+  commit_hash: 088a417379c4e08cc000f5a5082238e005d5b2d5
   version: 2025.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -36786,7 +36786,7 @@ sections:
               choices:
                 - name: none
                 - name: hypergraph
-                - name: recursive_coordinate_bisection
+                - name: multijagged
                 - name: monolithic
             - name: IMBALANCE_TOL
               type: double
