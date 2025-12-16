@@ -34,13 +34,9 @@ jobs:
           path: clang18_build-schema
       # Format new files with pre-commit (this needs to be done before the files are hashed to ensure that both are formatted)
       - name: Set up virtual environment
-        uses: conda-incubator/setup-miniconda@v3
+        uses: ./.github/actions/setup-env
         with:
-          auto-update-conda: true
-          conda-remove-defaults: true
-          channels: conda-forge
-          activate-environment: fourcipp
-          python-version: 3.12
+          python-version: 3.13
       - name: Install requirements
         shell: bash -el {0}
         run: |
