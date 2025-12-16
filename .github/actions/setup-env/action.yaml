@@ -1,0 +1,19 @@
+name: Setup Conda Python environment
+description: Sets up a conda environment with conda-forge and a given Python version.
+
+inputs:
+  python-version:
+    description: Python version to install
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Miniconda
+      uses: conda-incubator/setup-miniconda@v3
+      with:
+        auto-update-conda: true
+        conda-remove-defaults: true
+        channels: conda-forge
+        activate-environment: fourcipp
+        python-version: ${{ inputs.python-version }}

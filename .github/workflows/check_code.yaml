@@ -19,12 +19,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
       - name: Set up virtual environment
-        uses: conda-incubator/setup-miniconda@v3
+        uses: ./.github/actions/setup-env
         with:
-          auto-update-conda: true
-          conda-remove-defaults: true
-          activate-environment: fourcipp
-          python-version: 3.12
+          python-version: 3.13
       - name: Install requirements
         shell: bash -el {0}
         run: |
