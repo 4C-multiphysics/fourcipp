@@ -23,6 +23,7 @@ jobs:
         with:
           auto-update-conda: true
           conda-remove-defaults: true
+          channels: conda-forge
           activate-environment: fourcipp
           python-version: 3.12
       - name: Install requirements
