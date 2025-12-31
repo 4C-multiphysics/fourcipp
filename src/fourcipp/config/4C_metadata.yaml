@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 088a417379c4e08cc000f5a5082238e005d5b2d5
+  commit_hash: fba693f1fb3acd360495728ae24e102298a55a17
   version: 2025.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -40342,7 +40342,7 @@ sections:
                 - name: "GMRES"
             - name: AZPREC
               type: enum
-              description: "Type of internal preconditioner to use.\nNote! this preconditioner will only be used if the input operator\nsupports the Epetra interface and the client does not pass\nin an external preconditioner!"
+              description: "Type of internal preconditioner to use.\nNote! this preconditioner will only be used if the input operator\nsupports the Trilinos interface and the client does not pass\nin an external preconditioner!"
               required: false
               default: "ILU"
               choices:
@@ -40461,7 +40461,7 @@ sections:
                 - name: "GMRES"
             - name: AZPREC
               type: enum
-              description: "Type of internal preconditioner to use.\nNote! this preconditioner will only be used if the input operator\nsupports the Epetra interface and the client does not pass\nin an external preconditioner!"
+              description: "Type of internal preconditioner to use.\nNote! this preconditioner will only be used if the input operator\nsupports the Trilinos interface and the client does not pass\nin an external preconditioner!"
               required: false
               default: "ILU"
               choices:
@@ -40580,7 +40580,7 @@ sections:
                 - name: "GMRES"
             - name: AZPREC
               type: enum
-              description: "Type of internal preconditioner to use.\nNote! this preconditioner will only be used if the input operator\nsupports the Epetra interface and the client does not pass\nin an external preconditioner!"
+              description: "Type of internal preconditioner to use.\nNote! this preconditioner will only be used if the input operator\nsupports the Trilinos interface and the client does not pass\nin an external preconditioner!"
               required: false
               default: "ILU"
               choices:
@@ -40699,7 +40699,7 @@ sections:
                 - name: "GMRES"
             - name: AZPREC
               type: enum
-              description: "Type of internal preconditioner to use.\nNote! this preconditioner will only be used if the input operator\nsupports the Epetra interface and the client does not pass\nin an external preconditioner!"
+              description: "Type of internal preconditioner to use.\nNote! this preconditioner will only be used if the input operator\nsupports the Trilinos interface and the client does not pass\nin an external preconditioner!"
               required: false
               default: "ILU"
               choices:
@@ -40818,7 +40818,7 @@ sections:
                 - name: "GMRES"
             - name: AZPREC
               type: enum
-              description: "Type of internal preconditioner to use.\nNote! this preconditioner will only be used if the input operator\nsupports the Epetra interface and the client does not pass\nin an external preconditioner!"
+              description: "Type of internal preconditioner to use.\nNote! this preconditioner will only be used if the input operator\nsupports the Trilinos interface and the client does not pass\nin an external preconditioner!"
               required: false
               default: "ILU"
               choices:
@@ -40937,7 +40937,7 @@ sections:
                 - name: "GMRES"
             - name: AZPREC
               type: enum
-              description: "Type of internal preconditioner to use.\nNote! this preconditioner will only be used if the input operator\nsupports the Epetra interface and the client does not pass\nin an external preconditioner!"
+              description: "Type of internal preconditioner to use.\nNote! this preconditioner will only be used if the input operator\nsupports the Trilinos interface and the client does not pass\nin an external preconditioner!"
               required: false
               default: "ILU"
               choices:
@@ -41056,7 +41056,7 @@ sections:
                 - name: "GMRES"
             - name: AZPREC
               type: enum
-              description: "Type of internal preconditioner to use.\nNote! this preconditioner will only be used if the input operator\nsupports the Epetra interface and the client does not pass\nin an external preconditioner!"
+              description: "Type of internal preconditioner to use.\nNote! this preconditioner will only be used if the input operator\nsupports the Trilinos interface and the client does not pass\nin an external preconditioner!"
               required: false
               default: "ILU"
               choices:
@@ -41175,7 +41175,7 @@ sections:
                 - name: "GMRES"
             - name: AZPREC
               type: enum
-              description: "Type of internal preconditioner to use.\nNote! this preconditioner will only be used if the input operator\nsupports the Epetra interface and the client does not pass\nin an external preconditioner!"
+              description: "Type of internal preconditioner to use.\nNote! this preconditioner will only be used if the input operator\nsupports the Trilinos interface and the client does not pass\nin an external preconditioner!"
               required: false
               default: "ILU"
               choices:
@@ -41294,7 +41294,7 @@ sections:
                 - name: "GMRES"
             - name: AZPREC
               type: enum
-              description: "Type of internal preconditioner to use.\nNote! this preconditioner will only be used if the input operator\nsupports the Epetra interface and the client does not pass\nin an external preconditioner!"
+              description: "Type of internal preconditioner to use.\nNote! this preconditioner will only be used if the input operator\nsupports the Trilinos interface and the client does not pass\nin an external preconditioner!"
               required: false
               default: "ILU"
               choices:
