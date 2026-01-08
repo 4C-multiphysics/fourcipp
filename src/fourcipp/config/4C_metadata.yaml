@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: fba693f1fb3acd360495728ae24e102298a55a17
+  commit_hash: a1c24766073abbc8cd50ca751dafc123e247f584
   version: 2025.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -36825,10 +36825,11 @@ sections:
         - type: all_of
           specs:
             - name: POD_MATRIX
-              type: string
-              description: "filename of file containing projection matrix"
+              noneable: true
+              type: path
+              description: "filename of file containing the projection matrix"
               required: false
-              default: "none"
+              default: null
     - name: MORTAR COUPLING
       type: group
       required: false
