@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: a1c24766073abbc8cd50ca751dafc123e247f584
+  commit_hash: 5d1a9608324625fc3e1714eca107589dd01671a6
   version: 2025.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -42751,7 +42751,6 @@ sections:
               required: false
               default: "stop"
               choices:
-                - name: "adapt_3D0Dptc_ele_err"
                 - name: "adapt_penaltycontact"
                 - name: "adapt_step"
                 - name: "continue"
