@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 5d1a9608324625fc3e1714eca107589dd01671a6
+  commit_hash: c3626eb1bdc019efa5924e3aa5f0cf953a9eeaff
   version: 2025.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -27388,7 +27388,7 @@ sections:
                 - name: yaml
             - name: WRITE_CONDITION_INFORMATION
               type: bool
-              description: "write information about monitored boundary condition to output file"
+              description: "write information about monitored boundary condition to output file. Only possible for yaml output."
               required: false
               default: false
     - name: IO/RUNTIME VTK OUTPUT
