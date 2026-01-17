@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: c3626eb1bdc019efa5924e3aa5f0cf953a9eeaff
+  commit_hash: a8a95d66d5c739300c78a174db3cc37ee85375eb
   version: 2025.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -43508,16 +43508,6 @@ sections:
             - name: CONDUCTIVITY
               type: bool
               description: "write conductivity output"
-              required: false
-              default: false
-            - name: HEATFLUX
-              type: bool
-              description: "write heatflux output"
-              required: false
-              default: false
-            - name: TEMPGRAD
-              type: bool
-              description: "write temperature gradient output"
               required: false
               default: false
             - name: ELEMENT_OWNER
