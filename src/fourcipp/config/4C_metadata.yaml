@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 89294092500fab1d335163002c99a84504ff9133
+  commit_hash: 51d14cfedd134e36ded056c80ea5708180782038
   version: 2025.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -2954,6 +2954,47 @@ legacy_element_specs:
               type: double
             required: false
             default: null
+          - name: INTEGRATION
+            type: group
+            description: Defines the integration rules for the solid element.
+            required: false
+            specs:
+              - type: all_of
+                specs:
+                  - name: RESIDUUM
+                    type: enum
+                    description: "Gauss integration rule used to integrate the residuum and its linearization"
+                    required: false
+                    default: hex_8point
+                    choices:
+                      - name: hex_1point
+                      - name: hex_8point
+                      - name: hex_18point
+                      - name: hex_27point
+                      - name: hex_64point
+                      - name: hex_125point
+                      - name: hex_216point
+                      - name: hex_343point
+                      - name: hex_512point
+                      - name: hex_729point
+                      - name: hex_1000point
+                  - name: MASS
+                    type: enum
+                    description: "Gauss integration rule used to integrate the mass matrix"
+                    required: false
+                    default: hex_8point
+                    choices:
+                      - name: hex_1point
+                      - name: hex_8point
+                      - name: hex_18point
+                      - name: hex_27point
+                      - name: hex_64point
+                      - name: hex_125point
+                      - name: hex_216point
+                      - name: hex_343point
+                      - name: hex_512point
+                      - name: hex_729point
+                      - name: hex_1000point
           - name: TECH
             type: enum
             required: false
@@ -3036,6 +3077,47 @@ legacy_element_specs:
               type: double
             required: false
             default: null
+          - name: INTEGRATION
+            type: group
+            description: Defines the integration rules for the solid element.
+            required: false
+            specs:
+              - type: all_of
+                specs:
+                  - name: RESIDUUM
+                    type: enum
+                    description: "Gauss integration rule used to integrate the residuum and its linearization"
+                    required: false
+                    default: hex_18point
+                    choices:
+                      - name: hex_1point
+                      - name: hex_8point
+                      - name: hex_18point
+                      - name: hex_27point
+                      - name: hex_64point
+                      - name: hex_125point
+                      - name: hex_216point
+                      - name: hex_343point
+                      - name: hex_512point
+                      - name: hex_729point
+                      - name: hex_1000point
+                  - name: MASS
+                    type: enum
+                    description: "Gauss integration rule used to integrate the mass matrix"
+                    required: false
+                    default: hex_18point
+                    choices:
+                      - name: hex_1point
+                      - name: hex_8point
+                      - name: hex_18point
+                      - name: hex_27point
+                      - name: hex_64point
+                      - name: hex_125point
+                      - name: hex_216point
+                      - name: hex_343point
+                      - name: hex_512point
+                      - name: hex_729point
+                      - name: hex_1000point
     - cell_type: HEX20
       spec:
         type: all_of
@@ -3106,6 +3188,47 @@ legacy_element_specs:
               type: double
             required: false
             default: null
+          - name: INTEGRATION
+            type: group
+            description: Defines the integration rules for the solid element.
+            required: false
+            specs:
+              - type: all_of
+                specs:
+                  - name: RESIDUUM
+                    type: enum
+                    description: "Gauss integration rule used to integrate the residuum and its linearization"
+                    required: false
+                    default: hex_27point
+                    choices:
+                      - name: hex_1point
+                      - name: hex_8point
+                      - name: hex_18point
+                      - name: hex_27point
+                      - name: hex_64point
+                      - name: hex_125point
+                      - name: hex_216point
+                      - name: hex_343point
+                      - name: hex_512point
+                      - name: hex_729point
+                      - name: hex_1000point
+                  - name: MASS
+                    type: enum
+                    description: "Gauss integration rule used to integrate the mass matrix"
+                    required: false
+                    default: hex_27point
+                    choices:
+                      - name: hex_1point
+                      - name: hex_8point
+                      - name: hex_18point
+                      - name: hex_27point
+                      - name: hex_64point
+                      - name: hex_125point
+                      - name: hex_216point
+                      - name: hex_343point
+                      - name: hex_512point
+                      - name: hex_729point
+                      - name: hex_1000point
     - cell_type: HEX27
       spec:
         type: all_of
@@ -3176,6 +3299,47 @@ legacy_element_specs:
               type: double
             required: false
             default: null
+          - name: INTEGRATION
+            type: group
+            description: Defines the integration rules for the solid element.
+            required: false
+            specs:
+              - type: all_of
+                specs:
+                  - name: RESIDUUM
+                    type: enum
+                    description: "Gauss integration rule used to integrate the residuum and its linearization"
+                    required: false
+                    default: hex_27point
+                    choices:
+                      - name: hex_1point
+                      - name: hex_8point
+                      - name: hex_18point
+                      - name: hex_27point
+                      - name: hex_64point
+                      - name: hex_125point
+                      - name: hex_216point
+                      - name: hex_343point
+                      - name: hex_512point
+                      - name: hex_729point
+                      - name: hex_1000point
+                  - name: MASS
+                    type: enum
+                    description: "Gauss integration rule used to integrate the mass matrix"
+                    required: false
+                    default: hex_27point
+                    choices:
+                      - name: hex_1point
+                      - name: hex_8point
+                      - name: hex_18point
+                      - name: hex_27point
+                      - name: hex_64point
+                      - name: hex_125point
+                      - name: hex_216point
+                      - name: hex_343point
+                      - name: hex_512point
+                      - name: hex_729point
+                      - name: hex_1000point
     - cell_type: TET4
       spec:
         type: all_of
@@ -3246,6 +3410,39 @@ legacy_element_specs:
               type: double
             required: false
             default: null
+          - name: INTEGRATION
+            type: group
+            description: Defines the integration rules for the solid element.
+            required: false
+            specs:
+              - type: all_of
+                specs:
+                  - name: RESIDUUM
+                    type: enum
+                    description: "Gauss integration rule used to integrate the residuum and its linearization"
+                    required: false
+                    default: tet_1point
+                    choices:
+                      - name: tet_1point
+                      - name: tet_4point
+                      - name: tet_5point
+                      - name: tet_11point
+                      - name: tet_15point
+                      - name: tet_24point
+                      - name: tet_45point
+                  - name: MASS
+                    type: enum
+                    description: "Gauss integration rule used to integrate the mass matrix"
+                    required: false
+                    default: tet_4point
+                    choices:
+                      - name: tet_1point
+                      - name: tet_4point
+                      - name: tet_5point
+                      - name: tet_11point
+                      - name: tet_15point
+                      - name: tet_24point
+                      - name: tet_45point
     - cell_type: TET10
       spec:
         type: all_of
@@ -3316,6 +3513,39 @@ legacy_element_specs:
               type: double
             required: false
             default: null
+          - name: INTEGRATION
+            type: group
+            description: Defines the integration rules for the solid element.
+            required: false
+            specs:
+              - type: all_of
+                specs:
+                  - name: RESIDUUM
+                    type: enum
+                    description: "Gauss integration rule used to integrate the residuum and its linearization"
+                    required: false
+                    default: tet_4point
+                    choices:
+                      - name: tet_1point
+                      - name: tet_4point
+                      - name: tet_5point
+                      - name: tet_11point
+                      - name: tet_15point
+                      - name: tet_24point
+                      - name: tet_45point
+                  - name: MASS
+                    type: enum
+                    description: "Gauss integration rule used to integrate the mass matrix"
+                    required: false
+                    default: tet_11point
+                    choices:
+                      - name: tet_1point
+                      - name: tet_4point
+                      - name: tet_5point
+                      - name: tet_11point
+                      - name: tet_15point
+                      - name: tet_24point
+                      - name: tet_45point
     - cell_type: WEDGE6
       spec:
         type: all_of
@@ -3386,6 +3616,31 @@ legacy_element_specs:
               type: double
             required: false
             default: null
+          - name: INTEGRATION
+            type: group
+            description: Defines the integration rules for the solid element.
+            required: false
+            specs:
+              - type: all_of
+                specs:
+                  - name: RESIDUUM
+                    type: enum
+                    description: "Gauss integration rule used to integrate the residuum and its linearization"
+                    required: false
+                    default: wedge_6point
+                    choices:
+                      - name: wedge_1point
+                      - name: wedge_6point
+                      - name: wedge_9point
+                  - name: MASS
+                    type: enum
+                    description: "Gauss integration rule used to integrate the mass matrix"
+                    required: false
+                    default: wedge_6point
+                    choices:
+                      - name: wedge_1point
+                      - name: wedge_6point
+                      - name: wedge_9point
           - name: TECH
             type: enum
             required: false
@@ -3464,6 +3719,29 @@ legacy_element_specs:
               type: double
             required: false
             default: null
+          - name: INTEGRATION
+            type: group
+            description: Defines the integration rules for the solid element.
+            required: false
+            specs:
+              - type: all_of
+                specs:
+                  - name: RESIDUUM
+                    type: enum
+                    description: "Gauss integration rule used to integrate the residuum and its linearization"
+                    required: false
+                    default: pyramid_8point
+                    choices:
+                      - name: pyramid_1point
+                      - name: pyramid_8point
+                  - name: MASS
+                    type: enum
+                    description: "Gauss integration rule used to integrate the mass matrix"
+                    required: false
+                    default: pyramid_8point
+                    choices:
+                      - name: pyramid_1point
+                      - name: pyramid_8point
           - name: TECH
             type: enum
             required: false
@@ -3485,6 +3763,47 @@ legacy_element_specs:
             choices:
               - name: "linear"
               - name: "nonlinear"
+          - name: INTEGRATION
+            type: group
+            description: Defines the integration rules for the solid element.
+            required: false
+            specs:
+              - type: all_of
+                specs:
+                  - name: RESIDUUM
+                    type: enum
+                    description: "Gauss integration rule used to integrate the residuum and its linearization"
+                    required: false
+                    default: hex_27point
+                    choices:
+                      - name: hex_1point
+                      - name: hex_8point
+                      - name: hex_18point
+                      - name: hex_27point
+                      - name: hex_64point
+                      - name: hex_125point
+                      - name: hex_216point
+                      - name: hex_343point
+                      - name: hex_512point
+                      - name: hex_729point
+                      - name: hex_1000point
+                  - name: MASS
+                    type: enum
+                    description: "Gauss integration rule used to integrate the mass matrix"
+                    required: false
+                    default: hex_27point
+                    choices:
+                      - name: hex_1point
+                      - name: hex_8point
+                      - name: hex_18point
+                      - name: hex_27point
+                      - name: hex_64point
+                      - name: hex_125point
+                      - name: hex_216point
+                      - name: hex_343point
+                      - name: hex_512point
+                      - name: hex_729point
+                      - name: hex_1000point
   SOLIDPORO_PRESSURE_BASED:
     - cell_type: HEX8
       spec:
@@ -50416,6 +50735,47 @@ $references:
                                               type: double
                                             required: false
                                             default: null
+                                          - name: INTEGRATION
+                                            type: group
+                                            description: Defines the integration rules for the solid element.
+                                            required: false
+                                            specs:
+                                              - type: all_of
+                                                specs:
+                                                  - name: RESIDUUM
+                                                    type: enum
+                                                    description: "Gauss integration rule used to integrate the residuum and its linearization"
+                                                    required: false
+                                                    default: hex_8point
+                                                    choices:
+                                                      - name: hex_1point
+                                                      - name: hex_8point
+                                                      - name: hex_18point
+                                                      - name: hex_27point
+                                                      - name: hex_64point
+                                                      - name: hex_125point
+                                                      - name: hex_216point
+                                                      - name: hex_343point
+                                                      - name: hex_512point
+                                                      - name: hex_729point
+                                                      - name: hex_1000point
+                                                  - name: MASS
+                                                    type: enum
+                                                    description: "Gauss integration rule used to integrate the mass matrix"
+                                                    required: false
+                                                    default: hex_8point
+                                                    choices:
+                                                      - name: hex_1point
+                                                      - name: hex_8point
+                                                      - name: hex_18point
+                                                      - name: hex_27point
+                                                      - name: hex_64point
+                                                      - name: hex_125point
+                                                      - name: hex_216point
+                                                      - name: hex_343point
+                                                      - name: hex_512point
+                                                      - name: hex_729point
+                                                      - name: hex_1000point
                                           - name: TECH
                                             type: enum
                                             required: false
@@ -50502,6 +50862,47 @@ $references:
                                               type: double
                                             required: false
                                             default: null
+                                          - name: INTEGRATION
+                                            type: group
+                                            description: Defines the integration rules for the solid element.
+                                            required: false
+                                            specs:
+                                              - type: all_of
+                                                specs:
+                                                  - name: RESIDUUM
+                                                    type: enum
+                                                    description: "Gauss integration rule used to integrate the residuum and its linearization"
+                                                    required: false
+                                                    default: hex_18point
+                                                    choices:
+                                                      - name: hex_1point
+                                                      - name: hex_8point
+                                                      - name: hex_18point
+                                                      - name: hex_27point
+                                                      - name: hex_64point
+                                                      - name: hex_125point
+                                                      - name: hex_216point
+                                                      - name: hex_343point
+                                                      - name: hex_512point
+                                                      - name: hex_729point
+                                                      - name: hex_1000point
+                                                  - name: MASS
+                                                    type: enum
+                                                    description: "Gauss integration rule used to integrate the mass matrix"
+                                                    required: false
+                                                    default: hex_18point
+                                                    choices:
+                                                      - name: hex_1point
+                                                      - name: hex_8point
+                                                      - name: hex_18point
+                                                      - name: hex_27point
+                                                      - name: hex_64point
+                                                      - name: hex_125point
+                                                      - name: hex_216point
+                                                      - name: hex_343point
+                                                      - name: hex_512point
+                                                      - name: hex_729point
+                                                      - name: hex_1000point
                               - type: all_of
                                 specs:
                                   - name: HEX20
@@ -50576,6 +50977,47 @@ $references:
                                               type: double
                                             required: false
                                             default: null
+                                          - name: INTEGRATION
+                                            type: group
+                                            description: Defines the integration rules for the solid element.
+                                            required: false
+                                            specs:
+                                              - type: all_of
+                                                specs:
+                                                  - name: RESIDUUM
+                                                    type: enum
+                                                    description: "Gauss integration rule used to integrate the residuum and its linearization"
+                                                    required: false
+                                                    default: hex_27point
+                                                    choices:
+                                                      - name: hex_1point
+                                                      - name: hex_8point
+                                                      - name: hex_18point
+                                                      - name: hex_27point
+                                                      - name: hex_64point
+                                                      - name: hex_125point
+                                                      - name: hex_216point
+                                                      - name: hex_343point
+                                                      - name: hex_512point
+                                                      - name: hex_729point
+                                                      - name: hex_1000point
+                                                  - name: MASS
+                                                    type: enum
+                                                    description: "Gauss integration rule used to integrate the mass matrix"
+                                                    required: false
+                                                    default: hex_27point
+                                                    choices:
+                                                      - name: hex_1point
+                                                      - name: hex_8point
+                                                      - name: hex_18point
+                                                      - name: hex_27point
+                                                      - name: hex_64point
+                                                      - name: hex_125point
+                                                      - name: hex_216point
+                                                      - name: hex_343point
+                                                      - name: hex_512point
+                                                      - name: hex_729point
+                                                      - name: hex_1000point
                               - type: all_of
                                 specs:
                                   - name: HEX27
@@ -50650,6 +51092,47 @@ $references:
                                               type: double
                                             required: false
                                             default: null
+                                          - name: INTEGRATION
+                                            type: group
+                                            description: Defines the integration rules for the solid element.
+                                            required: false
+                                            specs:
+                                              - type: all_of
+                                                specs:
+                                                  - name: RESIDUUM
+                                                    type: enum
+                                                    description: "Gauss integration rule used to integrate the residuum and its linearization"
+                                                    required: false
+                                                    default: hex_27point
+                                                    choices:
+                                                      - name: hex_1point
+                                                      - name: hex_8point
+                                                      - name: hex_18point
+                                                      - name: hex_27point
+                                                      - name: hex_64point
+                                                      - name: hex_125point
+                                                      - name: hex_216point
+                                                      - name: hex_343point
+                                                      - name: hex_512point
+                                                      - name: hex_729point
+                                                      - name: hex_1000point
+                                                  - name: MASS
+                                                    type: enum
+                                                    description: "Gauss integration rule used to integrate the mass matrix"
+                                                    required: false
+                                                    default: hex_27point
+                                                    choices:
+                                                      - name: hex_1point
+                                                      - name: hex_8point
+                                                      - name: hex_18point
+                                                      - name: hex_27point
+                                                      - name: hex_64point
+                                                      - name: hex_125point
+                                                      - name: hex_216point
+                                                      - name: hex_343point
+                                                      - name: hex_512point
+                                                      - name: hex_729point
+                                                      - name: hex_1000point
                               - type: all_of
                                 specs:
                                   - name: TET4
@@ -50724,6 +51207,39 @@ $references:
                                               type: double
                                             required: false
                                             default: null
+                                          - name: INTEGRATION
+                                            type: group
+                                            description: Defines the integration rules for the solid element.
+                                            required: false
+                                            specs:
+                                              - type: all_of
+                                                specs:
+                                                  - name: RESIDUUM
+                                                    type: enum
+                                                    description: "Gauss integration rule used to integrate the residuum and its linearization"
+                                                    required: false
+                                                    default: tet_1point
+                                                    choices:
+                                                      - name: tet_1point
+                                                      - name: tet_4point
+                                                      - name: tet_5point
+                                                      - name: tet_11point
+                                                      - name: tet_15point
+                                                      - name: tet_24point
+                                                      - name: tet_45point
+                                                  - name: MASS
+                                                    type: enum
+                                                    description: "Gauss integration rule used to integrate the mass matrix"
+                                                    required: false
+                                                    default: tet_4point
+                                                    choices:
+                                                      - name: tet_1point
+                                                      - name: tet_4point
+                                                      - name: tet_5point
+                                                      - name: tet_11point
+                                                      - name: tet_15point
+                                                      - name: tet_24point
+                                                      - name: tet_45point
                               - type: all_of
                                 specs:
                                   - name: TET10
@@ -50798,6 +51314,39 @@ $references:
                                               type: double
                                             required: false
                                             default: null
+                                          - name: INTEGRATION
+                                            type: group
+                                            description: Defines the integration rules for the solid element.
+                                            required: false
+                                            specs:
+                                              - type: all_of
+                                                specs:
+                                                  - name: RESIDUUM
+                                                    type: enum
+                                                    description: "Gauss integration rule used to integrate the residuum and its linearization"
+                                                    required: false
+                                                    default: tet_4point
+                                                    choices:
+                                                      - name: tet_1point
+                                                      - name: tet_4point
+                                                      - name: tet_5point
+                                                      - name: tet_11point
+                                                      - name: tet_15point
+                                                      - name: tet_24point
+                                                      - name: tet_45point
+                                                  - name: MASS
+                                                    type: enum
+                                                    description: "Gauss integration rule used to integrate the mass matrix"
+                                                    required: false
+                                                    default: tet_11point
+                                                    choices:
+                                                      - name: tet_1point
+                                                      - name: tet_4point
+                                                      - name: tet_5point
+                                                      - name: tet_11point
+                                                      - name: tet_15point
+                                                      - name: tet_24point
+                                                      - name: tet_45point
                               - type: all_of
                                 specs:
                                   - name: WEDGE6
@@ -50872,6 +51421,31 @@ $references:
                                               type: double
                                             required: false
                                             default: null
+                                          - name: INTEGRATION
+                                            type: group
+                                            description: Defines the integration rules for the solid element.
+                                            required: false
+                                            specs:
+                                              - type: all_of
+                                                specs:
+                                                  - name: RESIDUUM
+                                                    type: enum
+                                                    description: "Gauss integration rule used to integrate the residuum and its linearization"
+                                                    required: false
+                                                    default: wedge_6point
+                                                    choices:
+                                                      - name: wedge_1point
+                                                      - name: wedge_6point
+                                                      - name: wedge_9point
+                                                  - name: MASS
+                                                    type: enum
+                                                    description: "Gauss integration rule used to integrate the mass matrix"
+                                                    required: false
+                                                    default: wedge_6point
+                                                    choices:
+                                                      - name: wedge_1point
+                                                      - name: wedge_6point
+                                                      - name: wedge_9point
                                           - name: TECH
                                             type: enum
                                             required: false
@@ -50954,6 +51528,29 @@ $references:
                                               type: double
                                             required: false
                                             default: null
+                                          - name: INTEGRATION
+                                            type: group
+                                            description: Defines the integration rules for the solid element.
+                                            required: false
+                                            specs:
+                                              - type: all_of
+                                                specs:
+                                                  - name: RESIDUUM
+                                                    type: enum
+                                                    description: "Gauss integration rule used to integrate the residuum and its linearization"
+                                                    required: false
+                                                    default: pyramid_8point
+                                                    choices:
+                                                      - name: pyramid_1point
+                                                      - name: pyramid_8point
+                                                  - name: MASS
+                                                    type: enum
+                                                    description: "Gauss integration rule used to integrate the mass matrix"
+                                                    required: false
+                                                    default: pyramid_8point
+                                                    choices:
+                                                      - name: pyramid_1point
+                                                      - name: pyramid_8point
                                           - name: TECH
                                             type: enum
                                             required: false
@@ -50979,6 +51576,47 @@ $references:
                                             choices:
                                               - name: "linear"
                                               - name: "nonlinear"
+                                          - name: INTEGRATION
+                                            type: group
+                                            description: Defines the integration rules for the solid element.
+                                            required: false
+                                            specs:
+                                              - type: all_of
+                                                specs:
+                                                  - name: RESIDUUM
+                                                    type: enum
+                                                    description: "Gauss integration rule used to integrate the residuum and its linearization"
+                                                    required: false
+                                                    default: hex_27point
+                                                    choices:
+                                                      - name: hex_1point
+                                                      - name: hex_8point
+                                                      - name: hex_18point
+                                                      - name: hex_27point
+                                                      - name: hex_64point
+                                                      - name: hex_125point
+                                                      - name: hex_216point
+                                                      - name: hex_343point
+                                                      - name: hex_512point
+                                                      - name: hex_729point
+                                                      - name: hex_1000point
+                                                  - name: MASS
+                                                    type: enum
+                                                    description: "Gauss integration rule used to integrate the mass matrix"
+                                                    required: false
+                                                    default: hex_27point
+                                                    choices:
+                                                      - name: hex_1point
+                                                      - name: hex_8point
+                                                      - name: hex_18point
+                                                      - name: hex_27point
+                                                      - name: hex_64point
+                                                      - name: hex_125point
+                                                      - name: hex_216point
+                                                      - name: hex_343point
+                                                      - name: hex_512point
+                                                      - name: hex_729point
+                                                      - name: hex_1000point
               - type: all_of
                 specs:
                   - name: SOLIDPORO_PRESSURE_BASED
@@ -58784,6 +59422,47 @@ $references:
                                             type: double
                                           required: false
                                           default: null
+                                        - name: INTEGRATION
+                                          type: group
+                                          description: Defines the integration rules for the solid element.
+                                          required: false
+                                          specs:
+                                            - type: all_of
+                                              specs:
+                                                - name: RESIDUUM
+                                                  type: enum
+                                                  description: "Gauss integration rule used to integrate the residuum and its linearization"
+                                                  required: false
+                                                  default: hex_8point
+                                                  choices:
+                                                    - name: hex_1point
+                                                    - name: hex_8point
+                                                    - name: hex_18point
+                                                    - name: hex_27point
+                                                    - name: hex_64point
+                                                    - name: hex_125point
+                                                    - name: hex_216point
+                                                    - name: hex_343point
+                                                    - name: hex_512point
+                                                    - name: hex_729point
+                                                    - name: hex_1000point
+                                                - name: MASS
+                                                  type: enum
+                                                  description: "Gauss integration rule used to integrate the mass matrix"
+                                                  required: false
+                                                  default: hex_8point
+                                                  choices:
+                                                    - name: hex_1point
+                                                    - name: hex_8point
+                                                    - name: hex_18point
+                                                    - name: hex_27point
+                                                    - name: hex_64point
+                                                    - name: hex_125point
+                                                    - name: hex_216point
+                                                    - name: hex_343point
+                                                    - name: hex_512point
+                                                    - name: hex_729point
+                                                    - name: hex_1000point
                                         - name: TECH
                                           type: enum
                                           required: false
@@ -58870,6 +59549,47 @@ $references:
                                             type: double
                                           required: false
                                           default: null
+                                        - name: INTEGRATION
+                                          type: group
+                                          description: Defines the integration rules for the solid element.
+                                          required: false
+                                          specs:
+                                            - type: all_of
+                                              specs:
+                                                - name: RESIDUUM
+                                                  type: enum
+                                                  description: "Gauss integration rule used to integrate the residuum and its linearization"
+                                                  required: false
+                                                  default: hex_18point
+                                                  choices:
+                                                    - name: hex_1point
+                                                    - name: hex_8point
+                                                    - name: hex_18point
+                                                    - name: hex_27point
+                                                    - name: hex_64point
+                                                    - name: hex_125point
+                                                    - name: hex_216point
+                                                    - name: hex_343point
+                                                    - name: hex_512point
+                                                    - name: hex_729point
+                                                    - name: hex_1000point
+                                                - name: MASS
+                                                  type: enum
+                                                  description: "Gauss integration rule used to integrate the mass matrix"
+                                                  required: false
+                                                  default: hex_18point
+                                                  choices:
+                                                    - name: hex_1point
+                                                    - name: hex_8point
+                                                    - name: hex_18point
+                                                    - name: hex_27point
+                                                    - name: hex_64point
+                                                    - name: hex_125point
+                                                    - name: hex_216point
+                                                    - name: hex_343point
+                                                    - name: hex_512point
+                                                    - name: hex_729point
+                                                    - name: hex_1000point
                             - type: all_of
                               specs:
                                 - name: HEX20
@@ -58944,6 +59664,47 @@ $references:
                                             type: double
                                           required: false
                                           default: null
+                                        - name: INTEGRATION
+                                          type: group
+                                          description: Defines the integration rules for the solid element.
+                                          required: false
+                                          specs:
+                                            - type: all_of
+                                              specs:
+                                                - name: RESIDUUM
+                                                  type: enum
+                                                  description: "Gauss integration rule used to integrate the residuum and its linearization"
+                                                  required: false
+                                                  default: hex_27point
+                                                  choices:
+                                                    - name: hex_1point
+                                                    - name: hex_8point
+                                                    - name: hex_18point
+                                                    - name: hex_27point
+                                                    - name: hex_64point
+                                                    - name: hex_125point
+                                                    - name: hex_216point
+                                                    - name: hex_343point
+                                                    - name: hex_512point
+                                                    - name: hex_729point
+                                                    - name: hex_1000point
+                                                - name: MASS
+                                                  type: enum
+                                                  description: "Gauss integration rule used to integrate the mass matrix"
+                                                  required: false
+                                                  default: hex_27point
+                                                  choices:
+                                                    - name: hex_1point
+                                                    - name: hex_8point
+                                                    - name: hex_18point
+                                                    - name: hex_27point
+                                                    - name: hex_64point
+                                                    - name: hex_125point
+                                                    - name: hex_216point
+                                                    - name: hex_343point
+                                                    - name: hex_512point
+                                                    - name: hex_729point
+                                                    - name: hex_1000point
                             - type: all_of
                               specs:
                                 - name: HEX27
@@ -59018,6 +59779,47 @@ $references:
                                             type: double
                                           required: false
                                           default: null
+                                        - name: INTEGRATION
+                                          type: group
+                                          description: Defines the integration rules for the solid element.
+                                          required: false
+                                          specs:
+                                            - type: all_of
+                                              specs:
+                                                - name: RESIDUUM
+                                                  type: enum
+                                                  description: "Gauss integration rule used to integrate the residuum and its linearization"
+                                                  required: false
+                                                  default: hex_27point
+                                                  choices:
+                                                    - name: hex_1point
+                                                    - name: hex_8point
+                                                    - name: hex_18point
+                                                    - name: hex_27point
+                                                    - name: hex_64point
+                                                    - name: hex_125point
+                                                    - name: hex_216point
+                                                    - name: hex_343point
+                                                    - name: hex_512point
+                                                    - name: hex_729point
+                                                    - name: hex_1000point
+                                                - name: MASS
+                                                  type: enum
+                                                  description: "Gauss integration rule used to integrate the mass matrix"
+                                                  required: false
+                                                  default: hex_27point
+                                                  choices:
+                                                    - name: hex_1point
+                                                    - name: hex_8point
+                                                    - name: hex_18point
+                                                    - name: hex_27point
+                                                    - name: hex_64point
+                                                    - name: hex_125point
+                                                    - name: hex_216point
+                                                    - name: hex_343point
+                                                    - name: hex_512point
+                                                    - name: hex_729point
+                                                    - name: hex_1000point
                             - type: all_of
                               specs:
                                 - name: TET4
@@ -59092,6 +59894,39 @@ $references:
                                             type: double
                                           required: false
                                           default: null
+                                        - name: INTEGRATION
+                                          type: group
+                                          description: Defines the integration rules for the solid element.
+                                          required: false
+                                          specs:
+                                            - type: all_of
+                                              specs:
+                                                - name: RESIDUUM
+                                                  type: enum
+                                                  description: "Gauss integration rule used to integrate the residuum and its linearization"
+                                                  required: false
+                                                  default: tet_1point
+                                                  choices:
+                                                    - name: tet_1point
+                                                    - name: tet_4point
+                                                    - name: tet_5point
+                                                    - name: tet_11point
+                                                    - name: tet_15point
+                                                    - name: tet_24point
+                                                    - name: tet_45point
+                                                - name: MASS
+                                                  type: enum
+                                                  description: "Gauss integration rule used to integrate the mass matrix"
+                                                  required: false
+                                                  default: tet_4point
+                                                  choices:
+                                                    - name: tet_1point
+                                                    - name: tet_4point
+                                                    - name: tet_5point
+                                                    - name: tet_11point
+                                                    - name: tet_15point
+                                                    - name: tet_24point
+                                                    - name: tet_45point
                             - type: all_of
                               specs:
                                 - name: TET10
@@ -59166,6 +60001,39 @@ $references:
                                             type: double
                                           required: false
                                           default: null
+                                        - name: INTEGRATION
+                                          type: group
+                                          description: Defines the integration rules for the solid element.
+                                          required: false
+                                          specs:
+                                            - type: all_of
+                                              specs:
+                                                - name: RESIDUUM
+                                                  type: enum
+                                                  description: "Gauss integration rule used to integrate the residuum and its linearization"
+                                                  required: false
+                                                  default: tet_4point
+                                                  choices:
+                                                    - name: tet_1point
+                                                    - name: tet_4point
+                                                    - name: tet_5point
+                                                    - name: tet_11point
+                                                    - name: tet_15point
+                                                    - name: tet_24point
+                                                    - name: tet_45point
+                                                - name: MASS
+                                                  type: enum
+                                                  description: "Gauss integration rule used to integrate the mass matrix"
+                                                  required: false
+                                                  default: tet_11point
+                                                  choices:
+                                                    - name: tet_1point
+                                                    - name: tet_4point
+                                                    - name: tet_5point
+                                                    - name: tet_11point
+                                                    - name: tet_15point
+                                                    - name: tet_24point
+                                                    - name: tet_45point
                             - type: all_of
                               specs:
                                 - name: WEDGE6
@@ -59240,6 +60108,31 @@ $references:
                                             type: double
                                           required: false
                                           default: null
+                                        - name: INTEGRATION
+                                          type: group
+                                          description: Defines the integration rules for the solid element.
+                                          required: false
+                                          specs:
+                                            - type: all_of
+                                              specs:
+                                                - name: RESIDUUM
+                                                  type: enum
+                                                  description: "Gauss integration rule used to integrate the residuum and its linearization"
+                                                  required: false
+                                                  default: wedge_6point
+                                                  choices:
+                                                    - name: wedge_1point
+                                                    - name: wedge_6point
+                                                    - name: wedge_9point
+                                                - name: MASS
+                                                  type: enum
+                                                  description: "Gauss integration rule used to integrate the mass matrix"
+                                                  required: false
+                                                  default: wedge_6point
+                                                  choices:
+                                                    - name: wedge_1point
+                                                    - name: wedge_6point
+                                                    - name: wedge_9point
                                         - name: TECH
                                           type: enum
                                           required: false
@@ -59322,6 +60215,29 @@ $references:
                                             type: double
                                           required: false
                                           default: null
+                                        - name: INTEGRATION
+                                          type: group
+                                          description: Defines the integration rules for the solid element.
+                                          required: false
+                                          specs:
+                                            - type: all_of
+                                              specs:
+                                                - name: RESIDUUM
+                                                  type: enum
+                                                  description: "Gauss integration rule used to integrate the residuum and its linearization"
+                                                  required: false
+                                                  default: pyramid_8point
+                                                  choices:
+                                                    - name: pyramid_1point
+                                                    - name: pyramid_8point
+                                                - name: MASS
+                                                  type: enum
+                                                  description: "Gauss integration rule used to integrate the mass matrix"
+                                                  required: false
+                                                  default: pyramid_8point
+                                                  choices:
+                                                    - name: pyramid_1point
+                                                    - name: pyramid_8point
                                         - name: TECH
                                           type: enum
                                           required: false
@@ -59347,6 +60263,47 @@ $references:
                                           choices:
                                             - name: "linear"
                                             - name: "nonlinear"
+                                        - name: INTEGRATION
+                                          type: group
+                                          description: Defines the integration rules for the solid element.
+                                          required: false
+                                          specs:
+                                            - type: all_of
+                                              specs:
+                                                - name: RESIDUUM
+                                                  type: enum
+                                                  description: "Gauss integration rule used to integrate the residuum and its linearization"
+                                                  required: false
+                                                  default: hex_27point
+                                                  choices:
+                                                    - name: hex_1point
+                                                    - name: hex_8point
+                                                    - name: hex_18point
+                                                    - name: hex_27point
+                                                    - name: hex_64point
+                                                    - name: hex_125point
+                                                    - name: hex_216point
+                                                    - name: hex_343point
+                                                    - name: hex_512point
+                                                    - name: hex_729point
+                                                    - name: hex_1000point
+                                                - name: MASS
+                                                  type: enum
+                                                  description: "Gauss integration rule used to integrate the mass matrix"
+                                                  required: false
+                                                  default: hex_27point
+                                                  choices:
+                                                    - name: hex_1point
+                                                    - name: hex_8point
+                                                    - name: hex_18point
+                                                    - name: hex_27point
+                                                    - name: hex_64point
+                                                    - name: hex_125point
+                                                    - name: hex_216point
+                                                    - name: hex_343point
+                                                    - name: hex_512point
+                                                    - name: hex_729point
+                                                    - name: hex_1000point
             - type: all_of
               specs:
                 - name: ID
