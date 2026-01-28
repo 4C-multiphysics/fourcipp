@@ -1,6 +1,6 @@
 metadata:
-  commit_hash: c32d92f3d54a33baf285435d1a0947186fd63441
-  version: 2026.1.0
+  commit_hash: 472777c4d9d95e15980cb81b3dee5a3c48797256
+  version: 2026.2.0-dev
   description_section_name: TITLE
 legacy_element_specs:
   ALE2:
