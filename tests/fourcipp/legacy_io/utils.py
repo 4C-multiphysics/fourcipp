@@ -21,6 +21,8 @@
 # THE SOFTWARE.
 """Utils for legacy io testing."""
 
+from loguru import logger
+
 from fourcipp.legacy_io.element import to_dat_string
 
 # This map is used to generate elements from the metadata file
@@ -68,6 +70,11 @@ def reference_value_from_all_of(all_of):
             entry = [_TESTING_MAP[parameter["value_type"]["type"]]] * parameter["size"]
         elif parameter["type"] == "enum":
             entry = parameter["choices"][0]["name"]
+        elif parameter["type"] in ["selection", "group", "list", "all_of", "one_of"]:
+            logger.info(
+                f"The 4C legacy reader does not support parameters of type {parameter['type']}. Skipping the test for parameter \n{parameter}"
+            )
+            continue
         else:
             raise ValueError(f"Could not create testing line from {parameter['type']}")
 
