@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 472777c4d9d95e15980cb81b3dee5a3c48797256
+  commit_hash: af53a0cae38e3966f29244da67780ae4d0fe8571
   version: 2026.2.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -7793,10 +7793,12 @@ sections:
                 specs:
                   - name: POSITIONAL_PENALTY_PARAMETER
                     type: double
-                    required: true
+                    required: false
+                    default: 0
                   - name: ROTATIONAL_PENALTY_PARAMETER
                     type: double
-                    required: true
+                    required: false
+                    default: 0
                   - name: PROJECTION_VALID_FACTOR
                     type: double
                     description: "Factor multiplied with sum of cross section radii to define valid projection distance"
@@ -7809,12 +7811,12 @@ sections:
                     default: 0
                   - name: CONSTRAINT_ENFORCEMENT
                     type: enum
-                    description: "How the constraints for this condition shall be enforced"
-                    required: false
-                    default: penalty_direct
+                    description: "Specifies the constraint enforcement technique for beam-to-beam point couplings."
+                    required: true
                     choices:
                       - name: penalty_direct
                       - name: penalty_indirect
+                      - name: lagrange_multiplier
     - name: BEAM INTERACTION/BEAM TO SOLID EDGE CONTACT
       type: group
       description: Parameters for beam-to-solid edge contact.
