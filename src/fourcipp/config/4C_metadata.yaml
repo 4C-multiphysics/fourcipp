@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: af53a0cae38e3966f29244da67780ae4d0fe8571
+  commit_hash: 1ada6cf803dcc81486c5b65a72b3361bd36d4b47
   version: 2026.2.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -8757,6 +8757,11 @@ sections:
               description: "Bounding volume of the sphere is the sphere center extended by this factor times the sphere radius in all directions (+ and -)."
               required: false
               default: 2
+            - name: POINT_TOLERANCE
+              type: double
+              description: "Tolerance for point objects"
+              required: false
+              default: 0.0001
             - name: WRITE_GEOMETRIC_SEARCH_VISUALIZATION
               type: bool
               description: "If visualization output for the geometric search should be written"
@@ -38817,6 +38822,7 @@ sections:
                 - name: "Poroelasticity"
                 - name: "ReducedDimensionalAirWays"
                 - name: "Reduced_Lung"
+                - name: "Reduced_Lung_1D_Pipe_Flow"
                 - name: "Scalar_Thermo_Interaction"
                 - name: "Scalar_Transport"
                 - name: "Structure"
@@ -47013,6 +47019,212 @@ sections:
                       type: double
                       description: "Density of air in the reduced dimensional lung simulation."
                       required: true
+    - name: reduced_lung
+      type: group
+      description: Reduced-dimensional fluid dynamics in a 1D network
+      required: false
+      specs:
+        - type: all_of
+          specs:
+            - name: general
+              type: group
+              required: true
+              specs:
+                - type: all_of
+                  specs:
+                    - name: final_time
+                      type: double
+                      description: "Final time when the simulation ends"
+                      required: true
+                    - name: steps
+                      type: int
+                      description: "Number of time steps in the simulation"
+                      required: true
+                      validator:
+                        range:
+                          minimum: 0
+                          maximum: 2147483647
+                          minimum_exclusive: true
+                          maximum_exclusive: false
+                    - name: result_every
+                      type: int
+                      description: "Write result every n timestep"
+                      required: true
+                      validator:
+                        range:
+                          minimum: 0
+                          maximum: 2147483647
+                          minimum_exclusive: true
+                          maximum_exclusive: false
+                    - name: fluid_properties
+                      type: group
+                      description: Parameters of fluid
+                      required: true
+                      specs:
+                        - type: all_of
+                          specs:
+                            - name: density_rho
+                              type: double
+                              description: "Density of fluid"
+                              required: true
+                              validator:
+                                range:
+                                  minimum: 0
+                                  maximum: 1.7976931348623157e+308
+                                  minimum_exclusive: true
+                                  maximum_exclusive: false
+                            - name: viscosity_mu
+                              type: double
+                              description: "Viscosity of fluid"
+                              required: true
+                    - name: material_parameters
+                      type: group
+                      description: Parameters of wall mechanics
+                      required: true
+                      specs:
+                        - type: all_of
+                          specs:
+                            - name: Young_E
+                              type: selection
+                              description: "Young's modulus depending on generation and vessel type."
+                              required: true
+                              choices:
+                                - name: constant
+                                  spec:
+                                    name: constant
+                                    type: double
+                                    description: "Constant value for the field."
+                                    required: true
+                                - name: from_file
+                                  spec:
+                                    name: from_file
+                                    type: path
+                                    description: "Path to a file containing the input field data."
+                                    required: true
+                                - name: field_reference
+                                  spec:
+                                    name: field_reference
+                                    type: string
+                                    description: "Refer to a globally defined field by a name."
+                                    required: true
+                                - name: from_mesh
+                                  spec:
+                                    name: from_mesh
+                                    type: string
+                                    description: "Refer to a field defined in the input mesh by a name."
+                                    required: true
+                            - name: Poisson_ratio_nue
+                              type: double
+                              description: "Poisson ratio of material"
+                              required: true
+                    - name: geometry_parameters
+                      type: group
+                      description: Geometry of pulmonary vasculature
+                      required: true
+                      specs:
+                        - type: all_of
+                          specs:
+                            - name: reference_area_A0
+                              type: selection
+                              description: "Reference area of element"
+                              required: true
+                              choices:
+                                - name: constant
+                                  spec:
+                                    name: constant
+                                    type: double
+                                    description: "Constant value for the field."
+                                    required: true
+                                - name: from_file
+                                  spec:
+                                    name: from_file
+                                    type: path
+                                    description: "Path to a file containing the input field data."
+                                    required: true
+                                - name: field_reference
+                                  spec:
+                                    name: field_reference
+                                    type: string
+                                    description: "Refer to a globally defined field by a name."
+                                    required: true
+                                - name: from_mesh
+                                  spec:
+                                    name: from_mesh
+                                    type: string
+                                    description: "Refer to a field defined in the input mesh by a name."
+                                    required: true
+                            - name: thickness_th
+                              type: selection
+                              description: "Wall thickness of element"
+                              required: true
+                              choices:
+                                - name: constant
+                                  spec:
+                                    name: constant
+                                    type: double
+                                    description: "Constant value for the field."
+                                    required: true
+                                - name: from_file
+                                  spec:
+                                    name: from_file
+                                    type: path
+                                    description: "Path to a file containing the input field data."
+                                    required: true
+                                - name: field_reference
+                                  spec:
+                                    name: field_reference
+                                    type: string
+                                    description: "Refer to a globally defined field by a name."
+                                    required: true
+                                - name: from_mesh
+                                  spec:
+                                    name: from_mesh
+                                    type: string
+                                    description: "Refer to a field defined in the input mesh by a name."
+                                    required: true
+                    - name: boundary_conditions
+                      type: group
+                      description: Parameters of fluid
+                      required: true
+                      specs:
+                        - type: all_of
+                          specs:
+                            - name: input
+                              type: enum
+                              description: "Choice of prescribed parameter at inflow boundary"
+                              required: true
+                              choices:
+                                - name: "area"
+                                - name: "flow"
+                                - name: "pressure"
+                                - name: "velocity"
+                            - name: output
+                              type: enum
+                              description: "Choice of prescribed parameter at outflow boundary"
+                              required: true
+                              choices:
+                                - name: "pressure"
+                                - name: "reflection"
+                            - name: function_ID
+                              type: int
+                              description: "ID of function describing the boundary condition"
+                              required: true
+                            - name: condition_outflow
+                              type: double
+                              description: "Condition applied at the outlet, either pressure (mmHg) or reflection."
+                              required: true
+                            - name: cycle_period
+                              noneable: true
+                              type: double
+                              description: "Duration of one cycle until next one starts, to implement pulsatility (systolic vs diastolic)."
+                              required: false
+                              default: null
+                            - name: pulse_width
+                              noneable: true
+                              type: double
+                              description: "Duration of input pulse in the cycle - Heaviside function = 1."
+                              required: false
+                              default: null
 $references:
   "0":
     name: elements
