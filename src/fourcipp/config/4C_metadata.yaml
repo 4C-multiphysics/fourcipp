@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 1ada6cf803dcc81486c5b65a72b3361bd36d4b47
+  commit_hash: cb43fe560d0e60d359d226880874e1b72974b9da
   version: 2026.2.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -42905,7 +42905,7 @@ sections:
               type: enum
               description: "global type of the used integration strategy"
               required: false
-              default: "Old"
+              default: "Standard"
               choices:
                 - name: "Old"
                 - name: "Standard"
