@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: bcd86f2b5569932cec6ef5f02819cf2484f99a13
+  commit_hash: 3e140f489221c763b2cd3260b88194e49b7b7b51
   version: 2026.2.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -22467,12 +22467,12 @@ sections:
             - name: MATRIXTYPE
               type: enum
               description: "type of global system matrix in global system of equations"
-              required: false
-              default: "undefined"
+              required: true
               choices:
-                - name: "block"
-                - name: "sparse"
-                - name: "undefined"
+                - name: sparse
+                - name: block
+                - name: block_condition
+                - name: block_condition_dof
             - name: ADAPT_TIME_STEP
               type: int
               description: "time step when time step size should be updated to 'ADAPTED_TIME_STEP_SIZE'."
@@ -40302,9 +40302,8 @@ sections:
               required: false
               default: sparse
               choices:
-                - name: undefined
                 - name: sparse
-                - name: block_field
+                - name: block
                 - name: block_condition
                 - name: block_condition_dof
             - name: NATURAL_CONVECTION
@@ -42082,12 +42081,12 @@ sections:
             - name: MATRIXTYPE
               type: enum
               description: "type of global system matrix in global system of equations"
-              required: false
-              default: "undefined"
+              required: true
               choices:
-                - name: "block"
-                - name: "sparse"
-                - name: "undefined"
+                - name: sparse
+                - name: block
+                - name: block_condition
+                - name: block_condition_dof
             - name: EQUILIBRATION
               type: enum
               description: "flag for equilibration of global system of equations"
@@ -42273,12 +42272,12 @@ sections:
             - name: MATRIXTYPE
               type: enum
               description: "type of global system matrix in global system of equations"
-              required: false
-              default: "undefined"
+              required: true
               choices:
-                - name: "block"
-                - name: "sparse"
-                - name: "undefined"
+                - name: sparse
+                - name: block
+                - name: block_condition
+                - name: block_condition_dof
             - name: EQUILIBRATION
               type: enum
               description: "flag for equilibration of global system of equations"
