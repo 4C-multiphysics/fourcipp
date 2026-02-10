@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 3e140f489221c763b2cd3260b88194e49b7b7b51
+  commit_hash: 8ac72dd1c6624c47c9ac8bbfb029ac8d6aa76371
   version: 2026.2.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -37882,6 +37882,15 @@ sections:
               description: "Refer to the function ID describing the temperature boundary condition of particle phase"
               required: false
               default: "none"
+            - name: CONSTRAINT
+              type: enum
+              description: "type of kinematic constraint imposed"
+              required: false
+              default: NoConstraint
+              choices:
+                - name: NoConstraint
+                - name: Projection1D
+                - name: Projection2D
     - name: PARTICLE DYNAMIC/PD
       type: group
       required: false
@@ -38017,6 +38026,11 @@ sections:
                 - name: NoTransportVelocity
                 - name: StandardTransportVelocity
                 - name: GeneralizedTransportVelocity
+            - name: REDUCED_DIMENSION_SCALE_FACTOR
+              type: double
+              description: "scaling factor for the wall contact force to consider reduced dimensional modeling from 1D or 2D particle field to 3D structural field"
+              required: false
+              default: 1
             - name: TEMPERATUREEVALUATION
               type: enum
               description: "type of temperature evaluation scheme"
