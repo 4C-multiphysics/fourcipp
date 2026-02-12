@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 8ac72dd1c6624c47c9ac8bbfb029ac8d6aa76371
+  commit_hash: 797b94c42103a127a205a793348cf0d153413a2c
   version: 2026.2.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -8327,6 +8327,7 @@ sections:
               choices:
                 - name: none
                 - name: saddlepoint
+                - name: augmented
                 - name: regularized
             - name: MORTAR_FOURIER_MODES
               type: int
@@ -10001,7 +10002,28 @@ sections:
                             required: true
                           - name: Offset
                             type: double
-                            description: "offset for contact to start"
+                            description: "Verticaloffset for contact to start"
+                            required: false
+                            default: 0
+              - type: all_of
+                specs:
+                  - name: LAW
+                    type: int
+                    required: true
+                  - name: CoConstLaw_python_surrogate
+                    type: group
+                    description: Python surrogate model
+                    required: true
+                    specs:
+                      - type: all_of
+                        specs:
+                          - name: Python_Filename
+                            type: path
+                            description: "Path to the Python surrogate model file / script"
+                            required: true
+                          - name: Offset
+                            type: double
+                            description: "Vertical offset for contact to start"
                             required: false
                             default: 0
               - type: all_of
@@ -10026,7 +10048,7 @@ sections:
                             required: true
                           - name: Offset
                             type: double
-                            description: "offset for contact to start"
+                            description: "Verticaloffset for contact to start"
                             required: false
                             default: 0
               - type: all_of
@@ -10059,7 +10081,7 @@ sections:
                             required: true
                           - name: Offset
                             type: double
-                            description: "offset for contact to start"
+                            description: "Verticaloffset for contact to start"
                             required: false
                             default: 0
               - type: all_of
@@ -10084,7 +10106,7 @@ sections:
                             required: true
                           - name: Offset
                             type: double
-                            description: "offset for contact to start"
+                            description: "Verticaloffset for contact to start"
                             required: false
                             default: 0
               - type: all_of
