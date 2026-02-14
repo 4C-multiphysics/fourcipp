@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 797b94c42103a127a205a793348cf0d153413a2c
+  commit_hash: 9ea3f35965b4fd1a5cd8a3a1d6425af90c24f0a8
   version: 2026.2.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -28028,6 +28028,8 @@ sections:
               choices:
                 - name: "No"
                 - name: "membranethickness"
+                - name: "shell7pthickness"
+                - name: "shell7pthicknessdirector"
             - name: OUTPUT_CONTACT
               type: bool
               description: "Flag, defining if contact related quantities should be written to output."
