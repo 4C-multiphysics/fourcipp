@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 9ea3f35965b4fd1a5cd8a3a1d6425af90c24f0a8
+  commit_hash: b937fce7423ed62e9540899dbdbac3999609a20f
   version: 2026.2.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -33374,7 +33374,7 @@ sections:
                     required: true
                   - name: MAT_Struct_ThermoPlasticLinElast
                     type: group
-                    description: Thermo-elastic St.Venant Kirchhoff / plastic von Mises material
+                    description: Thermo-elastic St.Venant Kirchhoff / plastic von Mises material with isotropic and kinematic hardening. The material also includes adiabatic heating due to plastic dissipation
                     required: true
                     specs:
                       - type: all_of
@@ -33413,13 +33413,13 @@ sections:
                             required: true
                           - name: SAMPLENUM
                             type: int
-                            description: "number of stress-strain pairs in list"
+                            description: "number of stress-strain pairs for multi-linear isotropic hardening"
                             required: true
                           - name: SIGMA_Y
                             type: vector
                             value_type:
                               type: double
-                            description: "yield stress"
+                            description: "yield stress values at specific plastic strains. The value at zero plastic strain is still given in YIELD"
                             required: true
                           - name: EPSBAR_P
                             type: vector
