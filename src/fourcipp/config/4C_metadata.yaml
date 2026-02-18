@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: b937fce7423ed62e9540899dbdbac3999609a20f
+  commit_hash: 478c82f7c192572eab2e42f93349c2e4a5cc59ae
   version: 2026.2.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -46419,6 +46419,83 @@ sections:
               specs:
                 - type: all_of
                   specs:
+                    - name: topology
+                      type: group
+                      description: Topology of the reduced lung tree.
+                      required: true
+                      specs:
+                        - type: all_of
+                          specs:
+                            - name: num_nodes
+                              type: int
+                              description: "Total number of nodes in the reduced lung tree."
+                              required: true
+                            - name: num_elements
+                              type: int
+                              description: "Total number of elements in the reduced lung tree."
+                              required: true
+                            - name: node_coordinates
+                              type: selection
+                              description: "Nodal coordinates as 3-component vectors indexed by 1-based node id (map keys 1-based)."
+                              required: true
+                              choices:
+                                - name: constant
+                                  spec:
+                                    name: constant
+                                    type: vector
+                                    value_type:
+                                      type: double
+                                    description: "Constant value for the field."
+                                    required: true
+                                - name: from_file
+                                  spec:
+                                    name: from_file
+                                    type: path
+                                    description: "Path to a file containing the input field data."
+                                    required: true
+                                - name: field_reference
+                                  spec:
+                                    name: field_reference
+                                    type: string
+                                    description: "Refer to a globally defined field by a name."
+                                    required: true
+                                - name: from_mesh
+                                  spec:
+                                    name: from_mesh
+                                    type: string
+                                    description: "Refer to a field defined in the input mesh by a name."
+                                    required: true
+                            - name: element_nodes
+                              type: selection
+                              description: "Element connectivity as [node_in, node_out] with 1-based node ids, indexed by 1-based element id (map keys 1-based)."
+                              required: true
+                              choices:
+                                - name: constant
+                                  spec:
+                                    name: constant
+                                    type: vector
+                                    value_type:
+                                      type: int
+                                    description: "Constant value for the field."
+                                    required: true
+                                - name: from_file
+                                  spec:
+                                    name: from_file
+                                    type: path
+                                    description: "Path to a file containing the input field data."
+                                    required: true
+                                - name: field_reference
+                                  spec:
+                                    name: field_reference
+                                    type: string
+                                    description: "Refer to a globally defined field by a name."
+                                    required: true
+                                - name: from_mesh
+                                  spec:
+                                    name: from_mesh
+                                    type: string
+                                    description: "Refer to a field defined in the input mesh by a name."
+                                    required: true
                     - name: element_type
                       type: selection
                       description: "Type of reduced lung elements."
@@ -47148,6 +47225,145 @@ sections:
                                                     type: string
                                                     description: "Refer to a field defined in the input mesh by a name."
                                                     required: true
+            - name: boundary_conditions
+              type: group
+              description: Boundary conditions for the reduced lung tree.
+              required: true
+              specs:
+                - type: all_of
+                  specs:
+                    - name: num_conditions
+                      type: int
+                      description: "Total number of boundary conditions."
+                      required: true
+                    - name: bc_type
+                      type: selection
+                      description: "Boundary condition type (Pressure or Flow)."
+                      required: true
+                      choices:
+                        - name: constant
+                          spec:
+                            name: constant
+                            type: enum
+                            description: "Constant value for the field."
+                            required: true
+                            choices:
+                              - name: Pressure
+                              - name: Flow
+                        - name: from_file
+                          spec:
+                            name: from_file
+                            type: path
+                            description: "Path to a file containing the input field data."
+                            required: true
+                        - name: field_reference
+                          spec:
+                            name: field_reference
+                            type: string
+                            description: "Refer to a globally defined field by a name."
+                            required: true
+                        - name: from_mesh
+                          spec:
+                            name: from_mesh
+                            type: string
+                            description: "Refer to a field defined in the input mesh by a name."
+                            required: true
+                    - name: bc_node_id
+                      type: selection
+                      description: "Boundary node id (1-based)."
+                      required: true
+                      choices:
+                        - name: constant
+                          spec:
+                            name: constant
+                            type: int
+                            description: "Constant value for the field."
+                            required: true
+                        - name: from_file
+                          spec:
+                            name: from_file
+                            type: path
+                            description: "Path to a file containing the input field data."
+                            required: true
+                        - name: field_reference
+                          spec:
+                            name: field_reference
+                            type: string
+                            description: "Refer to a globally defined field by a name."
+                            required: true
+                        - name: from_mesh
+                          spec:
+                            name: from_mesh
+                            type: string
+                            description: "Refer to a field defined in the input mesh by a name."
+                            required: true
+                    - name: boundary_value
+                      type: selection
+                      description: "Boundary condition value definition."
+                      required: true
+                      choices:
+                        - name: bc_function_id
+                          spec:
+                            name: bc_function_id
+                            type: selection
+                            description: "Function id for time-dependent boundary values."
+                            required: true
+                            choices:
+                              - name: constant
+                                spec:
+                                  name: constant
+                                  type: int
+                                  description: "Constant value for the field."
+                                  required: true
+                              - name: from_file
+                                spec:
+                                  name: from_file
+                                  type: path
+                                  description: "Path to a file containing the input field data."
+                                  required: true
+                              - name: field_reference
+                                spec:
+                                  name: field_reference
+                                  type: string
+                                  description: "Refer to a globally defined field by a name."
+                                  required: true
+                              - name: from_mesh
+                                spec:
+                                  name: from_mesh
+                                  type: string
+                                  description: "Refer to a field defined in the input mesh by a name."
+                                  required: true
+                        - name: bc_value
+                          spec:
+                            name: bc_value
+                            type: selection
+                            description: "Constant boundary value."
+                            required: true
+                            choices:
+                              - name: constant
+                                spec:
+                                  name: constant
+                                  type: double
+                                  description: "Constant value for the field."
+                                  required: true
+                              - name: from_file
+                                spec:
+                                  name: from_file
+                                  type: path
+                                  description: "Path to a file containing the input field data."
+                                  required: true
+                              - name: field_reference
+                                spec:
+                                  name: field_reference
+                                  type: string
+                                  description: "Refer to a globally defined field by a name."
+                                  required: true
+                              - name: from_mesh
+                                spec:
+                                  name: from_mesh
+                                  type: string
+                                  description: "Refer to a field defined in the input mesh by a name."
+                                  required: true
             - name: air_properties
               type: group
               description: Air properties for the reduced dimensional lung simulation
