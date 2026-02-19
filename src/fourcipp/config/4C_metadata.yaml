@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 478c82f7c192572eab2e42f93349c2e4a5cc59ae
+  commit_hash: 6b662e817345a244d1b18f01a35d171c28ba57f7
   version: 2026.2.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -226,90 +226,178 @@ legacy_element_specs:
       spec:
         type: all_of
         specs:
-          - name: MAT
-            type: int
-            required: true
-          - name: TRIADS
-            type: vector
-            size: 6
-            value_type:
-              type: double
-            required: true
-          - name: USE_FAD
-            type: bool
-            required: false
-            default: false
-          - name: HERMITE_CENTERLINE
-            type: bool
-            description: "Use Hermite interpolation for centerline using the two end nodes of the element"
-            required: false
-            default: false
+          - type: one_of
+            specs:
+              - type: all_of
+                specs:
+                  - name: MAT
+                    type: int
+                    required: true
+                  - name: TRIADS
+                    type: vector
+                    size: 6
+                    value_type:
+                      type: double
+                    required: true
+                  - name: USE_FAD
+                    type: bool
+                    required: false
+                    default: false
+                  - name: HERMITE_CENTERLINE
+                    type: bool
+                    description: "Use Hermite interpolation for centerline using the two end nodes of the element"
+                    required: false
+                    default: false
+              - type: all_of
+                specs:
+                  - name: MAT
+                    type: int
+                    required: true
+                  - name: NODAL_ROTATION_VECTORS
+                    type: string
+                    description: "Cell data field name for nodal rotation vectors."
+                    required: true
+                  - name: USE_FAD
+                    type: bool
+                    required: false
+                    default: false
+                  - name: HERMITE_CENTERLINE
+                    type: bool
+                    description: "Use Hermite interpolation for centerline using the two end nodes of the element"
+                    required: false
+                    default: false
     - cell_type: LINE3
       spec:
         type: all_of
         specs:
-          - name: MAT
-            type: int
-            required: true
-          - name: TRIADS
-            type: vector
-            size: 9
-            value_type:
-              type: double
-            required: true
-          - name: USE_FAD
-            type: bool
-            required: false
-            default: false
-          - name: HERMITE_CENTERLINE
-            type: bool
-            description: "Use Hermite interpolation for centerline using the two end nodes of the element"
-            required: false
-            default: false
+          - type: one_of
+            specs:
+              - type: all_of
+                specs:
+                  - name: MAT
+                    type: int
+                    required: true
+                  - name: TRIADS
+                    type: vector
+                    size: 9
+                    value_type:
+                      type: double
+                    required: true
+                  - name: USE_FAD
+                    type: bool
+                    required: false
+                    default: false
+                  - name: HERMITE_CENTERLINE
+                    type: bool
+                    description: "Use Hermite interpolation for centerline using the two end nodes of the element"
+                    required: false
+                    default: false
+              - type: all_of
+                specs:
+                  - name: MAT
+                    type: int
+                    required: true
+                  - name: NODAL_ROTATION_VECTORS
+                    type: string
+                    description: "Cell data field name for nodal rotation vectors."
+                    required: true
+                  - name: USE_FAD
+                    type: bool
+                    required: false
+                    default: false
+                  - name: HERMITE_CENTERLINE
+                    type: bool
+                    description: "Use Hermite interpolation for centerline using the two end nodes of the element"
+                    required: false
+                    default: false
     - cell_type: LINE4
       spec:
         type: all_of
         specs:
-          - name: MAT
-            type: int
-            required: true
-          - name: TRIADS
-            type: vector
-            size: 12
-            value_type:
-              type: double
-            required: true
-          - name: USE_FAD
-            type: bool
-            required: false
-            default: false
-          - name: HERMITE_CENTERLINE
-            type: bool
-            description: "Use Hermite interpolation for centerline using the two end nodes of the element"
-            required: false
-            default: false
+          - type: one_of
+            specs:
+              - type: all_of
+                specs:
+                  - name: MAT
+                    type: int
+                    required: true
+                  - name: TRIADS
+                    type: vector
+                    size: 12
+                    value_type:
+                      type: double
+                    required: true
+                  - name: USE_FAD
+                    type: bool
+                    required: false
+                    default: false
+                  - name: HERMITE_CENTERLINE
+                    type: bool
+                    description: "Use Hermite interpolation for centerline using the two end nodes of the element"
+                    required: false
+                    default: false
+              - type: all_of
+                specs:
+                  - name: MAT
+                    type: int
+                    required: true
+                  - name: NODAL_ROTATION_VECTORS
+                    type: string
+                    description: "Cell data field name for nodal rotation vectors."
+                    required: true
+                  - name: USE_FAD
+                    type: bool
+                    required: false
+                    default: false
+                  - name: HERMITE_CENTERLINE
+                    type: bool
+                    description: "Use Hermite interpolation for centerline using the two end nodes of the element"
+                    required: false
+                    default: false
     - cell_type: LINE5
       spec:
         type: all_of
         specs:
-          - name: MAT
-            type: int
-            required: true
-          - name: TRIADS
-            type: vector
-            size: 15
-            value_type:
-              type: double
-            required: true
-          - name: USE_FAD
-            type: bool
-            required: false
-            default: false
-          - name: HERMITE_CENTERLINE
-            type: bool
-            description: "Use Hermite interpolation for centerline using the two end nodes of the element"
-            required: false
-            default: false
+          - type: one_of
+            specs:
+              - type: all_of
+                specs:
+                  - name: MAT
+                    type: int
+                    required: true
+                  - name: TRIADS
+                    type: vector
+                    size: 15
+                    value_type:
+                      type: double
+                    required: true
+                  - name: USE_FAD
+                    type: bool
+                    required: false
+                    default: false
+                  - name: HERMITE_CENTERLINE
+                    type: bool
+                    description: "Use Hermite interpolation for centerline using the two end nodes of the element"
+                    required: false
+                    default: false
+              - type: all_of
+                specs:
+                  - name: MAT
+                    type: int
+                    required: true
+                  - name: NODAL_ROTATION_VECTORS
+                    type: string
+                    description: "Cell data field name for nodal rotation vectors."
+                    required: true
+                  - name: USE_FAD
+                    type: bool
+                    required: false
+                    default: false
+                  - name: HERMITE_CENTERLINE
+                    type: bool
+                    description: "Use Hermite interpolation for centerline using the two end nodes of the element"
+                    required: false
+                    default: false
   BELE3_3:
     - cell_type: QUAD4
       spec:
@@ -47941,24 +48029,46 @@ $references:
                                     specs:
                                       - type: all_of
                                         specs:
-                                          - name: MAT
-                                            type: int
-                                            required: true
-                                          - name: TRIADS
-                                            type: vector
-                                            size: 6
-                                            value_type:
-                                              type: double
-                                            required: true
-                                          - name: USE_FAD
-                                            type: bool
-                                            required: false
-                                            default: false
-                                          - name: HERMITE_CENTERLINE
-                                            type: bool
-                                            description: "Use Hermite interpolation for centerline using the two end nodes of the element"
-                                            required: false
-                                            default: false
+                                          - type: one_of
+                                            specs:
+                                              - type: all_of
+                                                specs:
+                                                  - name: MAT
+                                                    type: int
+                                                    required: true
+                                                  - name: TRIADS
+                                                    type: vector
+                                                    size: 6
+                                                    value_type:
+                                                      type: double
+                                                    required: true
+                                                  - name: USE_FAD
+                                                    type: bool
+                                                    required: false
+                                                    default: false
+                                                  - name: HERMITE_CENTERLINE
+                                                    type: bool
+                                                    description: "Use Hermite interpolation for centerline using the two end nodes of the element"
+                                                    required: false
+                                                    default: false
+                                              - type: all_of
+                                                specs:
+                                                  - name: MAT
+                                                    type: int
+                                                    required: true
+                                                  - name: NODAL_ROTATION_VECTORS
+                                                    type: string
+                                                    description: "Cell data field name for nodal rotation vectors."
+                                                    required: true
+                                                  - name: USE_FAD
+                                                    type: bool
+                                                    required: false
+                                                    default: false
+                                                  - name: HERMITE_CENTERLINE
+                                                    type: bool
+                                                    description: "Use Hermite interpolation for centerline using the two end nodes of the element"
+                                                    required: false
+                                                    default: false
                               - type: all_of
                                 specs:
                                   - name: LINE3
@@ -47967,24 +48077,46 @@ $references:
                                     specs:
                                       - type: all_of
                                         specs:
-                                          - name: MAT
-                                            type: int
-                                            required: true
-                                          - name: TRIADS
-                                            type: vector
-                                            size: 9
-                                            value_type:
-                                              type: double
-                                            required: true
-                                          - name: USE_FAD
-                                            type: bool
-                                            required: false
-                                            default: false
-                                          - name: HERMITE_CENTERLINE
-                                            type: bool
-                                            description: "Use Hermite interpolation for centerline using the two end nodes of the element"
-                                            required: false
-                                            default: false
+                                          - type: one_of
+                                            specs:
+                                              - type: all_of
+                                                specs:
+                                                  - name: MAT
+                                                    type: int
+                                                    required: true
+                                                  - name: TRIADS
+                                                    type: vector
+                                                    size: 9
+                                                    value_type:
+                                                      type: double
+                                                    required: true
+                                                  - name: USE_FAD
+                                                    type: bool
+                                                    required: false
+                                                    default: false
+                                                  - name: HERMITE_CENTERLINE
+                                                    type: bool
+                                                    description: "Use Hermite interpolation for centerline using the two end nodes of the element"
+                                                    required: false
+                                                    default: false
+                                              - type: all_of
+                                                specs:
+                                                  - name: MAT
+                                                    type: int
+                                                    required: true
+                                                  - name: NODAL_ROTATION_VECTORS
+                                                    type: string
+                                                    description: "Cell data field name for nodal rotation vectors."
+                                                    required: true
+                                                  - name: USE_FAD
+                                                    type: bool
+                                                    required: false
+                                                    default: false
+                                                  - name: HERMITE_CENTERLINE
+                                                    type: bool
+                                                    description: "Use Hermite interpolation for centerline using the two end nodes of the element"
+                                                    required: false
+                                                    default: false
                               - type: all_of
                                 specs:
                                   - name: LINE4
@@ -47993,24 +48125,46 @@ $references:
                                     specs:
                                       - type: all_of
                                         specs:
-                                          - name: MAT
-                                            type: int
-                                            required: true
-                                          - name: TRIADS
-                                            type: vector
-                                            size: 12
-                                            value_type:
-                                              type: double
-                                            required: true
-                                          - name: USE_FAD
-                                            type: bool
-                                            required: false
-                                            default: false
-                                          - name: HERMITE_CENTERLINE
-                                            type: bool
-                                            description: "Use Hermite interpolation for centerline using the two end nodes of the element"
-                                            required: false
-                                            default: false
+                                          - type: one_of
+                                            specs:
+                                              - type: all_of
+                                                specs:
+                                                  - name: MAT
+                                                    type: int
+                                                    required: true
+                                                  - name: TRIADS
+                                                    type: vector
+                                                    size: 12
+                                                    value_type:
+                                                      type: double
+                                                    required: true
+                                                  - name: USE_FAD
+                                                    type: bool
+                                                    required: false
+                                                    default: false
+                                                  - name: HERMITE_CENTERLINE
+                                                    type: bool
+                                                    description: "Use Hermite interpolation for centerline using the two end nodes of the element"
+                                                    required: false
+                                                    default: false
+                                              - type: all_of
+                                                specs:
+                                                  - name: MAT
+                                                    type: int
+                                                    required: true
+                                                  - name: NODAL_ROTATION_VECTORS
+                                                    type: string
+                                                    description: "Cell data field name for nodal rotation vectors."
+                                                    required: true
+                                                  - name: USE_FAD
+                                                    type: bool
+                                                    required: false
+                                                    default: false
+                                                  - name: HERMITE_CENTERLINE
+                                                    type: bool
+                                                    description: "Use Hermite interpolation for centerline using the two end nodes of the element"
+                                                    required: false
+                                                    default: false
                               - type: all_of
                                 specs:
                                   - name: LINE5
@@ -48019,24 +48173,46 @@ $references:
                                     specs:
                                       - type: all_of
                                         specs:
-                                          - name: MAT
-                                            type: int
-                                            required: true
-                                          - name: TRIADS
-                                            type: vector
-                                            size: 15
-                                            value_type:
-                                              type: double
-                                            required: true
-                                          - name: USE_FAD
-                                            type: bool
-                                            required: false
-                                            default: false
-                                          - name: HERMITE_CENTERLINE
-                                            type: bool
-                                            description: "Use Hermite interpolation for centerline using the two end nodes of the element"
-                                            required: false
-                                            default: false
+                                          - type: one_of
+                                            specs:
+                                              - type: all_of
+                                                specs:
+                                                  - name: MAT
+                                                    type: int
+                                                    required: true
+                                                  - name: TRIADS
+                                                    type: vector
+                                                    size: 15
+                                                    value_type:
+                                                      type: double
+                                                    required: true
+                                                  - name: USE_FAD
+                                                    type: bool
+                                                    required: false
+                                                    default: false
+                                                  - name: HERMITE_CENTERLINE
+                                                    type: bool
+                                                    description: "Use Hermite interpolation for centerline using the two end nodes of the element"
+                                                    required: false
+                                                    default: false
+                                              - type: all_of
+                                                specs:
+                                                  - name: MAT
+                                                    type: int
+                                                    required: true
+                                                  - name: NODAL_ROTATION_VECTORS
+                                                    type: string
+                                                    description: "Cell data field name for nodal rotation vectors."
+                                                    required: true
+                                                  - name: USE_FAD
+                                                    type: bool
+                                                    required: false
+                                                    default: false
+                                                  - name: HERMITE_CENTERLINE
+                                                    type: bool
+                                                    description: "Use Hermite interpolation for centerline using the two end nodes of the element"
+                                                    required: false
+                                                    default: false
               - type: all_of
                 specs:
                   - name: BELE3_3
@@ -56532,24 +56708,46 @@ $references:
                                   specs:
                                     - type: all_of
                                       specs:
-                                        - name: MAT
-                                          type: int
-                                          required: true
-                                        - name: TRIADS
-                                          type: vector
-                                          size: 6
-                                          value_type:
-                                            type: double
-                                          required: true
-                                        - name: USE_FAD
-                                          type: bool
-                                          required: false
-                                          default: false
-                                        - name: HERMITE_CENTERLINE
-                                          type: bool
-                                          description: "Use Hermite interpolation for centerline using the two end nodes of the element"
-                                          required: false
-                                          default: false
+                                        - type: one_of
+                                          specs:
+                                            - type: all_of
+                                              specs:
+                                                - name: MAT
+                                                  type: int
+                                                  required: true
+                                                - name: TRIADS
+                                                  type: vector
+                                                  size: 6
+                                                  value_type:
+                                                    type: double
+                                                  required: true
+                                                - name: USE_FAD
+                                                  type: bool
+                                                  required: false
+                                                  default: false
+                                                - name: HERMITE_CENTERLINE
+                                                  type: bool
+                                                  description: "Use Hermite interpolation for centerline using the two end nodes of the element"
+                                                  required: false
+                                                  default: false
+                                            - type: all_of
+                                              specs:
+                                                - name: MAT
+                                                  type: int
+                                                  required: true
+                                                - name: NODAL_ROTATION_VECTORS
+                                                  type: string
+                                                  description: "Cell data field name for nodal rotation vectors."
+                                                  required: true
+                                                - name: USE_FAD
+                                                  type: bool
+                                                  required: false
+                                                  default: false
+                                                - name: HERMITE_CENTERLINE
+                                                  type: bool
+                                                  description: "Use Hermite interpolation for centerline using the two end nodes of the element"
+                                                  required: false
+                                                  default: false
                             - type: all_of
                               specs:
                                 - name: LINE3
@@ -56558,24 +56756,46 @@ $references:
                                   specs:
                                     - type: all_of
                                       specs:
-                                        - name: MAT
-                                          type: int
-                                          required: true
-                                        - name: TRIADS
-                                          type: vector
-                                          size: 9
-                                          value_type:
-                                            type: double
-                                          required: true
-                                        - name: USE_FAD
-                                          type: bool
-                                          required: false
-                                          default: false
-                                        - name: HERMITE_CENTERLINE
-                                          type: bool
-                                          description: "Use Hermite interpolation for centerline using the two end nodes of the element"
-                                          required: false
-                                          default: false
+                                        - type: one_of
+                                          specs:
+                                            - type: all_of
+                                              specs:
+                                                - name: MAT
+                                                  type: int
+                                                  required: true
+                                                - name: TRIADS
+                                                  type: vector
+                                                  size: 9
+                                                  value_type:
+                                                    type: double
+                                                  required: true
+                                                - name: USE_FAD
+                                                  type: bool
+                                                  required: false
+                                                  default: false
+                                                - name: HERMITE_CENTERLINE
+                                                  type: bool
+                                                  description: "Use Hermite interpolation for centerline using the two end nodes of the element"
+                                                  required: false
+                                                  default: false
+                                            - type: all_of
+                                              specs:
+                                                - name: MAT
+                                                  type: int
+                                                  required: true
+                                                - name: NODAL_ROTATION_VECTORS
+                                                  type: string
+                                                  description: "Cell data field name for nodal rotation vectors."
+                                                  required: true
+                                                - name: USE_FAD
+                                                  type: bool
+                                                  required: false
+                                                  default: false
+                                                - name: HERMITE_CENTERLINE
+                                                  type: bool
+                                                  description: "Use Hermite interpolation for centerline using the two end nodes of the element"
+                                                  required: false
+                                                  default: false
                             - type: all_of
                               specs:
                                 - name: LINE4
@@ -56584,24 +56804,46 @@ $references:
                                   specs:
                                     - type: all_of
                                       specs:
-                                        - name: MAT
-                                          type: int
-                                          required: true
-                                        - name: TRIADS
-                                          type: vector
-                                          size: 12
-                                          value_type:
-                                            type: double
-                                          required: true
-                                        - name: USE_FAD
-                                          type: bool
-                                          required: false
-                                          default: false
-                                        - name: HERMITE_CENTERLINE
-                                          type: bool
-                                          description: "Use Hermite interpolation for centerline using the two end nodes of the element"
-                                          required: false
-                                          default: false
+                                        - type: one_of
+                                          specs:
+                                            - type: all_of
+                                              specs:
+                                                - name: MAT
+                                                  type: int
+                                                  required: true
+                                                - name: TRIADS
+                                                  type: vector
+                                                  size: 12
+                                                  value_type:
+                                                    type: double
+                                                  required: true
+                                                - name: USE_FAD
+                                                  type: bool
+                                                  required: false
+                                                  default: false
+                                                - name: HERMITE_CENTERLINE
+                                                  type: bool
+                                                  description: "Use Hermite interpolation for centerline using the two end nodes of the element"
+                                                  required: false
+                                                  default: false
+                                            - type: all_of
+                                              specs:
+                                                - name: MAT
+                                                  type: int
+                                                  required: true
+                                                - name: NODAL_ROTATION_VECTORS
+                                                  type: string
+                                                  description: "Cell data field name for nodal rotation vectors."
+                                                  required: true
+                                                - name: USE_FAD
+                                                  type: bool
+                                                  required: false
+                                                  default: false
+                                                - name: HERMITE_CENTERLINE
+                                                  type: bool
+                                                  description: "Use Hermite interpolation for centerline using the two end nodes of the element"
+                                                  required: false
+                                                  default: false
                             - type: all_of
                               specs:
                                 - name: LINE5
@@ -56610,24 +56852,46 @@ $references:
                                   specs:
                                     - type: all_of
                                       specs:
-                                        - name: MAT
-                                          type: int
-                                          required: true
-                                        - name: TRIADS
-                                          type: vector
-                                          size: 15
-                                          value_type:
-                                            type: double
-                                          required: true
-                                        - name: USE_FAD
-                                          type: bool
-                                          required: false
-                                          default: false
-                                        - name: HERMITE_CENTERLINE
-                                          type: bool
-                                          description: "Use Hermite interpolation for centerline using the two end nodes of the element"
-                                          required: false
-                                          default: false
+                                        - type: one_of
+                                          specs:
+                                            - type: all_of
+                                              specs:
+                                                - name: MAT
+                                                  type: int
+                                                  required: true
+                                                - name: TRIADS
+                                                  type: vector
+                                                  size: 15
+                                                  value_type:
+                                                    type: double
+                                                  required: true
+                                                - name: USE_FAD
+                                                  type: bool
+                                                  required: false
+                                                  default: false
+                                                - name: HERMITE_CENTERLINE
+                                                  type: bool
+                                                  description: "Use Hermite interpolation for centerline using the two end nodes of the element"
+                                                  required: false
+                                                  default: false
+                                            - type: all_of
+                                              specs:
+                                                - name: MAT
+                                                  type: int
+                                                  required: true
+                                                - name: NODAL_ROTATION_VECTORS
+                                                  type: string
+                                                  description: "Cell data field name for nodal rotation vectors."
+                                                  required: true
+                                                - name: USE_FAD
+                                                  type: bool
+                                                  required: false
+                                                  default: false
+                                                - name: HERMITE_CENTERLINE
+                                                  type: bool
+                                                  description: "Use Hermite interpolation for centerline using the two end nodes of the element"
+                                                  required: false
+                                                  default: false
             - type: all_of
               specs:
                 - name: ID
