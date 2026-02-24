@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 6b662e817345a244d1b18f01a35d171c28ba57f7
+  commit_hash: 45f580f6e25309535980b131ea91ea990e70f56e
   version: 2026.2.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -38037,6 +38037,15 @@ sections:
               description: "normal contact damping parameter"
               required: false
               default: 0
+            - name: PD_DIMENSION
+              type: enum
+              description: "dimension of peridynamic problem"
+              required: false
+              default: Peridynamic_3D
+              choices:
+                - name: Peridynamic_3D
+                - name: Peridynamic_2DPlaneStress
+                - name: Peridynamic_2DPlaneStrain
     - name: PARTICLE DYNAMIC/SPH
       type: group
       required: false
