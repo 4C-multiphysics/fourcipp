@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 8285097e16075b8529b3ae2738d703da14a692e3
+  commit_hash: 98ea7efeba5a2622b65b0cc7c4fcf67680350ff9
   version: 2026.2.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -19872,69 +19872,6 @@ sections:
             size: 3
             value_type:
               type: double
-            description: "direction"
-            required: true
-          - name: value
-            type: enum
-            description: "value"
-            required: false
-            default: "disp"
-            choices:
-              - name: "disp"
-              - name: "x"
-          - name: control
-            type: enum
-            description: "relative or absolute control"
-            required: false
-            default: "rel"
-            choices:
-              - name: "abs"
-              - name: "rel"
-    - name: DESIGN SURFACE NORMALDIR MULTIPNT CONSTRAINT 3D PEN
-      type: list
-      description: Node on Plane Constraint Penalty
-      required: false
-      spec:
-        type: all_of
-        specs:
-          - name: E
-            type: int
-            description: "ID of the condition. This ID refers to the respective topological entity of the condition."
-            required: true
-          - name: ENTITY_TYPE
-            type: enum
-            description: "The type of entity that E refers to."
-            required: false
-            default: legacy_id
-            choices:
-              - name: legacy_id
-              - name: node_set_id
-              - name: element_block_id
-          - name: ConditionID
-            type: int
-            required: true
-          - name: amplitude
-            type: double
-            required: true
-          - name: curve
-            noneable: true
-            type: int
-            required: false
-            default: null
-          - name: activeTime
-            type: double
-            required: true
-          - name: penalty
-            type: double
-            required: true
-          - name: masterNode
-            type: int
-            required: true
-          - name: direction
-            type: vector
-            size: 3
-            value_type:
-              type: int
             description: "direction"
             required: true
           - name: value
