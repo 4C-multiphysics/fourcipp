@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 98ea7efeba5a2622b65b0cc7c4fcf67680350ff9
+  commit_hash: 777355456be850d532e3960fd64921209a886d46
   version: 2026.2.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -40313,6 +40313,11 @@ sections:
             - name: SKIPINITDER
               type: bool
               description: "Flag to skip computation of initial time derivative"
+              required: false
+              default: false
+            - name: IS_INTENSIVE_SCALAR
+              type: bool
+              description: "If true, the scalar is treated as an intensive/material quantity without volume reference. In this case, the convective (non-conservative) form is allowed on deforming domains. If false, the scalar is assumed to be volume-referenced (e.g. concentration per current volume), and the conservative form must be used to account for volume changes."
               required: false
               default: false
             - name: FSSUGRDIFF
