@@ -365,7 +365,7 @@ class Primitive(InputSpec):
 class Enum(InputSpec):
     def __init__(
         self,
-        choices: Sequence[str],
+        choices: Sequence[str | None],
         name: NotSetAlias[str] = NotSetString,
         description: NotSetAlias[str] = NotSetString,
         required: bool = True,
@@ -385,6 +385,9 @@ class Enum(InputSpec):
             default: Default value
         """
         super().__init__("enum", name, description, required, noneable, validator)
+        if noneable:
+            # None is a valid value additionally if noneable
+            choices = list(choices) + [None]
         if check_if_set(default):
             if default not in choices:
                 raise ValueError(
