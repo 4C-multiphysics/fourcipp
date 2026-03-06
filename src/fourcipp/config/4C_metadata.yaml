@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 837f37f34a0323f69309884c4007f59e7b7dc47f
+  commit_hash: acce9beb31f74615946cd527d2d560082d7ae4d0
   version: 2026.2.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -12191,6 +12191,7 @@ sections:
             required: true
           - name: TAG
             type: enum
+            description: "If set to **monitor_reaction**, reaction forces (and moments in structural analyses) at the constrained nodes are written to data files (currently supported: csv and yaml) in a subdirectory of the simulation folder. Note that the output has to be switched on in the section `IO/MONITOR STRUCTURE DBC` as well. Results are only produced for structural analyses."
             required: false
             default: "none"
             choices:
@@ -12431,6 +12432,7 @@ sections:
             required: true
           - name: TAG
             type: enum
+            description: "If set to **monitor_reaction**, reaction forces (and moments in structural analyses) at the constrained nodes are written to data files (currently supported: csv and yaml) in a subdirectory of the simulation folder. Note that the output has to be switched on in the section `IO/MONITOR STRUCTURE DBC` as well. Results are only produced for structural analyses."
             required: false
             default: "none"
             choices:
@@ -12563,7 +12565,7 @@ sections:
             default: null
     - name: DESIGN LINE LOCSYS CONDITIONS
       type: list
-      description: Line local coordinate system
+      description: 'Line local coordinate system, to be used with the corresponding dirichlet boundary condition'
       required: false
       spec:
         type: all_of
@@ -12595,6 +12597,7 @@ sections:
             size: 3
             value_type:
               type: double
+            description: "Cartesian components of the rotation vector; rotation direction is defined by the direction of this vector, its norm defines the rotation angle in rad. "
             required: true
           - name: FUNCT
             type: vector
@@ -12602,12 +12605,15 @@ sections:
             value_type:
               noneable: true
               type: int
+            description: "Rotation angle components are multiplied by this function (mainly for spatial variation)"
             required: true
           - name: USEUPDATEDNODEPOS
             type: int
+            description: "1: Use node coordinates at new position within function definition, 0: Use node coordinates at position of previous time step"
             required: true
           - name: USECONSISTENTNODENORMAL
             type: int
+            description: "1: Use consistent nodal normals if available (not for solids!)"
             required: true
     - name: DESIGN LINE MANIFOLD DIRICH CONDITIONS
       type: list
@@ -13175,7 +13181,7 @@ sections:
             required: true
           - name: TYPE
             type: enum
-            description: "type"
+            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section, `PressureGrad`: prescribed pressure gradient in fluids"
             required: false
             default: "Live"
             choices:
@@ -13292,6 +13298,7 @@ sections:
             required: true
           - name: TAG
             type: enum
+            description: "If set to **monitor_reaction**, reaction forces (and moments in structural analyses) at the constrained nodes are written to data files (currently supported: csv and yaml) in a subdirectory of the simulation folder. Note that the output has to be switched on in the section `IO/MONITOR STRUCTURE DBC` as well. Results are only produced for structural analyses."
             required: false
             default: "none"
             choices:
@@ -13448,6 +13455,7 @@ sections:
             required: true
           - name: TAG
             type: enum
+            description: "If set to **monitor_reaction**, reaction forces (and moments in structural analyses) at the constrained nodes are written to data files (currently supported: csv and yaml) in a subdirectory of the simulation folder. Note that the output has to be switched on in the section `IO/MONITOR STRUCTURE DBC` as well. Results are only produced for structural analyses."
             required: false
             default: "none"
             choices:
@@ -13506,7 +13514,7 @@ sections:
             required: true
           - name: TYPE
             type: enum
-            description: "type"
+            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section, `PressureGrad`: prescribed pressure gradient in fluids"
             required: false
             default: "Live"
             choices:
@@ -13843,6 +13851,7 @@ sections:
             required: true
           - name: TAG
             type: enum
+            description: "If set to **monitor_reaction**, reaction forces (and moments in structural analyses) at the constrained nodes are written to data files (currently supported: csv and yaml) in a subdirectory of the simulation folder. Note that the output has to be switched on in the section `IO/MONITOR STRUCTURE DBC` as well. Results are only produced for structural analyses."
             required: false
             default: "none"
             choices:
@@ -13940,7 +13949,7 @@ sections:
             required: true
           - name: TYPE
             type: enum
-            description: "type"
+            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section, `PressureGrad`: prescribed pressure gradient in fluids"
             required: false
             default: "Live"
             choices:
@@ -14031,6 +14040,7 @@ sections:
             required: true
           - name: TAG
             type: enum
+            description: "If set to **monitor_reaction**, reaction forces (and moments in structural analyses) at the constrained nodes are written to data files (currently supported: csv and yaml) in a subdirectory of the simulation folder. Note that the output has to be switched on in the section `IO/MONITOR STRUCTURE DBC` as well. Results are only produced for structural analyses."
             required: false
             default: "none"
             choices:
@@ -14089,7 +14099,7 @@ sections:
             required: true
           - name: TYPE
             type: enum
-            description: "type"
+            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section, `PressureGrad`: prescribed pressure gradient in fluids"
             required: false
             default: "Live"
             choices:
@@ -14882,6 +14892,7 @@ sections:
             required: true
           - name: TAG
             type: enum
+            description: "If set to **monitor_reaction**, reaction forces (and moments in structural analyses) at the constrained nodes are written to data files (currently supported: csv and yaml) in a subdirectory of the simulation folder. Note that the output has to be switched on in the section `IO/MONITOR STRUCTURE DBC` as well. Results are only produced for structural analyses."
             required: false
             default: "none"
             choices:
@@ -14934,7 +14945,7 @@ sections:
             required: true
     - name: DESIGN POINT COUPLING CONDITIONS
       type: list
-      description: Point Coupling
+      description: All nodes in this point set share the same displacement in the specified direction(s)
       required: false
       spec:
         type: all_of
@@ -15019,6 +15030,7 @@ sections:
             required: true
           - name: TAG
             type: enum
+            description: "If set to **monitor_reaction**, reaction forces (and moments in structural analyses) at the constrained nodes are written to data files (currently supported: csv and yaml) in a subdirectory of the simulation folder. Note that the output has to be switched on in the section `IO/MONITOR STRUCTURE DBC` as well. Results are only produced for structural analyses."
             required: false
             default: "none"
             choices:
@@ -15100,7 +15112,7 @@ sections:
             default: null
     - name: DESIGN POINT LOCSYS CONDITIONS
       type: list
-      description: Point local coordinate system
+      description: 'Point local coordinate system, to be used with the corresponding dirichlet boundary condition'
       required: false
       spec:
         type: all_of
@@ -15132,6 +15144,7 @@ sections:
             size: 3
             value_type:
               type: double
+            description: "Cartesian components of the rotation vector; rotation direction is defined by the direction of this vector, its norm defines the rotation angle in rad. "
             required: true
           - name: FUNCT
             type: vector
@@ -15139,9 +15152,11 @@ sections:
             value_type:
               noneable: true
               type: int
+            description: "Rotation angle components are multiplied by this function (mainly for spatial variation)"
             required: true
           - name: USEUPDATEDNODEPOS
             type: int
+            description: "1: Use node coordinates at new position within function definition, 0: Use node coordinates at position of previous time step"
             required: true
     - name: DESIGN POINT MANIFOLD DIRICH CONDITIONS
       type: list
@@ -15251,7 +15266,7 @@ sections:
             required: true
           - name: TYPE
             type: enum
-            description: "type"
+            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section, `PressureGrad`: prescribed pressure gradient in fluids"
             required: false
             default: "Live"
             choices:
@@ -15377,7 +15392,7 @@ sections:
             required: true
           - name: TYPE
             type: enum
-            description: "type"
+            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section, `PressureGrad`: prescribed pressure gradient in fluids"
             required: false
             default: "Live"
             choices:
@@ -15436,6 +15451,7 @@ sections:
             required: true
           - name: TAG
             type: enum
+            description: "If set to **monitor_reaction**, reaction forces (and moments in structural analyses) at the constrained nodes are written to data files (currently supported: csv and yaml) in a subdirectory of the simulation folder. Note that the output has to be switched on in the section `IO/MONITOR STRUCTURE DBC` as well. Results are only produced for structural analyses."
             required: false
             default: "none"
             choices:
@@ -15568,6 +15584,7 @@ sections:
             required: true
           - name: TAG
             type: enum
+            description: "If set to **monitor_reaction**, reaction forces (and moments in structural analyses) at the constrained nodes are written to data files (currently supported: csv and yaml) in a subdirectory of the simulation folder. Note that the output has to be switched on in the section `IO/MONITOR STRUCTURE DBC` as well. Results are only produced for structural analyses."
             required: false
             default: "none"
             choices:
@@ -15626,7 +15643,7 @@ sections:
             required: true
           - name: TYPE
             type: enum
-            description: "type"
+            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section, `PressureGrad`: prescribed pressure gradient in fluids"
             required: false
             default: "Live"
             choices:
@@ -15762,7 +15779,7 @@ sections:
             default: null
     - name: DESIGN POINT THERMO COUPLING CONDITIONS
       type: list
-      description: Point Coupling
+      description: All nodes in this point set share the same temperature
       required: false
       spec:
         type: all_of
@@ -15847,6 +15864,7 @@ sections:
             required: true
           - name: TAG
             type: enum
+            description: "If set to **monitor_reaction**, reaction forces (and moments in structural analyses) at the constrained nodes are written to data files (currently supported: csv and yaml) in a subdirectory of the simulation folder. Note that the output has to be switched on in the section `IO/MONITOR STRUCTURE DBC` as well. Results are only produced for structural analyses."
             required: false
             default: "none"
             choices:
@@ -15944,7 +15962,7 @@ sections:
             required: true
           - name: TYPE
             type: enum
-            description: "type"
+            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section, `PressureGrad`: prescribed pressure gradient in fluids"
             required: false
             default: "Live"
             choices:
@@ -16003,6 +16021,7 @@ sections:
             required: true
           - name: TAG
             type: enum
+            description: "If set to **monitor_reaction**, reaction forces (and moments in structural analyses) at the constrained nodes are written to data files (currently supported: csv and yaml) in a subdirectory of the simulation folder. Note that the output has to be switched on in the section `IO/MONITOR STRUCTURE DBC` as well. Results are only produced for structural analyses."
             required: false
             default: "none"
             choices:
@@ -16061,7 +16080,7 @@ sections:
             required: true
           - name: TYPE
             type: enum
-            description: "type"
+            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section, `PressureGrad`: prescribed pressure gradient in fluids"
             required: false
             default: "Live"
             choices:
@@ -19807,6 +19826,7 @@ sections:
             required: true
           - name: TAG
             type: enum
+            description: "If set to **monitor_reaction**, reaction forces (and moments in structural analyses) at the constrained nodes are written to data files (currently supported: csv and yaml) in a subdirectory of the simulation folder. Note that the output has to be switched on in the section `IO/MONITOR STRUCTURE DBC` as well. Results are only produced for structural analyses."
             required: false
             default: "none"
             choices:
@@ -20112,6 +20132,7 @@ sections:
             required: true
           - name: TAG
             type: enum
+            description: "If set to **monitor_reaction**, reaction forces (and moments in structural analyses) at the constrained nodes are written to data files (currently supported: csv and yaml) in a subdirectory of the simulation folder. Note that the output has to be switched on in the section `IO/MONITOR STRUCTURE DBC` as well. Results are only produced for structural analyses."
             required: false
             default: "none"
             choices:
@@ -20271,7 +20292,7 @@ sections:
             required: true
     - name: DESIGN SURF LOCSYS CONDITIONS
       type: list
-      description: Surface local coordinate system
+      description: 'Surface local coordinate system, to be used with the corresponding dirichlet boundary condition'
       required: false
       spec:
         type: all_of
@@ -20303,6 +20324,7 @@ sections:
             size: 3
             value_type:
               type: double
+            description: "Cartesian components of the rotation vector; rotation direction is defined by the direction of this vector, its norm defines the rotation angle in rad. "
             required: true
           - name: FUNCT
             type: vector
@@ -20310,12 +20332,15 @@ sections:
             value_type:
               noneable: true
               type: int
+            description: "Rotation angle components are multiplied by this function (mainly for spatial variation)"
             required: true
           - name: USEUPDATEDNODEPOS
             type: int
+            description: "1: Use node coordinates at new position within function definition, 0: Use node coordinates at position of previous time step"
             required: true
           - name: USECONSISTENTNODENORMAL
             type: int
+            description: "1: Use consistent nodal normals if available (not for solids!)"
             required: true
     - name: DESIGN SURF MANIFOLD DIRICH CONDITIONS
       type: list
@@ -20694,7 +20719,7 @@ sections:
             required: true
           - name: TYPE
             type: enum
-            description: "type"
+            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section, `PressureGrad`: prescribed pressure gradient in fluids"
             required: false
             default: "Live"
             choices:
@@ -20753,6 +20778,7 @@ sections:
             required: true
           - name: TAG
             type: enum
+            description: "If set to **monitor_reaction**, reaction forces (and moments in structural analyses) at the constrained nodes are written to data files (currently supported: csv and yaml) in a subdirectory of the simulation folder. Note that the output has to be switched on in the section `IO/MONITOR STRUCTURE DBC` as well. Results are only produced for structural analyses."
             required: false
             default: "none"
             choices:
@@ -20911,6 +20937,7 @@ sections:
             required: true
           - name: TAG
             type: enum
+            description: "If set to **monitor_reaction**, reaction forces (and moments in structural analyses) at the constrained nodes are written to data files (currently supported: csv and yaml) in a subdirectory of the simulation folder. Note that the output has to be switched on in the section `IO/MONITOR STRUCTURE DBC` as well. Results are only produced for structural analyses."
             required: false
             default: "none"
             choices:
@@ -20969,7 +20996,7 @@ sections:
             required: true
           - name: TYPE
             type: enum
-            description: "type"
+            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section, `PressureGrad`: prescribed pressure gradient in fluids"
             required: false
             default: "Live"
             choices:
@@ -21183,6 +21210,7 @@ sections:
             required: true
           - name: TAG
             type: enum
+            description: "If set to **monitor_reaction**, reaction forces (and moments in structural analyses) at the constrained nodes are written to data files (currently supported: csv and yaml) in a subdirectory of the simulation folder. Note that the output has to be switched on in the section `IO/MONITOR STRUCTURE DBC` as well. Results are only produced for structural analyses."
             required: false
             default: "none"
             choices:
@@ -21280,7 +21308,7 @@ sections:
             required: true
           - name: TYPE
             type: enum
-            description: "type"
+            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section, `PressureGrad`: prescribed pressure gradient in fluids"
             required: false
             default: "Live"
             choices:
@@ -21453,6 +21481,7 @@ sections:
             required: true
           - name: TAG
             type: enum
+            description: "If set to **monitor_reaction**, reaction forces (and moments in structural analyses) at the constrained nodes are written to data files (currently supported: csv and yaml) in a subdirectory of the simulation folder. Note that the output has to be switched on in the section `IO/MONITOR STRUCTURE DBC` as well. Results are only produced for structural analyses."
             required: false
             default: "none"
             choices:
@@ -21511,7 +21540,7 @@ sections:
             required: true
           - name: TYPE
             type: enum
-            description: "type"
+            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section, `PressureGrad`: prescribed pressure gradient in fluids"
             required: false
             default: "Live"
             choices:
@@ -22938,6 +22967,7 @@ sections:
             required: true
           - name: TAG
             type: enum
+            description: "If set to **monitor_reaction**, reaction forces (and moments in structural analyses) at the constrained nodes are written to data files (currently supported: csv and yaml) in a subdirectory of the simulation folder. Note that the output has to be switched on in the section `IO/MONITOR STRUCTURE DBC` as well. Results are only produced for structural analyses."
             required: false
             default: "none"
             choices:
@@ -22993,6 +23023,7 @@ sections:
             required: true
           - name: TAG
             type: enum
+            description: "If set to **monitor_reaction**, reaction forces (and moments in structural analyses) at the constrained nodes are written to data files (currently supported: csv and yaml) in a subdirectory of the simulation folder. Note that the output has to be switched on in the section `IO/MONITOR STRUCTURE DBC` as well. Results are only produced for structural analyses."
             required: false
             default: "none"
             choices:
@@ -23045,7 +23076,7 @@ sections:
             required: true
     - name: DESIGN VOL LOCSYS CONDITIONS
       type: list
-      description: Volume local coordinate system
+      description: 'Volume local coordinate system, to be used with the corresponding dirichlet boundary condition'
       required: false
       spec:
         type: all_of
@@ -23077,6 +23108,7 @@ sections:
             size: 3
             value_type:
               type: double
+            description: "Cartesian components of the rotation vector; rotation direction is defined by the direction of this vector, its norm defines the rotation angle in rad. "
             required: true
           - name: FUNCT
             type: vector
@@ -23084,9 +23116,11 @@ sections:
             value_type:
               noneable: true
               type: int
+            description: "Rotation angle components are multiplied by this function (mainly for spatial variation)"
             required: true
           - name: USEUPDATEDNODEPOS
             type: int
+            description: "1: Use node coordinates at new position within function definition, 0: Use node coordinates at position of previous time step"
             required: true
     - name: DESIGN VOL MODE FOR KRYLOV SPACE PROJECTION
       type: list
@@ -23201,7 +23235,7 @@ sections:
             required: true
           - name: TYPE
             type: enum
-            description: "type"
+            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section, `PressureGrad`: prescribed pressure gradient in fluids"
             required: false
             default: "Live"
             choices:
@@ -23260,6 +23294,7 @@ sections:
             required: true
           - name: TAG
             type: enum
+            description: "If set to **monitor_reaction**, reaction forces (and moments in structural analyses) at the constrained nodes are written to data files (currently supported: csv and yaml) in a subdirectory of the simulation folder. Note that the output has to be switched on in the section `IO/MONITOR STRUCTURE DBC` as well. Results are only produced for structural analyses."
             required: false
             default: "none"
             choices:
@@ -23315,6 +23350,7 @@ sections:
             required: true
           - name: TAG
             type: enum
+            description: "If set to **monitor_reaction**, reaction forces (and moments in structural analyses) at the constrained nodes are written to data files (currently supported: csv and yaml) in a subdirectory of the simulation folder. Note that the output has to be switched on in the section `IO/MONITOR STRUCTURE DBC` as well. Results are only produced for structural analyses."
             required: false
             default: "none"
             choices:
@@ -23373,7 +23409,7 @@ sections:
             required: true
           - name: TYPE
             type: enum
-            description: "type"
+            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section, `PressureGrad`: prescribed pressure gradient in fluids"
             required: false
             default: "Live"
             choices:
@@ -23464,6 +23500,7 @@ sections:
             required: true
           - name: TAG
             type: enum
+            description: "If set to **monitor_reaction**, reaction forces (and moments in structural analyses) at the constrained nodes are written to data files (currently supported: csv and yaml) in a subdirectory of the simulation folder. Note that the output has to be switched on in the section `IO/MONITOR STRUCTURE DBC` as well. Results are only produced for structural analyses."
             required: false
             default: "none"
             choices:
@@ -23561,7 +23598,7 @@ sections:
             required: true
           - name: TYPE
             type: enum
-            description: "type"
+            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section, `PressureGrad`: prescribed pressure gradient in fluids"
             required: false
             default: "Live"
             choices:
@@ -23620,6 +23657,7 @@ sections:
             required: true
           - name: TAG
             type: enum
+            description: "If set to **monitor_reaction**, reaction forces (and moments in structural analyses) at the constrained nodes are written to data files (currently supported: csv and yaml) in a subdirectory of the simulation folder. Note that the output has to be switched on in the section `IO/MONITOR STRUCTURE DBC` as well. Results are only produced for structural analyses."
             required: false
             default: "none"
             choices:
@@ -23678,7 +23716,7 @@ sections:
             required: true
           - name: TYPE
             type: enum
-            description: "type"
+            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section, `PressureGrad`: prescribed pressure gradient in fluids"
             required: false
             default: "Live"
             choices:
@@ -36290,6 +36328,38 @@ sections:
                                 maximum: 1.7976931348623157e+308
                                 minimum_exclusive: false
                                 maximum_exclusive: false
+                          - name: FIBER_ORIENTATION
+                            type: selection
+                            description: "A unit vector field pointing in the direction of the fibers."
+                            required: true
+                            choices:
+                              - name: constant
+                                spec:
+                                  name: constant
+                                  type: vector
+                                  size: 3
+                                  value_type:
+                                    type: double
+                                  description: "Constant value for the field."
+                                  required: true
+                              - name: from_file
+                                spec:
+                                  name: from_file
+                                  type: path
+                                  description: "Path to a file containing the input field data."
+                                  required: true
+                              - name: field_reference
+                                spec:
+                                  name: field_reference
+                                  type: string
+                                  description: "Refer to a globally defined field by a name."
+                                  required: true
+                              - name: from_mesh
+                                spec:
+                                  name: from_mesh
+                                  type: string
+                                  description: "Refer to a field defined in the input mesh by a name."
+                                  required: true
               - type: all_of
                 specs:
                   - name: MAT
@@ -37317,6 +37387,38 @@ sections:
                                         maximum: 1.7976931348623157e+308
                                         minimum_exclusive: false
                                         maximum_exclusive: false
+                                  - name: FIBER_ORIENTATION
+                                    type: selection
+                                    description: "A unit vector field pointing in the direction of the fibers."
+                                    required: true
+                                    choices:
+                                      - name: constant
+                                        spec:
+                                          name: constant
+                                          type: vector
+                                          size: 3
+                                          value_type:
+                                            type: double
+                                          description: "Constant value for the field."
+                                          required: true
+                                      - name: from_file
+                                        spec:
+                                          name: from_file
+                                          type: path
+                                          description: "Path to a file containing the input field data."
+                                          required: true
+                                      - name: field_reference
+                                        spec:
+                                          name: field_reference
+                                          type: string
+                                          description: "Refer to a globally defined field by a name."
+                                          required: true
+                                      - name: from_mesh
+                                        spec:
+                                          name: from_mesh
+                                          type: string
+                                          description: "Refer to a field defined in the input mesh by a name."
+                                          required: true
                               - type: all_of
                                 specs:
                                   - name: ALPHA
@@ -37438,6 +37540,38 @@ sections:
                                         maximum: 1.7976931348623157e+308
                                         minimum_exclusive: false
                                         maximum_exclusive: false
+                                  - name: FIBER_ORIENTATION
+                                    type: selection
+                                    description: "A unit vector field pointing in the direction of the fibers."
+                                    required: true
+                                    choices:
+                                      - name: constant
+                                        spec:
+                                          name: constant
+                                          type: vector
+                                          size: 3
+                                          value_type:
+                                            type: double
+                                          description: "Constant value for the field."
+                                          required: true
+                                      - name: from_file
+                                        spec:
+                                          name: from_file
+                                          type: path
+                                          description: "Path to a file containing the input field data."
+                                          required: true
+                                      - name: field_reference
+                                        spec:
+                                          name: field_reference
+                                          type: string
+                                          description: "Refer to a globally defined field by a name."
+                                          required: true
+                                      - name: from_mesh
+                                        spec:
+                                          name: from_mesh
+                                          type: string
+                                          description: "Refer to a field defined in the input mesh by a name."
+                                          required: true
               - type: all_of
                 specs:
                   - name: MAT
@@ -37731,6 +37865,38 @@ sections:
                                 maximum: 1.7976931348623157e+308
                                 minimum_exclusive: false
                                 maximum_exclusive: false
+                          - name: FIBER_ORIENTATION
+                            type: selection
+                            description: "A unit vector field pointing in the direction of the fibers."
+                            required: true
+                            choices:
+                              - name: constant
+                                spec:
+                                  name: constant
+                                  type: vector
+                                  size: 3
+                                  value_type:
+                                    type: double
+                                  description: "Constant value for the field."
+                                  required: true
+                              - name: from_file
+                                spec:
+                                  name: from_file
+                                  type: path
+                                  description: "Path to a file containing the input field data."
+                                  required: true
+                              - name: field_reference
+                                spec:
+                                  name: field_reference
+                                  type: string
+                                  description: "Refer to a globally defined field by a name."
+                                  required: true
+                              - name: from_mesh
+                                spec:
+                                  name: from_mesh
+                                  type: string
+                                  description: "Refer to a field defined in the input mesh by a name."
+                                  required: true
               - type: all_of
                 specs:
                   - name: MAT
@@ -38163,6 +38329,38 @@ sections:
                                 maximum: 1.7976931348623157e+308
                                 minimum_exclusive: false
                                 maximum_exclusive: false
+                          - name: FIBER_ORIENTATION
+                            type: selection
+                            description: "A unit vector field pointing in the direction of the fibers."
+                            required: true
+                            choices:
+                              - name: constant
+                                spec:
+                                  name: constant
+                                  type: vector
+                                  size: 3
+                                  value_type:
+                                    type: double
+                                  description: "Constant value for the field."
+                                  required: true
+                              - name: from_file
+                                spec:
+                                  name: from_file
+                                  type: path
+                                  description: "Path to a file containing the input field data."
+                                  required: true
+                              - name: field_reference
+                                spec:
+                                  name: field_reference
+                                  type: string
+                                  description: "Refer to a globally defined field by a name."
+                                  required: true
+                              - name: from_mesh
+                                spec:
+                                  name: from_mesh
+                                  type: string
+                                  description: "Refer to a field defined in the input mesh by a name."
+                                  required: true
               - type: all_of
                 specs:
                   - name: MAT
@@ -43846,14 +44044,13 @@ sections:
           specs:
             - name: SOLVER
               type: enum
-              description: "The solver to attack the system of linear equations arising of FE approach with."
-              required: false
-              default: "undefined"
+              description: "Linear solver used to solve the system of linear equations."
+              required: true
               choices:
-                - name: "Belos"
-                - name: "Superlu"
-                - name: "UMFPACK"
-                - name: "undefined"
+                - name: KLU2
+                - name: UMFPACK
+                - name: Superlu
+                - name: Belos
             - name: AZSOLVE
               type: enum
               description: "Type of linear solver algorithm to use."
@@ -43965,14 +44162,13 @@ sections:
           specs:
             - name: SOLVER
               type: enum
-              description: "The solver to attack the system of linear equations arising of FE approach with."
-              required: false
-              default: "undefined"
+              description: "Linear solver used to solve the system of linear equations."
+              required: true
               choices:
-                - name: "Belos"
-                - name: "Superlu"
-                - name: "UMFPACK"
-                - name: "undefined"
+                - name: KLU2
+                - name: UMFPACK
+                - name: Superlu
+                - name: Belos
             - name: AZSOLVE
               type: enum
               description: "Type of linear solver algorithm to use."
@@ -44084,14 +44280,13 @@ sections:
           specs:
             - name: SOLVER
               type: enum
-              description: "The solver to attack the system of linear equations arising of FE approach with."
-              required: false
-              default: "undefined"
+              description: "Linear solver used to solve the system of linear equations."
+              required: true
               choices:
-                - name: "Belos"
-                - name: "Superlu"
-                - name: "UMFPACK"
-                - name: "undefined"
+                - name: KLU2
+                - name: UMFPACK
+                - name: Superlu
+                - name: Belos
             - name: AZSOLVE
               type: enum
               description: "Type of linear solver algorithm to use."
@@ -44203,14 +44398,13 @@ sections:
           specs:
             - name: SOLVER
               type: enum
-              description: "The solver to attack the system of linear equations arising of FE approach with."
-              required: false
-              default: "undefined"
+              description: "Linear solver used to solve the system of linear equations."
+              required: true
               choices:
-                - name: "Belos"
-                - name: "Superlu"
-                - name: "UMFPACK"
-                - name: "undefined"
+                - name: KLU2
+                - name: UMFPACK
+                - name: Superlu
+                - name: Belos
             - name: AZSOLVE
               type: enum
               description: "Type of linear solver algorithm to use."
@@ -44322,14 +44516,13 @@ sections:
           specs:
             - name: SOLVER
               type: enum
-              description: "The solver to attack the system of linear equations arising of FE approach with."
-              required: false
-              default: "undefined"
+              description: "Linear solver used to solve the system of linear equations."
+              required: true
               choices:
-                - name: "Belos"
-                - name: "Superlu"
-                - name: "UMFPACK"
-                - name: "undefined"
+                - name: KLU2
+                - name: UMFPACK
+                - name: Superlu
+                - name: Belos
             - name: AZSOLVE
               type: enum
               description: "Type of linear solver algorithm to use."
@@ -44441,14 +44634,13 @@ sections:
           specs:
             - name: SOLVER
               type: enum
-              description: "The solver to attack the system of linear equations arising of FE approach with."
-              required: false
-              default: "undefined"
+              description: "Linear solver used to solve the system of linear equations."
+              required: true
               choices:
-                - name: "Belos"
-                - name: "Superlu"
-                - name: "UMFPACK"
-                - name: "undefined"
+                - name: KLU2
+                - name: UMFPACK
+                - name: Superlu
+                - name: Belos
             - name: AZSOLVE
               type: enum
               description: "Type of linear solver algorithm to use."
@@ -44560,14 +44752,13 @@ sections:
           specs:
             - name: SOLVER
               type: enum
-              description: "The solver to attack the system of linear equations arising of FE approach with."
-              required: false
-              default: "undefined"
+              description: "Linear solver used to solve the system of linear equations."
+              required: true
               choices:
-                - name: "Belos"
-                - name: "Superlu"
-                - name: "UMFPACK"
-                - name: "undefined"
+                - name: KLU2
+                - name: UMFPACK
+                - name: Superlu
+                - name: Belos
             - name: AZSOLVE
               type: enum
               description: "Type of linear solver algorithm to use."
@@ -44679,14 +44870,13 @@ sections:
           specs:
             - name: SOLVER
               type: enum
-              description: "The solver to attack the system of linear equations arising of FE approach with."
-              required: false
-              default: "undefined"
+              description: "Linear solver used to solve the system of linear equations."
+              required: true
               choices:
-                - name: "Belos"
-                - name: "Superlu"
-                - name: "UMFPACK"
-                - name: "undefined"
+                - name: KLU2
+                - name: UMFPACK
+                - name: Superlu
+                - name: Belos
             - name: AZSOLVE
               type: enum
               description: "Type of linear solver algorithm to use."
@@ -44798,14 +44988,13 @@ sections:
           specs:
             - name: SOLVER
               type: enum
-              description: "The solver to attack the system of linear equations arising of FE approach with."
-              required: false
-              default: "undefined"
+              description: "Linear solver used to solve the system of linear equations."
+              required: true
               choices:
-                - name: "Belos"
-                - name: "Superlu"
-                - name: "UMFPACK"
-                - name: "undefined"
+                - name: KLU2
+                - name: UMFPACK
+                - name: Superlu
+                - name: Belos
             - name: AZSOLVE
               type: enum
               description: "Type of linear solver algorithm to use."
