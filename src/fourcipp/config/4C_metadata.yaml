@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: ad4aaa89b738d43006788bb512ac91505ab5edc4
+  commit_hash: 5543995db5ad5034ec090cbf94c24b59eb97d5ba
   version: 2026.2.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -47950,11 +47950,11 @@ sections:
               type: enum
               description: "type of norm for convergence check of primary variables in TSI"
               required: false
-              default: "Abs"
+              default: Abs
               choices:
-                - name: "Abs"
-                - name: "Mix"
-                - name: "Rel"
+                - name: Abs
+                - name: Rel
+                - name: Mix
     - name: TSI DYNAMIC/MONOLITHIC
       type: group
       required: false
@@ -47975,11 +47975,11 @@ sections:
               type: enum
               description: "type of norm for residual convergence check"
               required: false
-              default: "Abs"
+              default: Abs
               choices:
-                - name: "Abs"
-                - name: "Mix"
-                - name: "Rel"
+                - name: Abs
+                - name: Rel
+                - name: Mix
             - name: NORMCOMBI_RESFINC
               type: enum
               description: "binary operator to combine primary variables and residual force values"
@@ -47996,21 +47996,21 @@ sections:
               type: enum
               description: "type of norm to be applied to residuals"
               required: false
-              default: "Rms"
+              default: Rms
               choices:
-                - name: "Inf"
-                - name: "L1"
-                - name: "L1_Scaled"
-                - name: "L2"
-                - name: "Rms"
+                - name: L1
+                - name: L1_Scaled
+                - name: L2
+                - name: Rms
+                - name: Inf
             - name: NLNSOL
               type: enum
               description: "Nonlinear solution technique"
               required: false
-              default: "fullnewton"
+              default: fullnewton
               choices:
-                - name: "fullnewton"
-                - name: "ptc"
+                - name: fullnewton
+                - name: ptc
             - name: PTCDT
               type: double
               description: "pseudo time step for pseudo-transient continuation (PTC) stabilised Newton procedure"
@@ -48062,10 +48062,10 @@ sections:
               type: enum
               description: "Coupling variable"
               required: false
-              default: "Displacement"
+              default: Displacement
               choices:
-                - name: "Displacement"
-                - name: "Temperature"
+                - name: Displacement
+                - name: Temperature
             - name: MAXOMEGA
               type: double
               description: "largest omega allowed for Aitken relaxation (0.0 means no constraint)"
