@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 5543995db5ad5034ec090cbf94c24b59eb97d5ba
+  commit_hash: a9dc83cb8c96b87150d76bb12abb6f3513cbfc7f
   version: 2026.2.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -32186,11 +32186,6 @@ sections:
                             description: "Mixture rule has inelastic growth (default false)"
                             required: false
                             default: false
-                          - name: GAMMA
-                            type: double
-                            description: "Angle of fiber alignment in degree (default = 0.0 degrees)"
-                            required: false
-                            default: 0
               - type: all_of
                 specs:
                   - name: MAT
