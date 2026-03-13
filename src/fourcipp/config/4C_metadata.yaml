@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: a9dc83cb8c96b87150d76bb12abb6f3513cbfc7f
+  commit_hash: 0103290af18cadcc390cd8299d6ad6317409c8d9
   version: 2026.2.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -7679,14 +7679,6 @@ sections:
                 - name: "Everydt"
                 - name: "adaptive"
                 - name: "everydt"
-            - name: SEARCH_STRATEGY
-              type: enum
-              description: "Type of search strategy used for finding coupling pairs"
-              required: false
-              default: bruteforce_with_binning
-              choices:
-                - name: bruteforce_with_binning
-                - name: bounding_volume_hierarchy
     - name: BEAM INTERACTION/BEAM TO BEAM CONTACT
       type: group
       required: false
@@ -40981,13 +40973,20 @@ sections:
                 - name: Constant
                 - name: Normal
             - name: MIN_RADIUS
+              noneable: true
               type: double
-              description: "minimum allowed particle radius"
+              description: "minimum allowed particle radius: used as lower cutoff for a radius distribution"
               required: false
-              default: 0
+              default: null
+              validator:
+                range:
+                  minimum: 0
+                  maximum: 1.7976931348623157e+308
+                  minimum_exclusive: true
+                  maximum_exclusive: false
             - name: MAX_RADIUS
               type: double
-              description: "maximum allowed particle radius"
+              description: "maximum allowed particle radius: used as upper cutoff for a radius distribution and to calculate the contact stiffness."
               required: false
               default: 0
             - name: MAX_VELOCITY
@@ -45348,6 +45347,12 @@ sections:
               description: "Automatically calculate initial field for electric potential"
               required: false
               default: false
+            - name: INIT_POT_CALC_LINEAR_SOLVER
+              noneable: true
+              type: int
+              description: "ID of linear solver for global system of equations for calculation of the initial potential field"
+              required: false
+              default: null
     - name: SSI CONTROL/MANIFOLD
       type: group
       required: false
