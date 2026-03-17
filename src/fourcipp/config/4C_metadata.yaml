@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 0103290af18cadcc390cd8299d6ad6317409c8d9
+  commit_hash: 84090979d7b9cdc594b592903bc8cab758e5434a
   version: 2026.2.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -49355,6 +49355,14 @@ sections:
                       description: "time step size dt"
                       required: false
                       default: -1
+            - name: body_force
+              noneable: true
+              type: vector
+              value_type:
+                type: double
+              description: "External body force contribution vector. The vector must have the same dimension as the problem (2D/3D)."
+              required: false
+              default: null
             - name: nonlinear_solver
               type: group
               required: false
