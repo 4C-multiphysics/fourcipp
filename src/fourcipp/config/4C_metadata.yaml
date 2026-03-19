@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 84090979d7b9cdc594b592903bc8cab758e5434a
+  commit_hash: 85db4e98f8d137b55bcc4b833169c2ebcc39898a
   version: 2026.2.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -41166,6 +41166,113 @@ sections:
                 - name: NoConstraint
                 - name: Projection1D
                 - name: Projection2D
+    - name: PARTICLE DYNAMIC/OPEN BOUNDARIES
+      type: group
+      required: false
+      specs:
+        - type: all_of
+          specs:
+            - name: DIRICHLET_BOUNDARIES
+              type: list
+              required: false
+              spec:
+                type: all_of
+                specs:
+                  - type: one_of
+                    specs:
+                      - type: all_of
+                        specs:
+                          - name: BOUNDARY
+                            type: int
+                            required: true
+                          - name: NoDirichletOpenBoundary
+                            type: group
+                            description: no dirichlet open boundary
+                            required: true
+                            specs:
+                              - type: all_of
+                                specs: []
+                      - type: all_of
+                        specs:
+                          - name: BOUNDARY
+                            type: int
+                            required: true
+                          - name: DirichletNormalToPlane
+                            type: group
+                            description: dirichlet normal to plane open boundary
+                            required: true
+                            specs:
+                              - type: all_of
+                                specs:
+                                  - name: FUNCT
+                                    type: int
+                                    description: "number of function governing velocity condition on dirichlet open boundary"
+                                    required: true
+                                  - name: OUTWARD_NORMAL
+                                    type: vector
+                                    size: 3
+                                    value_type:
+                                      type: double
+                                    description: "direction of outward normal on dirichlet open boundary"
+                                    required: true
+                                  - name: PLANE_POINT
+                                    type: vector
+                                    size: 3
+                                    value_type:
+                                      type: double
+                                    description: "point on dirichlet open boundary plane"
+                                    required: true
+            - name: NEUMANN_BOUNDARIES
+              type: list
+              required: false
+              spec:
+                type: all_of
+                specs:
+                  - type: one_of
+                    specs:
+                      - type: all_of
+                        specs:
+                          - name: BOUNDARY
+                            type: int
+                            required: true
+                          - name: NoNeumannOpenBoundary
+                            type: group
+                            description: no neumann open boundary
+                            required: true
+                            specs:
+                              - type: all_of
+                                specs: []
+                      - type: all_of
+                        specs:
+                          - name: BOUNDARY
+                            type: int
+                            required: true
+                          - name: NeumannNormalToPlane
+                            type: group
+                            description: neumann normal to plane open boundary
+                            required: true
+                            specs:
+                              - type: all_of
+                                specs:
+                                  - name: FUNCT
+                                    type: int
+                                    description: "number of function governing pressure condition on neumann open boundary"
+                                    required: false
+                                    default: -1
+                                  - name: OUTWARD_NORMAL
+                                    type: vector
+                                    size: 3
+                                    value_type:
+                                      type: double
+                                    description: "direction of outward normal on neumann open boundary"
+                                    required: true
+                                  - name: PLANE_POINT
+                                    type: vector
+                                    size: 3
+                                    value_type:
+                                      type: double
+                                    description: "point on neumann open boundary plane"
+                                    required: true
     - name: PARTICLE DYNAMIC/PD
       type: group
       required: false
@@ -41525,52 +41632,6 @@ sections:
               description: "transition temperature difference for barrier force evaluation"
               required: false
               default: 0
-            - name: DIRICHLETBOUNDARYTYPE
-              type: enum
-              description: "type of dirichlet open boundary"
-              required: false
-              default: NoDirichletOpenBoundary
-              choices:
-                - name: NoDirichletOpenBoundary
-                - name: DirichletNormalToPlane
-            - name: DIRICHLET_FUNCT
-              type: int
-              description: "number of function governing velocity condition on dirichlet open boundary"
-              required: false
-              default: -1
-            - name: DIRICHLET_OUTWARD_NORMAL
-              type: string
-              description: "direction of outward normal on dirichlet open boundary"
-              required: false
-              default: "0.0 0.0 0.0"
-            - name: DIRICHLET_PLANE_POINT
-              type: string
-              description: "point on dirichlet open boundary plane"
-              required: false
-              default: "0.0 0.0 0.0"
-            - name: NEUMANNBOUNDARYTYPE
-              type: enum
-              description: "type of neumann open boundary"
-              required: false
-              default: NoNeumannOpenBoundary
-              choices:
-                - name: NoNeumannOpenBoundary
-                - name: NeumannNormalToPlane
-            - name: NEUMANN_FUNCT
-              type: int
-              description: "number of function governing pressure condition on neumann open boundary"
-              required: false
-              default: -1
-            - name: NEUMANN_OUTWARD_NORMAL
-              type: string
-              description: "direction of outward normal on neumann open boundary"
-              required: false
-              default: "0.0 0.0 0.0"
-            - name: NEUMANN_PLANE_POINT
-              type: string
-              description: "point on neumann open boundary plane"
-              required: false
-              default: "0.0 0.0 0.0"
             - name: PHASECHANGETYPE
               type: enum
               description: "type of phase change"
