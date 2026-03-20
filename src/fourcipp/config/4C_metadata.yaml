@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 85db4e98f8d137b55bcc4b833169c2ebcc39898a
+  commit_hash: a1d595d78167bf2d81ef02614bd007c4e67b5a44
   version: 2026.2.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -7244,6 +7244,11 @@ legacy_particle_specs:
       required: false
       default: null
     - name: PDBODYID
+      noneable: true
+      type: double
+      required: false
+      default: null
+    - name: BOUNDARYID
       noneable: true
       type: double
       required: false
