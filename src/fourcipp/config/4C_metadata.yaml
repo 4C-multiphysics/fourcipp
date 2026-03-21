@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: a1d595d78167bf2d81ef02614bd007c4e67b5a44
+  commit_hash: 1bac381efe500e8584c9a250832745b8c898591a
   version: 2026.2.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -39963,29 +39963,100 @@ sections:
                             description: "MAT ID of the used fiber direction reader for transversely isotropic behavior"
                             required: true
                           - name: YIELD_COND_A
+                            noneable: true
                             type: double
                             description: "transversely isotropic version of the Hill(1948) yield condition: parameter A, following the notation in Dafalias 1989, International Journal of Plasticity, Vol. 5"
-                            required: true
+                            required: false
+                            default: null
                           - name: YIELD_COND_B
+                            noneable: true
                             type: double
                             description: "transversely isotropic version of the Hill(1948) yield condition: parameter B, following the notation in Dafalias 1989, International Journal of Plasticity, Vol. 5"
-                            required: true
+                            required: false
+                            default: null
                           - name: YIELD_COND_F
+                            noneable: true
                             type: double
                             description: "transversely isotropic version of the Hill(1948) yield condition: parameter F, following the notation in Dafalias 1989, International Journal of Plasticity, Vol. 5"
+                            required: false
+                            default: null
+                          - name: MAT_BEHAVIOR
+                            type: enum
+                            description: "Material behavior / anisotropy type"
                             required: true
-                          - name: ANISOTROPY
-                            type: string
-                            description: "Anisotropy type: transversely isotropic (transvisotrop; transverseisotropic; transverselyisotropic) | isotropic (isotrop; isotropic; Default)"
-                            required: true
-                          - name: LOG_SUBSTEP
-                            type: bool
-                            description: "boolean: time integration of internal variables using logarithmic substepping (True) or standard substepping (False)?"
-                            required: true
-                          - name: MAX_HALVE_NUM_SUBSTEP
+                            choices:
+                              - name: isotropic
+                              - name: transv_isotropic
+                          - name: TIME_INTEGRATION_HIST_VARS
+                            type: enum
+                            description: "time integration of internal variables: standard | logarithmic (logarithmic transformation of the evolution equation for the plastic deformation gradient -> default)"
+                            required: false
+                            default: logarithmic
+                            choices:
+                              - name: standard
+                              - name: logarithmic
+                          - name: LINEARIZATION
+                            type: enum
+                            description: "utilized material linearization: analytic | perturb_based (based on perturbations of the current state)"
+                            required: false
+                            default: analytic
+                            choices:
+                              - name: analytic
+                              - name: perturbation_based
+                          - name: MAX_PLASTIC_STRAIN_INCR
+                            type: double
+                            description: "maximum evaluable plastic strain increment used for verifying overflow errors"
+                            required: false
+                            default: 1.0686474581524463e+13
+                          - name: MAX_PLASTIC_STRAIN_DERIV_INCR
+                            type: double
+                            description: "maximum evaluable increment of the plastic strain derivatives w.r.t. plastic strain and equivalent stress, used for verifying possible overflow errors"
+                            required: false
+                            default: 1.0686474581524463e+13
+                          - name: MAX_SUBSTEPPING_HALVE_NUM
                             type: int
-                            description: "maximum number of times the global time step can be halved in the substepping procedure"
-                            required: true
+                            description: "maximum number of times the global time step can be halved in the substepping procedure (default: 10)"
+                            required: false
+                            default: 10
+                          - name: MATRIX_EXP_CALC_METHOD
+                            type: enum
+                            description: "chosen computation method for matrix exponential (default: automatic method selection based on matrix characteristics)"
+                            required: false
+                            default: automatic
+                            choices:
+                              - name: automatic
+                              - name: taylor_series
+                              - name: spectral_decomp
+                          - name: MATRIX_EXP_DERIV_CALC_METHOD
+                            type: enum
+                            description: "chosen computation method for the first derivative of the matrix exponential w.r.t. matrix (default: automatic method selection based on matrix characteristics)"
+                            required: false
+                            default: automatic
+                            choices:
+                              - name: automatic
+                              - name: taylor_series
+                          - name: MATRIX_LOG_CALC_METHOD
+                            type: enum
+                            description: "chosen computation method for matrix logarithm"
+                            required: false
+                            default: inv_scal_square
+                            choices:
+                              - name: automatic
+                              - name: taylor_series
+                              - name: gregory_series
+                              - name: spectral_decomp
+                              - name: inv_scal_square
+                              - name: pade_part_fract
+                          - name: MATRIX_LOG_DERIV_CALC_METHOD
+                            type: enum
+                            description: "chosen computation method for the first derivative of the matrix logarithm w.r.t. matrix"
+                            required: false
+                            default: pade_part_fract
+                            choices:
+                              - name: automatic
+                              - name: taylor_series
+                              - name: gregory_series
+                              - name: pade_part_fract
               - type: all_of
                 specs:
                   - name: MAT
@@ -40323,7 +40394,7 @@ sections:
                     required: true
                   - name: MAT_ScDepInterp
                     type: group
-                    description: integration point based and scalar dependent interpolation between to materials
+                    description: integration point based and scalar dependent interpolation between two materials
                     required: true
                     specs:
                       - type: all_of
