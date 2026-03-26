@@ -49,6 +49,16 @@ def load_yaml(path_to_yaml_file: Path) -> dict:
         ryml.parse_in_arena(pathlib.Path(path_to_yaml_file).read_bytes())
     )
 
+    # rapidyaml may emit non-standard JSON tokens for special float values
+    # such as 'inf', '-inf' or 'nan' (sometimes lowercase). The standard
+    # json.loads() will raise JSONDecodeError for these. Replace those
+    # literal tokens with null so the JSON parser can load the document.
+    # We only replace standalone tokens that appear as values (followed by
+    # a comma, closing bracket or closing brace).
+    json_str = regex.sub(
+        r"(?<=:\s)(?:-?inf|nan)(?=[,\]\}])", "null", json_str, flags=regex.IGNORECASE
+    )
+
     data = json.loads(json_str)
 
     return data
