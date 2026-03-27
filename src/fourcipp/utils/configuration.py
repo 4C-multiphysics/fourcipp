@@ -78,6 +78,8 @@ class ConfigProfile:
         fourc_metadata_path: Path to metadata yaml file
         json_schema_path: Path to json schema path
         user_defaults_path: Path to user specific defaults
+        log_output_flag: Whether to log the output of the 4CIPP execution
+        log_output_path: Path to log output, if log_output_flag is True, or none if logging to stdout
     """
 
     name: str
@@ -85,6 +87,8 @@ class ConfigProfile:
     fourc_metadata_path: Path
     fourc_json_schema_path: Path
     user_defaults_path: Path | None = None
+    log_output_flag: bool = False
+    log_output_path: Path | None = None
     fourc_metadata: dict = field(init=False)
     fourc_json_schema: dict = field(init=False)
     sections: Sections = field(init=False)
@@ -173,6 +177,8 @@ class ConfigProfile:
         s += add_keyword("4C metadata path", self.fourc_json_schema_path)
         s += add_keyword("4C JSON schema path", self.fourc_json_schema_path)
         s += add_keyword("User default path", self.user_defaults_path)
+        s += add_keyword("Log output", self.log_output_flag)
+        s += add_keyword("Log output path", self.log_output_path)
 
         return s
 

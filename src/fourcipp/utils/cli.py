@@ -85,10 +85,9 @@ def format_file(
 
 def main() -> None:
     """Main CLI interface."""
-    # Set up the logger
-    logger.enable("fourcipp")
+    # Configure logger based on CLI args and configuration. We clear default sinks
+    # and enable the fourcipp namespace only when logging is requested.
     logger.remove()
-    logger.add(sys.stdout, format="{message}")
 
     # The FourCIPP CLI is build upon argparse and subparsers. The latter ones are use to interface
     # mutual exclusive commands. If you add a new command add a new subparser and add the CLI
@@ -148,9 +147,65 @@ def main() -> None:
         action="store_true",
         help=f"Overwrite existing input file.",
     )
-    # Replace "-" with "_" for variable names
+    # Add global CLI logging options
+    main_parser.add_argument(
+        "--log-file",
+        help="Path to log file. If set, enables file logging.",
+        type=str,
+        default=None,
+    )
+    main_parser.add_argument(
+        "--enable-log",
+        help="Enable logging to file according to configuration.",
+        action="store_true",
+    )
+
+    # Parse args and build kwargs for commands. Skip log-related global args.
+    parsed_args = main_parser.parse_args(sys.argv[1:])
+
+    # Determine whether logging should be enabled. Precedence:
+    # 1. CLI --log-file (explicit path)
+    # 2. CLI --enable-log
+    # 3. CONFIG.log_output_flag
+    # When enabled, if a file path is provided (CLI or CONFIG.log_output_path) use it
+    # and open with mode='w' (replace any existing file). Otherwise log to stdout.
+    try:
+        log_file_arg = getattr(parsed_args, "log_file", None)
+        enable_log_cli = getattr(parsed_args, "enable_log", False)
+        config_flag = getattr(CONFIG, "log_output_flag", False)
+        config_path = getattr(CONFIG, "log_output_path", None)
+
+        should_enable = bool(log_file_arg) or enable_log_cli or bool(config_flag)
+
+        if should_enable:
+            logger.enable("fourcipp")
+            # Prefer CLI-specified path, then config path, otherwise stdout
+            if log_file_arg:
+                target = pathlib.Path(log_file_arg)
+                logger.add(
+                    target.as_posix(), mode="w", format="{time} {level} {message}"
+                )
+                logger.debug(f"Logging enabled to file: {target}")
+            elif config_path:
+                target = pathlib.Path(config_path)
+                logger.add(
+                    target.as_posix(), mode="w", format="{time} {level} {message}"
+                )
+                logger.debug(f"Logging enabled to file: {target}")
+            else:
+                # No file path; log to stdout (screen)
+                logger.add(sys.stdout, format="{message}")
+                logger.debug("Logging enabled to stdout")
+        else:
+            # Keep package logging disabled
+            logger.disable("fourcipp")
+    except Exception:
+        logger.debug("Could not set up logging; continuing without sinks.")
+
     kwargs: dict = {}
-    for key, value in vars(main_parser.parse_args(sys.argv[1:])).items():
+    for key, value in vars(parsed_args).items():
+        if key in ("log_file", "enable_log"):
+            continue
         kwargs[key.replace("-", "_")] = value
     command = kwargs.pop("command")
 

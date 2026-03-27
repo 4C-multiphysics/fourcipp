@@ -21,6 +21,8 @@
 # THE SOFTWARE.
 """FourCIPP."""
 
+import sys
+
 from loguru import logger
 
 from fourcipp.utils.configuration import load_config
@@ -30,5 +32,22 @@ logger.disable("fourcipp")
 
 # Load the config
 CONFIG = load_config()
+# If requested in the configuration, enable logging and add a sink.
+if getattr(CONFIG, "log_output_flag", False):
+    # Re-enable the fourcipp logger namespace
+    logger.enable("fourcipp")
+    try:
+        config_path = getattr(CONFIG, "log_output_path", None)
+        if config_path:
+            # Write to configured file and replace any existing file
+            logger.add(str(config_path), mode="w", format="{time} {level} {message}")
+            logger.info(f"Logging enabled to file: {config_path}")
+        else:
+            # No path provided: log to stdout
+            logger.add(sys.stdout, format="{message}")
+            logger.info("Logging enabled to stdout")
+    except Exception:
+        # Don't raise on import-time logging setup errors
+        logger.debug("Could not set up file logging during import; continuing.")
 
 logger.info(CONFIG)
