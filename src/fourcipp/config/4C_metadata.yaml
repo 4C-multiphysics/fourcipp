@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 1bac381efe500e8584c9a250832745b8c898591a
+  commit_hash: 6150f3b7512ee042d333131db14d3e2def56f521
   version: 2026.2.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -2972,6 +2972,626 @@ legacy_element_specs:
               type: int
             required: true
   SOLID:
+    - cell_type: QUAD4
+      spec:
+        type: all_of
+        specs:
+          - name: MAT
+            type: int
+            required: true
+          - name: KINEM
+            type: enum
+            description: "Whether to use linear kinematics (small displacements) or nonlinear kinematics (large displacements)"
+            required: true
+            choices:
+              - name: "linear"
+              - name: "nonlinear"
+          - name: PRESTRESS_TECH
+            type: enum
+            description: "The technology used for prestressing"
+            required: false
+            default: none
+            choices:
+              - name: none
+              - name: mulf
+          - name: RAD
+            noneable: true
+            type: vector
+            size: 2
+            value_type:
+              type: double
+            required: false
+            default: null
+          - name: AXI
+            noneable: true
+            type: vector
+            size: 2
+            value_type:
+              type: double
+            required: false
+            default: null
+          - name: CIR
+            noneable: true
+            type: vector
+            size: 2
+            value_type:
+              type: double
+            required: false
+            default: null
+          - name: FIBER1
+            noneable: true
+            type: vector
+            size: 2
+            value_type:
+              type: double
+            required: false
+            default: null
+          - name: FIBER2
+            noneable: true
+            type: vector
+            size: 2
+            value_type:
+              type: double
+            required: false
+            default: null
+          - name: FIBER3
+            noneable: true
+            type: vector
+            size: 2
+            value_type:
+              type: double
+            required: false
+            default: null
+          - name: INTEGRATION
+            type: group
+            description: Defines the integration rules for the solid element.
+            required: false
+            specs:
+              - type: all_of
+                specs:
+                  - name: RESIDUUM
+                    type: enum
+                    description: "Gauss integration rule used to integrate the residuum and its linearization"
+                    required: false
+                    default: quad_4point
+                    choices:
+                      - name: quad_1point
+                      - name: quad_4point
+                      - name: quad_6point
+                      - name: quad_9point
+                      - name: quad_16point
+                      - name: quad_25point
+                      - name: quad_36point
+                      - name: quad_49point
+                      - name: quad_64point
+                      - name: quad_81point
+                      - name: quad_100point
+                      - name: quad_256point
+                      - name: quad_400point
+                      - name: quad_1024point
+                  - name: MASS
+                    type: enum
+                    description: "Gauss integration rule used to integrate the mass matrix"
+                    required: false
+                    default: quad_4point
+                    choices:
+                      - name: quad_1point
+                      - name: quad_4point
+                      - name: quad_6point
+                      - name: quad_9point
+                      - name: quad_16point
+                      - name: quad_25point
+                      - name: quad_36point
+                      - name: quad_49point
+                      - name: quad_64point
+                      - name: quad_81point
+                      - name: quad_100point
+                      - name: quad_256point
+                      - name: quad_400point
+                      - name: quad_1024point
+          - name: THICKNESS
+            type: double
+            description: "Reference thickness of the 2D solid element"
+            required: true
+          - name: PLANE_ASSUMPTION
+            type: enum
+            description: "Plane assumption for the 2D solid element"
+            required: true
+            choices:
+              - name: plane_stress
+              - name: plane_strain
+    - cell_type: QUAD8
+      spec:
+        type: all_of
+        specs:
+          - name: MAT
+            type: int
+            required: true
+          - name: KINEM
+            type: enum
+            description: "Whether to use linear kinematics (small displacements) or nonlinear kinematics (large displacements)"
+            required: true
+            choices:
+              - name: "linear"
+              - name: "nonlinear"
+          - name: PRESTRESS_TECH
+            type: enum
+            description: "The technology used for prestressing"
+            required: false
+            default: none
+            choices:
+              - name: none
+              - name: mulf
+          - name: RAD
+            noneable: true
+            type: vector
+            size: 2
+            value_type:
+              type: double
+            required: false
+            default: null
+          - name: AXI
+            noneable: true
+            type: vector
+            size: 2
+            value_type:
+              type: double
+            required: false
+            default: null
+          - name: CIR
+            noneable: true
+            type: vector
+            size: 2
+            value_type:
+              type: double
+            required: false
+            default: null
+          - name: FIBER1
+            noneable: true
+            type: vector
+            size: 2
+            value_type:
+              type: double
+            required: false
+            default: null
+          - name: FIBER2
+            noneable: true
+            type: vector
+            size: 2
+            value_type:
+              type: double
+            required: false
+            default: null
+          - name: FIBER3
+            noneable: true
+            type: vector
+            size: 2
+            value_type:
+              type: double
+            required: false
+            default: null
+          - name: INTEGRATION
+            type: group
+            description: Defines the integration rules for the solid element.
+            required: false
+            specs:
+              - type: all_of
+                specs:
+                  - name: RESIDUUM
+                    type: enum
+                    description: "Gauss integration rule used to integrate the residuum and its linearization"
+                    required: false
+                    default: quad_9point
+                    choices:
+                      - name: quad_1point
+                      - name: quad_4point
+                      - name: quad_6point
+                      - name: quad_9point
+                      - name: quad_16point
+                      - name: quad_25point
+                      - name: quad_36point
+                      - name: quad_49point
+                      - name: quad_64point
+                      - name: quad_81point
+                      - name: quad_100point
+                      - name: quad_256point
+                      - name: quad_400point
+                      - name: quad_1024point
+                  - name: MASS
+                    type: enum
+                    description: "Gauss integration rule used to integrate the mass matrix"
+                    required: false
+                    default: quad_9point
+                    choices:
+                      - name: quad_1point
+                      - name: quad_4point
+                      - name: quad_6point
+                      - name: quad_9point
+                      - name: quad_16point
+                      - name: quad_25point
+                      - name: quad_36point
+                      - name: quad_49point
+                      - name: quad_64point
+                      - name: quad_81point
+                      - name: quad_100point
+                      - name: quad_256point
+                      - name: quad_400point
+                      - name: quad_1024point
+          - name: THICKNESS
+            type: double
+            description: "Reference thickness of the 2D solid element"
+            required: true
+          - name: PLANE_ASSUMPTION
+            type: enum
+            description: "Plane assumption for the 2D solid element"
+            required: true
+            choices:
+              - name: plane_stress
+              - name: plane_strain
+    - cell_type: QUAD9
+      spec:
+        type: all_of
+        specs:
+          - name: MAT
+            type: int
+            required: true
+          - name: KINEM
+            type: enum
+            description: "Whether to use linear kinematics (small displacements) or nonlinear kinematics (large displacements)"
+            required: true
+            choices:
+              - name: "linear"
+              - name: "nonlinear"
+          - name: PRESTRESS_TECH
+            type: enum
+            description: "The technology used for prestressing"
+            required: false
+            default: none
+            choices:
+              - name: none
+              - name: mulf
+          - name: RAD
+            noneable: true
+            type: vector
+            size: 2
+            value_type:
+              type: double
+            required: false
+            default: null
+          - name: AXI
+            noneable: true
+            type: vector
+            size: 2
+            value_type:
+              type: double
+            required: false
+            default: null
+          - name: CIR
+            noneable: true
+            type: vector
+            size: 2
+            value_type:
+              type: double
+            required: false
+            default: null
+          - name: FIBER1
+            noneable: true
+            type: vector
+            size: 2
+            value_type:
+              type: double
+            required: false
+            default: null
+          - name: FIBER2
+            noneable: true
+            type: vector
+            size: 2
+            value_type:
+              type: double
+            required: false
+            default: null
+          - name: FIBER3
+            noneable: true
+            type: vector
+            size: 2
+            value_type:
+              type: double
+            required: false
+            default: null
+          - name: INTEGRATION
+            type: group
+            description: Defines the integration rules for the solid element.
+            required: false
+            specs:
+              - type: all_of
+                specs:
+                  - name: RESIDUUM
+                    type: enum
+                    description: "Gauss integration rule used to integrate the residuum and its linearization"
+                    required: false
+                    default: quad_9point
+                    choices:
+                      - name: quad_1point
+                      - name: quad_4point
+                      - name: quad_6point
+                      - name: quad_9point
+                      - name: quad_16point
+                      - name: quad_25point
+                      - name: quad_36point
+                      - name: quad_49point
+                      - name: quad_64point
+                      - name: quad_81point
+                      - name: quad_100point
+                      - name: quad_256point
+                      - name: quad_400point
+                      - name: quad_1024point
+                  - name: MASS
+                    type: enum
+                    description: "Gauss integration rule used to integrate the mass matrix"
+                    required: false
+                    default: quad_9point
+                    choices:
+                      - name: quad_1point
+                      - name: quad_4point
+                      - name: quad_6point
+                      - name: quad_9point
+                      - name: quad_16point
+                      - name: quad_25point
+                      - name: quad_36point
+                      - name: quad_49point
+                      - name: quad_64point
+                      - name: quad_81point
+                      - name: quad_100point
+                      - name: quad_256point
+                      - name: quad_400point
+                      - name: quad_1024point
+          - name: THICKNESS
+            type: double
+            description: "Reference thickness of the 2D solid element"
+            required: true
+          - name: PLANE_ASSUMPTION
+            type: enum
+            description: "Plane assumption for the 2D solid element"
+            required: true
+            choices:
+              - name: plane_stress
+              - name: plane_strain
+    - cell_type: TRI3
+      spec:
+        type: all_of
+        specs:
+          - name: MAT
+            type: int
+            required: true
+          - name: KINEM
+            type: enum
+            description: "Whether to use linear kinematics (small displacements) or nonlinear kinematics (large displacements)"
+            required: true
+            choices:
+              - name: "linear"
+              - name: "nonlinear"
+          - name: PRESTRESS_TECH
+            type: enum
+            description: "The technology used for prestressing"
+            required: false
+            default: none
+            choices:
+              - name: none
+              - name: mulf
+          - name: RAD
+            noneable: true
+            type: vector
+            size: 2
+            value_type:
+              type: double
+            required: false
+            default: null
+          - name: AXI
+            noneable: true
+            type: vector
+            size: 2
+            value_type:
+              type: double
+            required: false
+            default: null
+          - name: CIR
+            noneable: true
+            type: vector
+            size: 2
+            value_type:
+              type: double
+            required: false
+            default: null
+          - name: FIBER1
+            noneable: true
+            type: vector
+            size: 2
+            value_type:
+              type: double
+            required: false
+            default: null
+          - name: FIBER2
+            noneable: true
+            type: vector
+            size: 2
+            value_type:
+              type: double
+            required: false
+            default: null
+          - name: FIBER3
+            noneable: true
+            type: vector
+            size: 2
+            value_type:
+              type: double
+            required: false
+            default: null
+          - name: INTEGRATION
+            type: group
+            description: Defines the integration rules for the solid element.
+            required: false
+            specs:
+              - type: all_of
+                specs:
+                  - name: RESIDUUM
+                    type: enum
+                    description: "Gauss integration rule used to integrate the residuum and its linearization"
+                    required: false
+                    default: tri_3point
+                    choices:
+                      - name: tri_1point
+                      - name: tri_3point
+                      - name: tri_4point
+                      - name: tri_6point
+                      - name: tri_7point
+                      - name: tri_12point
+                      - name: tri_16point
+                      - name: tri_37point
+                      - name: tri_64point
+                  - name: MASS
+                    type: enum
+                    description: "Gauss integration rule used to integrate the mass matrix"
+                    required: false
+                    default: tri_3point
+                    choices:
+                      - name: tri_1point
+                      - name: tri_3point
+                      - name: tri_4point
+                      - name: tri_6point
+                      - name: tri_7point
+                      - name: tri_12point
+                      - name: tri_16point
+                      - name: tri_37point
+                      - name: tri_64point
+          - name: THICKNESS
+            type: double
+            description: "Reference thickness of the 2D solid element"
+            required: true
+          - name: PLANE_ASSUMPTION
+            type: enum
+            description: "Plane assumption for the 2D solid element"
+            required: true
+            choices:
+              - name: plane_stress
+              - name: plane_strain
+    - cell_type: TRI6
+      spec:
+        type: all_of
+        specs:
+          - name: MAT
+            type: int
+            required: true
+          - name: KINEM
+            type: enum
+            description: "Whether to use linear kinematics (small displacements) or nonlinear kinematics (large displacements)"
+            required: true
+            choices:
+              - name: "linear"
+              - name: "nonlinear"
+          - name: PRESTRESS_TECH
+            type: enum
+            description: "The technology used for prestressing"
+            required: false
+            default: none
+            choices:
+              - name: none
+              - name: mulf
+          - name: RAD
+            noneable: true
+            type: vector
+            size: 2
+            value_type:
+              type: double
+            required: false
+            default: null
+          - name: AXI
+            noneable: true
+            type: vector
+            size: 2
+            value_type:
+              type: double
+            required: false
+            default: null
+          - name: CIR
+            noneable: true
+            type: vector
+            size: 2
+            value_type:
+              type: double
+            required: false
+            default: null
+          - name: FIBER1
+            noneable: true
+            type: vector
+            size: 2
+            value_type:
+              type: double
+            required: false
+            default: null
+          - name: FIBER2
+            noneable: true
+            type: vector
+            size: 2
+            value_type:
+              type: double
+            required: false
+            default: null
+          - name: FIBER3
+            noneable: true
+            type: vector
+            size: 2
+            value_type:
+              type: double
+            required: false
+            default: null
+          - name: INTEGRATION
+            type: group
+            description: Defines the integration rules for the solid element.
+            required: false
+            specs:
+              - type: all_of
+                specs:
+                  - name: RESIDUUM
+                    type: enum
+                    description: "Gauss integration rule used to integrate the residuum and its linearization"
+                    required: false
+                    default: tri_6point
+                    choices:
+                      - name: tri_1point
+                      - name: tri_3point
+                      - name: tri_4point
+                      - name: tri_6point
+                      - name: tri_7point
+                      - name: tri_12point
+                      - name: tri_16point
+                      - name: tri_37point
+                      - name: tri_64point
+                  - name: MASS
+                    type: enum
+                    description: "Gauss integration rule used to integrate the mass matrix"
+                    required: false
+                    default: tri_6point
+                    choices:
+                      - name: tri_1point
+                      - name: tri_3point
+                      - name: tri_4point
+                      - name: tri_6point
+                      - name: tri_7point
+                      - name: tri_12point
+                      - name: tri_16point
+                      - name: tri_37point
+                      - name: tri_64point
+          - name: THICKNESS
+            type: double
+            description: "Reference thickness of the 2D solid element"
+            required: true
+          - name: PLANE_ASSUMPTION
+            type: enum
+            description: "Plane assumption for the 2D solid element"
+            required: true
+            choices:
+              - name: plane_stress
+              - name: plane_strain
     - cell_type: HEX8
       spec:
         type: all_of
@@ -49909,6 +50529,21 @@ sections:
                       type: int
                       description: "Number of linear solver used for reduced dimensional lung simulation."
                       required: true
+                    - name: max_nonlinear_iterations
+                      type: int
+                      description: "Maximum number of nonlinear iterations."
+                      required: false
+                      default: 10
+                    - name: nonlinear_residual_tolerance
+                      type: double
+                      description: "Absolute residual norm tolerance for nonlinear convergence."
+                      required: false
+                      default: 1e-08
+                    - name: nonlinear_increment_tolerance
+                      type: double
+                      description: "Absolute increment norm tolerance for nonlinear convergence."
+                      required: false
+                      default: 1e-10
             - name: lung_tree
               type: group
               description: Definition of the reduced dimensional lung tree including model definitions and parameters
@@ -55167,6 +55802,646 @@ $references:
                         specs:
                           - type: one_of
                             specs:
+                              - type: all_of
+                                specs:
+                                  - name: QUAD4
+                                    type: group
+                                    required: true
+                                    specs:
+                                      - type: all_of
+                                        specs:
+                                          - name: MAT
+                                            type: int
+                                            required: true
+                                          - name: KINEM
+                                            type: enum
+                                            description: "Whether to use linear kinematics (small displacements) or nonlinear kinematics (large displacements)"
+                                            required: true
+                                            choices:
+                                              - name: "linear"
+                                              - name: "nonlinear"
+                                          - name: PRESTRESS_TECH
+                                            type: enum
+                                            description: "The technology used for prestressing"
+                                            required: false
+                                            default: none
+                                            choices:
+                                              - name: none
+                                              - name: mulf
+                                          - name: RAD
+                                            noneable: true
+                                            type: vector
+                                            size: 2
+                                            value_type:
+                                              type: double
+                                            required: false
+                                            default: null
+                                          - name: AXI
+                                            noneable: true
+                                            type: vector
+                                            size: 2
+                                            value_type:
+                                              type: double
+                                            required: false
+                                            default: null
+                                          - name: CIR
+                                            noneable: true
+                                            type: vector
+                                            size: 2
+                                            value_type:
+                                              type: double
+                                            required: false
+                                            default: null
+                                          - name: FIBER1
+                                            noneable: true
+                                            type: vector
+                                            size: 2
+                                            value_type:
+                                              type: double
+                                            required: false
+                                            default: null
+                                          - name: FIBER2
+                                            noneable: true
+                                            type: vector
+                                            size: 2
+                                            value_type:
+                                              type: double
+                                            required: false
+                                            default: null
+                                          - name: FIBER3
+                                            noneable: true
+                                            type: vector
+                                            size: 2
+                                            value_type:
+                                              type: double
+                                            required: false
+                                            default: null
+                                          - name: INTEGRATION
+                                            type: group
+                                            description: Defines the integration rules for the solid element.
+                                            required: false
+                                            specs:
+                                              - type: all_of
+                                                specs:
+                                                  - name: RESIDUUM
+                                                    type: enum
+                                                    description: "Gauss integration rule used to integrate the residuum and its linearization"
+                                                    required: false
+                                                    default: quad_4point
+                                                    choices:
+                                                      - name: quad_1point
+                                                      - name: quad_4point
+                                                      - name: quad_6point
+                                                      - name: quad_9point
+                                                      - name: quad_16point
+                                                      - name: quad_25point
+                                                      - name: quad_36point
+                                                      - name: quad_49point
+                                                      - name: quad_64point
+                                                      - name: quad_81point
+                                                      - name: quad_100point
+                                                      - name: quad_256point
+                                                      - name: quad_400point
+                                                      - name: quad_1024point
+                                                  - name: MASS
+                                                    type: enum
+                                                    description: "Gauss integration rule used to integrate the mass matrix"
+                                                    required: false
+                                                    default: quad_4point
+                                                    choices:
+                                                      - name: quad_1point
+                                                      - name: quad_4point
+                                                      - name: quad_6point
+                                                      - name: quad_9point
+                                                      - name: quad_16point
+                                                      - name: quad_25point
+                                                      - name: quad_36point
+                                                      - name: quad_49point
+                                                      - name: quad_64point
+                                                      - name: quad_81point
+                                                      - name: quad_100point
+                                                      - name: quad_256point
+                                                      - name: quad_400point
+                                                      - name: quad_1024point
+                                          - name: THICKNESS
+                                            type: double
+                                            description: "Reference thickness of the 2D solid element"
+                                            required: true
+                                          - name: PLANE_ASSUMPTION
+                                            type: enum
+                                            description: "Plane assumption for the 2D solid element"
+                                            required: true
+                                            choices:
+                                              - name: plane_stress
+                                              - name: plane_strain
+                              - type: all_of
+                                specs:
+                                  - name: QUAD8
+                                    type: group
+                                    required: true
+                                    specs:
+                                      - type: all_of
+                                        specs:
+                                          - name: MAT
+                                            type: int
+                                            required: true
+                                          - name: KINEM
+                                            type: enum
+                                            description: "Whether to use linear kinematics (small displacements) or nonlinear kinematics (large displacements)"
+                                            required: true
+                                            choices:
+                                              - name: "linear"
+                                              - name: "nonlinear"
+                                          - name: PRESTRESS_TECH
+                                            type: enum
+                                            description: "The technology used for prestressing"
+                                            required: false
+                                            default: none
+                                            choices:
+                                              - name: none
+                                              - name: mulf
+                                          - name: RAD
+                                            noneable: true
+                                            type: vector
+                                            size: 2
+                                            value_type:
+                                              type: double
+                                            required: false
+                                            default: null
+                                          - name: AXI
+                                            noneable: true
+                                            type: vector
+                                            size: 2
+                                            value_type:
+                                              type: double
+                                            required: false
+                                            default: null
+                                          - name: CIR
+                                            noneable: true
+                                            type: vector
+                                            size: 2
+                                            value_type:
+                                              type: double
+                                            required: false
+                                            default: null
+                                          - name: FIBER1
+                                            noneable: true
+                                            type: vector
+                                            size: 2
+                                            value_type:
+                                              type: double
+                                            required: false
+                                            default: null
+                                          - name: FIBER2
+                                            noneable: true
+                                            type: vector
+                                            size: 2
+                                            value_type:
+                                              type: double
+                                            required: false
+                                            default: null
+                                          - name: FIBER3
+                                            noneable: true
+                                            type: vector
+                                            size: 2
+                                            value_type:
+                                              type: double
+                                            required: false
+                                            default: null
+                                          - name: INTEGRATION
+                                            type: group
+                                            description: Defines the integration rules for the solid element.
+                                            required: false
+                                            specs:
+                                              - type: all_of
+                                                specs:
+                                                  - name: RESIDUUM
+                                                    type: enum
+                                                    description: "Gauss integration rule used to integrate the residuum and its linearization"
+                                                    required: false
+                                                    default: quad_9point
+                                                    choices:
+                                                      - name: quad_1point
+                                                      - name: quad_4point
+                                                      - name: quad_6point
+                                                      - name: quad_9point
+                                                      - name: quad_16point
+                                                      - name: quad_25point
+                                                      - name: quad_36point
+                                                      - name: quad_49point
+                                                      - name: quad_64point
+                                                      - name: quad_81point
+                                                      - name: quad_100point
+                                                      - name: quad_256point
+                                                      - name: quad_400point
+                                                      - name: quad_1024point
+                                                  - name: MASS
+                                                    type: enum
+                                                    description: "Gauss integration rule used to integrate the mass matrix"
+                                                    required: false
+                                                    default: quad_9point
+                                                    choices:
+                                                      - name: quad_1point
+                                                      - name: quad_4point
+                                                      - name: quad_6point
+                                                      - name: quad_9point
+                                                      - name: quad_16point
+                                                      - name: quad_25point
+                                                      - name: quad_36point
+                                                      - name: quad_49point
+                                                      - name: quad_64point
+                                                      - name: quad_81point
+                                                      - name: quad_100point
+                                                      - name: quad_256point
+                                                      - name: quad_400point
+                                                      - name: quad_1024point
+                                          - name: THICKNESS
+                                            type: double
+                                            description: "Reference thickness of the 2D solid element"
+                                            required: true
+                                          - name: PLANE_ASSUMPTION
+                                            type: enum
+                                            description: "Plane assumption for the 2D solid element"
+                                            required: true
+                                            choices:
+                                              - name: plane_stress
+                                              - name: plane_strain
+                              - type: all_of
+                                specs:
+                                  - name: QUAD9
+                                    type: group
+                                    required: true
+                                    specs:
+                                      - type: all_of
+                                        specs:
+                                          - name: MAT
+                                            type: int
+                                            required: true
+                                          - name: KINEM
+                                            type: enum
+                                            description: "Whether to use linear kinematics (small displacements) or nonlinear kinematics (large displacements)"
+                                            required: true
+                                            choices:
+                                              - name: "linear"
+                                              - name: "nonlinear"
+                                          - name: PRESTRESS_TECH
+                                            type: enum
+                                            description: "The technology used for prestressing"
+                                            required: false
+                                            default: none
+                                            choices:
+                                              - name: none
+                                              - name: mulf
+                                          - name: RAD
+                                            noneable: true
+                                            type: vector
+                                            size: 2
+                                            value_type:
+                                              type: double
+                                            required: false
+                                            default: null
+                                          - name: AXI
+                                            noneable: true
+                                            type: vector
+                                            size: 2
+                                            value_type:
+                                              type: double
+                                            required: false
+                                            default: null
+                                          - name: CIR
+                                            noneable: true
+                                            type: vector
+                                            size: 2
+                                            value_type:
+                                              type: double
+                                            required: false
+                                            default: null
+                                          - name: FIBER1
+                                            noneable: true
+                                            type: vector
+                                            size: 2
+                                            value_type:
+                                              type: double
+                                            required: false
+                                            default: null
+                                          - name: FIBER2
+                                            noneable: true
+                                            type: vector
+                                            size: 2
+                                            value_type:
+                                              type: double
+                                            required: false
+                                            default: null
+                                          - name: FIBER3
+                                            noneable: true
+                                            type: vector
+                                            size: 2
+                                            value_type:
+                                              type: double
+                                            required: false
+                                            default: null
+                                          - name: INTEGRATION
+                                            type: group
+                                            description: Defines the integration rules for the solid element.
+                                            required: false
+                                            specs:
+                                              - type: all_of
+                                                specs:
+                                                  - name: RESIDUUM
+                                                    type: enum
+                                                    description: "Gauss integration rule used to integrate the residuum and its linearization"
+                                                    required: false
+                                                    default: quad_9point
+                                                    choices:
+                                                      - name: quad_1point
+                                                      - name: quad_4point
+                                                      - name: quad_6point
+                                                      - name: quad_9point
+                                                      - name: quad_16point
+                                                      - name: quad_25point
+                                                      - name: quad_36point
+                                                      - name: quad_49point
+                                                      - name: quad_64point
+                                                      - name: quad_81point
+                                                      - name: quad_100point
+                                                      - name: quad_256point
+                                                      - name: quad_400point
+                                                      - name: quad_1024point
+                                                  - name: MASS
+                                                    type: enum
+                                                    description: "Gauss integration rule used to integrate the mass matrix"
+                                                    required: false
+                                                    default: quad_9point
+                                                    choices:
+                                                      - name: quad_1point
+                                                      - name: quad_4point
+                                                      - name: quad_6point
+                                                      - name: quad_9point
+                                                      - name: quad_16point
+                                                      - name: quad_25point
+                                                      - name: quad_36point
+                                                      - name: quad_49point
+                                                      - name: quad_64point
+                                                      - name: quad_81point
+                                                      - name: quad_100point
+                                                      - name: quad_256point
+                                                      - name: quad_400point
+                                                      - name: quad_1024point
+                                          - name: THICKNESS
+                                            type: double
+                                            description: "Reference thickness of the 2D solid element"
+                                            required: true
+                                          - name: PLANE_ASSUMPTION
+                                            type: enum
+                                            description: "Plane assumption for the 2D solid element"
+                                            required: true
+                                            choices:
+                                              - name: plane_stress
+                                              - name: plane_strain
+                              - type: all_of
+                                specs:
+                                  - name: TRI3
+                                    type: group
+                                    required: true
+                                    specs:
+                                      - type: all_of
+                                        specs:
+                                          - name: MAT
+                                            type: int
+                                            required: true
+                                          - name: KINEM
+                                            type: enum
+                                            description: "Whether to use linear kinematics (small displacements) or nonlinear kinematics (large displacements)"
+                                            required: true
+                                            choices:
+                                              - name: "linear"
+                                              - name: "nonlinear"
+                                          - name: PRESTRESS_TECH
+                                            type: enum
+                                            description: "The technology used for prestressing"
+                                            required: false
+                                            default: none
+                                            choices:
+                                              - name: none
+                                              - name: mulf
+                                          - name: RAD
+                                            noneable: true
+                                            type: vector
+                                            size: 2
+                                            value_type:
+                                              type: double
+                                            required: false
+                                            default: null
+                                          - name: AXI
+                                            noneable: true
+                                            type: vector
+                                            size: 2
+                                            value_type:
+                                              type: double
+                                            required: false
+                                            default: null
+                                          - name: CIR
+                                            noneable: true
+                                            type: vector
+                                            size: 2
+                                            value_type:
+                                              type: double
+                                            required: false
+                                            default: null
+                                          - name: FIBER1
+                                            noneable: true
+                                            type: vector
+                                            size: 2
+                                            value_type:
+                                              type: double
+                                            required: false
+                                            default: null
+                                          - name: FIBER2
+                                            noneable: true
+                                            type: vector
+                                            size: 2
+                                            value_type:
+                                              type: double
+                                            required: false
+                                            default: null
+                                          - name: FIBER3
+                                            noneable: true
+                                            type: vector
+                                            size: 2
+                                            value_type:
+                                              type: double
+                                            required: false
+                                            default: null
+                                          - name: INTEGRATION
+                                            type: group
+                                            description: Defines the integration rules for the solid element.
+                                            required: false
+                                            specs:
+                                              - type: all_of
+                                                specs:
+                                                  - name: RESIDUUM
+                                                    type: enum
+                                                    description: "Gauss integration rule used to integrate the residuum and its linearization"
+                                                    required: false
+                                                    default: tri_3point
+                                                    choices:
+                                                      - name: tri_1point
+                                                      - name: tri_3point
+                                                      - name: tri_4point
+                                                      - name: tri_6point
+                                                      - name: tri_7point
+                                                      - name: tri_12point
+                                                      - name: tri_16point
+                                                      - name: tri_37point
+                                                      - name: tri_64point
+                                                  - name: MASS
+                                                    type: enum
+                                                    description: "Gauss integration rule used to integrate the mass matrix"
+                                                    required: false
+                                                    default: tri_3point
+                                                    choices:
+                                                      - name: tri_1point
+                                                      - name: tri_3point
+                                                      - name: tri_4point
+                                                      - name: tri_6point
+                                                      - name: tri_7point
+                                                      - name: tri_12point
+                                                      - name: tri_16point
+                                                      - name: tri_37point
+                                                      - name: tri_64point
+                                          - name: THICKNESS
+                                            type: double
+                                            description: "Reference thickness of the 2D solid element"
+                                            required: true
+                                          - name: PLANE_ASSUMPTION
+                                            type: enum
+                                            description: "Plane assumption for the 2D solid element"
+                                            required: true
+                                            choices:
+                                              - name: plane_stress
+                                              - name: plane_strain
+                              - type: all_of
+                                specs:
+                                  - name: TRI6
+                                    type: group
+                                    required: true
+                                    specs:
+                                      - type: all_of
+                                        specs:
+                                          - name: MAT
+                                            type: int
+                                            required: true
+                                          - name: KINEM
+                                            type: enum
+                                            description: "Whether to use linear kinematics (small displacements) or nonlinear kinematics (large displacements)"
+                                            required: true
+                                            choices:
+                                              - name: "linear"
+                                              - name: "nonlinear"
+                                          - name: PRESTRESS_TECH
+                                            type: enum
+                                            description: "The technology used for prestressing"
+                                            required: false
+                                            default: none
+                                            choices:
+                                              - name: none
+                                              - name: mulf
+                                          - name: RAD
+                                            noneable: true
+                                            type: vector
+                                            size: 2
+                                            value_type:
+                                              type: double
+                                            required: false
+                                            default: null
+                                          - name: AXI
+                                            noneable: true
+                                            type: vector
+                                            size: 2
+                                            value_type:
+                                              type: double
+                                            required: false
+                                            default: null
+                                          - name: CIR
+                                            noneable: true
+                                            type: vector
+                                            size: 2
+                                            value_type:
+                                              type: double
+                                            required: false
+                                            default: null
+                                          - name: FIBER1
+                                            noneable: true
+                                            type: vector
+                                            size: 2
+                                            value_type:
+                                              type: double
+                                            required: false
+                                            default: null
+                                          - name: FIBER2
+                                            noneable: true
+                                            type: vector
+                                            size: 2
+                                            value_type:
+                                              type: double
+                                            required: false
+                                            default: null
+                                          - name: FIBER3
+                                            noneable: true
+                                            type: vector
+                                            size: 2
+                                            value_type:
+                                              type: double
+                                            required: false
+                                            default: null
+                                          - name: INTEGRATION
+                                            type: group
+                                            description: Defines the integration rules for the solid element.
+                                            required: false
+                                            specs:
+                                              - type: all_of
+                                                specs:
+                                                  - name: RESIDUUM
+                                                    type: enum
+                                                    description: "Gauss integration rule used to integrate the residuum and its linearization"
+                                                    required: false
+                                                    default: tri_6point
+                                                    choices:
+                                                      - name: tri_1point
+                                                      - name: tri_3point
+                                                      - name: tri_4point
+                                                      - name: tri_6point
+                                                      - name: tri_7point
+                                                      - name: tri_12point
+                                                      - name: tri_16point
+                                                      - name: tri_37point
+                                                      - name: tri_64point
+                                                  - name: MASS
+                                                    type: enum
+                                                    description: "Gauss integration rule used to integrate the mass matrix"
+                                                    required: false
+                                                    default: tri_6point
+                                                    choices:
+                                                      - name: tri_1point
+                                                      - name: tri_3point
+                                                      - name: tri_4point
+                                                      - name: tri_6point
+                                                      - name: tri_7point
+                                                      - name: tri_12point
+                                                      - name: tri_16point
+                                                      - name: tri_37point
+                                                      - name: tri_64point
+                                          - name: THICKNESS
+                                            type: double
+                                            description: "Reference thickness of the 2D solid element"
+                                            required: true
+                                          - name: PLANE_ASSUMPTION
+                                            type: enum
+                                            description: "Plane assumption for the 2D solid element"
+                                            required: true
+                                            choices:
+                                              - name: plane_stress
+                                              - name: plane_strain
                               - type: all_of
                                 specs:
                                   - name: HEX8
@@ -63942,6 +65217,646 @@ $references:
                       specs:
                         - type: one_of
                           specs:
+                            - type: all_of
+                              specs:
+                                - name: QUAD4
+                                  type: group
+                                  required: true
+                                  specs:
+                                    - type: all_of
+                                      specs:
+                                        - name: MAT
+                                          type: int
+                                          required: true
+                                        - name: KINEM
+                                          type: enum
+                                          description: "Whether to use linear kinematics (small displacements) or nonlinear kinematics (large displacements)"
+                                          required: true
+                                          choices:
+                                            - name: "linear"
+                                            - name: "nonlinear"
+                                        - name: PRESTRESS_TECH
+                                          type: enum
+                                          description: "The technology used for prestressing"
+                                          required: false
+                                          default: none
+                                          choices:
+                                            - name: none
+                                            - name: mulf
+                                        - name: RAD
+                                          noneable: true
+                                          type: vector
+                                          size: 2
+                                          value_type:
+                                            type: double
+                                          required: false
+                                          default: null
+                                        - name: AXI
+                                          noneable: true
+                                          type: vector
+                                          size: 2
+                                          value_type:
+                                            type: double
+                                          required: false
+                                          default: null
+                                        - name: CIR
+                                          noneable: true
+                                          type: vector
+                                          size: 2
+                                          value_type:
+                                            type: double
+                                          required: false
+                                          default: null
+                                        - name: FIBER1
+                                          noneable: true
+                                          type: vector
+                                          size: 2
+                                          value_type:
+                                            type: double
+                                          required: false
+                                          default: null
+                                        - name: FIBER2
+                                          noneable: true
+                                          type: vector
+                                          size: 2
+                                          value_type:
+                                            type: double
+                                          required: false
+                                          default: null
+                                        - name: FIBER3
+                                          noneable: true
+                                          type: vector
+                                          size: 2
+                                          value_type:
+                                            type: double
+                                          required: false
+                                          default: null
+                                        - name: INTEGRATION
+                                          type: group
+                                          description: Defines the integration rules for the solid element.
+                                          required: false
+                                          specs:
+                                            - type: all_of
+                                              specs:
+                                                - name: RESIDUUM
+                                                  type: enum
+                                                  description: "Gauss integration rule used to integrate the residuum and its linearization"
+                                                  required: false
+                                                  default: quad_4point
+                                                  choices:
+                                                    - name: quad_1point
+                                                    - name: quad_4point
+                                                    - name: quad_6point
+                                                    - name: quad_9point
+                                                    - name: quad_16point
+                                                    - name: quad_25point
+                                                    - name: quad_36point
+                                                    - name: quad_49point
+                                                    - name: quad_64point
+                                                    - name: quad_81point
+                                                    - name: quad_100point
+                                                    - name: quad_256point
+                                                    - name: quad_400point
+                                                    - name: quad_1024point
+                                                - name: MASS
+                                                  type: enum
+                                                  description: "Gauss integration rule used to integrate the mass matrix"
+                                                  required: false
+                                                  default: quad_4point
+                                                  choices:
+                                                    - name: quad_1point
+                                                    - name: quad_4point
+                                                    - name: quad_6point
+                                                    - name: quad_9point
+                                                    - name: quad_16point
+                                                    - name: quad_25point
+                                                    - name: quad_36point
+                                                    - name: quad_49point
+                                                    - name: quad_64point
+                                                    - name: quad_81point
+                                                    - name: quad_100point
+                                                    - name: quad_256point
+                                                    - name: quad_400point
+                                                    - name: quad_1024point
+                                        - name: THICKNESS
+                                          type: double
+                                          description: "Reference thickness of the 2D solid element"
+                                          required: true
+                                        - name: PLANE_ASSUMPTION
+                                          type: enum
+                                          description: "Plane assumption for the 2D solid element"
+                                          required: true
+                                          choices:
+                                            - name: plane_stress
+                                            - name: plane_strain
+                            - type: all_of
+                              specs:
+                                - name: QUAD8
+                                  type: group
+                                  required: true
+                                  specs:
+                                    - type: all_of
+                                      specs:
+                                        - name: MAT
+                                          type: int
+                                          required: true
+                                        - name: KINEM
+                                          type: enum
+                                          description: "Whether to use linear kinematics (small displacements) or nonlinear kinematics (large displacements)"
+                                          required: true
+                                          choices:
+                                            - name: "linear"
+                                            - name: "nonlinear"
+                                        - name: PRESTRESS_TECH
+                                          type: enum
+                                          description: "The technology used for prestressing"
+                                          required: false
+                                          default: none
+                                          choices:
+                                            - name: none
+                                            - name: mulf
+                                        - name: RAD
+                                          noneable: true
+                                          type: vector
+                                          size: 2
+                                          value_type:
+                                            type: double
+                                          required: false
+                                          default: null
+                                        - name: AXI
+                                          noneable: true
+                                          type: vector
+                                          size: 2
+                                          value_type:
+                                            type: double
+                                          required: false
+                                          default: null
+                                        - name: CIR
+                                          noneable: true
+                                          type: vector
+                                          size: 2
+                                          value_type:
+                                            type: double
+                                          required: false
+                                          default: null
+                                        - name: FIBER1
+                                          noneable: true
+                                          type: vector
+                                          size: 2
+                                          value_type:
+                                            type: double
+                                          required: false
+                                          default: null
+                                        - name: FIBER2
+                                          noneable: true
+                                          type: vector
+                                          size: 2
+                                          value_type:
+                                            type: double
+                                          required: false
+                                          default: null
+                                        - name: FIBER3
+                                          noneable: true
+                                          type: vector
+                                          size: 2
+                                          value_type:
+                                            type: double
+                                          required: false
+                                          default: null
+                                        - name: INTEGRATION
+                                          type: group
+                                          description: Defines the integration rules for the solid element.
+                                          required: false
+                                          specs:
+                                            - type: all_of
+                                              specs:
+                                                - name: RESIDUUM
+                                                  type: enum
+                                                  description: "Gauss integration rule used to integrate the residuum and its linearization"
+                                                  required: false
+                                                  default: quad_9point
+                                                  choices:
+                                                    - name: quad_1point
+                                                    - name: quad_4point
+                                                    - name: quad_6point
+                                                    - name: quad_9point
+                                                    - name: quad_16point
+                                                    - name: quad_25point
+                                                    - name: quad_36point
+                                                    - name: quad_49point
+                                                    - name: quad_64point
+                                                    - name: quad_81point
+                                                    - name: quad_100point
+                                                    - name: quad_256point
+                                                    - name: quad_400point
+                                                    - name: quad_1024point
+                                                - name: MASS
+                                                  type: enum
+                                                  description: "Gauss integration rule used to integrate the mass matrix"
+                                                  required: false
+                                                  default: quad_9point
+                                                  choices:
+                                                    - name: quad_1point
+                                                    - name: quad_4point
+                                                    - name: quad_6point
+                                                    - name: quad_9point
+                                                    - name: quad_16point
+                                                    - name: quad_25point
+                                                    - name: quad_36point
+                                                    - name: quad_49point
+                                                    - name: quad_64point
+                                                    - name: quad_81point
+                                                    - name: quad_100point
+                                                    - name: quad_256point
+                                                    - name: quad_400point
+                                                    - name: quad_1024point
+                                        - name: THICKNESS
+                                          type: double
+                                          description: "Reference thickness of the 2D solid element"
+                                          required: true
+                                        - name: PLANE_ASSUMPTION
+                                          type: enum
+                                          description: "Plane assumption for the 2D solid element"
+                                          required: true
+                                          choices:
+                                            - name: plane_stress
+                                            - name: plane_strain
+                            - type: all_of
+                              specs:
+                                - name: QUAD9
+                                  type: group
+                                  required: true
+                                  specs:
+                                    - type: all_of
+                                      specs:
+                                        - name: MAT
+                                          type: int
+                                          required: true
+                                        - name: KINEM
+                                          type: enum
+                                          description: "Whether to use linear kinematics (small displacements) or nonlinear kinematics (large displacements)"
+                                          required: true
+                                          choices:
+                                            - name: "linear"
+                                            - name: "nonlinear"
+                                        - name: PRESTRESS_TECH
+                                          type: enum
+                                          description: "The technology used for prestressing"
+                                          required: false
+                                          default: none
+                                          choices:
+                                            - name: none
+                                            - name: mulf
+                                        - name: RAD
+                                          noneable: true
+                                          type: vector
+                                          size: 2
+                                          value_type:
+                                            type: double
+                                          required: false
+                                          default: null
+                                        - name: AXI
+                                          noneable: true
+                                          type: vector
+                                          size: 2
+                                          value_type:
+                                            type: double
+                                          required: false
+                                          default: null
+                                        - name: CIR
+                                          noneable: true
+                                          type: vector
+                                          size: 2
+                                          value_type:
+                                            type: double
+                                          required: false
+                                          default: null
+                                        - name: FIBER1
+                                          noneable: true
+                                          type: vector
+                                          size: 2
+                                          value_type:
+                                            type: double
+                                          required: false
+                                          default: null
+                                        - name: FIBER2
+                                          noneable: true
+                                          type: vector
+                                          size: 2
+                                          value_type:
+                                            type: double
+                                          required: false
+                                          default: null
+                                        - name: FIBER3
+                                          noneable: true
+                                          type: vector
+                                          size: 2
+                                          value_type:
+                                            type: double
+                                          required: false
+                                          default: null
+                                        - name: INTEGRATION
+                                          type: group
+                                          description: Defines the integration rules for the solid element.
+                                          required: false
+                                          specs:
+                                            - type: all_of
+                                              specs:
+                                                - name: RESIDUUM
+                                                  type: enum
+                                                  description: "Gauss integration rule used to integrate the residuum and its linearization"
+                                                  required: false
+                                                  default: quad_9point
+                                                  choices:
+                                                    - name: quad_1point
+                                                    - name: quad_4point
+                                                    - name: quad_6point
+                                                    - name: quad_9point
+                                                    - name: quad_16point
+                                                    - name: quad_25point
+                                                    - name: quad_36point
+                                                    - name: quad_49point
+                                                    - name: quad_64point
+                                                    - name: quad_81point
+                                                    - name: quad_100point
+                                                    - name: quad_256point
+                                                    - name: quad_400point
+                                                    - name: quad_1024point
+                                                - name: MASS
+                                                  type: enum
+                                                  description: "Gauss integration rule used to integrate the mass matrix"
+                                                  required: false
+                                                  default: quad_9point
+                                                  choices:
+                                                    - name: quad_1point
+                                                    - name: quad_4point
+                                                    - name: quad_6point
+                                                    - name: quad_9point
+                                                    - name: quad_16point
+                                                    - name: quad_25point
+                                                    - name: quad_36point
+                                                    - name: quad_49point
+                                                    - name: quad_64point
+                                                    - name: quad_81point
+                                                    - name: quad_100point
+                                                    - name: quad_256point
+                                                    - name: quad_400point
+                                                    - name: quad_1024point
+                                        - name: THICKNESS
+                                          type: double
+                                          description: "Reference thickness of the 2D solid element"
+                                          required: true
+                                        - name: PLANE_ASSUMPTION
+                                          type: enum
+                                          description: "Plane assumption for the 2D solid element"
+                                          required: true
+                                          choices:
+                                            - name: plane_stress
+                                            - name: plane_strain
+                            - type: all_of
+                              specs:
+                                - name: TRI3
+                                  type: group
+                                  required: true
+                                  specs:
+                                    - type: all_of
+                                      specs:
+                                        - name: MAT
+                                          type: int
+                                          required: true
+                                        - name: KINEM
+                                          type: enum
+                                          description: "Whether to use linear kinematics (small displacements) or nonlinear kinematics (large displacements)"
+                                          required: true
+                                          choices:
+                                            - name: "linear"
+                                            - name: "nonlinear"
+                                        - name: PRESTRESS_TECH
+                                          type: enum
+                                          description: "The technology used for prestressing"
+                                          required: false
+                                          default: none
+                                          choices:
+                                            - name: none
+                                            - name: mulf
+                                        - name: RAD
+                                          noneable: true
+                                          type: vector
+                                          size: 2
+                                          value_type:
+                                            type: double
+                                          required: false
+                                          default: null
+                                        - name: AXI
+                                          noneable: true
+                                          type: vector
+                                          size: 2
+                                          value_type:
+                                            type: double
+                                          required: false
+                                          default: null
+                                        - name: CIR
+                                          noneable: true
+                                          type: vector
+                                          size: 2
+                                          value_type:
+                                            type: double
+                                          required: false
+                                          default: null
+                                        - name: FIBER1
+                                          noneable: true
+                                          type: vector
+                                          size: 2
+                                          value_type:
+                                            type: double
+                                          required: false
+                                          default: null
+                                        - name: FIBER2
+                                          noneable: true
+                                          type: vector
+                                          size: 2
+                                          value_type:
+                                            type: double
+                                          required: false
+                                          default: null
+                                        - name: FIBER3
+                                          noneable: true
+                                          type: vector
+                                          size: 2
+                                          value_type:
+                                            type: double
+                                          required: false
+                                          default: null
+                                        - name: INTEGRATION
+                                          type: group
+                                          description: Defines the integration rules for the solid element.
+                                          required: false
+                                          specs:
+                                            - type: all_of
+                                              specs:
+                                                - name: RESIDUUM
+                                                  type: enum
+                                                  description: "Gauss integration rule used to integrate the residuum and its linearization"
+                                                  required: false
+                                                  default: tri_3point
+                                                  choices:
+                                                    - name: tri_1point
+                                                    - name: tri_3point
+                                                    - name: tri_4point
+                                                    - name: tri_6point
+                                                    - name: tri_7point
+                                                    - name: tri_12point
+                                                    - name: tri_16point
+                                                    - name: tri_37point
+                                                    - name: tri_64point
+                                                - name: MASS
+                                                  type: enum
+                                                  description: "Gauss integration rule used to integrate the mass matrix"
+                                                  required: false
+                                                  default: tri_3point
+                                                  choices:
+                                                    - name: tri_1point
+                                                    - name: tri_3point
+                                                    - name: tri_4point
+                                                    - name: tri_6point
+                                                    - name: tri_7point
+                                                    - name: tri_12point
+                                                    - name: tri_16point
+                                                    - name: tri_37point
+                                                    - name: tri_64point
+                                        - name: THICKNESS
+                                          type: double
+                                          description: "Reference thickness of the 2D solid element"
+                                          required: true
+                                        - name: PLANE_ASSUMPTION
+                                          type: enum
+                                          description: "Plane assumption for the 2D solid element"
+                                          required: true
+                                          choices:
+                                            - name: plane_stress
+                                            - name: plane_strain
+                            - type: all_of
+                              specs:
+                                - name: TRI6
+                                  type: group
+                                  required: true
+                                  specs:
+                                    - type: all_of
+                                      specs:
+                                        - name: MAT
+                                          type: int
+                                          required: true
+                                        - name: KINEM
+                                          type: enum
+                                          description: "Whether to use linear kinematics (small displacements) or nonlinear kinematics (large displacements)"
+                                          required: true
+                                          choices:
+                                            - name: "linear"
+                                            - name: "nonlinear"
+                                        - name: PRESTRESS_TECH
+                                          type: enum
+                                          description: "The technology used for prestressing"
+                                          required: false
+                                          default: none
+                                          choices:
+                                            - name: none
+                                            - name: mulf
+                                        - name: RAD
+                                          noneable: true
+                                          type: vector
+                                          size: 2
+                                          value_type:
+                                            type: double
+                                          required: false
+                                          default: null
+                                        - name: AXI
+                                          noneable: true
+                                          type: vector
+                                          size: 2
+                                          value_type:
+                                            type: double
+                                          required: false
+                                          default: null
+                                        - name: CIR
+                                          noneable: true
+                                          type: vector
+                                          size: 2
+                                          value_type:
+                                            type: double
+                                          required: false
+                                          default: null
+                                        - name: FIBER1
+                                          noneable: true
+                                          type: vector
+                                          size: 2
+                                          value_type:
+                                            type: double
+                                          required: false
+                                          default: null
+                                        - name: FIBER2
+                                          noneable: true
+                                          type: vector
+                                          size: 2
+                                          value_type:
+                                            type: double
+                                          required: false
+                                          default: null
+                                        - name: FIBER3
+                                          noneable: true
+                                          type: vector
+                                          size: 2
+                                          value_type:
+                                            type: double
+                                          required: false
+                                          default: null
+                                        - name: INTEGRATION
+                                          type: group
+                                          description: Defines the integration rules for the solid element.
+                                          required: false
+                                          specs:
+                                            - type: all_of
+                                              specs:
+                                                - name: RESIDUUM
+                                                  type: enum
+                                                  description: "Gauss integration rule used to integrate the residuum and its linearization"
+                                                  required: false
+                                                  default: tri_6point
+                                                  choices:
+                                                    - name: tri_1point
+                                                    - name: tri_3point
+                                                    - name: tri_4point
+                                                    - name: tri_6point
+                                                    - name: tri_7point
+                                                    - name: tri_12point
+                                                    - name: tri_16point
+                                                    - name: tri_37point
+                                                    - name: tri_64point
+                                                - name: MASS
+                                                  type: enum
+                                                  description: "Gauss integration rule used to integrate the mass matrix"
+                                                  required: false
+                                                  default: tri_6point
+                                                  choices:
+                                                    - name: tri_1point
+                                                    - name: tri_3point
+                                                    - name: tri_4point
+                                                    - name: tri_6point
+                                                    - name: tri_7point
+                                                    - name: tri_12point
+                                                    - name: tri_16point
+                                                    - name: tri_37point
+                                                    - name: tri_64point
+                                        - name: THICKNESS
+                                          type: double
+                                          description: "Reference thickness of the 2D solid element"
+                                          required: true
+                                        - name: PLANE_ASSUMPTION
+                                          type: enum
+                                          description: "Plane assumption for the 2D solid element"
+                                          required: true
+                                          choices:
+                                            - name: plane_stress
+                                            - name: plane_strain
                             - type: all_of
                               specs:
                                 - name: HEX8
