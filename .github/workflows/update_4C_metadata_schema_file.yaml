@@ -76,7 +76,7 @@ jobs:
         run: echo "fourc_commit_hash=$(awk '/commit_hash:/ {print $2}' src/fourcipp/config/4C_metadata.yaml)" >> $GITHUB_ENV
       - name: Commit and push changes
         if: env.metadata_file_changed == 'true'
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "Nightly update of 4C metadata and schema file (4C commit hash: ${{ env.fourc_commit_hash }})"
           branch: main
