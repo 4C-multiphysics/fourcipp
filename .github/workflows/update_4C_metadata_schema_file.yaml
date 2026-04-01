@@ -15,7 +15,7 @@ jobs:
         with:
           token: ${{ secrets.PAT_4C_BOT_MERGE_TO_MAIN }}
       - name: Pull latest metadata file from 4C
-        uses: dawidd6/action-download-artifact@v9
+        uses: dawidd6/action-download-artifact@v19
         with:
           repo: 4C-multiphysics/4C
           github_token: ${{ secrets.ORGANIZATION_TOKEN }}
@@ -24,7 +24,7 @@ jobs:
           name: clang18_build-metadata
           path: clang18_build-metadata
       - name: Pull latest schema file from 4C
-        uses: dawidd6/action-download-artifact@v9
+        uses: dawidd6/action-download-artifact@v19
         with:
           repo: 4C-multiphysics/4C
           github_token: ${{ secrets.ORGANIZATION_TOKEN }}
