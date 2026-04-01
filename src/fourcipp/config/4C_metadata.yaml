@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 6150f3b7512ee042d333131db14d3e2def56f521
+  commit_hash: 206161d7ffe678d9205d247093f150c4f3f2766b
   version: 2026.2.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -3100,6 +3100,18 @@ legacy_element_specs:
             choices:
               - name: plane_stress
               - name: plane_strain
+          - name: TECH
+            type: enum
+            required: false
+            default: none
+            choices:
+              - name: none
+              - name: fbar
+              - name: eas_mild
+              - name: eas_full
+              - name: shell_ans
+              - name: shell_eas
+              - name: shell_eas_ans
     - cell_type: QUAD8
       spec:
         type: all_of
@@ -7864,6 +7876,11 @@ legacy_particle_specs:
       required: false
       default: null
     - name: PDBODYID
+      noneable: true
+      type: double
+      required: false
+      default: null
+    - name: DIRICHLET_FUNCT
       noneable: true
       type: double
       required: false
@@ -33009,6 +33026,41 @@ sections:
                             description: "Flag whether prestretch tensor is isochoric"
                             required: false
                             default: false
+                          - name: PRESTRETCH
+                            type: selection
+                            description: "Optional initial prestretch tensor used as starting value. If not provided, the identity tensor is used."
+                            required: false
+                            choices:
+                              - name: constant
+                                spec:
+                                  name: constant
+                                  type: vector
+                                  size: 3
+                                  value_type:
+                                    type: vector
+                                    size: 3
+                                    value_type:
+                                      type: double
+                                  description: "Constant value for the field."
+                                  required: true
+                              - name: from_file
+                                spec:
+                                  name: from_file
+                                  type: path
+                                  description: "Path to a file containing the input field data."
+                                  required: true
+                              - name: field_reference
+                                spec:
+                                  name: field_reference
+                                  type: string
+                                  description: "Refer to a globally defined field by a name."
+                                  required: true
+                              - name: from_mesh
+                                spec:
+                                  name: from_mesh
+                                  type: string
+                                  description: "Refer to a field defined in the input mesh by a name."
+                                  required: true
               - type: all_of
                 specs:
                   - name: MAT
@@ -40728,31 +40780,91 @@ sections:
                     required: true
                   - name: MAT_ViscoplasticLawReformulatedJohnsonCook
                     type: group
-                    description: 'Reformulation of the Johnson-Cook viscoplastic law (comprising flow rule $\dot{P} = \dot{P}_0 \exp \left( \frac{ \Sigma_{eq}}{C \Sigma_y} - \frac{1}{C} \right) - \dot{P}_0$ and hardening law), as shown in Mareau et al. (Mechanics of Materials 143, 2020)'
+                    description: 'Reformulation of the Johnson-Cook viscoplastic law (comprising flow rule $\dot{P} = \dot{P}_0 \exp \left( \frac{ \sigma_{eq}}{C \sigma_{\mathrm{Y}}} - \frac{1}{C} \right) - \dot{P}_0$ and hardening law $\sigma_{\mathrm{Y}} = (A_0 + B_0 \cdot P^{n}) \cdot (1 - \frac{T^m - T_{0}^m}{T_{\mathrm{melt}}^m - T_{0}^m})$), as shown in Mareau et al. (Mechanics of Materials 143, 2020)'
                     required: true
                     specs:
                       - type: all_of
                         specs:
                           - name: STRAIN_RATE_PREFAC
                             type: double
-                            description: "reference plastic strain rate $\\dot{P}_0$ "
+                            description: "reference plastic strain rate $\\dot{P}_0$"
                             required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
                           - name: STRAIN_RATE_EXP_FAC
                             type: double
                             description: "exponential factor of plastic strain rate $C$"
                             required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
                           - name: INIT_YIELD_STRENGTH
                             type: double
                             description: "initial yield strength of the material $A_0$"
                             required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
                           - name: ISOTROP_HARDEN_PREFAC
                             type: double
-                            description: "prefactor of the isotropic hardening stress $B_0$"
+                            description: "prefactor of the isotropic hardening stress / hardening modulus $B_0$"
                             required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: false
+                                maximum_exclusive: false
                           - name: ISOTROP_HARDEN_EXP
                             type: double
                             description: "exponent of the isotropic hardening stress $n$"
                             required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: false
+                                maximum_exclusive: false
+                          - name: REF_TEMPERATURE
+                            type: double
+                            description: "reference temperature $T_0$ for evaluating the yield strength $A_0$ and the hardening modulus $B_0$"
+                            required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: MELT_TEMPERATURE
+                            type: double
+                            description: "melting temperature $T_{\\mathrm{melt}}$"
+                            required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: TEMPERATURE_SENS
+                            type: double
+                            description: "temperature sensitivity $m$"
+                            required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: false
+                                maximum_exclusive: false
               - type: all_of
                 specs:
                   - name: MAT
@@ -41843,6 +41955,14 @@ sections:
               description: "Refer to the function ID describing the initial angular acceleration field of rigid body  phase/DEM particle"
               required: false
               default: "none"
+            - name: DIRICHLET_BOUNDARY_CONDITION_FLAGGED
+              noneable: true
+              type: vector
+              value_type:
+                type: string
+              description: "Particle type names for which individual particles may carry a DIRICHLET_FUNCT id (per-particle Dirichlet BC), e.g. '[phase1, phase2]'. \nNote: Individually flagged particles override a potentially set condition via DIRICHLET_BOUNDARY_CONDITION."
+              required: false
+              default: null
             - name: DIRICHLET_BOUNDARY_CONDITION
               type: string
               description: "Refer to the function ID describing the dirichlet boundary condition of particle phase"
@@ -55934,6 +56054,18 @@ $references:
                                             choices:
                                               - name: plane_stress
                                               - name: plane_strain
+                                          - name: TECH
+                                            type: enum
+                                            required: false
+                                            default: none
+                                            choices:
+                                              - name: none
+                                              - name: fbar
+                                              - name: eas_mild
+                                              - name: eas_full
+                                              - name: shell_ans
+                                              - name: shell_eas
+                                              - name: shell_eas_ans
                               - type: all_of
                                 specs:
                                   - name: QUAD8
@@ -65349,6 +65481,18 @@ $references:
                                           choices:
                                             - name: plane_stress
                                             - name: plane_strain
+                                        - name: TECH
+                                          type: enum
+                                          required: false
+                                          default: none
+                                          choices:
+                                            - name: none
+                                            - name: fbar
+                                            - name: eas_mild
+                                            - name: eas_full
+                                            - name: shell_ans
+                                            - name: shell_eas
+                                            - name: shell_eas_ans
                             - type: all_of
                               specs:
                                 - name: QUAD8
