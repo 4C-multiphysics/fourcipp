@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
         with:
           token: ${{ secrets.PAT_4C_BOT_MERGE_TO_MAIN }}
       - name: Pull latest metadata file from 4C
