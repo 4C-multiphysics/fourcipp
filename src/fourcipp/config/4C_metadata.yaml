@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: a8d46a94d629cd588998f52a21332498478df6ba
+  commit_hash: 73456e7a280e90c252e193c32f554fd9d1790fa7
   version: 2026.2.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -45394,22 +45394,6 @@ sections:
                 - name: "BiCGSTAB"
                 - name: "CG"
                 - name: "GMRES"
-            - name: AZPREC
-              type: enum
-              description: "Type of internal preconditioner to use.\nNote! this preconditioner will only be used if the input operator\nsupports the Trilinos interface and the client does not pass\nin an external preconditioner!"
-              required: false
-              default: "ILU"
-              choices:
-                - name: "AMGnxn"
-                - name: "ILU"
-                - name: "MueLu"
-                - name: "Teko"
-            - name: IFPACK_XML_FILE
-              noneable: true
-              type: path
-              description: "This parameter describes the absolute or relative path to an xml file containing the configuration of a Trilinos/Ifpack preconditioner. The content of this xml file needs to follow Ifpack guidelines. Consult the Trilinos/Ifpack documentation and user guide for more information on valid Ifpack parameters.."
-              required: false
-              default: null
             - name: AZITER
               type: int
               description: "The maximum number of iterations the underlying iterative solver is allowed to perform"
@@ -45420,14 +45404,6 @@ sections:
               description: "The level the residual norms must reach to decide about successful convergence"
               required: false
               default: 1e-08
-            - name: AZCONV
-              type: enum
-              description: "The implicit residual norm scaling type to use for terminating the iterative solver."
-              required: false
-              default: "AZ_r0"
-              choices:
-                - name: "AZ_noscaled"
-                - name: "AZ_r0"
             - name: AZOUTPUT
               type: int
               description: "The number of iterations between each output of the solver's progress is written to screen"
@@ -45459,34 +45435,32 @@ sections:
               description: "xml file defining any iterative solver"
               required: false
               default: null
-            - name: MUELU_XML_FILE
-              noneable: true
-              type: path
-              description: "xml file defining any MueLu preconditioner"
-              required: false
-              default: null
-            - name: TEKO_XML_FILE
-              noneable: true
-              type: path
-              description: "xml file defining any Teko preconditioner"
-              required: false
-              default: null
             - name: NAME
               type: string
               description: "User specified name for solver block"
               required: false
               default: "No_name"
+            - name: AZPREC
+              type: enum
+              description: "Type of internal preconditioner to use.\nNote! this preconditioner will only be used if the input operator\nsupports the Trilinos interface and the client does not pass\nin an external preconditioner!"
+              required: false
+              default: "ILU"
+              choices:
+                - name: "AMGnxn"
+                - name: "ILU"
+                - name: "MueLu"
+                - name: "Teko"
+            - name: PRECONDITIONER_XML_FILE
+              noneable: true
+              type: path
+              description: "This parameter describes the absolute or relative path to an xml file containing the configuration of a Trilinos preconditioner. The content of this xml file needs to follow the Stratimikos guidelines. Consult the Trilinos/Stratimikos documentation and user guide for more information on valid parameters."
+              required: false
+              default: null
             - name: AMGNXN_TYPE
               type: string
               description: "Name of the pre-built preconditioner to be used. If set to\"XML\" the preconditioner is defined using a xml file"
               required: false
               default: "AMG(BGS)"
-            - name: AMGNXN_XML_FILE
-              noneable: true
-              type: path
-              description: "xml file defining the AMGnxn preconditioner"
-              required: false
-              default: null
     - name: SOLVER 2
       type: group
       description: solver parameters for solver block 2
@@ -45513,22 +45487,6 @@ sections:
                 - name: "BiCGSTAB"
                 - name: "CG"
                 - name: "GMRES"
-            - name: AZPREC
-              type: enum
-              description: "Type of internal preconditioner to use.\nNote! this preconditioner will only be used if the input operator\nsupports the Trilinos interface and the client does not pass\nin an external preconditioner!"
-              required: false
-              default: "ILU"
-              choices:
-                - name: "AMGnxn"
-                - name: "ILU"
-                - name: "MueLu"
-                - name: "Teko"
-            - name: IFPACK_XML_FILE
-              noneable: true
-              type: path
-              description: "This parameter describes the absolute or relative path to an xml file containing the configuration of a Trilinos/Ifpack preconditioner. The content of this xml file needs to follow Ifpack guidelines. Consult the Trilinos/Ifpack documentation and user guide for more information on valid Ifpack parameters.."
-              required: false
-              default: null
             - name: AZITER
               type: int
               description: "The maximum number of iterations the underlying iterative solver is allowed to perform"
@@ -45539,14 +45497,6 @@ sections:
               description: "The level the residual norms must reach to decide about successful convergence"
               required: false
               default: 1e-08
-            - name: AZCONV
-              type: enum
-              description: "The implicit residual norm scaling type to use for terminating the iterative solver."
-              required: false
-              default: "AZ_r0"
-              choices:
-                - name: "AZ_noscaled"
-                - name: "AZ_r0"
             - name: AZOUTPUT
               type: int
               description: "The number of iterations between each output of the solver's progress is written to screen"
@@ -45578,34 +45528,32 @@ sections:
               description: "xml file defining any iterative solver"
               required: false
               default: null
-            - name: MUELU_XML_FILE
-              noneable: true
-              type: path
-              description: "xml file defining any MueLu preconditioner"
-              required: false
-              default: null
-            - name: TEKO_XML_FILE
-              noneable: true
-              type: path
-              description: "xml file defining any Teko preconditioner"
-              required: false
-              default: null
             - name: NAME
               type: string
               description: "User specified name for solver block"
               required: false
               default: "No_name"
+            - name: AZPREC
+              type: enum
+              description: "Type of internal preconditioner to use.\nNote! this preconditioner will only be used if the input operator\nsupports the Trilinos interface and the client does not pass\nin an external preconditioner!"
+              required: false
+              default: "ILU"
+              choices:
+                - name: "AMGnxn"
+                - name: "ILU"
+                - name: "MueLu"
+                - name: "Teko"
+            - name: PRECONDITIONER_XML_FILE
+              noneable: true
+              type: path
+              description: "This parameter describes the absolute or relative path to an xml file containing the configuration of a Trilinos preconditioner. The content of this xml file needs to follow the Stratimikos guidelines. Consult the Trilinos/Stratimikos documentation and user guide for more information on valid parameters."
+              required: false
+              default: null
             - name: AMGNXN_TYPE
               type: string
               description: "Name of the pre-built preconditioner to be used. If set to\"XML\" the preconditioner is defined using a xml file"
               required: false
               default: "AMG(BGS)"
-            - name: AMGNXN_XML_FILE
-              noneable: true
-              type: path
-              description: "xml file defining the AMGnxn preconditioner"
-              required: false
-              default: null
     - name: SOLVER 3
       type: group
       description: solver parameters for solver block 3
@@ -45632,22 +45580,6 @@ sections:
                 - name: "BiCGSTAB"
                 - name: "CG"
                 - name: "GMRES"
-            - name: AZPREC
-              type: enum
-              description: "Type of internal preconditioner to use.\nNote! this preconditioner will only be used if the input operator\nsupports the Trilinos interface and the client does not pass\nin an external preconditioner!"
-              required: false
-              default: "ILU"
-              choices:
-                - name: "AMGnxn"
-                - name: "ILU"
-                - name: "MueLu"
-                - name: "Teko"
-            - name: IFPACK_XML_FILE
-              noneable: true
-              type: path
-              description: "This parameter describes the absolute or relative path to an xml file containing the configuration of a Trilinos/Ifpack preconditioner. The content of this xml file needs to follow Ifpack guidelines. Consult the Trilinos/Ifpack documentation and user guide for more information on valid Ifpack parameters.."
-              required: false
-              default: null
             - name: AZITER
               type: int
               description: "The maximum number of iterations the underlying iterative solver is allowed to perform"
@@ -45658,14 +45590,6 @@ sections:
               description: "The level the residual norms must reach to decide about successful convergence"
               required: false
               default: 1e-08
-            - name: AZCONV
-              type: enum
-              description: "The implicit residual norm scaling type to use for terminating the iterative solver."
-              required: false
-              default: "AZ_r0"
-              choices:
-                - name: "AZ_noscaled"
-                - name: "AZ_r0"
             - name: AZOUTPUT
               type: int
               description: "The number of iterations between each output of the solver's progress is written to screen"
@@ -45697,34 +45621,32 @@ sections:
               description: "xml file defining any iterative solver"
               required: false
               default: null
-            - name: MUELU_XML_FILE
-              noneable: true
-              type: path
-              description: "xml file defining any MueLu preconditioner"
-              required: false
-              default: null
-            - name: TEKO_XML_FILE
-              noneable: true
-              type: path
-              description: "xml file defining any Teko preconditioner"
-              required: false
-              default: null
             - name: NAME
               type: string
               description: "User specified name for solver block"
               required: false
               default: "No_name"
+            - name: AZPREC
+              type: enum
+              description: "Type of internal preconditioner to use.\nNote! this preconditioner will only be used if the input operator\nsupports the Trilinos interface and the client does not pass\nin an external preconditioner!"
+              required: false
+              default: "ILU"
+              choices:
+                - name: "AMGnxn"
+                - name: "ILU"
+                - name: "MueLu"
+                - name: "Teko"
+            - name: PRECONDITIONER_XML_FILE
+              noneable: true
+              type: path
+              description: "This parameter describes the absolute or relative path to an xml file containing the configuration of a Trilinos preconditioner. The content of this xml file needs to follow the Stratimikos guidelines. Consult the Trilinos/Stratimikos documentation and user guide for more information on valid parameters."
+              required: false
+              default: null
             - name: AMGNXN_TYPE
               type: string
               description: "Name of the pre-built preconditioner to be used. If set to\"XML\" the preconditioner is defined using a xml file"
               required: false
               default: "AMG(BGS)"
-            - name: AMGNXN_XML_FILE
-              noneable: true
-              type: path
-              description: "xml file defining the AMGnxn preconditioner"
-              required: false
-              default: null
     - name: SOLVER 4
       type: group
       description: solver parameters for solver block 4
@@ -45751,22 +45673,6 @@ sections:
                 - name: "BiCGSTAB"
                 - name: "CG"
                 - name: "GMRES"
-            - name: AZPREC
-              type: enum
-              description: "Type of internal preconditioner to use.\nNote! this preconditioner will only be used if the input operator\nsupports the Trilinos interface and the client does not pass\nin an external preconditioner!"
-              required: false
-              default: "ILU"
-              choices:
-                - name: "AMGnxn"
-                - name: "ILU"
-                - name: "MueLu"
-                - name: "Teko"
-            - name: IFPACK_XML_FILE
-              noneable: true
-              type: path
-              description: "This parameter describes the absolute or relative path to an xml file containing the configuration of a Trilinos/Ifpack preconditioner. The content of this xml file needs to follow Ifpack guidelines. Consult the Trilinos/Ifpack documentation and user guide for more information on valid Ifpack parameters.."
-              required: false
-              default: null
             - name: AZITER
               type: int
               description: "The maximum number of iterations the underlying iterative solver is allowed to perform"
@@ -45777,14 +45683,6 @@ sections:
               description: "The level the residual norms must reach to decide about successful convergence"
               required: false
               default: 1e-08
-            - name: AZCONV
-              type: enum
-              description: "The implicit residual norm scaling type to use for terminating the iterative solver."
-              required: false
-              default: "AZ_r0"
-              choices:
-                - name: "AZ_noscaled"
-                - name: "AZ_r0"
             - name: AZOUTPUT
               type: int
               description: "The number of iterations between each output of the solver's progress is written to screen"
@@ -45816,34 +45714,32 @@ sections:
               description: "xml file defining any iterative solver"
               required: false
               default: null
-            - name: MUELU_XML_FILE
-              noneable: true
-              type: path
-              description: "xml file defining any MueLu preconditioner"
-              required: false
-              default: null
-            - name: TEKO_XML_FILE
-              noneable: true
-              type: path
-              description: "xml file defining any Teko preconditioner"
-              required: false
-              default: null
             - name: NAME
               type: string
               description: "User specified name for solver block"
               required: false
               default: "No_name"
+            - name: AZPREC
+              type: enum
+              description: "Type of internal preconditioner to use.\nNote! this preconditioner will only be used if the input operator\nsupports the Trilinos interface and the client does not pass\nin an external preconditioner!"
+              required: false
+              default: "ILU"
+              choices:
+                - name: "AMGnxn"
+                - name: "ILU"
+                - name: "MueLu"
+                - name: "Teko"
+            - name: PRECONDITIONER_XML_FILE
+              noneable: true
+              type: path
+              description: "This parameter describes the absolute or relative path to an xml file containing the configuration of a Trilinos preconditioner. The content of this xml file needs to follow the Stratimikos guidelines. Consult the Trilinos/Stratimikos documentation and user guide for more information on valid parameters."
+              required: false
+              default: null
             - name: AMGNXN_TYPE
               type: string
               description: "Name of the pre-built preconditioner to be used. If set to\"XML\" the preconditioner is defined using a xml file"
               required: false
               default: "AMG(BGS)"
-            - name: AMGNXN_XML_FILE
-              noneable: true
-              type: path
-              description: "xml file defining the AMGnxn preconditioner"
-              required: false
-              default: null
     - name: SOLVER 5
       type: group
       description: solver parameters for solver block 5
@@ -45870,22 +45766,6 @@ sections:
                 - name: "BiCGSTAB"
                 - name: "CG"
                 - name: "GMRES"
-            - name: AZPREC
-              type: enum
-              description: "Type of internal preconditioner to use.\nNote! this preconditioner will only be used if the input operator\nsupports the Trilinos interface and the client does not pass\nin an external preconditioner!"
-              required: false
-              default: "ILU"
-              choices:
-                - name: "AMGnxn"
-                - name: "ILU"
-                - name: "MueLu"
-                - name: "Teko"
-            - name: IFPACK_XML_FILE
-              noneable: true
-              type: path
-              description: "This parameter describes the absolute or relative path to an xml file containing the configuration of a Trilinos/Ifpack preconditioner. The content of this xml file needs to follow Ifpack guidelines. Consult the Trilinos/Ifpack documentation and user guide for more information on valid Ifpack parameters.."
-              required: false
-              default: null
             - name: AZITER
               type: int
               description: "The maximum number of iterations the underlying iterative solver is allowed to perform"
@@ -45896,14 +45776,6 @@ sections:
               description: "The level the residual norms must reach to decide about successful convergence"
               required: false
               default: 1e-08
-            - name: AZCONV
-              type: enum
-              description: "The implicit residual norm scaling type to use for terminating the iterative solver."
-              required: false
-              default: "AZ_r0"
-              choices:
-                - name: "AZ_noscaled"
-                - name: "AZ_r0"
             - name: AZOUTPUT
               type: int
               description: "The number of iterations between each output of the solver's progress is written to screen"
@@ -45935,34 +45807,32 @@ sections:
               description: "xml file defining any iterative solver"
               required: false
               default: null
-            - name: MUELU_XML_FILE
-              noneable: true
-              type: path
-              description: "xml file defining any MueLu preconditioner"
-              required: false
-              default: null
-            - name: TEKO_XML_FILE
-              noneable: true
-              type: path
-              description: "xml file defining any Teko preconditioner"
-              required: false
-              default: null
             - name: NAME
               type: string
               description: "User specified name for solver block"
               required: false
               default: "No_name"
+            - name: AZPREC
+              type: enum
+              description: "Type of internal preconditioner to use.\nNote! this preconditioner will only be used if the input operator\nsupports the Trilinos interface and the client does not pass\nin an external preconditioner!"
+              required: false
+              default: "ILU"
+              choices:
+                - name: "AMGnxn"
+                - name: "ILU"
+                - name: "MueLu"
+                - name: "Teko"
+            - name: PRECONDITIONER_XML_FILE
+              noneable: true
+              type: path
+              description: "This parameter describes the absolute or relative path to an xml file containing the configuration of a Trilinos preconditioner. The content of this xml file needs to follow the Stratimikos guidelines. Consult the Trilinos/Stratimikos documentation and user guide for more information on valid parameters."
+              required: false
+              default: null
             - name: AMGNXN_TYPE
               type: string
               description: "Name of the pre-built preconditioner to be used. If set to\"XML\" the preconditioner is defined using a xml file"
               required: false
               default: "AMG(BGS)"
-            - name: AMGNXN_XML_FILE
-              noneable: true
-              type: path
-              description: "xml file defining the AMGnxn preconditioner"
-              required: false
-              default: null
     - name: SOLVER 6
       type: group
       description: solver parameters for solver block 6
@@ -45989,22 +45859,6 @@ sections:
                 - name: "BiCGSTAB"
                 - name: "CG"
                 - name: "GMRES"
-            - name: AZPREC
-              type: enum
-              description: "Type of internal preconditioner to use.\nNote! this preconditioner will only be used if the input operator\nsupports the Trilinos interface and the client does not pass\nin an external preconditioner!"
-              required: false
-              default: "ILU"
-              choices:
-                - name: "AMGnxn"
-                - name: "ILU"
-                - name: "MueLu"
-                - name: "Teko"
-            - name: IFPACK_XML_FILE
-              noneable: true
-              type: path
-              description: "This parameter describes the absolute or relative path to an xml file containing the configuration of a Trilinos/Ifpack preconditioner. The content of this xml file needs to follow Ifpack guidelines. Consult the Trilinos/Ifpack documentation and user guide for more information on valid Ifpack parameters.."
-              required: false
-              default: null
             - name: AZITER
               type: int
               description: "The maximum number of iterations the underlying iterative solver is allowed to perform"
@@ -46015,14 +45869,6 @@ sections:
               description: "The level the residual norms must reach to decide about successful convergence"
               required: false
               default: 1e-08
-            - name: AZCONV
-              type: enum
-              description: "The implicit residual norm scaling type to use for terminating the iterative solver."
-              required: false
-              default: "AZ_r0"
-              choices:
-                - name: "AZ_noscaled"
-                - name: "AZ_r0"
             - name: AZOUTPUT
               type: int
               description: "The number of iterations between each output of the solver's progress is written to screen"
@@ -46054,34 +45900,32 @@ sections:
               description: "xml file defining any iterative solver"
               required: false
               default: null
-            - name: MUELU_XML_FILE
-              noneable: true
-              type: path
-              description: "xml file defining any MueLu preconditioner"
-              required: false
-              default: null
-            - name: TEKO_XML_FILE
-              noneable: true
-              type: path
-              description: "xml file defining any Teko preconditioner"
-              required: false
-              default: null
             - name: NAME
               type: string
               description: "User specified name for solver block"
               required: false
               default: "No_name"
+            - name: AZPREC
+              type: enum
+              description: "Type of internal preconditioner to use.\nNote! this preconditioner will only be used if the input operator\nsupports the Trilinos interface and the client does not pass\nin an external preconditioner!"
+              required: false
+              default: "ILU"
+              choices:
+                - name: "AMGnxn"
+                - name: "ILU"
+                - name: "MueLu"
+                - name: "Teko"
+            - name: PRECONDITIONER_XML_FILE
+              noneable: true
+              type: path
+              description: "This parameter describes the absolute or relative path to an xml file containing the configuration of a Trilinos preconditioner. The content of this xml file needs to follow the Stratimikos guidelines. Consult the Trilinos/Stratimikos documentation and user guide for more information on valid parameters."
+              required: false
+              default: null
             - name: AMGNXN_TYPE
               type: string
               description: "Name of the pre-built preconditioner to be used. If set to\"XML\" the preconditioner is defined using a xml file"
               required: false
               default: "AMG(BGS)"
-            - name: AMGNXN_XML_FILE
-              noneable: true
-              type: path
-              description: "xml file defining the AMGnxn preconditioner"
-              required: false
-              default: null
     - name: SOLVER 7
       type: group
       description: solver parameters for solver block 7
@@ -46108,22 +45952,6 @@ sections:
                 - name: "BiCGSTAB"
                 - name: "CG"
                 - name: "GMRES"
-            - name: AZPREC
-              type: enum
-              description: "Type of internal preconditioner to use.\nNote! this preconditioner will only be used if the input operator\nsupports the Trilinos interface and the client does not pass\nin an external preconditioner!"
-              required: false
-              default: "ILU"
-              choices:
-                - name: "AMGnxn"
-                - name: "ILU"
-                - name: "MueLu"
-                - name: "Teko"
-            - name: IFPACK_XML_FILE
-              noneable: true
-              type: path
-              description: "This parameter describes the absolute or relative path to an xml file containing the configuration of a Trilinos/Ifpack preconditioner. The content of this xml file needs to follow Ifpack guidelines. Consult the Trilinos/Ifpack documentation and user guide for more information on valid Ifpack parameters.."
-              required: false
-              default: null
             - name: AZITER
               type: int
               description: "The maximum number of iterations the underlying iterative solver is allowed to perform"
@@ -46134,14 +45962,6 @@ sections:
               description: "The level the residual norms must reach to decide about successful convergence"
               required: false
               default: 1e-08
-            - name: AZCONV
-              type: enum
-              description: "The implicit residual norm scaling type to use for terminating the iterative solver."
-              required: false
-              default: "AZ_r0"
-              choices:
-                - name: "AZ_noscaled"
-                - name: "AZ_r0"
             - name: AZOUTPUT
               type: int
               description: "The number of iterations between each output of the solver's progress is written to screen"
@@ -46173,34 +45993,32 @@ sections:
               description: "xml file defining any iterative solver"
               required: false
               default: null
-            - name: MUELU_XML_FILE
-              noneable: true
-              type: path
-              description: "xml file defining any MueLu preconditioner"
-              required: false
-              default: null
-            - name: TEKO_XML_FILE
-              noneable: true
-              type: path
-              description: "xml file defining any Teko preconditioner"
-              required: false
-              default: null
             - name: NAME
               type: string
               description: "User specified name for solver block"
               required: false
               default: "No_name"
+            - name: AZPREC
+              type: enum
+              description: "Type of internal preconditioner to use.\nNote! this preconditioner will only be used if the input operator\nsupports the Trilinos interface and the client does not pass\nin an external preconditioner!"
+              required: false
+              default: "ILU"
+              choices:
+                - name: "AMGnxn"
+                - name: "ILU"
+                - name: "MueLu"
+                - name: "Teko"
+            - name: PRECONDITIONER_XML_FILE
+              noneable: true
+              type: path
+              description: "This parameter describes the absolute or relative path to an xml file containing the configuration of a Trilinos preconditioner. The content of this xml file needs to follow the Stratimikos guidelines. Consult the Trilinos/Stratimikos documentation and user guide for more information on valid parameters."
+              required: false
+              default: null
             - name: AMGNXN_TYPE
               type: string
               description: "Name of the pre-built preconditioner to be used. If set to\"XML\" the preconditioner is defined using a xml file"
               required: false
               default: "AMG(BGS)"
-            - name: AMGNXN_XML_FILE
-              noneable: true
-              type: path
-              description: "xml file defining the AMGnxn preconditioner"
-              required: false
-              default: null
     - name: SOLVER 8
       type: group
       description: solver parameters for solver block 8
@@ -46227,22 +46045,6 @@ sections:
                 - name: "BiCGSTAB"
                 - name: "CG"
                 - name: "GMRES"
-            - name: AZPREC
-              type: enum
-              description: "Type of internal preconditioner to use.\nNote! this preconditioner will only be used if the input operator\nsupports the Trilinos interface and the client does not pass\nin an external preconditioner!"
-              required: false
-              default: "ILU"
-              choices:
-                - name: "AMGnxn"
-                - name: "ILU"
-                - name: "MueLu"
-                - name: "Teko"
-            - name: IFPACK_XML_FILE
-              noneable: true
-              type: path
-              description: "This parameter describes the absolute or relative path to an xml file containing the configuration of a Trilinos/Ifpack preconditioner. The content of this xml file needs to follow Ifpack guidelines. Consult the Trilinos/Ifpack documentation and user guide for more information on valid Ifpack parameters.."
-              required: false
-              default: null
             - name: AZITER
               type: int
               description: "The maximum number of iterations the underlying iterative solver is allowed to perform"
@@ -46253,14 +46055,6 @@ sections:
               description: "The level the residual norms must reach to decide about successful convergence"
               required: false
               default: 1e-08
-            - name: AZCONV
-              type: enum
-              description: "The implicit residual norm scaling type to use for terminating the iterative solver."
-              required: false
-              default: "AZ_r0"
-              choices:
-                - name: "AZ_noscaled"
-                - name: "AZ_r0"
             - name: AZOUTPUT
               type: int
               description: "The number of iterations between each output of the solver's progress is written to screen"
@@ -46292,34 +46086,32 @@ sections:
               description: "xml file defining any iterative solver"
               required: false
               default: null
-            - name: MUELU_XML_FILE
-              noneable: true
-              type: path
-              description: "xml file defining any MueLu preconditioner"
-              required: false
-              default: null
-            - name: TEKO_XML_FILE
-              noneable: true
-              type: path
-              description: "xml file defining any Teko preconditioner"
-              required: false
-              default: null
             - name: NAME
               type: string
               description: "User specified name for solver block"
               required: false
               default: "No_name"
+            - name: AZPREC
+              type: enum
+              description: "Type of internal preconditioner to use.\nNote! this preconditioner will only be used if the input operator\nsupports the Trilinos interface and the client does not pass\nin an external preconditioner!"
+              required: false
+              default: "ILU"
+              choices:
+                - name: "AMGnxn"
+                - name: "ILU"
+                - name: "MueLu"
+                - name: "Teko"
+            - name: PRECONDITIONER_XML_FILE
+              noneable: true
+              type: path
+              description: "This parameter describes the absolute or relative path to an xml file containing the configuration of a Trilinos preconditioner. The content of this xml file needs to follow the Stratimikos guidelines. Consult the Trilinos/Stratimikos documentation and user guide for more information on valid parameters."
+              required: false
+              default: null
             - name: AMGNXN_TYPE
               type: string
               description: "Name of the pre-built preconditioner to be used. If set to\"XML\" the preconditioner is defined using a xml file"
               required: false
               default: "AMG(BGS)"
-            - name: AMGNXN_XML_FILE
-              noneable: true
-              type: path
-              description: "xml file defining the AMGnxn preconditioner"
-              required: false
-              default: null
     - name: SOLVER 9
       type: group
       description: solver parameters for solver block 9
@@ -46346,22 +46138,6 @@ sections:
                 - name: "BiCGSTAB"
                 - name: "CG"
                 - name: "GMRES"
-            - name: AZPREC
-              type: enum
-              description: "Type of internal preconditioner to use.\nNote! this preconditioner will only be used if the input operator\nsupports the Trilinos interface and the client does not pass\nin an external preconditioner!"
-              required: false
-              default: "ILU"
-              choices:
-                - name: "AMGnxn"
-                - name: "ILU"
-                - name: "MueLu"
-                - name: "Teko"
-            - name: IFPACK_XML_FILE
-              noneable: true
-              type: path
-              description: "This parameter describes the absolute or relative path to an xml file containing the configuration of a Trilinos/Ifpack preconditioner. The content of this xml file needs to follow Ifpack guidelines. Consult the Trilinos/Ifpack documentation and user guide for more information on valid Ifpack parameters.."
-              required: false
-              default: null
             - name: AZITER
               type: int
               description: "The maximum number of iterations the underlying iterative solver is allowed to perform"
@@ -46372,14 +46148,6 @@ sections:
               description: "The level the residual norms must reach to decide about successful convergence"
               required: false
               default: 1e-08
-            - name: AZCONV
-              type: enum
-              description: "The implicit residual norm scaling type to use for terminating the iterative solver."
-              required: false
-              default: "AZ_r0"
-              choices:
-                - name: "AZ_noscaled"
-                - name: "AZ_r0"
             - name: AZOUTPUT
               type: int
               description: "The number of iterations between each output of the solver's progress is written to screen"
@@ -46411,34 +46179,32 @@ sections:
               description: "xml file defining any iterative solver"
               required: false
               default: null
-            - name: MUELU_XML_FILE
-              noneable: true
-              type: path
-              description: "xml file defining any MueLu preconditioner"
-              required: false
-              default: null
-            - name: TEKO_XML_FILE
-              noneable: true
-              type: path
-              description: "xml file defining any Teko preconditioner"
-              required: false
-              default: null
             - name: NAME
               type: string
               description: "User specified name for solver block"
               required: false
               default: "No_name"
+            - name: AZPREC
+              type: enum
+              description: "Type of internal preconditioner to use.\nNote! this preconditioner will only be used if the input operator\nsupports the Trilinos interface and the client does not pass\nin an external preconditioner!"
+              required: false
+              default: "ILU"
+              choices:
+                - name: "AMGnxn"
+                - name: "ILU"
+                - name: "MueLu"
+                - name: "Teko"
+            - name: PRECONDITIONER_XML_FILE
+              noneable: true
+              type: path
+              description: "This parameter describes the absolute or relative path to an xml file containing the configuration of a Trilinos preconditioner. The content of this xml file needs to follow the Stratimikos guidelines. Consult the Trilinos/Stratimikos documentation and user guide for more information on valid parameters."
+              required: false
+              default: null
             - name: AMGNXN_TYPE
               type: string
               description: "Name of the pre-built preconditioner to be used. If set to\"XML\" the preconditioner is defined using a xml file"
               required: false
               default: "AMG(BGS)"
-            - name: AMGNXN_XML_FILE
-              noneable: true
-              type: path
-              description: "xml file defining the AMGnxn preconditioner"
-              required: false
-              default: null
     - name: SSI CONTROL
       type: group
       required: false
