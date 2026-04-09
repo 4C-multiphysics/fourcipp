@@ -30,5 +30,4 @@ logger.disable("fourcipp")
 
 # Load the config
 CONFIG = load_config()
-
 logger.info(CONFIG)

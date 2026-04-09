@@ -173,7 +173,6 @@ class ConfigProfile:
         s += add_keyword("4C metadata path", self.fourc_json_schema_path)
         s += add_keyword("4C JSON schema path", self.fourc_json_schema_path)
         s += add_keyword("User default path", self.user_defaults_path)
-
         return s
 
 
