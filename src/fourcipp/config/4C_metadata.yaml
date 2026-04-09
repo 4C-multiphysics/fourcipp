@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 78752d735de17edcc86dbc15312db06d1d3cf6dc
+  commit_hash: a10538b801ca2fbbe44855f1fdb736cc12526929
   version: 2026.2.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -9468,6 +9468,28 @@ sections:
               description: "Penalty parameter for beam-to-solid volume meshtying"
               required: false
               default: 0
+            - name: AUGMENTATION_SCALING_PARAMETER_BEAM
+              type: double
+              description: "For the augmented Lagrange formulation, this parameter scales all penalty terms in the beam equations."
+              required: false
+              default: 1
+              validator:
+                range:
+                  minimum: 0
+                  maximum: 1.7976931348623157e+308
+                  minimum_exclusive: true
+                  maximum_exclusive: false
+            - name: AUGMENTATION_SCALING_PARAMETER_SOLID
+              type: double
+              description: "For the augmented Lagrange formulation, this parameter scales all penalty terms in the solid equations."
+              required: false
+              default: 1
+              validator:
+                range:
+                  minimum: 0
+                  maximum: 1.7976931348623157e+308
+                  minimum_exclusive: true
+                  maximum_exclusive: false
             - name: COUPLE_RESTART_STATE
               type: bool
               description: "Enable / disable the coupling of the restart configuration."
@@ -40977,14 +40999,32 @@ sections:
                             type: int
                             description: "number of growth inducing scalar"
                             required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
                           - name: SCALAR1_RefConc
                             type: double
                             description: "reference concentration of scalar 1 causing no strains"
                             required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: false
+                                maximum_exclusive: false
                           - name: POLY_PARA_NUM
                             type: int
                             description: "number of polynomial coefficients"
                             required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
                           - name: POLY_PARAMS
                             type: vector
                             value_type:
@@ -40995,14 +41035,32 @@ sections:
                             type: double
                             description: "lower bound of validity of polynomial"
                             required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: false
+                                maximum_exclusive: false
                           - name: X_max
                             type: double
                             description: "upper bound of validity of polynomial"
                             required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
                           - name: MATID
                             type: int
                             description: "material ID of the corresponding scatra material"
                             required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
               - type: all_of
                 specs:
                   - name: MAT
@@ -41063,10 +41121,22 @@ sections:
                             type: int
                             description: "MAT ID of the corresponding viscoplastic law"
                             required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
                           - name: FIBER_READER_ID
                             type: int
                             description: "MAT ID of the used fiber direction reader for transversely isotropic behavior"
                             required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
                           - name: YIELD_COND_A
                             noneable: true
                             type: double
@@ -41113,16 +41183,34 @@ sections:
                             description: "maximum evaluable plastic strain increment used for verifying overflow errors"
                             required: false
                             default: 1.0686474581524463e+13
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
                           - name: MAX_PLASTIC_STRAIN_DERIV_INCR
                             type: double
                             description: "maximum evaluable increment of the plastic strain derivatives w.r.t. plastic strain and equivalent stress, used for verifying possible overflow errors"
                             required: false
                             default: 1.0686474581524463e+13
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
                           - name: MAX_SUBSTEPPING_HALVE_NUM
                             type: int
                             description: "maximum number of times the global time step can be halved in the substepping procedure (default: 10)"
                             required: false
                             default: 10
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: false
+                                maximum_exclusive: false
                           - name: MATRIX_EXP_CALC_METHOD
                             type: enum
                             description: "chosen computation method for matrix exponential (default: automatic method selection based on matrix characteristics)"
@@ -41424,14 +41512,32 @@ sections:
                             type: int
                             description: "number of growth inducing scalar"
                             required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
                           - name: SCALAR1_MolarGrowthFac
                             type: double
                             description: "isotropic molar growth factor due to scalar 1"
                             required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
                           - name: SCALAR1_RefConc
                             type: double
                             description: "reference concentration of scalar 1 causing no strains"
                             required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: false
+                                maximum_exclusive: false
               - type: all_of
                 specs:
                   - name: MAT
@@ -41448,20 +41554,35 @@ sections:
                             type: int
                             description: "number of growth inducing scalar"
                             required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
                           - name: SCALAR1_MolarGrowthFac
                             type: double
                             description: "anisotropic molar growth factor due to scalar 1"
                             required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
                           - name: SCALAR1_RefConc
                             type: double
                             description: "reference concentration of scalar 1 causing no strains"
                             required: true
-                          - name: NUMSPACEDIM
-                            type: int
-                            description: "Number of space dimension (only 3 valid)"
-                            required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: false
+                                maximum_exclusive: false
                           - name: GrowthDirection
                             type: vector
+                            size: 3
                             value_type:
                               type: double
                             description: "vector that defines the growth direction"
@@ -41482,16 +41603,25 @@ sections:
                             type: int
                             description: "number of growth inducing scalar"
                             required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
                           - name: SCALAR1_RefConc
                             type: double
                             description: "reference concentration of scalar 1 causing no strains"
                             required: true
-                          - name: NUMSPACEDIM
-                            type: int
-                            description: "Number of space dimension (only 3 valid)"
-                            required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: false
+                                maximum_exclusive: false
                           - name: GrowthDirection
                             type: vector
+                            size: 3
                             value_type:
                               type: double
                             description: "vector that defines the growth direction"
@@ -41500,6 +41630,12 @@ sections:
                             type: int
                             description: "number of polynomial coefficients"
                             required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
                           - name: POLY_PARAMS
                             type: vector
                             value_type:
@@ -41510,14 +41646,32 @@ sections:
                             type: double
                             description: "lower bound of validity of polynomial"
                             required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: false
+                                maximum_exclusive: false
                           - name: X_max
                             type: double
                             description: "upper bound of validity of polynomial"
                             required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
                           - name: MATID
                             type: int
                             description: "material ID of the corresponding scatra material"
                             required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
               - type: all_of
                 specs:
                   - name: MAT
@@ -41558,6 +41712,12 @@ sections:
                             type: double
                             description: "reference temperature causing no strains"
                             required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: false
+                                maximum_exclusive: false
               - type: all_of
                 specs:
                   - name: MAT
@@ -41574,10 +41734,6 @@ sections:
                             type: int
                             description: "Time-dependent function used to calculate the inelastic deformation gradient"
                             required: true
-                          - name: NUMSPACEDIM
-                            type: int
-                            description: "Number of space dimension (only 3 valid)"
-                            required: true
                             validator:
                               range:
                                 minimum: 0
@@ -41586,6 +41742,7 @@ sections:
                                 maximum_exclusive: false
                           - name: GrowthDirection
                             type: vector
+                            size: 3
                             value_type:
                               type: double
                             description: "vector that defines the growth direction"
@@ -41606,6 +41763,12 @@ sections:
                             type: int
                             description: "Time-dependent function used to calculate the inelastic deformation gradient"
                             required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
               - type: all_of
                 specs:
                   - name: MAT
