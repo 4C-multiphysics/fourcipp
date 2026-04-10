@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: a10538b801ca2fbbe44855f1fdb736cc12526929
+  commit_hash: 32e0aedade214c62f5bfa4fece0fe7de6fb5151e
   version: 2026.2.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -4709,6 +4709,211 @@ legacy_element_specs:
                       - name: hex_729point
                       - name: hex_1000point
   SOLIDPORO_PRESSURE_BASED:
+    - cell_type: QUAD4
+      spec:
+        type: all_of
+        specs:
+          - name: MAT
+            type: int
+            required: true
+          - name: KINEM
+            type: enum
+            description: "Whether to use linear kinematics (small displacements) or nonlinear kinematics (large displacements)"
+            required: true
+            choices:
+              - name: "linear"
+              - name: "nonlinear"
+          - name: TYPE
+            type: enum
+            description: "Scalar transport implementation type"
+            required: false
+            default: "Undefined"
+            choices:
+              - name: "Advanced_Reaction"
+              - name: "CardMono"
+              - name: "Chemo_Reac"
+              - name: "Chemotaxis"
+              - name: "Loma"
+              - name: "Poro"
+              - name: "PoroMultiReac"
+              - name: "PoroReac"
+              - name: "PoroReacECM"
+              - name: "Std"
+              - name: "Undefined"
+          - name: THICKNESS
+            type: double
+            description: "Reference thickness of the 2D solid element"
+            required: true
+          - name: PLANE_ASSUMPTION
+            type: enum
+            description: "Plane assumption for the 2D solid element (Note: In solid-poro, only plane strain makes physical sense)"
+            required: true
+            choices:
+              - name: plane_strain
+    - cell_type: QUAD8
+      spec:
+        type: all_of
+        specs:
+          - name: MAT
+            type: int
+            required: true
+          - name: KINEM
+            type: enum
+            description: "Whether to use linear kinematics (small displacements) or nonlinear kinematics (large displacements)"
+            required: true
+            choices:
+              - name: "linear"
+              - name: "nonlinear"
+          - name: TYPE
+            type: enum
+            description: "Scalar transport implementation type"
+            required: false
+            default: "Undefined"
+            choices:
+              - name: "Advanced_Reaction"
+              - name: "CardMono"
+              - name: "Chemo_Reac"
+              - name: "Chemotaxis"
+              - name: "Loma"
+              - name: "Poro"
+              - name: "PoroMultiReac"
+              - name: "PoroReac"
+              - name: "PoroReacECM"
+              - name: "Std"
+              - name: "Undefined"
+          - name: THICKNESS
+            type: double
+            description: "Reference thickness of the 2D solid element"
+            required: true
+          - name: PLANE_ASSUMPTION
+            type: enum
+            description: "Plane assumption for the 2D solid element (Note: In solid-poro, only plane strain makes physical sense)"
+            required: true
+            choices:
+              - name: plane_strain
+    - cell_type: QUAD9
+      spec:
+        type: all_of
+        specs:
+          - name: MAT
+            type: int
+            required: true
+          - name: KINEM
+            type: enum
+            description: "Whether to use linear kinematics (small displacements) or nonlinear kinematics (large displacements)"
+            required: true
+            choices:
+              - name: "linear"
+              - name: "nonlinear"
+          - name: TYPE
+            type: enum
+            description: "Scalar transport implementation type"
+            required: false
+            default: "Undefined"
+            choices:
+              - name: "Advanced_Reaction"
+              - name: "CardMono"
+              - name: "Chemo_Reac"
+              - name: "Chemotaxis"
+              - name: "Loma"
+              - name: "Poro"
+              - name: "PoroMultiReac"
+              - name: "PoroReac"
+              - name: "PoroReacECM"
+              - name: "Std"
+              - name: "Undefined"
+          - name: THICKNESS
+            type: double
+            description: "Reference thickness of the 2D solid element"
+            required: true
+          - name: PLANE_ASSUMPTION
+            type: enum
+            description: "Plane assumption for the 2D solid element (Note: In solid-poro, only plane strain makes physical sense)"
+            required: true
+            choices:
+              - name: plane_strain
+    - cell_type: TRI3
+      spec:
+        type: all_of
+        specs:
+          - name: MAT
+            type: int
+            required: true
+          - name: KINEM
+            type: enum
+            description: "Whether to use linear kinematics (small displacements) or nonlinear kinematics (large displacements)"
+            required: true
+            choices:
+              - name: "linear"
+              - name: "nonlinear"
+          - name: TYPE
+            type: enum
+            description: "Scalar transport implementation type"
+            required: false
+            default: "Undefined"
+            choices:
+              - name: "Advanced_Reaction"
+              - name: "CardMono"
+              - name: "Chemo_Reac"
+              - name: "Chemotaxis"
+              - name: "Loma"
+              - name: "Poro"
+              - name: "PoroMultiReac"
+              - name: "PoroReac"
+              - name: "PoroReacECM"
+              - name: "Std"
+              - name: "Undefined"
+          - name: THICKNESS
+            type: double
+            description: "Reference thickness of the 2D solid element"
+            required: true
+          - name: PLANE_ASSUMPTION
+            type: enum
+            description: "Plane assumption for the 2D solid element (Note: In solid-poro, only plane strain makes physical sense)"
+            required: true
+            choices:
+              - name: plane_strain
+    - cell_type: TRI6
+      spec:
+        type: all_of
+        specs:
+          - name: MAT
+            type: int
+            required: true
+          - name: KINEM
+            type: enum
+            description: "Whether to use linear kinematics (small displacements) or nonlinear kinematics (large displacements)"
+            required: true
+            choices:
+              - name: "linear"
+              - name: "nonlinear"
+          - name: TYPE
+            type: enum
+            description: "Scalar transport implementation type"
+            required: false
+            default: "Undefined"
+            choices:
+              - name: "Advanced_Reaction"
+              - name: "CardMono"
+              - name: "Chemo_Reac"
+              - name: "Chemotaxis"
+              - name: "Loma"
+              - name: "Poro"
+              - name: "PoroMultiReac"
+              - name: "PoroReac"
+              - name: "PoroReacECM"
+              - name: "Std"
+              - name: "Undefined"
+          - name: THICKNESS
+            type: double
+            description: "Reference thickness of the 2D solid element"
+            required: true
+          - name: PLANE_ASSUMPTION
+            type: enum
+            description: "Plane assumption for the 2D solid element (Note: In solid-poro, only plane strain makes physical sense)"
+            required: true
+            choices:
+              - name: plane_strain
     - cell_type: HEX8
       spec:
         type: all_of
@@ -58026,6 +58231,231 @@ $references:
                             specs:
                               - type: all_of
                                 specs:
+                                  - name: QUAD4
+                                    type: group
+                                    required: true
+                                    specs:
+                                      - type: all_of
+                                        specs:
+                                          - name: MAT
+                                            type: int
+                                            required: true
+                                          - name: KINEM
+                                            type: enum
+                                            description: "Whether to use linear kinematics (small displacements) or nonlinear kinematics (large displacements)"
+                                            required: true
+                                            choices:
+                                              - name: "linear"
+                                              - name: "nonlinear"
+                                          - name: TYPE
+                                            type: enum
+                                            description: "Scalar transport implementation type"
+                                            required: false
+                                            default: "Undefined"
+                                            choices:
+                                              - name: "Advanced_Reaction"
+                                              - name: "CardMono"
+                                              - name: "Chemo_Reac"
+                                              - name: "Chemotaxis"
+                                              - name: "Loma"
+                                              - name: "Poro"
+                                              - name: "PoroMultiReac"
+                                              - name: "PoroReac"
+                                              - name: "PoroReacECM"
+                                              - name: "Std"
+                                              - name: "Undefined"
+                                          - name: THICKNESS
+                                            type: double
+                                            description: "Reference thickness of the 2D solid element"
+                                            required: true
+                                          - name: PLANE_ASSUMPTION
+                                            type: enum
+                                            description: "Plane assumption for the 2D solid element (Note: In solid-poro, only plane strain makes physical sense)"
+                                            required: true
+                                            choices:
+                                              - name: plane_strain
+                              - type: all_of
+                                specs:
+                                  - name: QUAD8
+                                    type: group
+                                    required: true
+                                    specs:
+                                      - type: all_of
+                                        specs:
+                                          - name: MAT
+                                            type: int
+                                            required: true
+                                          - name: KINEM
+                                            type: enum
+                                            description: "Whether to use linear kinematics (small displacements) or nonlinear kinematics (large displacements)"
+                                            required: true
+                                            choices:
+                                              - name: "linear"
+                                              - name: "nonlinear"
+                                          - name: TYPE
+                                            type: enum
+                                            description: "Scalar transport implementation type"
+                                            required: false
+                                            default: "Undefined"
+                                            choices:
+                                              - name: "Advanced_Reaction"
+                                              - name: "CardMono"
+                                              - name: "Chemo_Reac"
+                                              - name: "Chemotaxis"
+                                              - name: "Loma"
+                                              - name: "Poro"
+                                              - name: "PoroMultiReac"
+                                              - name: "PoroReac"
+                                              - name: "PoroReacECM"
+                                              - name: "Std"
+                                              - name: "Undefined"
+                                          - name: THICKNESS
+                                            type: double
+                                            description: "Reference thickness of the 2D solid element"
+                                            required: true
+                                          - name: PLANE_ASSUMPTION
+                                            type: enum
+                                            description: "Plane assumption for the 2D solid element (Note: In solid-poro, only plane strain makes physical sense)"
+                                            required: true
+                                            choices:
+                                              - name: plane_strain
+                              - type: all_of
+                                specs:
+                                  - name: QUAD9
+                                    type: group
+                                    required: true
+                                    specs:
+                                      - type: all_of
+                                        specs:
+                                          - name: MAT
+                                            type: int
+                                            required: true
+                                          - name: KINEM
+                                            type: enum
+                                            description: "Whether to use linear kinematics (small displacements) or nonlinear kinematics (large displacements)"
+                                            required: true
+                                            choices:
+                                              - name: "linear"
+                                              - name: "nonlinear"
+                                          - name: TYPE
+                                            type: enum
+                                            description: "Scalar transport implementation type"
+                                            required: false
+                                            default: "Undefined"
+                                            choices:
+                                              - name: "Advanced_Reaction"
+                                              - name: "CardMono"
+                                              - name: "Chemo_Reac"
+                                              - name: "Chemotaxis"
+                                              - name: "Loma"
+                                              - name: "Poro"
+                                              - name: "PoroMultiReac"
+                                              - name: "PoroReac"
+                                              - name: "PoroReacECM"
+                                              - name: "Std"
+                                              - name: "Undefined"
+                                          - name: THICKNESS
+                                            type: double
+                                            description: "Reference thickness of the 2D solid element"
+                                            required: true
+                                          - name: PLANE_ASSUMPTION
+                                            type: enum
+                                            description: "Plane assumption for the 2D solid element (Note: In solid-poro, only plane strain makes physical sense)"
+                                            required: true
+                                            choices:
+                                              - name: plane_strain
+                              - type: all_of
+                                specs:
+                                  - name: TRI3
+                                    type: group
+                                    required: true
+                                    specs:
+                                      - type: all_of
+                                        specs:
+                                          - name: MAT
+                                            type: int
+                                            required: true
+                                          - name: KINEM
+                                            type: enum
+                                            description: "Whether to use linear kinematics (small displacements) or nonlinear kinematics (large displacements)"
+                                            required: true
+                                            choices:
+                                              - name: "linear"
+                                              - name: "nonlinear"
+                                          - name: TYPE
+                                            type: enum
+                                            description: "Scalar transport implementation type"
+                                            required: false
+                                            default: "Undefined"
+                                            choices:
+                                              - name: "Advanced_Reaction"
+                                              - name: "CardMono"
+                                              - name: "Chemo_Reac"
+                                              - name: "Chemotaxis"
+                                              - name: "Loma"
+                                              - name: "Poro"
+                                              - name: "PoroMultiReac"
+                                              - name: "PoroReac"
+                                              - name: "PoroReacECM"
+                                              - name: "Std"
+                                              - name: "Undefined"
+                                          - name: THICKNESS
+                                            type: double
+                                            description: "Reference thickness of the 2D solid element"
+                                            required: true
+                                          - name: PLANE_ASSUMPTION
+                                            type: enum
+                                            description: "Plane assumption for the 2D solid element (Note: In solid-poro, only plane strain makes physical sense)"
+                                            required: true
+                                            choices:
+                                              - name: plane_strain
+                              - type: all_of
+                                specs:
+                                  - name: TRI6
+                                    type: group
+                                    required: true
+                                    specs:
+                                      - type: all_of
+                                        specs:
+                                          - name: MAT
+                                            type: int
+                                            required: true
+                                          - name: KINEM
+                                            type: enum
+                                            description: "Whether to use linear kinematics (small displacements) or nonlinear kinematics (large displacements)"
+                                            required: true
+                                            choices:
+                                              - name: "linear"
+                                              - name: "nonlinear"
+                                          - name: TYPE
+                                            type: enum
+                                            description: "Scalar transport implementation type"
+                                            required: false
+                                            default: "Undefined"
+                                            choices:
+                                              - name: "Advanced_Reaction"
+                                              - name: "CardMono"
+                                              - name: "Chemo_Reac"
+                                              - name: "Chemotaxis"
+                                              - name: "Loma"
+                                              - name: "Poro"
+                                              - name: "PoroMultiReac"
+                                              - name: "PoroReac"
+                                              - name: "PoroReacECM"
+                                              - name: "Std"
+                                              - name: "Undefined"
+                                          - name: THICKNESS
+                                            type: double
+                                            description: "Reference thickness of the 2D solid element"
+                                            required: true
+                                          - name: PLANE_ASSUMPTION
+                                            type: enum
+                                            description: "Plane assumption for the 2D solid element (Note: In solid-poro, only plane strain makes physical sense)"
+                                            required: true
+                                            choices:
+                                              - name: plane_strain
+                              - type: all_of
+                                specs:
                                   - name: HEX8
                                     type: group
                                     required: true
@@ -67773,6 +68203,231 @@ $references:
                       specs:
                         - type: one_of
                           specs:
+                            - type: all_of
+                              specs:
+                                - name: QUAD4
+                                  type: group
+                                  required: true
+                                  specs:
+                                    - type: all_of
+                                      specs:
+                                        - name: MAT
+                                          type: int
+                                          required: true
+                                        - name: KINEM
+                                          type: enum
+                                          description: "Whether to use linear kinematics (small displacements) or nonlinear kinematics (large displacements)"
+                                          required: true
+                                          choices:
+                                            - name: "linear"
+                                            - name: "nonlinear"
+                                        - name: TYPE
+                                          type: enum
+                                          description: "Scalar transport implementation type"
+                                          required: false
+                                          default: "Undefined"
+                                          choices:
+                                            - name: "Advanced_Reaction"
+                                            - name: "CardMono"
+                                            - name: "Chemo_Reac"
+                                            - name: "Chemotaxis"
+                                            - name: "Loma"
+                                            - name: "Poro"
+                                            - name: "PoroMultiReac"
+                                            - name: "PoroReac"
+                                            - name: "PoroReacECM"
+                                            - name: "Std"
+                                            - name: "Undefined"
+                                        - name: THICKNESS
+                                          type: double
+                                          description: "Reference thickness of the 2D solid element"
+                                          required: true
+                                        - name: PLANE_ASSUMPTION
+                                          type: enum
+                                          description: "Plane assumption for the 2D solid element (Note: In solid-poro, only plane strain makes physical sense)"
+                                          required: true
+                                          choices:
+                                            - name: plane_strain
+                            - type: all_of
+                              specs:
+                                - name: QUAD8
+                                  type: group
+                                  required: true
+                                  specs:
+                                    - type: all_of
+                                      specs:
+                                        - name: MAT
+                                          type: int
+                                          required: true
+                                        - name: KINEM
+                                          type: enum
+                                          description: "Whether to use linear kinematics (small displacements) or nonlinear kinematics (large displacements)"
+                                          required: true
+                                          choices:
+                                            - name: "linear"
+                                            - name: "nonlinear"
+                                        - name: TYPE
+                                          type: enum
+                                          description: "Scalar transport implementation type"
+                                          required: false
+                                          default: "Undefined"
+                                          choices:
+                                            - name: "Advanced_Reaction"
+                                            - name: "CardMono"
+                                            - name: "Chemo_Reac"
+                                            - name: "Chemotaxis"
+                                            - name: "Loma"
+                                            - name: "Poro"
+                                            - name: "PoroMultiReac"
+                                            - name: "PoroReac"
+                                            - name: "PoroReacECM"
+                                            - name: "Std"
+                                            - name: "Undefined"
+                                        - name: THICKNESS
+                                          type: double
+                                          description: "Reference thickness of the 2D solid element"
+                                          required: true
+                                        - name: PLANE_ASSUMPTION
+                                          type: enum
+                                          description: "Plane assumption for the 2D solid element (Note: In solid-poro, only plane strain makes physical sense)"
+                                          required: true
+                                          choices:
+                                            - name: plane_strain
+                            - type: all_of
+                              specs:
+                                - name: QUAD9
+                                  type: group
+                                  required: true
+                                  specs:
+                                    - type: all_of
+                                      specs:
+                                        - name: MAT
+                                          type: int
+                                          required: true
+                                        - name: KINEM
+                                          type: enum
+                                          description: "Whether to use linear kinematics (small displacements) or nonlinear kinematics (large displacements)"
+                                          required: true
+                                          choices:
+                                            - name: "linear"
+                                            - name: "nonlinear"
+                                        - name: TYPE
+                                          type: enum
+                                          description: "Scalar transport implementation type"
+                                          required: false
+                                          default: "Undefined"
+                                          choices:
+                                            - name: "Advanced_Reaction"
+                                            - name: "CardMono"
+                                            - name: "Chemo_Reac"
+                                            - name: "Chemotaxis"
+                                            - name: "Loma"
+                                            - name: "Poro"
+                                            - name: "PoroMultiReac"
+                                            - name: "PoroReac"
+                                            - name: "PoroReacECM"
+                                            - name: "Std"
+                                            - name: "Undefined"
+                                        - name: THICKNESS
+                                          type: double
+                                          description: "Reference thickness of the 2D solid element"
+                                          required: true
+                                        - name: PLANE_ASSUMPTION
+                                          type: enum
+                                          description: "Plane assumption for the 2D solid element (Note: In solid-poro, only plane strain makes physical sense)"
+                                          required: true
+                                          choices:
+                                            - name: plane_strain
+                            - type: all_of
+                              specs:
+                                - name: TRI3
+                                  type: group
+                                  required: true
+                                  specs:
+                                    - type: all_of
+                                      specs:
+                                        - name: MAT
+                                          type: int
+                                          required: true
+                                        - name: KINEM
+                                          type: enum
+                                          description: "Whether to use linear kinematics (small displacements) or nonlinear kinematics (large displacements)"
+                                          required: true
+                                          choices:
+                                            - name: "linear"
+                                            - name: "nonlinear"
+                                        - name: TYPE
+                                          type: enum
+                                          description: "Scalar transport implementation type"
+                                          required: false
+                                          default: "Undefined"
+                                          choices:
+                                            - name: "Advanced_Reaction"
+                                            - name: "CardMono"
+                                            - name: "Chemo_Reac"
+                                            - name: "Chemotaxis"
+                                            - name: "Loma"
+                                            - name: "Poro"
+                                            - name: "PoroMultiReac"
+                                            - name: "PoroReac"
+                                            - name: "PoroReacECM"
+                                            - name: "Std"
+                                            - name: "Undefined"
+                                        - name: THICKNESS
+                                          type: double
+                                          description: "Reference thickness of the 2D solid element"
+                                          required: true
+                                        - name: PLANE_ASSUMPTION
+                                          type: enum
+                                          description: "Plane assumption for the 2D solid element (Note: In solid-poro, only plane strain makes physical sense)"
+                                          required: true
+                                          choices:
+                                            - name: plane_strain
+                            - type: all_of
+                              specs:
+                                - name: TRI6
+                                  type: group
+                                  required: true
+                                  specs:
+                                    - type: all_of
+                                      specs:
+                                        - name: MAT
+                                          type: int
+                                          required: true
+                                        - name: KINEM
+                                          type: enum
+                                          description: "Whether to use linear kinematics (small displacements) or nonlinear kinematics (large displacements)"
+                                          required: true
+                                          choices:
+                                            - name: "linear"
+                                            - name: "nonlinear"
+                                        - name: TYPE
+                                          type: enum
+                                          description: "Scalar transport implementation type"
+                                          required: false
+                                          default: "Undefined"
+                                          choices:
+                                            - name: "Advanced_Reaction"
+                                            - name: "CardMono"
+                                            - name: "Chemo_Reac"
+                                            - name: "Chemotaxis"
+                                            - name: "Loma"
+                                            - name: "Poro"
+                                            - name: "PoroMultiReac"
+                                            - name: "PoroReac"
+                                            - name: "PoroReacECM"
+                                            - name: "Std"
+                                            - name: "Undefined"
+                                        - name: THICKNESS
+                                          type: double
+                                          description: "Reference thickness of the 2D solid element"
+                                          required: true
+                                        - name: PLANE_ASSUMPTION
+                                          type: enum
+                                          description: "Plane assumption for the 2D solid element (Note: In solid-poro, only plane strain makes physical sense)"
+                                          required: true
+                                          choices:
+                                            - name: plane_strain
                             - type: all_of
                               specs:
                                 - name: HEX8
