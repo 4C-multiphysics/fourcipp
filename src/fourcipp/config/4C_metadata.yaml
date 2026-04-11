@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 32e0aedade214c62f5bfa4fece0fe7de6fb5151e
+  commit_hash: badee63cab634ff39febc948ae14d94a50a03e04
   version: 2026.2.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -11612,7 +11612,7 @@ sections:
                 - name: "Tresca"
             - name: FRLESS_FIRST
               type: bool
-              description: "If chosen the first time step of a newly in contact slave node is regarded as frictionless"
+              description: "If chosen the first time step of a newly in contact source node is regarded as frictionless"
               required: false
               default: false
             - name: GP_SLIP_INCR
@@ -42867,6 +42867,55 @@ sections:
                 - name: Peridynamic_3D
                 - name: Peridynamic_2DPlaneStress
                 - name: Peridynamic_2DPlaneStrain
+            - name: PRE_CRACK_LINES
+              type: list
+              description: 'Pre-crack line segments (3D): peridynamic bonds whose reference configuration crosses any of these segments are broken at initialization. Each entry is defined by a start point (START) and an end point (END).'
+              required: false
+              spec:
+                type: all_of
+                specs:
+                  - name: START
+                    type: vector
+                    size: 3
+                    value_type:
+                      type: double
+                    description: "start point of crack line segment"
+                    required: true
+                  - name: END
+                    type: vector
+                    size: 3
+                    value_type:
+                      type: double
+                    description: "end point of crack line segment"
+                    required: true
+            - name: PRE_CRACK_PLANES
+              type: list
+              description: 'Pre-crack parallelogram patches (3D): peridynamic bonds whose reference configuration crosses any of these patches are broken at initialization. Each patch is defined by three corner points P0, P1, P2; the parallelogram is spanned by edges e1 = P1-P0 and e2 = P2-P0'
+              required: false
+              spec:
+                type: all_of
+                specs:
+                  - name: P0
+                    type: vector
+                    size: 3
+                    value_type:
+                      type: double
+                    description: "corner point 0 of parallelogram patch"
+                    required: true
+                  - name: P1
+                    type: vector
+                    size: 3
+                    value_type:
+                      type: double
+                    description: "corner point 1 of parallelogram patch"
+                    required: true
+                  - name: P2
+                    type: vector
+                    size: 3
+                    value_type:
+                      type: double
+                    description: "corner point 2 of parallelogram patch"
+                    required: true
     - name: PARTICLE DYNAMIC/SPH
       type: group
       required: false
@@ -50068,6 +50117,11 @@ sections:
                 - name: double_length_specific_small_separations
                 - name: single_length_specific_small_separations
                 - name: single_length_specific_small_separations_simple
+            - name: two_half_pass
+              type: bool
+              description: "Symmetrize SBIP approach via two exchanged pair evaluations which get averaged"
+              required: false
+              default: false
             - name: cutoff_radius
               noneable: true
               type: double
