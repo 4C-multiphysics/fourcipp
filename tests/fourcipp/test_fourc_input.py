@@ -418,7 +418,7 @@ def get_4C_test_input_files():
         "contact3D_quad_tet10.4C.yaml",
         "elch_2D_porousMediumHomo_SSPP.4C.yaml",
         "f2_nurbs9_dc_drt.4C.yaml",
-        "fsi_dc_mono_slss_msht.4C.yaml",
+        "fsi_dc_mono_slfs_msht.4C.yaml",
         "particle_dem_1d_adhesion_RegDMT.4C.yaml",
         "poro_3D_tet4.4C.yaml",
         "reduced_lung_3_aw_2_tu.4C.yaml",
