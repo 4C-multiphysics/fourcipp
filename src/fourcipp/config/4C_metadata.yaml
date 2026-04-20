@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 50a5e54c0b34f274ab10e524a83d3f344f0e6f34
+  commit_hash: 8f346aa8ce5fdd70f6c292ddecd48c28130366d0
   version: 2026.2.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -41586,17 +41586,6 @@ sections:
                                 maximum: 1.7976931348623157e+308
                                 minimum_exclusive: true
                                 maximum_exclusive: false
-                          - name: MAX_SUBSTEPPING_HALVE_NUM
-                            type: int
-                            description: "maximum number of times the global time step can be halved in the substepping procedure (default: 10)"
-                            required: false
-                            default: 10
-                            validator:
-                              range:
-                                minimum: 0
-                                maximum: 2147483647
-                                minimum_exclusive: false
-                                maximum_exclusive: false
                           - name: MATRIX_EXP_CALC_METHOD
                             type: enum
                             description: "chosen computation method for matrix exponential (default: automatic method selection based on matrix characteristics)"
@@ -41636,6 +41625,109 @@ sections:
                               - name: taylor_series
                               - name: gregory_series
                               - name: pade_part_fract
+                          - name: LOCAL_SUBSTEPPING
+                            type: group
+                            description: Settings for the usage of local substepping to integrate the viscoplastic evolution equations
+                            required: false
+                            specs:
+                              - type: all_of
+                                specs:
+                                  - name: USE_SUBSTEPPING
+                                    type: bool
+                                    description: "use substepping?"
+                                    required: false
+                                    default: false
+                                  - name: MAX_SUBSTEPPING_HALVE_NUM
+                                    type: int
+                                    description: "maximum number of times the global time step can be halved in the substepping procedure"
+                                    required: false
+                                    default: 10
+                                    validator:
+                                      range:
+                                        minimum: 0
+                                        maximum: 2147483647
+                                        minimum_exclusive: false
+                                        maximum_exclusive: false
+                          - name: LOCAL_NEWTON
+                            type: group
+                            description: Parameters used in the Local Newton--Raphson procedure (viscoplastic corrector stage)
+                            required: false
+                            specs:
+                              - type: all_of
+                                specs:
+                                  - name: CONV_CHECK
+                                    type: enum
+                                    description: "convergence check type"
+                                    required: false
+                                    default: residual_and_increment_ratio
+                                    choices:
+                                      - name: residual
+                                      - name: increment_ratio
+                                      - name: residual_and_increment_ratio
+                                  - name: MAX_ITER
+                                    type: int
+                                    description: "maximum number of iterations"
+                                    required: false
+                                    default: 100
+                                    validator:
+                                      range:
+                                        minimum: 0
+                                        maximum: 2147483647
+                                        minimum_exclusive: true
+                                        maximum_exclusive: false
+                                  - name: RES_TOL
+                                    type: double
+                                    description: "residual tolerance (absolute residual 2-norm)"
+                                    required: false
+                                    default: 1e-08
+                                    validator:
+                                      range:
+                                        minimum: 0
+                                        maximum: 1.7976931348623157e+308
+                                        minimum_exclusive: true
+                                        maximum_exclusive: false
+                                  - name: MAX_EXCEEDANCE_FACT_RES_TOL
+                                    type: double
+                                    description: "maximum exceedance factor for the specified residual tolerance (Local Newton divergence safeguard for continuing the simulation, if specified by the user via DIVER_CONT)"
+                                    required: false
+                                    default: 10
+                                    validator:
+                                      range:
+                                        minimum: 0
+                                        maximum: 1.7976931348623157e+308
+                                        minimum_exclusive: false
+                                        maximum_exclusive: false
+                                  - name: INCR_TOL
+                                    type: double
+                                    description: "increment tolerance (ratio of |increment| / |solution|)"
+                                    required: false
+                                    default: 1e-08
+                                    validator:
+                                      range:
+                                        minimum: 0
+                                        maximum: 1.7976931348623157e+308
+                                        minimum_exclusive: true
+                                        maximum_exclusive: false
+                                  - name: MAX_EXCEEDANCE_FACT_INCR_TOL
+                                    type: double
+                                    description: "maximum exceedance factor for the specified increment tolerance (Local Newton divergence safeguard for continuing the simulation, if specified by the user via DIVER_CONT)"
+                                    required: false
+                                    default: 10
+                                    validator:
+                                      range:
+                                        minimum: 0
+                                        maximum: 1.7976931348623157e+308
+                                        minimum_exclusive: false
+                                        maximum_exclusive: false
+                                  - name: DIVER_CONT
+                                    type: enum
+                                    description: "strategy to deal with divergence in the Local Newton Loop"
+                                    required: false
+                                    default: stop
+                                    choices:
+                                      - name: stop
+                                      - name: continue_sim
+                                      - name: continue_sim_with_safeguard
               - type: all_of
                 specs:
                   - name: MAT
