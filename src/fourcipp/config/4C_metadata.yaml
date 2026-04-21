@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 8f346aa8ce5fdd70f6c292ddecd48c28130366d0
+  commit_hash: c6bd04f9c765b7d93e6ae9b069722415847fa531
   version: 2026.2.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -31865,6 +31865,11 @@ sections:
               description: "Flag indicating whether quantities related to the spring dashpot conditions should be written to output."
               required: false
               default: false
+            - name: WRITE_TIMINGS
+              type: bool
+              description: "Flag indicating whether timings of the time monitor should be written to a yaml file. The timing information is written to <outputprefix>-timings.yaml."
+              required: false
+              default: true
             - name: OUTPUT_BIN
               type: bool
               description: "Do you want to have binary output?"
@@ -48380,9 +48385,15 @@ sections:
                 - name: "ConstDisVelAcc"
                 - name: "ConstDisVelAccPres"
                 - name: "ConstVel"
+                - name: "PythonWrapper"
                 - name: "TangDis"
                 - name: "TangDisConstFext"
                 - name: "Vague"
+            - name: PYTHON_PREDICTOR_FILE
+              type: path
+              description: "Absolute or relative path to the Python script implementing the PythonWrapper predictor."
+              required: false
+              default: ""
             - name: UZAWAPARAM
               type: double
               description: "Parameter for Uzawa algorithm dealing with lagrange multipliers"
