@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 6014a90bcaecf7c18d23ae062bc51065e8ffdbf2
+  commit_hash: 215bbaae7156135f7b4f1de69fdde659aac7b002
   version: 2026.3.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -50445,18 +50445,18 @@ sections:
               description: "Option to apply automatic differentiation via FAD"
               required: false
               default: false
-            - name: choice_master_slave
+            - name: choice_source_target
               type: enum
-              description: "Rule to which the role of master and slave is assigned to beam elements"
+              description: "Rule to which the role of target and source is assigned to beam elements"
               required: false
-              default: smaller_eleGID_is_slave
+              default: smaller_eleGID_is_source
               choices:
-                - name: smaller_eleGID_is_slave
-                - name: higher_eleGID_is_slave
+                - name: smaller_eleGID_is_source
+                - name: higher_eleGID_is_source
             - name: potential_reduction_length
               noneable: true
               type: double
-              description: "Length in which the potential is reduced to 0 at master beam end points (only applicable for 'single_length_specific_small_separations' strategy)."
+              description: "Length in which the potential is reduced to 0 at target beam end points (only applicable for 'single_length_specific_small_separations' strategy)."
               required: false
               default: null
               validator:
@@ -50527,7 +50527,7 @@ sections:
                       default: false
                     - name: write_uids
                       type: bool
-                      description: "Write out the unique ID's for each visualization point,i.e., master and slave beam element global ID (uid_0_beam_1_gid, uid_1_beam_2_gid) and local Gauss point ID (uid_2_gp_id)"
+                      description: "Write out the unique ID's for each visualization point,i.e., source and target beam element global ID (uid_0_beam_1_gid, uid_1_beam_2_gid) and local Gauss point ID (uid_2_gp_id)"
                       required: false
                       default: false
     - name: fields
