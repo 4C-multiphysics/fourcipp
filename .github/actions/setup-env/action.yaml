@@ -1,5 +1,5 @@
-name: Setup Conda Python environment
-description: Sets up a conda environment with conda-forge and a given Python version.
+name: Setup Conda Python environment and install requirements
+description: Sets up a conda environment with conda-forge and a given Python version and install the requirements.
 
 inputs:
   python-version:
@@ -10,10 +10,39 @@ runs:
   using: composite
   steps:
     - name: Set up Miniconda
-      uses: conda-incubator/setup-miniconda@v3
+      uses: conda-incubator/setup-miniconda@v4
       with:
-        auto-update-conda: true
-        conda-remove-defaults: true
-        channels: conda-forge
         activate-environment: fourcipp
         python-version: ${{ inputs.python-version }}
+        miniforge-variant: Miniforge3
+        channels: conda-forge
+        conda-remove-defaults: true
+        auto-activate-base: false
+        auto-update-conda: false
+        use-mamba: true
+
+    # Save the virtual environment path to the GITHUB_PATH so that it is available in subsequent steps/jobs
+    # This circumvents the need to source the virtual environment in each step
+    - name: Export Python environment to PATH
+      shell: bash
+      run: |
+        source "$CONDA/etc/profile.d/conda.sh"
+        conda activate fourcipp
+
+        if [[ "$RUNNER_OS" == "Windows" ]]; then
+          echo "$CONDA_PREFIX/Scripts" >> "$GITHUB_PATH"
+          echo "$CONDA_PREFIX" >> "$GITHUB_PATH"
+        else
+          echo "$CONDA_PREFIX/bin" >> "$GITHUB_PATH"
+        fi
+
+    - name: Install fourcipp and requirements
+      shell: bash
+      run: pip install -e .[dev,safe]
+
+    - name: Verify python and installed packages
+      shell: bash
+      run: |
+        which python
+        python --version
+        pip list

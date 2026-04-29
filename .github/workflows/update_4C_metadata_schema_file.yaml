@@ -33,22 +33,17 @@ jobs:
           name: clang18_build-schema
           path: clang18_build-schema
       # Format new files with pre-commit (this needs to be done before the files are hashed to ensure that both are formatted)
-      - name: Set up virtual environment
+      - name: Set up virtual environment and install fourcipp with requirements
         uses: ./.github/actions/setup-env
         with:
           python-version: 3.13
       - name: Install requirements
-        shell: bash -el {0}
         run: |
-          conda activate fourcipp
-          pip install -e .[dev,safe]
           pip install pre-commit
       # files need to be specified because they are not yet staged and therefore pre-commit cannot find them
       # pre-commit hook is run twice to not fail if the first run fails (due to formatting files)
       - name: Run pre-commit, i.e., format files
-        shell: bash -el {0}
         run: |
-          conda activate fourcipp
           SKIP=no-commit-to-branch pre-commit run --files clang18_build-metadata/4C_metadata.yaml clang18_build-schema/4C_schema.json || SKIP=no-commit-to-branch pre-commit run --files clang18_build-metadata/4C_metadata.yaml clang18_build-schema/4C_schema.json
       # Compare the hashes
       - name: Check if metadata file has changed and overwrite old file if necessary
