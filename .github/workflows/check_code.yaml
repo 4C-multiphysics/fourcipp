@@ -18,20 +18,15 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
-      - name: Set up virtual environment
+      - name: Set up virtual environment and install fourcipp with requirements
         uses: ./.github/actions/setup-env
         with:
           python-version: 3.13
       - name: Install requirements
-        shell: bash -el {0}
         run: |
-          conda activate fourcipp
-          pip install -e .[dev,safe]
           pip install pre-commit
       - name: Run code-checks
-        shell: bash -el {0}
         run: |
-          conda activate fourcipp
           if [ "${GITHUB_REF}" = "refs/heads/main" ]; then
             SKIP=no-commit-to-branch pre-commit run --all-files
           else

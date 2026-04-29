@@ -20,25 +20,15 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ["3.10", "3.13"]
-    defaults:
-      run:
-        shell: bash -l {0}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
-      - name: Set up virtual environment
+      - name: Set up virtual environment and install fourcipp with requirements
         uses: ./.github/actions/setup-env
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install requirements
-        shell: bash -el {0}
-        run: |
-          conda activate fourcipp
-          pip install -e .[dev,safe]
       - name: Run pytest
-        shell: bash -el {0}
         run: |
-          conda activate fourcipp
           pytest --color=yes -v --performance-tests --no-cov
           cat timings.md >> $GITHUB_STEP_SUMMARY
 
@@ -46,21 +36,13 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/4c-multiphysics/4c:main
-    defaults:
-      run:
-        shell: bash -l {0}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
-      - name: Set up virtual environment
+      - name: Set up virtual environment and install fourcipp with requirements
         uses: ./.github/actions/setup-env
         with:
           python-version: 3.13
-      - name: Install requirements
-        shell: bash -el {0}
-        run: |
-          conda activate fourcipp
-          pip install -e .[dev,safe]
       - name: Run pytest using 4C_docker_main config
         run: |
           fourcipp switch-config-profile 4C_docker_main
