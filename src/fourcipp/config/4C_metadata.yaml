@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 215bbaae7156135f7b4f1de69fdde659aac7b002
+  commit_hash: 924e42847c427e54713d21a8878140607a149d3c
   version: 2026.3.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -8848,7 +8848,7 @@ sections:
               required: true
             - name: SHOW_INFO
               type: enum
-              description: "Choose verbosity of reporting element, node and set info for the exodus file after reading."
+              description: "Choose verbosity of reporting element, node and set info for the external mesh file after reading."
               required: false
               default: none
               choices:
@@ -9003,7 +9003,7 @@ sections:
               required: true
             - name: SHOW_INFO
               type: enum
-              description: "Choose verbosity of reporting element, node and set info for the exodus file after reading."
+              description: "Choose verbosity of reporting element, node and set info for the external mesh file after reading."
               required: false
               default: none
               choices:
@@ -29781,7 +29781,7 @@ sections:
               required: true
             - name: SHOW_INFO
               type: enum
-              description: "Choose verbosity of reporting element, node and set info for the exodus file after reading."
+              description: "Choose verbosity of reporting element, node and set info for the external mesh file after reading."
               required: false
               default: none
               choices:
@@ -32987,7 +32987,7 @@ sections:
               required: true
             - name: SHOW_INFO
               type: enum
-              description: "Choose verbosity of reporting element, node and set info for the exodus file after reading."
+              description: "Choose verbosity of reporting element, node and set info for the external mesh file after reading."
               required: false
               default: none
               choices:
@@ -43698,7 +43698,7 @@ sections:
               required: true
             - name: SHOW_INFO
               type: enum
-              description: "Choose verbosity of reporting element, node and set info for the exodus file after reading."
+              description: "Choose verbosity of reporting element, node and set info for the external mesh file after reading."
               required: false
               default: none
               choices:
@@ -44270,7 +44270,7 @@ sections:
               required: true
             - name: SHOW_INFO
               type: enum
-              description: "Choose verbosity of reporting element, node and set info for the exodus file after reading."
+              description: "Choose verbosity of reporting element, node and set info for the external mesh file after reading."
               required: false
               default: none
               choices:
@@ -48739,7 +48739,7 @@ sections:
               required: true
             - name: SHOW_INFO
               type: enum
-              description: "Choose verbosity of reporting element, node and set info for the exodus file after reading."
+              description: "Choose verbosity of reporting element, node and set info for the external mesh file after reading."
               required: false
               default: none
               choices:
@@ -49170,7 +49170,7 @@ sections:
               required: true
             - name: SHOW_INFO
               type: enum
-              description: "Choose verbosity of reporting element, node and set info for the exodus file after reading."
+              description: "Choose verbosity of reporting element, node and set info for the external mesh file after reading."
               required: false
               default: none
               choices:
@@ -49262,7 +49262,7 @@ sections:
               required: true
             - name: SHOW_INFO
               type: enum
-              description: "Choose verbosity of reporting element, node and set info for the exodus file after reading."
+              description: "Choose verbosity of reporting element, node and set info for the external mesh file after reading."
               required: false
               default: none
               choices:
@@ -49524,7 +49524,7 @@ sections:
               required: true
             - name: SHOW_INFO
               type: enum
-              description: "Choose verbosity of reporting element, node and set info for the exodus file after reading."
+              description: "Choose verbosity of reporting element, node and set info for the external mesh file after reading."
               required: false
               default: none
               choices:
@@ -62909,6 +62909,7 @@ $references:
   "1":
     name: ELEMENT_BLOCKS
     type: list
+    description: List of element blocks to read from the external mesh file. Element blocks can be identified by either their ID or their NAME in the external mesh file.
     required: true
     spec:
       type: all_of
@@ -62918,9 +62919,17 @@ $references:
             - type: all_of
               specs:
                 - name: ID
+                  noneable: true
                   type: int
-                  description: "ID of the element block in the exodus file."
-                  required: true
+                  description: "ID of the element block in the external mesh file. Only allowed if NAME is not specified."
+                  required: false
+                  default: null
+                - name: NAME
+                  noneable: true
+                  type: string
+                  description: "Name of the element block in the external mesh file. Only allowed if ID is not specified."
+                  required: false
+                  default: null
                 - name: ALE2
                   type: group
                   required: true
@@ -62987,9 +62996,17 @@ $references:
             - type: all_of
               specs:
                 - name: ID
+                  noneable: true
                   type: int
-                  description: "ID of the element block in the exodus file."
-                  required: true
+                  description: "ID of the element block in the external mesh file. Only allowed if NAME is not specified."
+                  required: false
+                  default: null
+                - name: NAME
+                  noneable: true
+                  type: string
+                  description: "Name of the element block in the external mesh file. Only allowed if ID is not specified."
+                  required: false
+                  default: null
                 - name: ALE3
                   type: group
                   required: true
@@ -63089,9 +63106,17 @@ $references:
             - type: all_of
               specs:
                 - name: ID
+                  noneable: true
                   type: int
-                  description: "ID of the element block in the exodus file."
-                  required: true
+                  description: "ID of the element block in the external mesh file. Only allowed if NAME is not specified."
+                  required: false
+                  default: null
+                - name: NAME
+                  noneable: true
+                  type: string
+                  description: "Name of the element block in the external mesh file. Only allowed if ID is not specified."
+                  required: false
+                  default: null
                 - name: ART
                   type: group
                   required: true
@@ -63119,9 +63144,17 @@ $references:
             - type: all_of
               specs:
                 - name: ID
+                  noneable: true
                   type: int
-                  description: "ID of the element block in the exodus file."
-                  required: true
+                  description: "ID of the element block in the external mesh file. Only allowed if NAME is not specified."
+                  required: false
+                  default: null
+                - name: NAME
+                  noneable: true
+                  type: string
+                  description: "Name of the element block in the external mesh file. Only allowed if ID is not specified."
+                  required: false
+                  default: null
                 - name: BEAM3EB
                   type: group
                   required: true
@@ -63140,9 +63173,17 @@ $references:
             - type: all_of
               specs:
                 - name: ID
+                  noneable: true
                   type: int
-                  description: "ID of the element block in the exodus file."
-                  required: true
+                  description: "ID of the element block in the external mesh file. Only allowed if NAME is not specified."
+                  required: false
+                  default: null
+                - name: NAME
+                  noneable: true
+                  type: string
+                  description: "Name of the element block in the external mesh file. Only allowed if ID is not specified."
+                  required: false
+                  default: null
                 - name: BEAM3K
                   type: group
                   required: true
@@ -63265,9 +63306,17 @@ $references:
             - type: all_of
               specs:
                 - name: ID
+                  noneable: true
                   type: int
-                  description: "ID of the element block in the exodus file."
-                  required: true
+                  description: "ID of the element block in the external mesh file. Only allowed if NAME is not specified."
+                  required: false
+                  default: null
+                - name: NAME
+                  noneable: true
+                  type: string
+                  description: "Name of the element block in the external mesh file. Only allowed if ID is not specified."
+                  required: false
+                  default: null
                 - name: BEAM3R
                   type: group
                   required: true
@@ -63471,9 +63520,17 @@ $references:
             - type: all_of
               specs:
                 - name: ID
+                  noneable: true
                   type: int
-                  description: "ID of the element block in the exodus file."
-                  required: true
+                  description: "ID of the element block in the external mesh file. Only allowed if NAME is not specified."
+                  required: false
+                  default: null
+                - name: NAME
+                  noneable: true
+                  type: string
+                  description: "Name of the element block in the external mesh file. Only allowed if ID is not specified."
+                  required: false
+                  default: null
                 - name: BELE3_3
                   type: group
                   required: true
@@ -63550,9 +63607,17 @@ $references:
             - type: all_of
               specs:
                 - name: ID
+                  noneable: true
                   type: int
-                  description: "ID of the element block in the exodus file."
-                  required: true
+                  description: "ID of the element block in the external mesh file. Only allowed if NAME is not specified."
+                  required: false
+                  default: null
+                - name: NAME
+                  noneable: true
+                  type: string
+                  description: "Name of the element block in the external mesh file. Only allowed if ID is not specified."
+                  required: false
+                  default: null
                 - name: FLUID
                   type: group
                   required: true
@@ -63802,9 +63867,17 @@ $references:
             - type: all_of
               specs:
                 - name: ID
+                  noneable: true
                   type: int
-                  description: "ID of the element block in the exodus file."
-                  required: true
+                  description: "ID of the element block in the external mesh file. Only allowed if NAME is not specified."
+                  required: false
+                  default: null
+                - name: NAME
+                  noneable: true
+                  type: string
+                  description: "Name of the element block in the external mesh file. Only allowed if ID is not specified."
+                  required: false
+                  default: null
                 - name: FLUIDHDG
                   type: group
                   required: true
@@ -64190,9 +64263,17 @@ $references:
             - type: all_of
               specs:
                 - name: ID
+                  noneable: true
                   type: int
-                  description: "ID of the element block in the exodus file."
-                  required: true
+                  description: "ID of the element block in the external mesh file. Only allowed if NAME is not specified."
+                  required: false
+                  default: null
+                - name: NAME
+                  noneable: true
+                  type: string
+                  description: "Name of the element block in the external mesh file. Only allowed if ID is not specified."
+                  required: false
+                  default: null
                 - name: FLUIDHDGWEAKCOMP
                   type: group
                   required: true
@@ -64578,9 +64659,17 @@ $references:
             - type: all_of
               specs:
                 - name: ID
+                  noneable: true
                   type: int
-                  description: "ID of the element block in the exodus file."
-                  required: true
+                  description: "ID of the element block in the external mesh file. Only allowed if NAME is not specified."
+                  required: false
+                  default: null
+                - name: NAME
+                  noneable: true
+                  type: string
+                  description: "Name of the element block in the external mesh file. Only allowed if ID is not specified."
+                  required: false
+                  default: null
                 - name: FLUIDPORO
                   type: group
                   required: true
@@ -64830,9 +64919,17 @@ $references:
             - type: all_of
               specs:
                 - name: ID
+                  noneable: true
                   type: int
-                  description: "ID of the element block in the exodus file."
-                  required: true
+                  description: "ID of the element block in the external mesh file. Only allowed if NAME is not specified."
+                  required: false
+                  default: null
+                - name: NAME
+                  noneable: true
+                  type: string
+                  description: "Name of the element block in the external mesh file. Only allowed if ID is not specified."
+                  required: false
+                  default: null
                 - name: FLUIDXW
                   type: group
                   required: true
@@ -64872,9 +64969,17 @@ $references:
             - type: all_of
               specs:
                 - name: ID
+                  noneable: true
                   type: int
-                  description: "ID of the element block in the exodus file."
-                  required: true
+                  description: "ID of the element block in the external mesh file. Only allowed if NAME is not specified."
+                  required: false
+                  default: null
+                - name: NAME
+                  noneable: true
+                  type: string
+                  description: "Name of the element block in the external mesh file. Only allowed if ID is not specified."
+                  required: false
+                  default: null
                 - name: LUBRICATION
                   type: group
                   required: true
@@ -64963,9 +65068,17 @@ $references:
             - type: all_of
               specs:
                 - name: ID
+                  noneable: true
                   type: int
-                  description: "ID of the element block in the exodus file."
-                  required: true
+                  description: "ID of the element block in the external mesh file. Only allowed if NAME is not specified."
+                  required: false
+                  default: null
+                - name: NAME
+                  noneable: true
+                  type: string
+                  description: "Name of the element block in the external mesh file. Only allowed if ID is not specified."
+                  required: false
+                  default: null
                 - name: MEMBRANE3
                   type: group
                   required: true
@@ -65041,9 +65154,17 @@ $references:
             - type: all_of
               specs:
                 - name: ID
+                  noneable: true
                   type: int
-                  description: "ID of the element block in the exodus file."
-                  required: true
+                  description: "ID of the element block in the external mesh file. Only allowed if NAME is not specified."
+                  required: false
+                  default: null
+                - name: NAME
+                  noneable: true
+                  type: string
+                  description: "Name of the element block in the external mesh file. Only allowed if ID is not specified."
+                  required: false
+                  default: null
                 - name: MEMBRANE4
                   type: group
                   required: true
@@ -65119,9 +65240,17 @@ $references:
             - type: all_of
               specs:
                 - name: ID
+                  noneable: true
                   type: int
-                  description: "ID of the element block in the exodus file."
-                  required: true
+                  description: "ID of the element block in the external mesh file. Only allowed if NAME is not specified."
+                  required: false
+                  default: null
+                - name: NAME
+                  noneable: true
+                  type: string
+                  description: "Name of the element block in the external mesh file. Only allowed if ID is not specified."
+                  required: false
+                  default: null
                 - name: MEMBRANE6
                   type: group
                   required: true
@@ -65197,9 +65326,17 @@ $references:
             - type: all_of
               specs:
                 - name: ID
+                  noneable: true
                   type: int
-                  description: "ID of the element block in the exodus file."
-                  required: true
+                  description: "ID of the element block in the external mesh file. Only allowed if NAME is not specified."
+                  required: false
+                  default: null
+                - name: NAME
+                  noneable: true
+                  type: string
+                  description: "Name of the element block in the external mesh file. Only allowed if ID is not specified."
+                  required: false
+                  default: null
                 - name: MEMBRANE9
                   type: group
                   required: true
@@ -65275,9 +65412,17 @@ $references:
             - type: all_of
               specs:
                 - name: ID
+                  noneable: true
                   type: int
-                  description: "ID of the element block in the exodus file."
-                  required: true
+                  description: "ID of the element block in the external mesh file. Only allowed if NAME is not specified."
+                  required: false
+                  default: null
+                - name: NAME
+                  noneable: true
+                  type: string
+                  description: "Name of the element block in the external mesh file. Only allowed if ID is not specified."
+                  required: false
+                  default: null
                 - name: MEMBRANESCATRA3
                   type: group
                   required: true
@@ -65356,9 +65501,17 @@ $references:
             - type: all_of
               specs:
                 - name: ID
+                  noneable: true
                   type: int
-                  description: "ID of the element block in the exodus file."
-                  required: true
+                  description: "ID of the element block in the external mesh file. Only allowed if NAME is not specified."
+                  required: false
+                  default: null
+                - name: NAME
+                  noneable: true
+                  type: string
+                  description: "Name of the element block in the external mesh file. Only allowed if ID is not specified."
+                  required: false
+                  default: null
                 - name: MEMBRANESCATRA4
                   type: group
                   required: true
@@ -65437,9 +65590,17 @@ $references:
             - type: all_of
               specs:
                 - name: ID
+                  noneable: true
                   type: int
-                  description: "ID of the element block in the exodus file."
-                  required: true
+                  description: "ID of the element block in the external mesh file. Only allowed if NAME is not specified."
+                  required: false
+                  default: null
+                - name: NAME
+                  noneable: true
+                  type: string
+                  description: "Name of the element block in the external mesh file. Only allowed if ID is not specified."
+                  required: false
+                  default: null
                 - name: MEMBRANESCATRA6
                   type: group
                   required: true
@@ -65518,9 +65679,17 @@ $references:
             - type: all_of
               specs:
                 - name: ID
+                  noneable: true
                   type: int
-                  description: "ID of the element block in the exodus file."
-                  required: true
+                  description: "ID of the element block in the external mesh file. Only allowed if NAME is not specified."
+                  required: false
+                  default: null
+                - name: NAME
+                  noneable: true
+                  type: string
+                  description: "Name of the element block in the external mesh file. Only allowed if ID is not specified."
+                  required: false
+                  default: null
                 - name: MEMBRANESCATRA9
                   type: group
                   required: true
@@ -65599,9 +65768,17 @@ $references:
             - type: all_of
               specs:
                 - name: ID
+                  noneable: true
                   type: int
-                  description: "ID of the element block in the exodus file."
-                  required: true
+                  description: "ID of the element block in the external mesh file. Only allowed if NAME is not specified."
+                  required: false
+                  default: null
+                - name: NAME
+                  noneable: true
+                  type: string
+                  description: "Name of the element block in the external mesh file. Only allowed if ID is not specified."
+                  required: false
+                  default: null
                 - name: POROFLUIDMULTIPHASE
                   type: group
                   required: true
@@ -65723,9 +65900,17 @@ $references:
             - type: all_of
               specs:
                 - name: ID
+                  noneable: true
                   type: int
-                  description: "ID of the element block in the exodus file."
-                  required: true
+                  description: "ID of the element block in the external mesh file. Only allowed if NAME is not specified."
+                  required: false
+                  default: null
+                - name: NAME
+                  noneable: true
+                  type: string
+                  description: "Name of the element block in the external mesh file. Only allowed if ID is not specified."
+                  required: false
+                  default: null
                 - name: RED_ACINAR_INTER_DEP
                   type: group
                   required: true
@@ -65744,9 +65929,17 @@ $references:
             - type: all_of
               specs:
                 - name: ID
+                  noneable: true
                   type: int
-                  description: "ID of the element block in the exodus file."
-                  required: true
+                  description: "ID of the element block in the external mesh file. Only allowed if NAME is not specified."
+                  required: false
+                  default: null
+                - name: NAME
+                  noneable: true
+                  type: string
+                  description: "Name of the element block in the external mesh file. Only allowed if ID is not specified."
+                  required: false
+                  default: null
                 - name: RED_ACINUS
                   type: group
                   required: true
@@ -65850,9 +66043,17 @@ $references:
             - type: all_of
               specs:
                 - name: ID
+                  noneable: true
                   type: int
-                  description: "ID of the element block in the exodus file."
-                  required: true
+                  description: "ID of the element block in the external mesh file. Only allowed if NAME is not specified."
+                  required: false
+                  default: null
+                - name: NAME
+                  noneable: true
+                  type: string
+                  description: "Name of the element block in the external mesh file. Only allowed if ID is not specified."
+                  required: false
+                  default: null
                 - name: RED_AIRWAY
                   type: group
                   required: true
@@ -65947,9 +66148,17 @@ $references:
             - type: all_of
               specs:
                 - name: ID
+                  noneable: true
                   type: int
-                  description: "ID of the element block in the exodus file."
-                  required: true
+                  description: "ID of the element block in the external mesh file. Only allowed if NAME is not specified."
+                  required: false
+                  default: null
+                - name: NAME
+                  noneable: true
+                  type: string
+                  description: "Name of the element block in the external mesh file. Only allowed if ID is not specified."
+                  required: false
+                  default: null
                 - name: RIGIDSPHERE
                   type: group
                   required: true
@@ -65971,9 +66180,17 @@ $references:
             - type: all_of
               specs:
                 - name: ID
+                  noneable: true
                   type: int
-                  description: "ID of the element block in the exodus file."
-                  required: true
+                  description: "ID of the element block in the external mesh file. Only allowed if NAME is not specified."
+                  required: false
+                  default: null
+                - name: NAME
+                  noneable: true
+                  type: string
+                  description: "Name of the element block in the external mesh file. Only allowed if ID is not specified."
+                  required: false
+                  default: null
                 - name: SHELL7P
                   type: group
                   required: true
@@ -66340,9 +66557,17 @@ $references:
             - type: all_of
               specs:
                 - name: ID
+                  noneable: true
                   type: int
-                  description: "ID of the element block in the exodus file."
-                  required: true
+                  description: "ID of the element block in the external mesh file. Only allowed if NAME is not specified."
+                  required: false
+                  default: null
+                - name: NAME
+                  noneable: true
+                  type: string
+                  description: "Name of the element block in the external mesh file. Only allowed if ID is not specified."
+                  required: false
+                  default: null
                 - name: SHELL7PSCATRA
                   type: group
                   required: true
@@ -66724,9 +66949,17 @@ $references:
             - type: all_of
               specs:
                 - name: ID
+                  noneable: true
                   type: int
-                  description: "ID of the element block in the exodus file."
-                  required: true
+                  description: "ID of the element block in the external mesh file. Only allowed if NAME is not specified."
+                  required: false
+                  default: null
+                - name: NAME
+                  noneable: true
+                  type: string
+                  description: "Name of the element block in the external mesh file. Only allowed if ID is not specified."
+                  required: false
+                  default: null
                 - name: SHELL_KIRCHHOFF_LOVE_NURBS
                   type: group
                   required: true
@@ -66751,9 +66984,17 @@ $references:
             - type: all_of
               specs:
                 - name: ID
+                  noneable: true
                   type: int
-                  description: "ID of the element block in the exodus file."
-                  required: true
+                  description: "ID of the element block in the external mesh file. Only allowed if NAME is not specified."
+                  required: false
+                  default: null
+                - name: NAME
+                  noneable: true
+                  type: string
+                  description: "Name of the element block in the external mesh file. Only allowed if ID is not specified."
+                  required: false
+                  default: null
                 - name: SOLID
                   type: group
                   required: true
@@ -68561,9 +68802,17 @@ $references:
             - type: all_of
               specs:
                 - name: ID
+                  noneable: true
                   type: int
-                  description: "ID of the element block in the exodus file."
-                  required: true
+                  description: "ID of the element block in the external mesh file. Only allowed if NAME is not specified."
+                  required: false
+                  default: null
+                - name: NAME
+                  noneable: true
+                  type: string
+                  description: "Name of the element block in the external mesh file. Only allowed if ID is not specified."
+                  required: false
+                  default: null
                 - name: SOLIDPORO_PRESSURE_BASED
                   type: group
                   required: true
@@ -68940,9 +69189,17 @@ $references:
             - type: all_of
               specs:
                 - name: ID
+                  noneable: true
                   type: int
-                  description: "ID of the element block in the exodus file."
-                  required: true
+                  description: "ID of the element block in the external mesh file. Only allowed if NAME is not specified."
+                  required: false
+                  default: null
+                - name: NAME
+                  noneable: true
+                  type: string
+                  description: "Name of the element block in the external mesh file. Only allowed if ID is not specified."
+                  required: false
+                  default: null
                 - name: SOLIDPORO_PRESSURE_VELOCITY_BASED
                   type: group
                   required: true
@@ -69844,9 +70101,17 @@ $references:
             - type: all_of
               specs:
                 - name: ID
+                  noneable: true
                   type: int
-                  description: "ID of the element block in the exodus file."
-                  required: true
+                  description: "ID of the element block in the external mesh file. Only allowed if NAME is not specified."
+                  required: false
+                  default: null
+                - name: NAME
+                  noneable: true
+                  type: string
+                  description: "Name of the element block in the external mesh file. Only allowed if ID is not specified."
+                  required: false
+                  default: null
                 - name: SOLIDPORO_PRESSURE_VELOCITY_BASED_P1
                   type: group
                   required: true
@@ -70748,9 +71013,17 @@ $references:
             - type: all_of
               specs:
                 - name: ID
+                  noneable: true
                   type: int
-                  description: "ID of the element block in the exodus file."
-                  required: true
+                  description: "ID of the element block in the external mesh file. Only allowed if NAME is not specified."
+                  required: false
+                  default: null
+                - name: NAME
+                  noneable: true
+                  type: string
+                  description: "Name of the element block in the external mesh file. Only allowed if ID is not specified."
+                  required: false
+                  default: null
                 - name: SOLIDSCATRA
                   type: group
                   required: true
@@ -71523,9 +71796,17 @@ $references:
             - type: all_of
               specs:
                 - name: ID
+                  noneable: true
                   type: int
-                  description: "ID of the element block in the exodus file."
-                  required: true
+                  description: "ID of the element block in the external mesh file. Only allowed if NAME is not specified."
+                  required: false
+                  default: null
+                - name: NAME
+                  noneable: true
+                  type: string
+                  description: "Name of the element block in the external mesh file. Only allowed if ID is not specified."
+                  required: false
+                  default: null
                 - name: THERMO
                   type: group
                   required: true
@@ -71735,9 +72016,17 @@ $references:
             - type: all_of
               specs:
                 - name: ID
+                  noneable: true
                   type: int
-                  description: "ID of the element block in the exodus file."
-                  required: true
+                  description: "ID of the element block in the external mesh file. Only allowed if NAME is not specified."
+                  required: false
+                  default: null
+                - name: NAME
+                  noneable: true
+                  type: string
+                  description: "Name of the element block in the external mesh file. Only allowed if ID is not specified."
+                  required: false
+                  default: null
                 - name: TORSION3
                   type: group
                   required: true
@@ -71759,9 +72048,17 @@ $references:
             - type: all_of
               specs:
                 - name: ID
+                  noneable: true
                   type: int
-                  description: "ID of the element block in the exodus file."
-                  required: true
+                  description: "ID of the element block in the external mesh file. Only allowed if NAME is not specified."
+                  required: false
+                  default: null
+                - name: NAME
+                  noneable: true
+                  type: string
+                  description: "Name of the element block in the external mesh file. Only allowed if ID is not specified."
+                  required: false
+                  default: null
                 - name: TRANSP
                   type: group
                   required: true
@@ -72235,9 +72532,17 @@ $references:
             - type: all_of
               specs:
                 - name: ID
+                  noneable: true
                   type: int
-                  description: "ID of the element block in the exodus file."
-                  required: true
+                  description: "ID of the element block in the external mesh file. Only allowed if NAME is not specified."
+                  required: false
+                  default: null
+                - name: NAME
+                  noneable: true
+                  type: string
+                  description: "Name of the element block in the external mesh file. Only allowed if ID is not specified."
+                  required: false
+                  default: null
                 - name: TRANSPHDG
                   type: group
                   required: true
@@ -72879,9 +73184,17 @@ $references:
             - type: all_of
               specs:
                 - name: ID
+                  noneable: true
                   type: int
-                  description: "ID of the element block in the exodus file."
-                  required: true
+                  description: "ID of the element block in the external mesh file. Only allowed if NAME is not specified."
+                  required: false
+                  default: null
+                - name: NAME
+                  noneable: true
+                  type: string
+                  description: "Name of the element block in the external mesh file. Only allowed if ID is not specified."
+                  required: false
+                  default: null
                 - name: TRUSS3
                   type: group
                   required: true
@@ -72906,9 +73219,17 @@ $references:
             - type: all_of
               specs:
                 - name: ID
+                  noneable: true
                   type: int
-                  description: "ID of the element block in the exodus file."
-                  required: true
+                  description: "ID of the element block in the external mesh file. Only allowed if NAME is not specified."
+                  required: false
+                  default: null
+                - name: NAME
+                  noneable: true
+                  type: string
+                  description: "Name of the element block in the external mesh file. Only allowed if ID is not specified."
+                  required: false
+                  default: null
                 - name: TRUSS3SCATRA
                   type: group
                   required: true
@@ -72936,9 +73257,17 @@ $references:
             - type: all_of
               specs:
                 - name: ID
+                  noneable: true
                   type: int
-                  description: "ID of the element block in the exodus file."
-                  required: true
+                  description: "ID of the element block in the external mesh file. Only allowed if NAME is not specified."
+                  required: false
+                  default: null
+                - name: NAME
+                  noneable: true
+                  type: string
+                  description: "Name of the element block in the external mesh file. Only allowed if ID is not specified."
+                  required: false
+                  default: null
                 - name: VELE3
                   type: group
                   required: true
