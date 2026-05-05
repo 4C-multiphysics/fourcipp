@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 924e42847c427e54713d21a8878140607a149d3c
+  commit_hash: 59efb28e3aaab978812935db2a5c9dd8470f6d45
   version: 2026.3.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -35737,38 +35737,6 @@ sections:
                   - name: MAT
                     type: int
                     required: true
-                  - name: MAT_PoroLawLinBiot
-                    type: group
-                    description: linear biot model for porosity law
-                    required: true
-                    specs:
-                      - type: all_of
-                        specs:
-                          - name: INVBIOTMODULUS
-                            type: double
-                            description: "inverse Biot modulus of porous medium"
-                            required: true
-                          - name: BIOTCEOFF
-                            type: double
-                            description: "Biot coefficient of porous medium"
-                            required: true
-              - type: all_of
-                specs:
-                  - name: MAT
-                    type: int
-                    required: true
-                  - name: MAT_PoroLawIncompSkel
-                    type: group
-                    description: porosity law for incompressible skeleton phase
-                    required: true
-                    specs:
-                      - type: all_of
-                        specs: []
-              - type: all_of
-                specs:
-                  - name: MAT
-                    type: int
-                    required: true
                   - name: MAT_Struct_Multiscale
                     type: group
                     description: 'Structural micro-scale approach: material parameters are calculated from microscale simulation'
@@ -35938,21 +35906,47 @@ sections:
                   - name: MAT
                     type: int
                     required: true
-                  - name: ELAST_Iso1Pow
+                  - name: ELAST_IsoAnisoExpo
                     type: group
-                    description: isochoric part of general power material
+                    description: anisotropic part with one exp. fiber
                     required: true
                     specs:
                       - type: all_of
                         specs:
-                          - name: C
+                          - name: K1
                             type: double
-                            description: "material parameter"
+                            description: "linear constant"
                             required: true
-                          - name: D
+                          - name: K2
+                            type: double
+                            description: "exponential constant"
+                            required: true
+                          - name: GAMMA
+                            type: double
+                            description: "angle"
+                            required: true
+                          - name: K1COMP
+                            type: double
+                            description: "linear constant"
+                            required: true
+                          - name: K2COMP
+                            type: double
+                            description: "exponential constant"
+                            required: true
+                          - name: STR_TENS_ID
                             type: int
-                            description: "exponent"
+                            description: "MAT ID for definition of Structural Tensor"
                             required: true
+                          - name: INIT
+                            type: int
+                            description: "initialization modus for fiber alignment"
+                            required: false
+                            default: 1
+                          - name: ADAPT_ANGLE
+                            type: bool
+                            description: "adapt angle during remodeling"
+                            required: false
+                            default: false
               - type: all_of
                 specs:
                   - name: MAT
@@ -36139,26 +36133,24 @@ sections:
                   - name: MAT
                     type: int
                     required: true
-                  - name: VISCO_GeneralizedGenMax
+                  - name: VISCO_FSLS
                     type: group
-                    description: Viscoelastic Branches of generalized Maxwell
+                    description: Viscous contribution according to FSLS-Model
                     required: true
                     specs:
                       - type: all_of
                         specs:
-                          - name: NUMBRANCH
-                            type: int
-                            description: "number of viscoelastic branches"
+                          - name: TAU
+                            type: double
+                            description: "relaxation parameter"
                             required: true
-                          - name: MATIDS
-                            type: vector
-                            value_type:
-                              type: int
-                            description: "the list material IDs"
+                          - name: ALPHA
+                            type: double
+                            description: "fractional order derivative"
                             required: true
-                          - name: SOLVE
-                            type: string
-                            description: "Solution for evolution equation: OST (default) or CONVOL (convolution integral)"
+                          - name: BETA
+                            type: double
+                            description: "emphasis of viscous to elastic part"
                             required: true
               - type: all_of
                 specs:
@@ -36475,16 +36467,20 @@ sections:
                   - name: MAT
                     type: int
                     required: true
-                  - name: VISCO_PART
+                  - name: ELAST_Iso1Pow
                     type: group
-                    description: Viscous contribution of a viscoelastic Branch
+                    description: isochoric part of general power material
                     required: true
                     specs:
                       - type: all_of
                         specs:
-                          - name: TAU
+                          - name: C
                             type: double
-                            description: "dynamic viscosity divided by young's modulus of the branch"
+                            description: "material parameter"
+                            required: true
+                          - name: D
+                            type: int
+                            description: "exponent"
                             required: true
               - type: all_of
                 specs:
@@ -36680,24 +36676,20 @@ sections:
                   - name: MAT
                     type: int
                     required: true
-                  - name: VISCO_Fract
+                  - name: VISCO_GeneralizedMaxwellBranch
                     type: group
-                    description: Viscous contribution according to FSLS-Model
+                    description: Viscoelastic branch for generalized Maxwell model
                     required: true
                     specs:
                       - type: all_of
                         specs:
                           - name: TAU
                             type: double
-                            description: "relaxation parameter"
+                            description: "dynamic viscosity divided by branch stiffness"
                             required: true
-                          - name: ALPHA
-                            type: double
-                            description: "fractional order derivative"
-                            required: true
-                          - name: BETA
-                            type: double
-                            description: "emphasis of viscous to elastic part"
+                          - name: MATID
+                            type: int
+                            description: "material ID of branch elasticity rule"
                             required: true
               - type: all_of
                 specs:
@@ -37283,22 +37275,20 @@ sections:
                   - name: MAT
                     type: int
                     required: true
-                  - name: VISCO_BRANCH
+                  - name: ELAST_Iso2Pow
                     type: group
-                    description: Viscoelastic Branch (viscous and elastic contribution)
+                    description: isochoric part of general power material
                     required: true
                     specs:
                       - type: all_of
                         specs:
-                          - name: NUMMAT
-                            type: int
-                            description: "number of materials in the viscoelastic branch"
+                          - name: C
+                            type: double
+                            description: "material parameter"
                             required: true
-                          - name: MATIDS
-                            type: vector
-                            value_type:
-                              type: int
-                            description: "the list material IDs"
+                          - name: D
+                            type: int
+                            description: "exponent"
                             required: true
               - type: all_of
                 specs:
@@ -37786,21 +37776,42 @@ sections:
                   - name: MAT
                     type: int
                     required: true
-                  - name: ELAST_IsoMooneyRivlin
+                  - name: ELAST_IsoNeoHooke
                     type: group
-                    description: isochoric part of  Mooney-Rivlin material acc. to Holzapfel
+                    description: isochoric part of neo-Hooke material acc. to Holzapfel
                     required: true
                     specs:
                       - type: all_of
                         specs:
-                          - name: C1
-                            type: double
-                            description: "Linear modulus for first invariant"
+                          - name: MUE
+                            type: selection
+                            description: "Shear modulus"
                             required: true
-                          - name: C2
-                            type: double
-                            description: "Linear modulus for second invariant"
-                            required: true
+                            choices:
+                              - name: constant
+                                spec:
+                                  name: constant
+                                  type: double
+                                  description: "Constant value for the field."
+                                  required: true
+                              - name: from_file
+                                spec:
+                                  name: from_file
+                                  type: path
+                                  description: "Path to a file containing the input field data."
+                                  required: true
+                              - name: field_reference
+                                spec:
+                                  name: field_reference
+                                  type: string
+                                  description: "Refer to a globally defined field by a name."
+                                  required: true
+                              - name: from_mesh
+                                spec:
+                                  name: from_mesh
+                                  type: string
+                                  description: "Refer to a field defined in the input mesh by a name."
+                                  required: true
               - type: all_of
                 specs:
                   - name: MAT
@@ -37936,25 +37947,145 @@ sections:
                   - name: MAT
                     type: int
                     required: true
-                  - name: ELAST_IsoExpoPow
+                  - name: ELAST_IsoMuscle_Blemker
                     type: group
-                    description: isochoric part of  exponential material acc. to Holzapfel
+                    description: anisotropic Blemker muscle material
                     required: true
                     specs:
                       - type: all_of
                         specs:
-                          - name: K1
+                          - name: G1
                             type: double
-                            description: "material parameter"
+                            description: "muscle along fiber shear modulus"
                             required: true
-                          - name: K2
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: false
+                                maximum_exclusive: false
+                          - name: G2
                             type: double
-                            description: "material parameter"
+                            description: "muscle cross fiber shear modulus"
                             required: true
-                          - name: C
-                            type: int
-                            description: "exponent"
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: false
+                                maximum_exclusive: false
+                          - name: P1
+                            type: double
+                            description: "linear material parameter for passive along-fiber response"
                             required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: P2
+                            type: double
+                            description: "exponential material parameter for passive along-fiber response"
+                            required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: SIGMAMAX
+                            type: double
+                            description: "maximal active isometric stress"
+                            required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: false
+                                maximum_exclusive: false
+                          - name: LAMBDAOFL
+                            type: double
+                            description: "optimal fiber stretch"
+                            required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: LAMBDASTAR
+                            type: double
+                            description: "stretch at which the normalized passive fiber force becomes linear"
+                            required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: ALPHA
+                            type: double
+                            description: "tetanised activation level,"
+                            required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: false
+                                maximum_exclusive: false
+                          - name: BETA
+                            type: double
+                            description: "constant scaling tanh-type activation function"
+                            required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: false
+                                maximum_exclusive: false
+                          - name: ACTSTARTTIME
+                            type: double
+                            description: "starting time of muscle activation"
+                            required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: false
+                                maximum_exclusive: false
+                          - name: FIBER_ORIENTATION
+                            type: selection
+                            description: "A unit vector field pointing in the direction of the fibers."
+                            required: true
+                            choices:
+                              - name: constant
+                                spec:
+                                  name: constant
+                                  type: vector
+                                  size: 3
+                                  value_type:
+                                    type: double
+                                  description: "Constant value for the field."
+                                  required: true
+                              - name: from_file
+                                spec:
+                                  name: from_file
+                                  type: path
+                                  description: "Path to a file containing the input field data."
+                                  required: true
+                              - name: field_reference
+                                spec:
+                                  name: field_reference
+                                  type: string
+                                  description: "Refer to a globally defined field by a name."
+                                  required: true
+                              - name: from_mesh
+                                spec:
+                                  name: from_mesh
+                                  type: string
+                                  description: "Refer to a field defined in the input mesh by a name."
+                                  required: true
               - type: all_of
                 specs:
                   - name: MAT
@@ -38277,47 +38408,21 @@ sections:
                   - name: MAT
                     type: int
                     required: true
-                  - name: ELAST_IsoAnisoExpo
+                  - name: ELAST_IsoMooneyRivlin
                     type: group
-                    description: anisotropic part with one exp. fiber
+                    description: isochoric part of  Mooney-Rivlin material acc. to Holzapfel
                     required: true
                     specs:
                       - type: all_of
                         specs:
-                          - name: K1
+                          - name: C1
                             type: double
-                            description: "linear constant"
+                            description: "Linear modulus for first invariant"
                             required: true
-                          - name: K2
+                          - name: C2
                             type: double
-                            description: "exponential constant"
+                            description: "Linear modulus for second invariant"
                             required: true
-                          - name: GAMMA
-                            type: double
-                            description: "angle"
-                            required: true
-                          - name: K1COMP
-                            type: double
-                            description: "linear constant"
-                            required: true
-                          - name: K2COMP
-                            type: double
-                            description: "exponential constant"
-                            required: true
-                          - name: STR_TENS_ID
-                            type: int
-                            description: "MAT ID for definition of Structural Tensor"
-                            required: true
-                          - name: INIT
-                            type: int
-                            description: "initialization modus for fiber alignment"
-                            required: false
-                            default: 1
-                          - name: ADAPT_ANGLE
-                            type: bool
-                            description: "adapt angle during remodeling"
-                            required: false
-                            default: false
               - type: all_of
                 specs:
                   - name: MAT
@@ -38388,18 +38493,22 @@ sections:
                   - name: MAT
                     type: int
                     required: true
-                  - name: ELAST_Iso2Pow
+                  - name: ELAST_IsoExpoPow
                     type: group
-                    description: isochoric part of general power material
+                    description: isochoric part of  exponential material acc. to Holzapfel
                     required: true
                     specs:
                       - type: all_of
                         specs:
-                          - name: C
+                          - name: K1
                             type: double
                             description: "material parameter"
                             required: true
-                          - name: D
+                          - name: K2
+                            type: double
+                            description: "material parameter"
+                            required: true
+                          - name: C
                             type: int
                             description: "exponent"
                             required: true
@@ -40237,47 +40346,6 @@ sections:
                   - name: MAT
                     type: int
                     required: true
-                  - name: ELAST_IsoNeoHooke
-                    type: group
-                    description: isochoric part of neo-Hooke material acc. to Holzapfel
-                    required: true
-                    specs:
-                      - type: all_of
-                        specs:
-                          - name: MUE
-                            type: selection
-                            description: "Shear modulus"
-                            required: true
-                            choices:
-                              - name: constant
-                                spec:
-                                  name: constant
-                                  type: double
-                                  description: "Constant value for the field."
-                                  required: true
-                              - name: from_file
-                                spec:
-                                  name: from_file
-                                  type: path
-                                  description: "Path to a file containing the input field data."
-                                  required: true
-                              - name: field_reference
-                                spec:
-                                  name: field_reference
-                                  type: string
-                                  description: "Refer to a globally defined field by a name."
-                                  required: true
-                              - name: from_mesh
-                                spec:
-                                  name: from_mesh
-                                  type: string
-                                  description: "Refer to a field defined in the input mesh by a name."
-                                  required: true
-              - type: all_of
-                specs:
-                  - name: MAT
-                    type: int
-                    required: true
                   - name: ELAST_IsoOgden
                     type: group
                     description: isochoric part of the one-term Ogden material
@@ -40401,150 +40469,6 @@ sections:
                             type: double
                             description: "negative exponent of I3"
                             required: true
-              - type: all_of
-                specs:
-                  - name: MAT
-                    type: int
-                    required: true
-                  - name: ELAST_IsoMuscle_Blemker
-                    type: group
-                    description: anisotropic Blemker muscle material
-                    required: true
-                    specs:
-                      - type: all_of
-                        specs:
-                          - name: G1
-                            type: double
-                            description: "muscle along fiber shear modulus"
-                            required: true
-                            validator:
-                              range:
-                                minimum: 0
-                                maximum: 1.7976931348623157e+308
-                                minimum_exclusive: false
-                                maximum_exclusive: false
-                          - name: G2
-                            type: double
-                            description: "muscle cross fiber shear modulus"
-                            required: true
-                            validator:
-                              range:
-                                minimum: 0
-                                maximum: 1.7976931348623157e+308
-                                minimum_exclusive: false
-                                maximum_exclusive: false
-                          - name: P1
-                            type: double
-                            description: "linear material parameter for passive along-fiber response"
-                            required: true
-                            validator:
-                              range:
-                                minimum: 0
-                                maximum: 1.7976931348623157e+308
-                                minimum_exclusive: true
-                                maximum_exclusive: false
-                          - name: P2
-                            type: double
-                            description: "exponential material parameter for passive along-fiber response"
-                            required: true
-                            validator:
-                              range:
-                                minimum: 0
-                                maximum: 1.7976931348623157e+308
-                                minimum_exclusive: true
-                                maximum_exclusive: false
-                          - name: SIGMAMAX
-                            type: double
-                            description: "maximal active isometric stress"
-                            required: true
-                            validator:
-                              range:
-                                minimum: 0
-                                maximum: 1.7976931348623157e+308
-                                minimum_exclusive: false
-                                maximum_exclusive: false
-                          - name: LAMBDAOFL
-                            type: double
-                            description: "optimal fiber stretch"
-                            required: true
-                            validator:
-                              range:
-                                minimum: 0
-                                maximum: 1.7976931348623157e+308
-                                minimum_exclusive: true
-                                maximum_exclusive: false
-                          - name: LAMBDASTAR
-                            type: double
-                            description: "stretch at which the normalized passive fiber force becomes linear"
-                            required: true
-                            validator:
-                              range:
-                                minimum: 0
-                                maximum: 1.7976931348623157e+308
-                                minimum_exclusive: true
-                                maximum_exclusive: false
-                          - name: ALPHA
-                            type: double
-                            description: "tetanised activation level,"
-                            required: true
-                            validator:
-                              range:
-                                minimum: 0
-                                maximum: 1.7976931348623157e+308
-                                minimum_exclusive: false
-                                maximum_exclusive: false
-                          - name: BETA
-                            type: double
-                            description: "constant scaling tanh-type activation function"
-                            required: true
-                            validator:
-                              range:
-                                minimum: 0
-                                maximum: 1.7976931348623157e+308
-                                minimum_exclusive: false
-                                maximum_exclusive: false
-                          - name: ACTSTARTTIME
-                            type: double
-                            description: "starting time of muscle activation"
-                            required: true
-                            validator:
-                              range:
-                                minimum: 0
-                                maximum: 1.7976931348623157e+308
-                                minimum_exclusive: false
-                                maximum_exclusive: false
-                          - name: FIBER_ORIENTATION
-                            type: selection
-                            description: "A unit vector field pointing in the direction of the fibers."
-                            required: true
-                            choices:
-                              - name: constant
-                                spec:
-                                  name: constant
-                                  type: vector
-                                  size: 3
-                                  value_type:
-                                    type: double
-                                  description: "Constant value for the field."
-                                  required: true
-                              - name: from_file
-                                spec:
-                                  name: from_file
-                                  type: path
-                                  description: "Path to a file containing the input field data."
-                                  required: true
-                              - name: field_reference
-                                spec:
-                                  name: field_reference
-                                  type: string
-                                  description: "Refer to a globally defined field by a name."
-                                  required: true
-                              - name: from_mesh
-                                spec:
-                                  name: from_mesh
-                                  type: string
-                                  description: "Refer to a field defined in the input mesh by a name."
-                                  required: true
               - type: all_of
                 specs:
                   - name: MAT
@@ -41226,25 +41150,28 @@ sections:
                   - name: MAT
                     type: int
                     required: true
-                  - name: VISCO_GenMax
+                  - name: VISCO_GeneralizedMaxwell
                     type: group
-                    description: Viscous contribution according to SLS-Model
+                    description: Generalized Maxwell model
                     required: true
                     specs:
                       - type: all_of
                         specs:
-                          - name: TAU
-                            type: double
-                            description: "relaxation parameter"
+                          - name: NUMBRANCH
+                            type: int
+                            description: "number of viscoelastic branches"
                             required: true
-                          - name: BETA
-                            type: double
-                            description: "emphasis of viscous to elastic part"
+                          - name: MATIDS
+                            type: vector
+                            value_type:
+                              type: int
+                            description: "the list material IDs"
                             required: true
                           - name: SOLVE
                             type: string
-                            description: "Solution of evolution equation via: OST (default) or CONVOL (convolution integral)"
-                            required: true
+                            description: "Solution for evolution equation: OneStepTheta (default) or ExponentialTimeDiscretization (convolution integral)"
+                            required: false
+                            default: "OneStepTheta"
               - type: all_of
                 specs:
                   - name: MAT
@@ -41379,6 +41306,387 @@ sections:
                   - name: MAT
                     type: int
                     required: true
+                  - name: MAT_ViscoplasticLawReformulatedJohnsonCook
+                    type: group
+                    description: 'Reformulation of the Johnson-Cook viscoplastic law (comprising flow rule $\dot{P} = \dot{P}_0 \exp \left( \frac{ \sigma_{eq}}{C \sigma_{\mathrm{Y}}} - \frac{1}{C} \right) - \dot{P}_0$ and hardening law $\sigma_{\mathrm{Y}} = (A_0 + B_0 \cdot P^{n}) \cdot (1 - \frac{T^m - T_{0}^m}{T_{\mathrm{melt}}^m - T_{0}^m})$), as shown in Mareau et al. (Mechanics of Materials 143, 2020)'
+                    required: true
+                    specs:
+                      - type: all_of
+                        specs:
+                          - name: STRAIN_RATE_PREFAC
+                            type: double
+                            description: "reference plastic strain rate $\\dot{P}_0$"
+                            required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: STRAIN_RATE_EXP_FAC
+                            type: double
+                            description: "exponential factor of plastic strain rate $C$"
+                            required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: INIT_YIELD_STRENGTH
+                            type: double
+                            description: "initial yield strength of the material $A_0$"
+                            required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: ISOTROP_HARDEN_PREFAC
+                            type: double
+                            description: "prefactor of the isotropic hardening stress / hardening modulus $B_0$"
+                            required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: false
+                                maximum_exclusive: false
+                          - name: ISOTROP_HARDEN_EXP
+                            type: double
+                            description: "exponent of the isotropic hardening stress $n$"
+                            required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: false
+                                maximum_exclusive: false
+                          - name: REF_TEMPERATURE
+                            type: double
+                            description: "reference temperature $T_0$ for evaluating the yield strength $A_0$ and the hardening modulus $B_0$"
+                            required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: MELT_TEMPERATURE
+                            type: double
+                            description: "melting temperature $T_{\\mathrm{melt}}$"
+                            required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: TEMPERATURE_SENS
+                            type: double
+                            description: "temperature sensitivity $m$"
+                            required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: false
+                                maximum_exclusive: false
+              - type: all_of
+                specs:
+                  - name: MAT
+                    type: int
+                    required: true
+                  - name: MAT_Membrane_ActiveStrain
+                    type: group
+                    description: active strain membrane material
+                    required: true
+                    specs:
+                      - type: all_of
+                        specs:
+                          - name: MATIDPASSIVE
+                            type: int
+                            description: "MATID for the passive material"
+                            required: true
+                          - name: SCALIDVOLTAGE
+                            type: int
+                            description: "ID of the scalar that represents the (SMC) voltage"
+                            required: true
+                          - name: DENS
+                            type: double
+                            description: "material mass density"
+                            required: true
+                          - name: BETA1
+                            type: double
+                            description: "Ca2+ dynamics"
+                            required: true
+                          - name: BETA2
+                            type: double
+                            description: "opening dynamics of the VDCC"
+                            required: true
+                          - name: VOLTHRESH
+                            type: double
+                            description: "voltage threshold for activation"
+                            required: true
+                          - name: ALPHA1
+                            type: double
+                            description: "intensity of contraction in fiber direction 1"
+                            required: true
+                          - name: ALPHA2
+                            type: double
+                            description: "intensity of contraction in fiber direction 2"
+                            required: true
+              - type: all_of
+                specs:
+                  - name: MAT
+                    type: int
+                    required: true
+                  - name: MAT_GrowthRemodel_ElastHyper
+                    type: group
+                    description: growth and remodeling
+                    required: true
+                    specs:
+                      - type: all_of
+                        specs:
+                          - name: NUMMATRF
+                            type: int
+                            description: "number of remodelfiber materials in list"
+                            required: true
+                          - name: NUMMATEL3D
+                            type: int
+                            description: "number of 3d elastin matrix materials/potentials in list"
+                            required: false
+                            default: 0
+                          - name: NUMMATEL2D
+                            type: int
+                            description: "number of 2d elastin matrix materials/potentials in list"
+                            required: true
+                          - name: MATIDSRF
+                            type: vector
+                            value_type:
+                              type: int
+                            description: "the list remodelfiber material IDs"
+                            required: false
+                            default: [0]
+                          - name: MATIDSEL3D
+                            type: vector
+                            value_type:
+                              type: int
+                            description: "the list 3d elastin matrix material/potential IDs"
+                            required: false
+                            default: [-1]
+                          - name: MATIDSEL2D
+                            type: vector
+                            value_type:
+                              type: int
+                            description: "the list 2d elastin matrix material/potential IDs"
+                            required: false
+                            default: [0]
+                          - name: MATIDELPENALTY
+                            type: int
+                            description: "penalty material ID"
+                            required: false
+                            default: -1
+                          - name: ELMASSFRAC
+                            type: double
+                            description: "initial mass fraction of elastin matrix in constraint mixture"
+                            required: true
+                          - name: DENS
+                            type: double
+                            description: "material mass density"
+                            required: true
+                          - name: PRESTRETCHELASTINCIR
+                            type: double
+                            description: "circumferential prestretch of elastin matrix"
+                            required: true
+                          - name: PRESTRETCHELASTINAX
+                            type: double
+                            description: "axial prestretch of elastin matrix"
+                            required: true
+                          - name: THICKNESS
+                            type: double
+                            description: "reference wall thickness of the idealized cylindrical aneurysm [m]"
+                            required: false
+                            default: -1
+                          - name: MEANPRESSURE
+                            type: double
+                            description: "mean blood pressure [Pa]"
+                            required: false
+                            default: -1
+                          - name: RADIUS
+                            type: double
+                            description: "inner radius of the idealized cylindrical aneurysm [m]"
+                            required: false
+                            default: -1
+                          - name: DAMAGE
+                            type: int
+                            description: "1: elastin damage after prestressing,0: no elastin damage"
+                            required: true
+                          - name: GROWTHTYPE
+                            type: int
+                            description: "flag to decide what type of collagen growth is used: 1: anisotropic growth; 0: isotropic growth"
+                            required: true
+                          - name: LOCTIMEINT
+                            type: int
+                            description: "flag to decide what type of local time integration scheme is used: 1: Backward Euler Method; 0: Forward Euler Method"
+                            required: true
+                          - name: MEMBRANE
+                            type: int
+                            description: "Flag whether Hex or Membrane elements are used ( Membrane: 1, Hex: Everything else )"
+                            required: false
+                            default: -1
+                          - name: CYLINDER
+                            type: int
+                            description: "Flag that geometry is a cylinder. 1: aligned in x-direction; 2: y-direction; 3: z-direction"
+                            required: false
+                            default: -1
+              - type: all_of
+                specs:
+                  - name: MAT
+                    type: int
+                    required: true
+                  - name: MAT_MultiplicativeSplitDefgradElastHyper
+                    type: group
+                    description: multiplicative split of deformation gradient
+                    required: true
+                    specs:
+                      - type: all_of
+                        specs:
+                          - name: NUMMATEL
+                            type: int
+                            description: "number of elastic materials/potentials in list"
+                            required: true
+                          - name: MATIDSEL
+                            type: vector
+                            value_type:
+                              type: int
+                            description: "the list of elastic material/potential IDs"
+                            required: false
+                            default: [-1]
+                          - name: NUMFACINEL
+                            type: int
+                            description: "number of factors of inelastic deformation gradient"
+                            required: true
+                          - name: INELDEFGRADFACIDS
+                            type: vector
+                            value_type:
+                              type: int
+                            description: "the list of inelastic deformation gradient factor IDs"
+                            required: false
+                            default: [0]
+                          - name: DENS
+                            type: double
+                            description: "material mass density"
+                            required: true
+              - type: all_of
+                specs:
+                  - name: MAT
+                    type: int
+                    required: true
+                  - name: MAT_InelasticDefgradNoGrowth
+                    type: group
+                    description: 'no volume change, i.e. the inelastic deformation gradient is the identity tensor'
+                    required: true
+                    specs:
+                      - type: all_of
+                        specs: []
+              - type: all_of
+                specs:
+                  - name: MAT
+                    type: int
+                    required: true
+                  - name: MAT_InelasticDefgradLinScalarIso
+                    type: group
+                    description: scalar dependent isotropic growth law; volume change linearly dependent on scalar (in material configuration)
+                    required: true
+                    specs:
+                      - type: all_of
+                        specs:
+                          - name: SCALAR1
+                            type: int
+                            description: "number of growth inducing scalar"
+                            required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: SCALAR1_MolarGrowthFac
+                            type: double
+                            description: "isotropic molar growth factor due to scalar 1"
+                            required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: SCALAR1_RefConc
+                            type: double
+                            description: "reference concentration of scalar 1 causing no strains"
+                            required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: false
+                                maximum_exclusive: false
+              - type: all_of
+                specs:
+                  - name: MAT
+                    type: int
+                    required: true
+                  - name: MAT_InelasticDefgradLinScalarAniso
+                    type: group
+                    description: scalar dependent anisotropic growth law; growth in direction as given in input-file; volume change linearly dependent on scalar (in material configuration)
+                    required: true
+                    specs:
+                      - type: all_of
+                        specs:
+                          - name: SCALAR1
+                            type: int
+                            description: "number of growth inducing scalar"
+                            required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: SCALAR1_MolarGrowthFac
+                            type: double
+                            description: "anisotropic molar growth factor due to scalar 1"
+                            required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: SCALAR1_RefConc
+                            type: double
+                            description: "reference concentration of scalar 1 causing no strains"
+                            required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: false
+                                maximum_exclusive: false
+                          - name: GrowthDirection
+                            type: vector
+                            size: 3
+                            value_type:
+                              type: double
+                            description: "vector that defines the growth direction"
+                            required: true
+              - type: all_of
+                specs:
+                  - name: MAT
+                    type: int
+                    required: true
                   - name: MAT_InelasticDefgradPolyIntercalFracIso
                     type: group
                     description: 'scalar dependent isotropic growth law; volume change nonlinearly dependent on the intercalation fraction, that is calculated using the scalar concentration (in material configuration)'
@@ -41457,45 +41765,163 @@ sections:
                   - name: MAT
                     type: int
                     required: true
-                  - name: MAT_Membrane_ActiveStrain
+                  - name: MAT_InelasticDefgradPolyIntercalFracAniso
                     type: group
-                    description: active strain membrane material
+                    description: 'scalar dependent anisotropic growth law; growth in direction as given in input-file; volume change nonlinearly dependent on the intercalation fraction, that is calculated using the scalar concentration (in material configuration)'
                     required: true
                     specs:
                       - type: all_of
                         specs:
-                          - name: MATIDPASSIVE
+                          - name: SCALAR1
                             type: int
-                            description: "MATID for the passive material"
+                            description: "number of growth inducing scalar"
                             required: true
-                          - name: SCALIDVOLTAGE
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: SCALAR1_RefConc
+                            type: double
+                            description: "reference concentration of scalar 1 causing no strains"
+                            required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: false
+                                maximum_exclusive: false
+                          - name: GrowthDirection
+                            type: vector
+                            size: 3
+                            value_type:
+                              type: double
+                            description: "vector that defines the growth direction"
+                            required: true
+                          - name: POLY_PARA_NUM
                             type: int
-                            description: "ID of the scalar that represents the (SMC) voltage"
+                            description: "number of polynomial coefficients"
                             required: true
-                          - name: DENS
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: POLY_PARAMS
+                            type: vector
+                            value_type:
+                              type: double
+                            description: "coefficients of polynomial"
+                            required: true
+                          - name: X_min
                             type: double
-                            description: "material mass density"
+                            description: "lower bound of validity of polynomial"
                             required: true
-                          - name: BETA1
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: false
+                                maximum_exclusive: false
+                          - name: X_max
                             type: double
-                            description: "Ca2+ dynamics"
+                            description: "upper bound of validity of polynomial"
                             required: true
-                          - name: BETA2
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: MATID
+                            type: int
+                            description: "material ID of the corresponding scatra material"
+                            required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+              - type: all_of
+                specs:
+                  - name: MAT
+                    type: int
+                    required: true
+                  - name: MAT_InelasticDefgradLinTempIso
+                    type: group
+                    description: Temperature dependent growth law. Volume change linearly dependent on temperature
+                    required: true
+                    specs:
+                      - type: all_of
+                        specs:
+                          - name: Temp_GrowthFac
                             type: double
-                            description: "opening dynamics of the VDCC"
+                            description: "isotropic growth factor due to temperature"
                             required: true
-                          - name: VOLTHRESH
+                          - name: RefTemp
                             type: double
-                            description: "voltage threshold for activation"
+                            description: "reference temperature causing no strains"
                             required: true
-                          - name: ALPHA1
-                            type: double
-                            description: "intensity of contraction in fiber direction 1"
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: false
+                                maximum_exclusive: false
+              - type: all_of
+                specs:
+                  - name: MAT
+                    type: int
+                    required: true
+                  - name: MAT_InelasticDefgradTimeFunctAniso
+                    type: group
+                    description: Time-dependent anisotropic growth law; growth in direction as given in input-file. Determinant of volume change dependent on (1 + time function value) defined by 'FUNCT_NUM'
+                    required: true
+                    specs:
+                      - type: all_of
+                        specs:
+                          - name: FUNCT_NUM
+                            type: int
+                            description: "Time-dependent function used to calculate the inelastic deformation gradient"
                             required: true
-                          - name: ALPHA2
-                            type: double
-                            description: "intensity of contraction in fiber direction 2"
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: GrowthDirection
+                            type: vector
+                            size: 3
+                            value_type:
+                              type: double
+                            description: "vector that defines the growth direction"
                             required: true
+              - type: all_of
+                specs:
+                  - name: MAT
+                    type: int
+                    required: true
+                  - name: MAT_InelasticDefgradTimeFunctIso
+                    type: group
+                    description: Time-dependent isotropic growth law. Determinant of volume change dependent on (1 + time function value) defined by 'FUNCT_NUM'
+                    required: true
+                    specs:
+                      - type: all_of
+                        specs:
+                          - name: FUNCT_NUM
+                            type: int
+                            description: "Time-dependent function used to calculate the inelastic deformation gradient"
+                            required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
               - type: all_of
                 specs:
                   - name: MAT
@@ -41738,428 +42164,6 @@ sections:
                   - name: MAT
                     type: int
                     required: true
-                  - name: MAT_GrowthRemodel_ElastHyper
-                    type: group
-                    description: growth and remodeling
-                    required: true
-                    specs:
-                      - type: all_of
-                        specs:
-                          - name: NUMMATRF
-                            type: int
-                            description: "number of remodelfiber materials in list"
-                            required: true
-                          - name: NUMMATEL3D
-                            type: int
-                            description: "number of 3d elastin matrix materials/potentials in list"
-                            required: false
-                            default: 0
-                          - name: NUMMATEL2D
-                            type: int
-                            description: "number of 2d elastin matrix materials/potentials in list"
-                            required: true
-                          - name: MATIDSRF
-                            type: vector
-                            value_type:
-                              type: int
-                            description: "the list remodelfiber material IDs"
-                            required: false
-                            default: [0]
-                          - name: MATIDSEL3D
-                            type: vector
-                            value_type:
-                              type: int
-                            description: "the list 3d elastin matrix material/potential IDs"
-                            required: false
-                            default: [-1]
-                          - name: MATIDSEL2D
-                            type: vector
-                            value_type:
-                              type: int
-                            description: "the list 2d elastin matrix material/potential IDs"
-                            required: false
-                            default: [0]
-                          - name: MATIDELPENALTY
-                            type: int
-                            description: "penalty material ID"
-                            required: false
-                            default: -1
-                          - name: ELMASSFRAC
-                            type: double
-                            description: "initial mass fraction of elastin matrix in constraint mixture"
-                            required: true
-                          - name: DENS
-                            type: double
-                            description: "material mass density"
-                            required: true
-                          - name: PRESTRETCHELASTINCIR
-                            type: double
-                            description: "circumferential prestretch of elastin matrix"
-                            required: true
-                          - name: PRESTRETCHELASTINAX
-                            type: double
-                            description: "axial prestretch of elastin matrix"
-                            required: true
-                          - name: THICKNESS
-                            type: double
-                            description: "reference wall thickness of the idealized cylindrical aneurysm [m]"
-                            required: false
-                            default: -1
-                          - name: MEANPRESSURE
-                            type: double
-                            description: "mean blood pressure [Pa]"
-                            required: false
-                            default: -1
-                          - name: RADIUS
-                            type: double
-                            description: "inner radius of the idealized cylindrical aneurysm [m]"
-                            required: false
-                            default: -1
-                          - name: DAMAGE
-                            type: int
-                            description: "1: elastin damage after prestressing,0: no elastin damage"
-                            required: true
-                          - name: GROWTHTYPE
-                            type: int
-                            description: "flag to decide what type of collagen growth is used: 1: anisotropic growth; 0: isotropic growth"
-                            required: true
-                          - name: LOCTIMEINT
-                            type: int
-                            description: "flag to decide what type of local time integration scheme is used: 1: Backward Euler Method; 0: Forward Euler Method"
-                            required: true
-                          - name: MEMBRANE
-                            type: int
-                            description: "Flag whether Hex or Membrane elements are used ( Membrane: 1, Hex: Everything else )"
-                            required: false
-                            default: -1
-                          - name: CYLINDER
-                            type: int
-                            description: "Flag that geometry is a cylinder. 1: aligned in x-direction; 2: y-direction; 3: z-direction"
-                            required: false
-                            default: -1
-              - type: all_of
-                specs:
-                  - name: MAT
-                    type: int
-                    required: true
-                  - name: MAT_ViscoplasticLawReformulatedJohnsonCook
-                    type: group
-                    description: 'Reformulation of the Johnson-Cook viscoplastic law (comprising flow rule $\dot{P} = \dot{P}_0 \exp \left( \frac{ \sigma_{eq}}{C \sigma_{\mathrm{Y}}} - \frac{1}{C} \right) - \dot{P}_0$ and hardening law $\sigma_{\mathrm{Y}} = (A_0 + B_0 \cdot P^{n}) \cdot (1 - \frac{T^m - T_{0}^m}{T_{\mathrm{melt}}^m - T_{0}^m})$), as shown in Mareau et al. (Mechanics of Materials 143, 2020)'
-                    required: true
-                    specs:
-                      - type: all_of
-                        specs:
-                          - name: STRAIN_RATE_PREFAC
-                            type: double
-                            description: "reference plastic strain rate $\\dot{P}_0$"
-                            required: true
-                            validator:
-                              range:
-                                minimum: 0
-                                maximum: 1.7976931348623157e+308
-                                minimum_exclusive: true
-                                maximum_exclusive: false
-                          - name: STRAIN_RATE_EXP_FAC
-                            type: double
-                            description: "exponential factor of plastic strain rate $C$"
-                            required: true
-                            validator:
-                              range:
-                                minimum: 0
-                                maximum: 1.7976931348623157e+308
-                                minimum_exclusive: true
-                                maximum_exclusive: false
-                          - name: INIT_YIELD_STRENGTH
-                            type: double
-                            description: "initial yield strength of the material $A_0$"
-                            required: true
-                            validator:
-                              range:
-                                minimum: 0
-                                maximum: 1.7976931348623157e+308
-                                minimum_exclusive: true
-                                maximum_exclusive: false
-                          - name: ISOTROP_HARDEN_PREFAC
-                            type: double
-                            description: "prefactor of the isotropic hardening stress / hardening modulus $B_0$"
-                            required: true
-                            validator:
-                              range:
-                                minimum: 0
-                                maximum: 1.7976931348623157e+308
-                                minimum_exclusive: false
-                                maximum_exclusive: false
-                          - name: ISOTROP_HARDEN_EXP
-                            type: double
-                            description: "exponent of the isotropic hardening stress $n$"
-                            required: true
-                            validator:
-                              range:
-                                minimum: 0
-                                maximum: 1.7976931348623157e+308
-                                minimum_exclusive: false
-                                maximum_exclusive: false
-                          - name: REF_TEMPERATURE
-                            type: double
-                            description: "reference temperature $T_0$ for evaluating the yield strength $A_0$ and the hardening modulus $B_0$"
-                            required: true
-                            validator:
-                              range:
-                                minimum: 0
-                                maximum: 1.7976931348623157e+308
-                                minimum_exclusive: true
-                                maximum_exclusive: false
-                          - name: MELT_TEMPERATURE
-                            type: double
-                            description: "melting temperature $T_{\\mathrm{melt}}$"
-                            required: true
-                            validator:
-                              range:
-                                minimum: 0
-                                maximum: 1.7976931348623157e+308
-                                minimum_exclusive: true
-                                maximum_exclusive: false
-                          - name: TEMPERATURE_SENS
-                            type: double
-                            description: "temperature sensitivity $m$"
-                            required: true
-                            validator:
-                              range:
-                                minimum: 0
-                                maximum: 1.7976931348623157e+308
-                                minimum_exclusive: false
-                                maximum_exclusive: false
-              - type: all_of
-                specs:
-                  - name: MAT
-                    type: int
-                    required: true
-                  - name: MAT_MultiplicativeSplitDefgradElastHyper
-                    type: group
-                    description: multiplicative split of deformation gradient
-                    required: true
-                    specs:
-                      - type: all_of
-                        specs:
-                          - name: NUMMATEL
-                            type: int
-                            description: "number of elastic materials/potentials in list"
-                            required: true
-                          - name: MATIDSEL
-                            type: vector
-                            value_type:
-                              type: int
-                            description: "the list of elastic material/potential IDs"
-                            required: false
-                            default: [-1]
-                          - name: NUMFACINEL
-                            type: int
-                            description: "number of factors of inelastic deformation gradient"
-                            required: true
-                          - name: INELDEFGRADFACIDS
-                            type: vector
-                            value_type:
-                              type: int
-                            description: "the list of inelastic deformation gradient factor IDs"
-                            required: false
-                            default: [0]
-                          - name: DENS
-                            type: double
-                            description: "material mass density"
-                            required: true
-              - type: all_of
-                specs:
-                  - name: MAT
-                    type: int
-                    required: true
-                  - name: MAT_InelasticDefgradNoGrowth
-                    type: group
-                    description: 'no volume change, i.e. the inelastic deformation gradient is the identity tensor'
-                    required: true
-                    specs:
-                      - type: all_of
-                        specs: []
-              - type: all_of
-                specs:
-                  - name: MAT
-                    type: int
-                    required: true
-                  - name: MAT_InelasticDefgradLinScalarIso
-                    type: group
-                    description: scalar dependent isotropic growth law; volume change linearly dependent on scalar (in material configuration)
-                    required: true
-                    specs:
-                      - type: all_of
-                        specs:
-                          - name: SCALAR1
-                            type: int
-                            description: "number of growth inducing scalar"
-                            required: true
-                            validator:
-                              range:
-                                minimum: 0
-                                maximum: 2147483647
-                                minimum_exclusive: true
-                                maximum_exclusive: false
-                          - name: SCALAR1_MolarGrowthFac
-                            type: double
-                            description: "isotropic molar growth factor due to scalar 1"
-                            required: true
-                            validator:
-                              range:
-                                minimum: 0
-                                maximum: 1.7976931348623157e+308
-                                minimum_exclusive: true
-                                maximum_exclusive: false
-                          - name: SCALAR1_RefConc
-                            type: double
-                            description: "reference concentration of scalar 1 causing no strains"
-                            required: true
-                            validator:
-                              range:
-                                minimum: 0
-                                maximum: 1.7976931348623157e+308
-                                minimum_exclusive: false
-                                maximum_exclusive: false
-              - type: all_of
-                specs:
-                  - name: MAT
-                    type: int
-                    required: true
-                  - name: MAT_InelasticDefgradLinScalarAniso
-                    type: group
-                    description: scalar dependent anisotropic growth law; growth in direction as given in input-file; volume change linearly dependent on scalar (in material configuration)
-                    required: true
-                    specs:
-                      - type: all_of
-                        specs:
-                          - name: SCALAR1
-                            type: int
-                            description: "number of growth inducing scalar"
-                            required: true
-                            validator:
-                              range:
-                                minimum: 0
-                                maximum: 2147483647
-                                minimum_exclusive: true
-                                maximum_exclusive: false
-                          - name: SCALAR1_MolarGrowthFac
-                            type: double
-                            description: "anisotropic molar growth factor due to scalar 1"
-                            required: true
-                            validator:
-                              range:
-                                minimum: 0
-                                maximum: 1.7976931348623157e+308
-                                minimum_exclusive: true
-                                maximum_exclusive: false
-                          - name: SCALAR1_RefConc
-                            type: double
-                            description: "reference concentration of scalar 1 causing no strains"
-                            required: true
-                            validator:
-                              range:
-                                minimum: 0
-                                maximum: 1.7976931348623157e+308
-                                minimum_exclusive: false
-                                maximum_exclusive: false
-                          - name: GrowthDirection
-                            type: vector
-                            size: 3
-                            value_type:
-                              type: double
-                            description: "vector that defines the growth direction"
-                            required: true
-              - type: all_of
-                specs:
-                  - name: MAT
-                    type: int
-                    required: true
-                  - name: MAT_InelasticDefgradPolyIntercalFracAniso
-                    type: group
-                    description: 'scalar dependent anisotropic growth law; growth in direction as given in input-file; volume change nonlinearly dependent on the intercalation fraction, that is calculated using the scalar concentration (in material configuration)'
-                    required: true
-                    specs:
-                      - type: all_of
-                        specs:
-                          - name: SCALAR1
-                            type: int
-                            description: "number of growth inducing scalar"
-                            required: true
-                            validator:
-                              range:
-                                minimum: 0
-                                maximum: 2147483647
-                                minimum_exclusive: true
-                                maximum_exclusive: false
-                          - name: SCALAR1_RefConc
-                            type: double
-                            description: "reference concentration of scalar 1 causing no strains"
-                            required: true
-                            validator:
-                              range:
-                                minimum: 0
-                                maximum: 1.7976931348623157e+308
-                                minimum_exclusive: false
-                                maximum_exclusive: false
-                          - name: GrowthDirection
-                            type: vector
-                            size: 3
-                            value_type:
-                              type: double
-                            description: "vector that defines the growth direction"
-                            required: true
-                          - name: POLY_PARA_NUM
-                            type: int
-                            description: "number of polynomial coefficients"
-                            required: true
-                            validator:
-                              range:
-                                minimum: 0
-                                maximum: 2147483647
-                                minimum_exclusive: true
-                                maximum_exclusive: false
-                          - name: POLY_PARAMS
-                            type: vector
-                            value_type:
-                              type: double
-                            description: "coefficients of polynomial"
-                            required: true
-                          - name: X_min
-                            type: double
-                            description: "lower bound of validity of polynomial"
-                            required: true
-                            validator:
-                              range:
-                                minimum: 0
-                                maximum: 1.7976931348623157e+308
-                                minimum_exclusive: false
-                                maximum_exclusive: false
-                          - name: X_max
-                            type: double
-                            description: "upper bound of validity of polynomial"
-                            required: true
-                            validator:
-                              range:
-                                minimum: 0
-                                maximum: 1.7976931348623157e+308
-                                minimum_exclusive: true
-                                maximum_exclusive: false
-                          - name: MATID
-                            type: int
-                            description: "material ID of the corresponding scatra material"
-                            required: true
-                            validator:
-                              range:
-                                minimum: 0
-                                maximum: 2147483647
-                                minimum_exclusive: true
-                                maximum_exclusive: false
-              - type: all_of
-                specs:
-                  - name: MAT
-                    type: int
-                    required: true
                   - name: MAT_ScDepInterp
                     type: group
                     description: integration point based and scalar dependent interpolation between two materials
@@ -42175,83 +42179,6 @@ sections:
                             type: int
                             description: "material for lambda equal to one"
                             required: true
-              - type: all_of
-                specs:
-                  - name: MAT
-                    type: int
-                    required: true
-                  - name: MAT_InelasticDefgradLinTempIso
-                    type: group
-                    description: Temperature dependent growth law. Volume change linearly dependent on temperature
-                    required: true
-                    specs:
-                      - type: all_of
-                        specs:
-                          - name: Temp_GrowthFac
-                            type: double
-                            description: "isotropic growth factor due to temperature"
-                            required: true
-                          - name: RefTemp
-                            type: double
-                            description: "reference temperature causing no strains"
-                            required: true
-                            validator:
-                              range:
-                                minimum: 0
-                                maximum: 1.7976931348623157e+308
-                                minimum_exclusive: false
-                                maximum_exclusive: false
-              - type: all_of
-                specs:
-                  - name: MAT
-                    type: int
-                    required: true
-                  - name: MAT_InelasticDefgradTimeFunctAniso
-                    type: group
-                    description: Time-dependent anisotropic growth law; growth in direction as given in input-file. Determinant of volume change dependent on (1 + time function value) defined by 'FUNCT_NUM'
-                    required: true
-                    specs:
-                      - type: all_of
-                        specs:
-                          - name: FUNCT_NUM
-                            type: int
-                            description: "Time-dependent function used to calculate the inelastic deformation gradient"
-                            required: true
-                            validator:
-                              range:
-                                minimum: 0
-                                maximum: 2147483647
-                                minimum_exclusive: true
-                                maximum_exclusive: false
-                          - name: GrowthDirection
-                            type: vector
-                            size: 3
-                            value_type:
-                              type: double
-                            description: "vector that defines the growth direction"
-                            required: true
-              - type: all_of
-                specs:
-                  - name: MAT
-                    type: int
-                    required: true
-                  - name: MAT_InelasticDefgradTimeFunctIso
-                    type: group
-                    description: Time-dependent isotropic growth law. Determinant of volume change dependent on (1 + time function value) defined by 'FUNCT_NUM'
-                    required: true
-                    specs:
-                      - type: all_of
-                        specs:
-                          - name: FUNCT_NUM
-                            type: int
-                            description: "Time-dependent function used to calculate the inelastic deformation gradient"
-                            required: true
-                            validator:
-                              range:
-                                minimum: 0
-                                maximum: 2147483647
-                                minimum_exclusive: true
-                                maximum_exclusive: false
               - type: all_of
                 specs:
                   - name: MAT
@@ -42323,6 +42250,38 @@ sections:
                           - name: PENALTYPARAMETER
                             type: double
                             description: "penalty parameter of porous medium"
+                            required: true
+              - type: all_of
+                specs:
+                  - name: MAT
+                    type: int
+                    required: true
+                  - name: MAT_PoroLawIncompSkel
+                    type: group
+                    description: porosity law for incompressible skeleton phase
+                    required: true
+                    specs:
+                      - type: all_of
+                        specs: []
+              - type: all_of
+                specs:
+                  - name: MAT
+                    type: int
+                    required: true
+                  - name: MAT_PoroLawLinBiot
+                    type: group
+                    description: linear biot model for porosity law
+                    required: true
+                    specs:
+                      - type: all_of
+                        specs:
+                          - name: INVBIOTMODULUS
+                            type: double
+                            description: "inverse Biot modulus of porous medium"
+                            required: true
+                          - name: BIOTCEOFF
+                            type: double
+                            description: "Biot coefficient of porous medium"
                             required: true
     - name: MESH PARTITIONING
       type: group
