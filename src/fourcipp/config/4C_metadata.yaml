@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 59efb28e3aaab978812935db2a5c9dd8470f6d45
+  commit_hash: e3e637706e531a8d5f8d249028aaacb110ab7065
   version: 2026.3.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -41365,7 +41365,7 @@ sections:
                                 maximum_exclusive: false
                           - name: REF_TEMPERATURE
                             type: double
-                            description: "reference temperature $T_0$ for evaluating the yield strength $A_0$ and the hardening modulus $B_0$"
+                            description: "reference temperature $T_0$ for evaluating the yield strength $A_0$ and the hardening modulus $B_0$. Has no effect for isothermal simulations."
                             required: true
                             validator:
                               range:
@@ -41375,7 +41375,7 @@ sections:
                                 maximum_exclusive: false
                           - name: MELT_TEMPERATURE
                             type: double
-                            description: "melting temperature $T_{\\mathrm{melt}}$"
+                            description: "melting temperature $T_{\\mathrm{melt}}$. Has no effect for isothermal simulations."
                             required: true
                             validator:
                               range:
@@ -41385,13 +41385,13 @@ sections:
                                 maximum_exclusive: false
                           - name: TEMPERATURE_SENS
                             type: double
-                            description: "temperature sensitivity $m$"
+                            description: "temperature sensitivity $m$. Has no effect for isothermal simulations."
                             required: true
                             validator:
                               range:
                                 minimum: 0
                                 maximum: 1.7976931348623157e+308
-                                minimum_exclusive: false
+                                minimum_exclusive: true
                                 maximum_exclusive: false
               - type: all_of
                 specs:
