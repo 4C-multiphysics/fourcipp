@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: e3e637706e531a8d5f8d249028aaacb110ab7065
+  commit_hash: e71a5f053d5a38b201760d15e4b68b30f72ca98a
   version: 2026.3.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -52623,7 +52623,7 @@ sections:
                               required: true
                             - name: condition_outflow
                               type: double
-                              description: "Condition applied at the outlet, either pressure (mmHg) or reflection."
+                              description: "Condition applied at the outlet, either pressure or reflection."
                               required: true
                             - name: cycle_period
                               noneable: true
@@ -52644,10 +52644,42 @@ sections:
                       specs:
                         - type: all_of
                           specs:
+                            - name: terminal_unit_type
+                              type: selection
+                              description: "Type of terminal unit model."
+                              required: true
+                              choices:
+                                - name: constant
+                                  spec:
+                                    name: constant
+                                    type: enum
+                                    description: "Constant value for the field."
+                                    required: true
+                                    choices:
+                                      - name: RheologicalElasticity
+                                      - name: Windkessel
+                                - name: from_file
+                                  spec:
+                                    name: from_file
+                                    type: path
+                                    description: "Path to a file containing the input field data."
+                                    required: true
+                                - name: field_reference
+                                  spec:
+                                    name: field_reference
+                                    type: string
+                                    description: "Refer to a globally defined field by a name."
+                                    required: true
+                                - name: from_mesh
+                                  spec:
+                                    name: from_mesh
+                                    type: string
+                                    description: "Refer to a field defined in the input mesh by a name."
+                                    required: true
                             - name: rheological_model
                               type: group
                               description: Rheological model of the terminal unit.
-                              required: true
+                              required: false
                               specs:
                                 - type: all_of
                                   specs:
@@ -52852,6 +52884,35 @@ sections:
                                             type: string
                                             description: "Refer to a field defined in the input mesh by a name."
                                             required: true
+                                    - name: acinar_reference_volume_v0
+                                      type: selection
+                                      description: "Reference volume of acinus at terminal unit."
+                                      required: true
+                                      choices:
+                                        - name: constant
+                                          spec:
+                                            name: constant
+                                            type: double
+                                            description: "Constant value for the field."
+                                            required: true
+                                        - name: from_file
+                                          spec:
+                                            name: from_file
+                                            type: path
+                                            description: "Path to a file containing the input field data."
+                                            required: true
+                                        - name: field_reference
+                                          spec:
+                                            name: field_reference
+                                            type: string
+                                            description: "Refer to a globally defined field by a name."
+                                            required: true
+                                        - name: from_mesh
+                                          spec:
+                                            name: from_mesh
+                                            type: string
+                                            description: "Refer to a field defined in the input mesh by a name."
+                                            required: true
                                     - name: linear
                                       type: group
                                       description: Linear elastic model in the rheological model of the terminal unit.
@@ -52953,35 +53014,129 @@ sections:
                                                     type: string
                                                     description: "Refer to a field defined in the input mesh by a name."
                                                     required: true
-                            - name: acinar_reference_volume_v0
-                              type: selection
-                              description: "Reference volume of acinus at terminal unit."
-                              required: true
-                              choices:
-                                - name: constant
-                                  spec:
-                                    name: constant
-                                    type: double
-                                    description: "Constant value for the field."
-                                    required: true
-                                - name: from_file
-                                  spec:
-                                    name: from_file
-                                    type: path
-                                    description: "Path to a file containing the input field data."
-                                    required: true
-                                - name: field_reference
-                                  spec:
-                                    name: field_reference
-                                    type: string
-                                    description: "Refer to a globally defined field by a name."
-                                    required: true
-                                - name: from_mesh
-                                  spec:
-                                    name: from_mesh
-                                    type: string
-                                    description: "Refer to a field defined in the input mesh by a name."
-                                    required: true
+                            - name: windkessel_model
+                              type: group
+                              description: Windkessel (RCR) model for terminal units.
+                              required: false
+                              specs:
+                                - type: all_of
+                                  specs:
+                                    - name: proximal_resistance_R_p
+                                      type: selection
+                                      description: "Proximal resistance of Windkessel model."
+                                      required: true
+                                      choices:
+                                        - name: constant
+                                          spec:
+                                            name: constant
+                                            type: double
+                                            description: "Constant value for the field."
+                                            required: true
+                                        - name: from_file
+                                          spec:
+                                            name: from_file
+                                            type: path
+                                            description: "Path to a file containing the input field data."
+                                            required: true
+                                        - name: field_reference
+                                          spec:
+                                            name: field_reference
+                                            type: string
+                                            description: "Refer to a globally defined field by a name."
+                                            required: true
+                                        - name: from_mesh
+                                          spec:
+                                            name: from_mesh
+                                            type: string
+                                            description: "Refer to a field defined in the input mesh by a name."
+                                            required: true
+                                    - name: compliance_C
+                                      type: selection
+                                      description: "Compliance of Windkessel model."
+                                      required: true
+                                      choices:
+                                        - name: constant
+                                          spec:
+                                            name: constant
+                                            type: double
+                                            description: "Constant value for the field."
+                                            required: true
+                                        - name: from_file
+                                          spec:
+                                            name: from_file
+                                            type: path
+                                            description: "Path to a file containing the input field data."
+                                            required: true
+                                        - name: field_reference
+                                          spec:
+                                            name: field_reference
+                                            type: string
+                                            description: "Refer to a globally defined field by a name."
+                                            required: true
+                                        - name: from_mesh
+                                          spec:
+                                            name: from_mesh
+                                            type: string
+                                            description: "Refer to a field defined in the input mesh by a name."
+                                            required: true
+                                    - name: distal_resistance_R_d
+                                      type: selection
+                                      description: "Distal resistance of Windkessel model."
+                                      required: true
+                                      choices:
+                                        - name: constant
+                                          spec:
+                                            name: constant
+                                            type: double
+                                            description: "Constant value for the field."
+                                            required: true
+                                        - name: from_file
+                                          spec:
+                                            name: from_file
+                                            type: path
+                                            description: "Path to a file containing the input field data."
+                                            required: true
+                                        - name: field_reference
+                                          spec:
+                                            name: field_reference
+                                            type: string
+                                            description: "Refer to a globally defined field by a name."
+                                            required: true
+                                        - name: from_mesh
+                                          spec:
+                                            name: from_mesh
+                                            type: string
+                                            description: "Refer to a field defined in the input mesh by a name."
+                                            required: true
+                                    - name: pressure_peripheral
+                                      type: selection
+                                      description: "Peripheral pressure after Windkessel model."
+                                      required: true
+                                      choices:
+                                        - name: constant
+                                          spec:
+                                            name: constant
+                                            type: double
+                                            description: "Constant value for the field."
+                                            required: true
+                                        - name: from_file
+                                          spec:
+                                            name: from_file
+                                            type: path
+                                            description: "Path to a file containing the input field data."
+                                            required: true
+                                        - name: field_reference
+                                          spec:
+                                            name: field_reference
+                                            type: string
+                                            description: "Refer to a globally defined field by a name."
+                                            required: true
+                                        - name: from_mesh
+                                          spec:
+                                            name: from_mesh
+                                            type: string
+                                            description: "Refer to a field defined in the input mesh by a name."
+                                            required: true
 $references:
   "0":
     name: elements
