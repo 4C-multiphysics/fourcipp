@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: e71a5f053d5a38b201760d15e4b68b30f72ca98a
+  commit_hash: 42ded28c4829404d082d74e8e5a8027df5ea5d1b
   version: 2026.3.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -33575,7 +33575,7 @@ sections:
                     required: true
                   - name: MIX_Constituent_SsiRemodelFiber
                     type: group
-                    description: A 1D constituent where the g&r evolution is solved in a coupled ssi framework
+                    description: A 1D constituent where the g&r evolution ODEs can be solved either as own scatra dofs (using GROWTH_SCALAR_ID & REMODELING_SCALAR_ID) or Gauss-point wise based on a non-local stimulus (using NONLOCAL_STIMULUS_SCALAR_ID).
                     required: true
                     specs:
                       - type: all_of
@@ -33649,9 +33649,11 @@ sections:
                             required: false
                             default: false
                           - name: GROWTH_SCALAR_ID
+                            noneable: true
                             type: int
-                            description: "Index of the corresponding growth scalar material in the scatra matlist"
-                            required: true
+                            description: "Index of the corresponding growth scalar material in the scatra matlist (leave unset to disable)"
+                            required: false
+                            default: null
                             validator:
                               range:
                                 minimum: 0
@@ -33659,9 +33661,23 @@ sections:
                                 minimum_exclusive: false
                                 maximum_exclusive: false
                           - name: REMODELING_SCALAR_ID
+                            noneable: true
                             type: int
-                            description: "Index of the corresponding remodeling scalar material in the scatra matlist"
-                            required: true
+                            description: "Index of the corresponding remodeling scalar material in the scatra matlist (leave unset to disable)"
+                            required: false
+                            default: null
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: false
+                                maximum_exclusive: false
+                          - name: NONLOCAL_STIMULUS_SCALAR_ID
+                            noneable: true
+                            type: int
+                            description: "Index of the non-local stimulus scalar in the scatra matlist (leave unset to disable)"
+                            required: false
+                            default: null
                             validator:
                               range:
                                 minimum: 0
@@ -35737,6 +35753,26 @@ sections:
                   - name: MAT
                     type: int
                     required: true
+                  - name: MAT_PoroLawLinBiot
+                    type: group
+                    description: linear biot model for porosity law
+                    required: true
+                    specs:
+                      - type: all_of
+                        specs:
+                          - name: INVBIOTMODULUS
+                            type: double
+                            description: "inverse Biot modulus of porous medium"
+                            required: true
+                          - name: BIOTCEOFF
+                            type: double
+                            description: "Biot coefficient of porous medium"
+                            required: true
+              - type: all_of
+                specs:
+                  - name: MAT
+                    type: int
+                    required: true
                   - name: MAT_Struct_Multiscale
                     type: group
                     description: 'Structural micro-scale approach: material parameters are calculated from microscale simulation'
@@ -35800,16 +35836,36 @@ sections:
                   - name: MAT
                     type: int
                     required: true
-                  - name: ELAST_CoupAnisoNeoHooke
+                  - name: ELAST_CoupAnisoExpoTwoCoup
                     type: group
-                    description: anisotropic part with one neo Hookean fiber
+                    description: anisotropic part with two exp. fibers
                     required: true
                     specs:
                       - type: all_of
                         specs:
-                          - name: C
+                          - name: A4
                             type: double
-                            description: "linear constant"
+                            description: "linear anisotropic constant for fiber 1"
+                            required: true
+                          - name: B4
+                            type: double
+                            description: "exponential anisotropic constant for fiber 1"
+                            required: true
+                          - name: A6
+                            type: double
+                            description: "linear anisotropic constant for fiber 2"
+                            required: true
+                          - name: B6
+                            type: double
+                            description: "exponential anisotropic constant for fiber 2"
+                            required: true
+                          - name: A8
+                            type: double
+                            description: "linear anisotropic constant for fiber 1 relating fiber 2"
+                            required: true
+                          - name: B8
+                            type: double
+                            description: "exponential anisotropic constant for fiber 1 relating fiber 2"
                             required: true
                           - name: GAMMA
                             type: double
@@ -35824,11 +35880,115 @@ sections:
                             description: "initialization modus for fiber alignment"
                             required: false
                             default: 1
+                          - name: FIB_COMP
+                            type: bool
+                            description: "fibers support compression: yes (true) or no (false)"
+                            required: false
+                            default: true
                           - name: ADAPT_ANGLE
                             type: bool
                             description: "adapt angle during remodeling"
                             required: false
                             default: false
+              - type: all_of
+                specs:
+                  - name: MAT
+                    type: int
+                    required: true
+                  - name: MAT_Struct_Robinson
+                    type: group
+                    description: Robinson's visco-plastic material
+                    required: true
+                    specs:
+                      - type: all_of
+                        specs:
+                          - name: KIND
+                            type: string
+                            description: "kind of Robinson material: Butler, Arya, Arya_NarloyZ (default), Arya_CrMoSteel"
+                            required: true
+                          - name: YOUNGNUM
+                            type: int
+                            description: "number of Young's modulus in list"
+                            required: true
+                          - name: YOUNG
+                            type: vector
+                            value_type:
+                              type: double
+                            description: "Young's modulus"
+                            required: true
+                          - name: NUE
+                            type: double
+                            description: "Poisson's ratio"
+                            required: true
+                          - name: DENS
+                            type: double
+                            description: "mass density"
+                            required: true
+                          - name: THEXPANS
+                            type: double
+                            description: "coefficient of linear thermal expansion"
+                            required: true
+                          - name: INITTEMP
+                            type: double
+                            description: "initial temperature"
+                            required: true
+                          - name: HRDN_FACT
+                            type: double
+                            description: "hardening factor 'A'"
+                            required: true
+                          - name: HRDN_EXPO
+                            type: double
+                            description: "hardening power 'n'"
+                            required: true
+                          - name: SHRTHRSHLDNUM
+                            type: int
+                            description: "number of shear stress threshold 'K^2'in list"
+                            required: true
+                          - name: SHRTHRSHLD
+                            type: vector
+                            value_type:
+                              type: double
+                            description: "Bingam-Prager shear stress threshold 'K^2'"
+                            required: true
+                          - name: RCVRY
+                            type: double
+                            description: "recovery factor 'R_0'"
+                            required: true
+                          - name: ACTV_ERGY
+                            type: double
+                            description: "activation energy 'Q_0'"
+                            required: true
+                          - name: ACTV_TMPR
+                            type: double
+                            description: "activation temperature 'T_0'"
+                            required: true
+                          - name: G0
+                            type: double
+                            description: "'G_0'"
+                            required: true
+                          - name: M_EXPO
+                            type: double
+                            description: "'m'"
+                            required: true
+                          - name: BETANUM
+                            type: int
+                            description: "number of 'beta' in list"
+                            required: true
+                          - name: BETA
+                            type: vector
+                            value_type:
+                              type: double
+                            description: "beta"
+                            required: true
+                          - name: H_FACT
+                            type: double
+                            description: "'H'"
+                            required: true
+                          - name: THERMOMAT
+                            type: int
+                            description: "mat id of thermal material part"
+                            required: false
+                            default: -1
               - type: all_of
                 specs:
                   - name: MAT
@@ -35906,47 +36066,21 @@ sections:
                   - name: MAT
                     type: int
                     required: true
-                  - name: ELAST_IsoAnisoExpo
+                  - name: ELAST_Iso2Pow
                     type: group
-                    description: anisotropic part with one exp. fiber
+                    description: isochoric part of general power material
                     required: true
                     specs:
                       - type: all_of
                         specs:
-                          - name: K1
+                          - name: C
                             type: double
-                            description: "linear constant"
+                            description: "material parameter"
                             required: true
-                          - name: K2
-                            type: double
-                            description: "exponential constant"
-                            required: true
-                          - name: GAMMA
-                            type: double
-                            description: "angle"
-                            required: true
-                          - name: K1COMP
-                            type: double
-                            description: "linear constant"
-                            required: true
-                          - name: K2COMP
-                            type: double
-                            description: "exponential constant"
-                            required: true
-                          - name: STR_TENS_ID
+                          - name: D
                             type: int
-                            description: "MAT ID for definition of Structural Tensor"
+                            description: "exponent"
                             required: true
-                          - name: INIT
-                            type: int
-                            description: "initialization modus for fiber alignment"
-                            required: false
-                            default: 1
-                          - name: ADAPT_ANGLE
-                            type: bool
-                            description: "adapt angle during remodeling"
-                            required: false
-                            default: false
               - type: all_of
                 specs:
                   - name: MAT
@@ -36016,92 +36150,6 @@ sections:
                   - name: MAT
                     type: int
                     required: true
-                  - name: MAT_Struct_SuperElastSMA
-                    type: group
-                    description: finite strain superelastic shape memory alloy
-                    required: true
-                    specs:
-                      - type: all_of
-                        specs:
-                          - name: DENS
-                            type: double
-                            description: "mass density"
-                            required: true
-                          - name: YOUNG
-                            type: double
-                            description: "Young's modulus"
-                            required: true
-                          - name: NUE
-                            type: double
-                            description: "Poisson's ratio"
-                            required: true
-                          - name: EPSILON_L
-                            type: double
-                            description: "parameter representing the maximum deformation obtainable only by detwinning of the multiple-variant martensite"
-                            required: true
-                          - name: T_AS_s
-                            type: double
-                            description: "Temperature at which the phase transformation from austenite to martensite starts"
-                            required: true
-                          - name: T_AS_f
-                            type: double
-                            description: "Temperature at which the phase transformation from austenite to martensite finishes"
-                            required: true
-                          - name: T_SA_s
-                            type: double
-                            description: "Temperature at which the phase transformation from martensite to autenite starts"
-                            required: true
-                          - name: T_SA_f
-                            type: double
-                            description: "Temperature at which the phase transformation from martensite to autenite finishes"
-                            required: true
-                          - name: C_AS
-                            type: double
-                            description: "Coefficient of the linear temperature dependence of T_AS"
-                            required: true
-                          - name: C_SA
-                            type: double
-                            description: "Coefficient of the linear temperature dependence of T_SA"
-                            required: true
-                          - name: SIGMA_AS_s
-                            type: double
-                            description: "stress at which the phase transformation from austenite to martensite begins"
-                            required: true
-                          - name: SIGMA_AS_f
-                            type: double
-                            description: "stress at which the phase transformation from austenite to martensite finishes"
-                            required: true
-                          - name: SIGMA_SA_s
-                            type: double
-                            description: "stress at which the phase transformation from martensite to austenite begins"
-                            required: true
-                          - name: SIGMA_SA_f
-                            type: double
-                            description: "stress at which the phase transformation from martensite to austenite finishes"
-                            required: true
-                          - name: ALPHA
-                            type: double
-                            description: "pressure dependency in the drucker-prager-type loading"
-                            required: true
-                          - name: MODEL
-                            type: int
-                            description: "Model used for the evolution of martensitic fraction (1=exponential; 2=linear)"
-                            required: true
-                          - name: BETA_AS
-                            type: double
-                            description: "parameter, measuring the speed of the transformation from austenite to martensite"
-                            required: false
-                            default: 0
-                          - name: BETA_SA
-                            type: double
-                            description: "parameter, measuring the speed of the transformation from martensite to austenite"
-                            required: false
-                            default: 0
-              - type: all_of
-                specs:
-                  - name: MAT
-                    type: int
-                    required: true
                   - name: MAT_ElastHyper
                     type: group
                     description: 'list/collection of hyperelastic materials, i.e. material IDs'
@@ -36133,25 +36181,28 @@ sections:
                   - name: MAT
                     type: int
                     required: true
-                  - name: VISCO_FSLS
+                  - name: VISCO_GeneralizedMaxwell
                     type: group
-                    description: Viscous contribution according to FSLS-Model
+                    description: Generalized Maxwell model
                     required: true
                     specs:
                       - type: all_of
                         specs:
-                          - name: TAU
-                            type: double
-                            description: "relaxation parameter"
+                          - name: NUMBRANCH
+                            type: int
+                            description: "number of viscoelastic branches"
                             required: true
-                          - name: ALPHA
-                            type: double
-                            description: "fractional order derivative"
+                          - name: MATIDS
+                            type: vector
+                            value_type:
+                              type: int
+                            description: "the list material IDs"
                             required: true
-                          - name: BETA
-                            type: double
-                            description: "emphasis of viscous to elastic part"
-                            required: true
+                          - name: SOLVE
+                            type: string
+                            description: "Solution for evolution equation: OneStepTheta (default) or ExponentialTimeDiscretization (convolution integral)"
+                            required: false
+                            default: "OneStepTheta"
               - type: all_of
                 specs:
                   - name: MAT
@@ -36297,6 +36348,118 @@ sections:
                             description: "Maximum Iterations for local Neutron Raphson"
                             required: false
                             default: 50
+              - type: all_of
+                specs:
+                  - name: MAT
+                    type: int
+                    required: true
+                  - name: MAT_Struct_StVenantKirchhoffOrthotropic
+                    type: group
+                    description: St.Venant--Kirchhoff material with orthotropy
+                    required: true
+                    specs:
+                      - type: all_of
+                        specs:
+                          - name: YOUNG
+                            type: selection
+                            description: "Input vector field of Young's moduli for the principal directions with the ordering [E1, E2, E3]."
+                            required: true
+                            choices:
+                              - name: constant
+                                spec:
+                                  name: constant
+                                  type: vector
+                                  size: 3
+                                  value_type:
+                                    type: double
+                                  description: "Constant value for the field."
+                                  required: true
+                              - name: from_file
+                                spec:
+                                  name: from_file
+                                  type: path
+                                  description: "Path to a file containing the input field data."
+                                  required: true
+                              - name: field_reference
+                                spec:
+                                  name: field_reference
+                                  type: string
+                                  description: "Refer to a globally defined field by a name."
+                                  required: true
+                              - name: from_mesh
+                                spec:
+                                  name: from_mesh
+                                  type: string
+                                  description: "Refer to a field defined in the input mesh by a name."
+                                  required: true
+                          - name: SHEAR
+                            type: selection
+                            description: "Input vector field of shear moduli with the ordering [G12, G23, G13]."
+                            required: true
+                            choices:
+                              - name: constant
+                                spec:
+                                  name: constant
+                                  type: vector
+                                  size: 3
+                                  value_type:
+                                    type: double
+                                  description: "Constant value for the field."
+                                  required: true
+                              - name: from_file
+                                spec:
+                                  name: from_file
+                                  type: path
+                                  description: "Path to a file containing the input field data."
+                                  required: true
+                              - name: field_reference
+                                spec:
+                                  name: field_reference
+                                  type: string
+                                  description: "Refer to a globally defined field by a name."
+                                  required: true
+                              - name: from_mesh
+                                spec:
+                                  name: from_mesh
+                                  type: string
+                                  description: "Refer to a field defined in the input mesh by a name."
+                                  required: true
+                          - name: NUE
+                            type: selection
+                            description: "Input vector field of Poisson's ratios with the ordering [nu12, nu23, nu13]."
+                            required: true
+                            choices:
+                              - name: constant
+                                spec:
+                                  name: constant
+                                  type: vector
+                                  size: 3
+                                  value_type:
+                                    type: double
+                                  description: "Constant value for the field."
+                                  required: true
+                              - name: from_file
+                                spec:
+                                  name: from_file
+                                  type: path
+                                  description: "Path to a file containing the input field data."
+                                  required: true
+                              - name: field_reference
+                                spec:
+                                  name: field_reference
+                                  type: string
+                                  description: "Refer to a globally defined field by a name."
+                                  required: true
+                              - name: from_mesh
+                                spec:
+                                  name: from_mesh
+                                  type: string
+                                  description: "Refer to a field defined in the input mesh by a name."
+                                  required: true
+                          - name: DENS
+                            type: double
+                            description: "mass density"
+                            required: true
               - type: all_of
                 specs:
                   - name: MAT
@@ -36467,44 +36630,20 @@ sections:
                   - name: MAT
                     type: int
                     required: true
-                  - name: ELAST_Iso1Pow
+                  - name: VISCO_GeneralizedMaxwellBranch
                     type: group
-                    description: isochoric part of general power material
+                    description: Viscoelastic branch for generalized Maxwell model
                     required: true
                     specs:
                       - type: all_of
                         specs:
-                          - name: C
+                          - name: TAU
                             type: double
-                            description: "material parameter"
+                            description: "dynamic viscosity divided by branch stiffness"
                             required: true
-                          - name: D
+                          - name: MATID
                             type: int
-                            description: "exponent"
-                            required: true
-              - type: all_of
-                specs:
-                  - name: MAT
-                    type: int
-                    required: true
-                  - name: ELAST_CoupLogNeoHooke
-                    type: group
-                    description: logarithmic neo-Hooke material acc. to Bonet and Wood
-                    required: true
-                    specs:
-                      - type: all_of
-                        specs:
-                          - name: MODE
-                            type: string
-                            description: "parameter set: YN (Young's modulus and Poisson's ration; default) or Lame (mue and lambda)"
-                            required: true
-                          - name: C1
-                            type: double
-                            description: "E or mue"
-                            required: true
-                          - name: C2
-                            type: double
-                            description: "nue or lambda"
+                            description: "material ID of branch elasticity rule"
                             required: true
               - type: all_of
                 specs:
@@ -36676,168 +36815,25 @@ sections:
                   - name: MAT
                     type: int
                     required: true
-                  - name: VISCO_GeneralizedMaxwellBranch
+                  - name: VISCO_FSLS
                     type: group
-                    description: Viscoelastic branch for generalized Maxwell model
+                    description: Viscous contribution according to FSLS-Model
                     required: true
                     specs:
                       - type: all_of
                         specs:
                           - name: TAU
                             type: double
-                            description: "dynamic viscosity divided by branch stiffness"
+                            description: "relaxation parameter"
                             required: true
-                          - name: MATID
-                            type: int
-                            description: "material ID of branch elasticity rule"
-                            required: true
-              - type: all_of
-                specs:
-                  - name: MAT
-                    type: int
-                    required: true
-                  - name: MAT_Struct_Robinson
-                    type: group
-                    description: Robinson's visco-plastic material
-                    required: true
-                    specs:
-                      - type: all_of
-                        specs:
-                          - name: KIND
-                            type: string
-                            description: "kind of Robinson material: Butler, Arya, Arya_NarloyZ (default), Arya_CrMoSteel"
-                            required: true
-                          - name: YOUNGNUM
-                            type: int
-                            description: "number of Young's modulus in list"
-                            required: true
-                          - name: YOUNG
-                            type: vector
-                            value_type:
-                              type: double
-                            description: "Young's modulus"
-                            required: true
-                          - name: NUE
+                          - name: ALPHA
                             type: double
-                            description: "Poisson's ratio"
-                            required: true
-                          - name: DENS
-                            type: double
-                            description: "mass density"
-                            required: true
-                          - name: THEXPANS
-                            type: double
-                            description: "coefficient of linear thermal expansion"
-                            required: true
-                          - name: INITTEMP
-                            type: double
-                            description: "initial temperature"
-                            required: true
-                          - name: HRDN_FACT
-                            type: double
-                            description: "hardening factor 'A'"
-                            required: true
-                          - name: HRDN_EXPO
-                            type: double
-                            description: "hardening power 'n'"
-                            required: true
-                          - name: SHRTHRSHLDNUM
-                            type: int
-                            description: "number of shear stress threshold 'K^2'in list"
-                            required: true
-                          - name: SHRTHRSHLD
-                            type: vector
-                            value_type:
-                              type: double
-                            description: "Bingam-Prager shear stress threshold 'K^2'"
-                            required: true
-                          - name: RCVRY
-                            type: double
-                            description: "recovery factor 'R_0'"
-                            required: true
-                          - name: ACTV_ERGY
-                            type: double
-                            description: "activation energy 'Q_0'"
-                            required: true
-                          - name: ACTV_TMPR
-                            type: double
-                            description: "activation temperature 'T_0'"
-                            required: true
-                          - name: G0
-                            type: double
-                            description: "'G_0'"
-                            required: true
-                          - name: M_EXPO
-                            type: double
-                            description: "'m'"
-                            required: true
-                          - name: BETANUM
-                            type: int
-                            description: "number of 'beta' in list"
+                            description: "fractional order derivative"
                             required: true
                           - name: BETA
-                            type: vector
-                            value_type:
-                              type: double
-                            description: "beta"
-                            required: true
-                          - name: H_FACT
                             type: double
-                            description: "'H'"
+                            description: "emphasis of viscous to elastic part"
                             required: true
-                          - name: THERMOMAT
-                            type: int
-                            description: "mat id of thermal material part"
-                            required: false
-                            default: -1
-              - type: all_of
-                specs:
-                  - name: MAT
-                    type: int
-                    required: true
-                  - name: MAT_matlist_chemo_reac
-                    type: group
-                    description: 'list/collection of materials, i.e. material IDs and list of reactive/chemotactic pairs'
-                    required: true
-                    specs:
-                      - type: all_of
-                        specs:
-                          - name: LOCAL
-                            type: bool
-                            description: "individual materials allocated per element or only at global scope"
-                            required: true
-                          - name: NUMMAT
-                            type: int
-                            description: "number of materials in list"
-                            required: true
-                          - name: MATIDS
-                            type: vector
-                            value_type:
-                              type: int
-                            description: "the list material IDs"
-                            required: true
-                          - name: NUMPAIR
-                            type: int
-                            description: "number of pairs for these elements"
-                            required: true
-                          - name: PAIRIDS
-                            type: vector
-                            value_type:
-                              type: int
-                            description: "chemotaxis pairs list"
-                            required: false
-                            default: [0]
-                          - name: NUMREAC
-                            type: int
-                            description: "number of reactions for these elements"
-                            required: true
-                          - name: REACIDS
-                            type: vector
-                            value_type:
-                              type: int
-                            description: "advanced reaction list"
-                            required: false
-                            default: [0]
               - type: all_of
                 specs:
                   - name: MAT
@@ -36907,9 +36903,9 @@ sections:
                   - name: MAT
                     type: int
                     required: true
-                  - name: MAT_matlist_chemotaxis
+                  - name: MAT_matlist_chemo_reac
                     type: group
-                    description: 'list/collection of materials, i.e. material IDs and list of chemotactic pairs'
+                    description: 'list/collection of materials, i.e. material IDs and list of reactive/chemotactic pairs'
                     required: true
                     specs:
                       - type: all_of
@@ -36937,6 +36933,17 @@ sections:
                             value_type:
                               type: int
                             description: "chemotaxis pairs list"
+                            required: false
+                            default: [0]
+                          - name: NUMREAC
+                            type: int
+                            description: "number of reactions for these elements"
+                            required: true
+                          - name: REACIDS
+                            type: vector
+                            value_type:
+                              type: int
+                            description: "advanced reaction list"
                             required: false
                             default: [0]
               - type: all_of
@@ -36980,6 +36987,74 @@ sections:
                   - name: MAT
                     type: int
                     required: true
+                  - name: MAT_matlist_chemotaxis
+                    type: group
+                    description: 'list/collection of materials, i.e. material IDs and list of chemotactic pairs'
+                    required: true
+                    specs:
+                      - type: all_of
+                        specs:
+                          - name: LOCAL
+                            type: bool
+                            description: "individual materials allocated per element or only at global scope"
+                            required: true
+                          - name: NUMMAT
+                            type: int
+                            description: "number of materials in list"
+                            required: true
+                          - name: MATIDS
+                            type: vector
+                            value_type:
+                              type: int
+                            description: "the list material IDs"
+                            required: true
+                          - name: NUMPAIR
+                            type: int
+                            description: "number of pairs for these elements"
+                            required: true
+                          - name: PAIRIDS
+                            type: vector
+                            value_type:
+                              type: int
+                            description: "chemotaxis pairs list"
+                            required: false
+                            default: [0]
+              - type: all_of
+                specs:
+                  - name: MAT
+                    type: int
+                    required: true
+                  - name: MAT_ViscoElastHyper
+                    type: group
+                    description: Viscohyperelastic material compatible with the collection of hyperelastic materials
+                    required: true
+                    specs:
+                      - type: all_of
+                        specs:
+                          - name: NUMMAT
+                            type: int
+                            description: "number of materials/potentials in list"
+                            required: true
+                          - name: MATIDS
+                            type: vector
+                            value_type:
+                              type: int
+                            description: "the list material/potential IDs"
+                            required: true
+                          - name: DENS
+                            type: double
+                            description: "material mass density"
+                            required: true
+                          - name: POLYCONVEX
+                            type: int
+                            description: "1.0 if polyconvexity of system is checked"
+                            required: false
+                            default: 0
+              - type: all_of
+                specs:
+                  - name: MAT
+                    type: int
+                    required: true
                   - name: MAT_matlist_reactions
                     type: group
                     description: 'list/collection of materials, i.e. material IDs and list of reactions'
@@ -37017,32 +37092,61 @@ sections:
                   - name: MAT
                     type: int
                     required: true
-                  - name: MAT_ViscoElastHyper
+                  - name: MAT_VISCOANISO
                     type: group
-                    description: Viscohyperelastic material compatible with the collection of hyperelastic materials
+                    description: visco-elastic anisotropic fibre material law
                     required: true
                     specs:
                       - type: all_of
                         specs:
-                          - name: NUMMAT
-                            type: int
-                            description: "number of materials/potentials in list"
+                          - name: KAPPA
+                            type: double
+                            description: "dilatation modulus"
                             required: true
-                          - name: MATIDS
-                            type: vector
-                            value_type:
-                              type: int
-                            description: "the list material/potential IDs"
+                          - name: MUE
+                            type: double
+                            description: "Shear Modulus"
                             required: true
                           - name: DENS
                             type: double
-                            description: "material mass density"
+                            description: "Density"
                             required: true
-                          - name: POLYCONVEX
+                          - name: K1
+                            type: double
+                            description: "Parameter for linear fiber stiffness"
+                            required: true
+                          - name: K2
+                            type: double
+                            description: "Parameter for exponential fiber stiffness"
+                            required: true
+                          - name: GAMMA
+                            type: double
+                            description: "angle between fibers"
+                            required: true
+                          - name: BETA_ISO
+                            type: double
+                            description: "ratio between elasticities in generalized Maxweel body"
+                            required: true
+                          - name: BETA_ANISO
+                            type: double
+                            description: "ratio between elasticities in generalized Maxweel body"
+                            required: true
+                          - name: RELAX_ISO
+                            type: double
+                            description: "isotropic relaxation time"
+                            required: true
+                          - name: RELAX_ANISO
+                            type: double
+                            description: "anisotropic relaxation time"
+                            required: true
+                          - name: MINSTRETCH
+                            type: double
+                            description: "minimal principal stretch fibers do respond to"
+                            required: true
+                          - name: ELETHICKDIR
                             type: int
-                            description: "1.0 if polyconvexity of system is checked"
-                            required: false
-                            default: 0
+                            description: "Element thickness direction applies also to fibers (only sosh)"
+                            required: true
               - type: all_of
                 specs:
                   - name: MAT
@@ -37275,7 +37379,7 @@ sections:
                   - name: MAT
                     type: int
                     required: true
-                  - name: ELAST_Iso2Pow
+                  - name: ELAST_Iso1Pow
                     type: group
                     description: isochoric part of general power material
                     required: true
@@ -37416,6 +37520,139 @@ sections:
                   - name: MAT
                     type: int
                     required: true
+                  - name: MAT_newman_multiscale
+                    type: group
+                    description: material parameters for ion species in electrolyte solution for multi-scale approach
+                    required: true
+                    specs:
+                      - type: all_of
+                        specs:
+                          - name: VALENCE
+                            type: double
+                            description: "valence (= charge number)"
+                            required: true
+                          - name: DIFF_COEF_CONC_DEP_FUNCT
+                            type: int
+                            description: "function number of function describing concentration dependence of diffusion coefficient"
+                            required: true
+                          - name: DIFF_COEF_TEMP_SCALE_FUNCT
+                            type: int
+                            description: "FUNCT number describing temperature scaling of diffusion coefficient"
+                            required: true
+                          - name: TRANSNR
+                            type: int
+                            description: "curve number for transference number"
+                            required: true
+                          - name: THERMFAC
+                            type: int
+                            description: "curve number for thermodynamic factor"
+                            required: true
+                          - name: COND_CONC_DEP_FUNCT
+                            type: int
+                            description: "function number of function describing concentration dependence of conductivity"
+                            required: true
+                          - name: COND_TEMP_SCALE_FUNCT
+                            type: int
+                            description: "FUNCT number describing temperature scaling of conductivity"
+                            required: true
+                          - name: ELECTRONIC_COND
+                            type: double
+                            description: "electronic conductivity"
+                            required: true
+                          - name: ELECTRONIC_COND_CONC_SCALE_FUNC_NUM
+                            type: int
+                            description: "FUNCT number describing concentration dependence of electronic conductivity"
+                            required: true
+                          - name: A_s
+                            type: double
+                            description: "specific micro-scale surface area"
+                            required: true
+                          - name: MICROFILE
+                            type: string
+                            description: "input file for micro scale"
+                            required: false
+                            default: "filename.dat"
+                          - name: MICRODIS_NUM
+                            type: int
+                            description: "number of micro-scale discretization"
+                            required: true
+                          - name: DIFF_PARA_NUM
+                            type: int
+                            description: "number of parameters for diffusion coefficient"
+                            required: false
+                            default: 0
+                          - name: DIFF_PARA
+                            type: vector
+                            value_type:
+                              type: double
+                            description: "parameters for diffusion coefficient"
+                            required: false
+                            default: []
+                          - name: DIFF_COEF_TEMP_SCALE_FUNCT_PARA_NUM
+                            type: int
+                            description: "number of parameters for scaling function describing temperature dependence of diffusion coefficient"
+                            required: false
+                            default: 0
+                          - name: DIFF_COEF_TEMP_SCALE_FUNCT_PARA
+                            type: vector
+                            value_type:
+                              type: double
+                            description: "parameters for function describing temperature dependence of diffusion coefficient"
+                            required: false
+                            default: []
+                          - name: TRANS_PARA_NUM
+                            type: int
+                            description: "number of parameters for transference number"
+                            required: false
+                            default: 0
+                          - name: TRANS_PARA
+                            type: vector
+                            value_type:
+                              type: double
+                            description: "parameters for transference number"
+                            required: false
+                            default: []
+                          - name: THERM_PARA_NUM
+                            type: int
+                            description: "number of parameters for thermodynamic factor"
+                            required: false
+                            default: 0
+                          - name: THERM_PARA
+                            type: vector
+                            value_type:
+                              type: double
+                            description: "parameters for thermodynamic factor"
+                            required: false
+                            default: []
+                          - name: COND_PARA_NUM
+                            type: int
+                            description: "number of parameters for ionic conductivity"
+                            required: false
+                            default: 0
+                          - name: COND_PARA
+                            type: vector
+                            value_type:
+                              type: double
+                            description: "parameters for ionic conductivity"
+                            required: false
+                            default: []
+                          - name: COND_TEMP_SCALE_FUNCT_PARA_NUM
+                            type: int
+                            description: "number of parameters for temperature scaling of conductivity"
+                            required: false
+                            default: 0
+                          - name: COND_TEMP_SCALE_FUNCT_PARA
+                            type: vector
+                            value_type:
+                              type: double
+                            description: "parameters for temperature scaling of conductivity"
+                            required: false
+                            default: []
+              - type: all_of
+                specs:
+                  - name: MAT
+                    type: int
+                    required: true
                   - name: MAT_scatra_reaction_poro
                     type: group
                     description: scalar transport material
@@ -37512,94 +37749,6 @@ sections:
                   - name: MAT
                     type: int
                     required: true
-                  - name: MAT_VISCOANISO
-                    type: group
-                    description: visco-elastic anisotropic fibre material law
-                    required: true
-                    specs:
-                      - type: all_of
-                        specs:
-                          - name: KAPPA
-                            type: double
-                            description: "dilatation modulus"
-                            required: true
-                          - name: MUE
-                            type: double
-                            description: "Shear Modulus"
-                            required: true
-                          - name: DENS
-                            type: double
-                            description: "Density"
-                            required: true
-                          - name: K1
-                            type: double
-                            description: "Parameter for linear fiber stiffness"
-                            required: true
-                          - name: K2
-                            type: double
-                            description: "Parameter for exponential fiber stiffness"
-                            required: true
-                          - name: GAMMA
-                            type: double
-                            description: "angle between fibers"
-                            required: true
-                          - name: BETA_ISO
-                            type: double
-                            description: "ratio between elasticities in generalized Maxweel body"
-                            required: true
-                          - name: BETA_ANISO
-                            type: double
-                            description: "ratio between elasticities in generalized Maxweel body"
-                            required: true
-                          - name: RELAX_ISO
-                            type: double
-                            description: "isotropic relaxation time"
-                            required: true
-                          - name: RELAX_ANISO
-                            type: double
-                            description: "anisotropic relaxation time"
-                            required: true
-                          - name: MINSTRETCH
-                            type: double
-                            description: "minimal principal stretch fibers do respond to"
-                            required: true
-                          - name: ELETHICKDIR
-                            type: int
-                            description: "Element thickness direction applies also to fibers (only sosh)"
-                            required: true
-              - type: all_of
-                specs:
-                  - name: MAT
-                    type: int
-                    required: true
-                  - name: MAT_lubrication_law_roeland
-                    type: group
-                    description: roeland lubrication material law
-                    required: true
-                    specs:
-                      - type: all_of
-                        specs:
-                          - name: ABSViscosity
-                            type: double
-                            description: "absolute lubricant viscosity"
-                            required: true
-                          - name: PreVisCoeff
-                            type: double
-                            description: "pressure viscosity coefficient"
-                            required: true
-                          - name: RefVisc
-                            type: double
-                            description: "reference viscosity"
-                            required: true
-                          - name: RefPress
-                            type: double
-                            description: "reference Pressure"
-                            required: true
-              - type: all_of
-                specs:
-                  - name: MAT
-                    type: int
-                    required: true
                   - name: MAT_Struct_ThermoStVenantK
                     type: group
                     description: Thermo St.Venant--Kirchhoff material
@@ -37643,9 +37792,9 @@ sections:
                   - name: MAT
                     type: int
                     required: true
-                  - name: MAT_lubrication_law_barus
+                  - name: MAT_lubrication_law_roeland
                     type: group
-                    description: barus lubrication material law
+                    description: roeland lubrication material law
                     required: true
                     specs:
                       - type: all_of
@@ -37657,6 +37806,14 @@ sections:
                           - name: PreVisCoeff
                             type: double
                             description: "pressure viscosity coefficient"
+                            required: true
+                          - name: RefVisc
+                            type: double
+                            description: "reference viscosity"
+                            required: true
+                          - name: RefPress
+                            type: double
+                            description: "reference Pressure"
                             required: true
               - type: all_of
                 specs:
@@ -37732,86 +37889,21 @@ sections:
                   - name: MAT
                     type: int
                     required: true
-                  - name: MAT_lubrication_law_constant
+                  - name: MAT_lubrication_law_barus
                     type: group
-                    description: constant lubrication material law
+                    description: barus lubrication material law
                     required: true
                     specs:
                       - type: all_of
                         specs:
-                          - name: VISCOSITY
+                          - name: ABSViscosity
                             type: double
-                            description: "lubricant viscosity"
+                            description: "absolute lubricant viscosity"
                             required: true
-              - type: all_of
-                specs:
-                  - name: MAT
-                    type: int
-                    required: true
-                  - name: MAT_fluid_weakly_compressible
-                    type: group
-                    description: Weakly compressible fluid
-                    required: true
-                    specs:
-                      - type: all_of
-                        specs:
-                          - name: VISCOSITY
+                          - name: PreVisCoeff
                             type: double
-                            description: "viscosity"
+                            description: "pressure viscosity coefficient"
                             required: true
-                          - name: REFDENSITY
-                            type: double
-                            description: "reference density"
-                            required: true
-                          - name: REFPRESSURE
-                            type: double
-                            description: "reference pressure"
-                            required: true
-                          - name: COMPRCOEFF
-                            type: double
-                            description: "compressibility coefficient"
-                            required: true
-              - type: all_of
-                specs:
-                  - name: MAT
-                    type: int
-                    required: true
-                  - name: ELAST_IsoNeoHooke
-                    type: group
-                    description: isochoric part of neo-Hooke material acc. to Holzapfel
-                    required: true
-                    specs:
-                      - type: all_of
-                        specs:
-                          - name: MUE
-                            type: selection
-                            description: "Shear modulus"
-                            required: true
-                            choices:
-                              - name: constant
-                                spec:
-                                  name: constant
-                                  type: double
-                                  description: "Constant value for the field."
-                                  required: true
-                              - name: from_file
-                                spec:
-                                  name: from_file
-                                  type: path
-                                  description: "Path to a file containing the input field data."
-                                  required: true
-                              - name: field_reference
-                                spec:
-                                  name: field_reference
-                                  type: string
-                                  description: "Refer to a globally defined field by a name."
-                                  required: true
-                              - name: from_mesh
-                                spec:
-                                  name: from_mesh
-                                  type: string
-                                  description: "Refer to a field defined in the input mesh by a name."
-                                  required: true
               - type: all_of
                 specs:
                   - name: MAT
@@ -37890,58 +37982,45 @@ sections:
                   - name: MAT
                     type: int
                     required: true
-                  - name: MAT_lubrication
+                  - name: MAT_lubrication_law_constant
                     type: group
-                    description: lubrication material
+                    description: constant lubrication material law
                     required: true
                     specs:
                       - type: all_of
                         specs:
-                          - name: LUBRICATIONLAWID
-                            type: int
-                            description: "lubrication law id"
-                            required: true
-                          - name: DENSITY
+                          - name: VISCOSITY
                             type: double
-                            description: "lubricant density"
+                            description: "lubricant viscosity"
                             required: true
               - type: all_of
                 specs:
                   - name: MAT
                     type: int
                     required: true
-                  - name: MAT_fluid_murnaghantait
+                  - name: MAT_fluid_weakly_compressible
                     type: group
-                    description: Weakly compressible fluid according to Murnaghan-Tait
+                    description: Weakly compressible fluid
                     required: true
                     specs:
                       - type: all_of
                         specs:
-                          - name: DYNVISCOSITY
+                          - name: VISCOSITY
                             type: double
-                            description: "dynamic viscosity"
+                            description: "viscosity"
                             required: true
                           - name: REFDENSITY
                             type: double
-                            description: "reference spatial mass density"
+                            description: "reference density"
                             required: true
                           - name: REFPRESSURE
                             type: double
                             description: "reference pressure"
                             required: true
-                          - name: REFBULKMODULUS
+                          - name: COMPRCOEFF
                             type: double
-                            description: "reference bulk modulus"
+                            description: "compressibility coefficient"
                             required: true
-                          - name: MATPARAMETER
-                            type: double
-                            description: "material parameter according to Murnaghan-Tait"
-                            required: true
-                          - name: GAMMA
-                            type: double
-                            description: "surface tension coefficient"
-                            required: false
-                            default: 0
               - type: all_of
                 specs:
                   - name: MAT
@@ -38091,6 +38170,123 @@ sections:
                   - name: MAT
                     type: int
                     required: true
+                  - name: MAT_lubrication
+                    type: group
+                    description: lubrication material
+                    required: true
+                    specs:
+                      - type: all_of
+                        specs:
+                          - name: LUBRICATIONLAWID
+                            type: int
+                            description: "lubrication law id"
+                            required: true
+                          - name: DENSITY
+                            type: double
+                            description: "lubricant density"
+                            required: true
+              - type: all_of
+                specs:
+                  - name: MAT
+                    type: int
+                    required: true
+                  - name: MAT_fluid_murnaghantait
+                    type: group
+                    description: Weakly compressible fluid according to Murnaghan-Tait
+                    required: true
+                    specs:
+                      - type: all_of
+                        specs:
+                          - name: DYNVISCOSITY
+                            type: double
+                            description: "dynamic viscosity"
+                            required: true
+                          - name: REFDENSITY
+                            type: double
+                            description: "reference spatial mass density"
+                            required: true
+                          - name: REFPRESSURE
+                            type: double
+                            description: "reference pressure"
+                            required: true
+                          - name: REFBULKMODULUS
+                            type: double
+                            description: "reference bulk modulus"
+                            required: true
+                          - name: MATPARAMETER
+                            type: double
+                            description: "material parameter according to Murnaghan-Tait"
+                            required: true
+                          - name: GAMMA
+                            type: double
+                            description: "surface tension coefficient"
+                            required: false
+                            default: 0
+              - type: all_of
+                specs:
+                  - name: MAT
+                    type: int
+                    required: true
+                  - name: ELAST_IsoMooneyRivlin
+                    type: group
+                    description: isochoric part of  Mooney-Rivlin material acc. to Holzapfel
+                    required: true
+                    specs:
+                      - type: all_of
+                        specs:
+                          - name: C1
+                            type: double
+                            description: "Linear modulus for first invariant"
+                            required: true
+                          - name: C2
+                            type: double
+                            description: "Linear modulus for second invariant"
+                            required: true
+              - type: all_of
+                specs:
+                  - name: MAT
+                    type: int
+                    required: true
+                  - name: MAT_sutherland
+                    type: group
+                    description: material according to Sutherland law
+                    required: true
+                    specs:
+                      - type: all_of
+                        specs:
+                          - name: REFVISC
+                            type: double
+                            description: "reference dynamic viscosity (kg/(m*s))"
+                            required: true
+                          - name: REFTEMP
+                            type: double
+                            description: "reference temperature (K)"
+                            required: true
+                          - name: SUTHTEMP
+                            type: double
+                            description: "Sutherland temperature (K)"
+                            required: true
+                          - name: SHC
+                            type: double
+                            description: "specific heat capacity at constant pressure (J/(kg*K))"
+                            required: true
+                          - name: PRANUM
+                            type: double
+                            description: "Prandtl number"
+                            required: true
+                          - name: THERMPRESS
+                            type: double
+                            description: "(initial) thermodynamic pressure (J/m^3)"
+                            required: true
+                          - name: GASCON
+                            type: double
+                            description: "specific gas constant R (J/(kg*K))"
+                            required: true
+              - type: all_of
+                specs:
+                  - name: MAT
+                    type: int
+                    required: true
                   - name: MAT_scatra
                     type: group
                     description: scalar transport material
@@ -38163,23 +38359,17 @@ sections:
                   - name: MAT
                     type: int
                     required: true
-                  - name: ELAST_CoupNeoHooke
+                  - name: VISCO_CoupMyocard
                     type: group
-                    description: compressible neo-Hooke material acc. to Holzapfel
+                    description: Isotropic viscous contribution of myocardial matrix
                     required: true
                     specs:
                       - type: all_of
                         specs:
-                          - name: YOUNG
+                          - name: N
                             type: double
-                            description: "Young's modulus"
-                            required: false
-                            default: 0
-                          - name: NUE
-                            type: double
-                            description: "Poisson's ratio"
-                            required: false
-                            default: 0
+                            description: "material parameter"
+                            required: true
               - type: all_of
                 specs:
                   - name: MAT
@@ -38212,37 +38402,87 @@ sections:
                   - name: MAT
                     type: int
                     required: true
-                  - name: MAT_Struct_StVenantKirchhoff
+                  - name: MAT_Struct_SuperElastSMA
                     type: group
-                    description: St.Venant--Kirchhoff material
+                    description: finite strain superelastic shape memory alloy
                     required: true
                     specs:
                       - type: all_of
                         specs:
-                          - name: YOUNG
-                            type: double
-                            description: "Young's modulus"
-                            required: true
-                            validator:
-                              range:
-                                minimum: 0
-                                maximum: 1.7976931348623157e+308
-                                minimum_exclusive: true
-                                maximum_exclusive: false
-                          - name: NUE
-                            type: double
-                            description: "Poisson's ratio"
-                            required: true
-                            validator:
-                              range:
-                                minimum: -1
-                                maximum: 0.5
-                                minimum_exclusive: false
-                                maximum_exclusive: true
                           - name: DENS
                             type: double
                             description: "mass density"
                             required: true
+                          - name: YOUNG
+                            type: double
+                            description: "Young's modulus"
+                            required: true
+                          - name: NUE
+                            type: double
+                            description: "Poisson's ratio"
+                            required: true
+                          - name: EPSILON_L
+                            type: double
+                            description: "parameter representing the maximum deformation obtainable only by detwinning of the multiple-variant martensite"
+                            required: true
+                          - name: T_AS_s
+                            type: double
+                            description: "Temperature at which the phase transformation from austenite to martensite starts"
+                            required: true
+                          - name: T_AS_f
+                            type: double
+                            description: "Temperature at which the phase transformation from austenite to martensite finishes"
+                            required: true
+                          - name: T_SA_s
+                            type: double
+                            description: "Temperature at which the phase transformation from martensite to autenite starts"
+                            required: true
+                          - name: T_SA_f
+                            type: double
+                            description: "Temperature at which the phase transformation from martensite to autenite finishes"
+                            required: true
+                          - name: C_AS
+                            type: double
+                            description: "Coefficient of the linear temperature dependence of T_AS"
+                            required: true
+                          - name: C_SA
+                            type: double
+                            description: "Coefficient of the linear temperature dependence of T_SA"
+                            required: true
+                          - name: SIGMA_AS_s
+                            type: double
+                            description: "stress at which the phase transformation from austenite to martensite begins"
+                            required: true
+                          - name: SIGMA_AS_f
+                            type: double
+                            description: "stress at which the phase transformation from austenite to martensite finishes"
+                            required: true
+                          - name: SIGMA_SA_s
+                            type: double
+                            description: "stress at which the phase transformation from martensite to austenite begins"
+                            required: true
+                          - name: SIGMA_SA_f
+                            type: double
+                            description: "stress at which the phase transformation from martensite to austenite finishes"
+                            required: true
+                          - name: ALPHA
+                            type: double
+                            description: "pressure dependency in the drucker-prager-type loading"
+                            required: true
+                          - name: MODEL
+                            type: int
+                            description: "Model used for the evolution of martensitic fraction (1=exponential; 2=linear)"
+                            required: true
+                          - name: BETA_AS
+                            type: double
+                            description: "parameter, measuring the speed of the transformation from austenite to martensite"
+                            required: false
+                            default: 0
+                          - name: BETA_SA
+                            type: double
+                            description: "parameter, measuring the speed of the transformation from martensite to austenite"
+                            required: false
+                            default: 0
               - type: all_of
                 specs:
                   - name: MAT
@@ -38408,60 +38648,24 @@ sections:
                   - name: MAT
                     type: int
                     required: true
-                  - name: ELAST_IsoMooneyRivlin
+                  - name: ELAST_IsoExpoPow
                     type: group
-                    description: isochoric part of  Mooney-Rivlin material acc. to Holzapfel
+                    description: isochoric part of  exponential material acc. to Holzapfel
                     required: true
                     specs:
                       - type: all_of
                         specs:
-                          - name: C1
+                          - name: K1
                             type: double
-                            description: "Linear modulus for first invariant"
+                            description: "material parameter"
                             required: true
-                          - name: C2
+                          - name: K2
                             type: double
-                            description: "Linear modulus for second invariant"
+                            description: "material parameter"
                             required: true
-              - type: all_of
-                specs:
-                  - name: MAT
-                    type: int
-                    required: true
-                  - name: MAT_sutherland
-                    type: group
-                    description: material according to Sutherland law
-                    required: true
-                    specs:
-                      - type: all_of
-                        specs:
-                          - name: REFVISC
-                            type: double
-                            description: "reference dynamic viscosity (kg/(m*s))"
-                            required: true
-                          - name: REFTEMP
-                            type: double
-                            description: "reference temperature (K)"
-                            required: true
-                          - name: SUTHTEMP
-                            type: double
-                            description: "Sutherland temperature (K)"
-                            required: true
-                          - name: SHC
-                            type: double
-                            description: "specific heat capacity at constant pressure (J/(kg*K))"
-                            required: true
-                          - name: PRANUM
-                            type: double
-                            description: "Prandtl number"
-                            required: true
-                          - name: THERMPRESS
-                            type: double
-                            description: "(initial) thermodynamic pressure (J/m^3)"
-                            required: true
-                          - name: GASCON
-                            type: double
-                            description: "specific gas constant R (J/(kg*K))"
+                          - name: C
+                            type: int
+                            description: "exponent"
                             required: true
               - type: all_of
                 specs:
@@ -38493,25 +38697,47 @@ sections:
                   - name: MAT
                     type: int
                     required: true
-                  - name: ELAST_IsoExpoPow
+                  - name: ELAST_IsoAnisoExpo
                     type: group
-                    description: isochoric part of  exponential material acc. to Holzapfel
+                    description: anisotropic part with one exp. fiber
                     required: true
                     specs:
                       - type: all_of
                         specs:
                           - name: K1
                             type: double
-                            description: "material parameter"
+                            description: "linear constant"
                             required: true
                           - name: K2
                             type: double
-                            description: "material parameter"
+                            description: "exponential constant"
                             required: true
-                          - name: C
+                          - name: GAMMA
+                            type: double
+                            description: "angle"
+                            required: true
+                          - name: K1COMP
+                            type: double
+                            description: "linear constant"
+                            required: true
+                          - name: K2COMP
+                            type: double
+                            description: "exponential constant"
+                            required: true
+                          - name: STR_TENS_ID
                             type: int
-                            description: "exponent"
+                            description: "MAT ID for definition of Structural Tensor"
                             required: true
+                          - name: INIT
+                            type: int
+                            description: "initialization modus for fiber alignment"
+                            required: false
+                            default: 1
+                          - name: ADAPT_ANGLE
+                            type: bool
+                            description: "adapt angle during remodeling"
+                            required: false
+                            default: false
               - type: all_of
                 specs:
                   - name: MAT
@@ -39410,134 +39636,21 @@ sections:
                   - name: MAT
                     type: int
                     required: true
-                  - name: MAT_newman_multiscale
+                  - name: MAT_scatra_nl_stimulus
                     type: group
-                    description: material parameters for ion species in electrolyte solution for multi-scale approach
+                    description: 'Helmholtz equation for non-local G&R stimulus: psi - lc^2 * laplace(psi) = (sigma-sigma_h)'
                     required: true
                     specs:
                       - type: all_of
                         specs:
-                          - name: VALENCE
+                          - name: CHAR_LENGTH_SQ
                             type: double
-                            description: "valence (= charge number)"
+                            description: "Squared characteristic length scale lc for the Helmholtz equation"
                             required: true
-                          - name: DIFF_COEF_CONC_DEP_FUNCT
+                          - name: STRUCTURE_MAT_ID
                             type: int
-                            description: "function number of function describing concentration dependence of diffusion coefficient"
+                            description: "Material ID of the MixtureConstituentRemodelFiberSsi constituent that provides the local stimulus"
                             required: true
-                          - name: DIFF_COEF_TEMP_SCALE_FUNCT
-                            type: int
-                            description: "FUNCT number describing temperature scaling of diffusion coefficient"
-                            required: true
-                          - name: TRANSNR
-                            type: int
-                            description: "curve number for transference number"
-                            required: true
-                          - name: THERMFAC
-                            type: int
-                            description: "curve number for thermodynamic factor"
-                            required: true
-                          - name: COND_CONC_DEP_FUNCT
-                            type: int
-                            description: "function number of function describing concentration dependence of conductivity"
-                            required: true
-                          - name: COND_TEMP_SCALE_FUNCT
-                            type: int
-                            description: "FUNCT number describing temperature scaling of conductivity"
-                            required: true
-                          - name: ELECTRONIC_COND
-                            type: double
-                            description: "electronic conductivity"
-                            required: true
-                          - name: ELECTRONIC_COND_CONC_SCALE_FUNC_NUM
-                            type: int
-                            description: "FUNCT number describing concentration dependence of electronic conductivity"
-                            required: true
-                          - name: A_s
-                            type: double
-                            description: "specific micro-scale surface area"
-                            required: true
-                          - name: MICROFILE
-                            type: string
-                            description: "input file for micro scale"
-                            required: false
-                            default: "filename.dat"
-                          - name: MICRODIS_NUM
-                            type: int
-                            description: "number of micro-scale discretization"
-                            required: true
-                          - name: DIFF_PARA_NUM
-                            type: int
-                            description: "number of parameters for diffusion coefficient"
-                            required: false
-                            default: 0
-                          - name: DIFF_PARA
-                            type: vector
-                            value_type:
-                              type: double
-                            description: "parameters for diffusion coefficient"
-                            required: false
-                            default: []
-                          - name: DIFF_COEF_TEMP_SCALE_FUNCT_PARA_NUM
-                            type: int
-                            description: "number of parameters for scaling function describing temperature dependence of diffusion coefficient"
-                            required: false
-                            default: 0
-                          - name: DIFF_COEF_TEMP_SCALE_FUNCT_PARA
-                            type: vector
-                            value_type:
-                              type: double
-                            description: "parameters for function describing temperature dependence of diffusion coefficient"
-                            required: false
-                            default: []
-                          - name: TRANS_PARA_NUM
-                            type: int
-                            description: "number of parameters for transference number"
-                            required: false
-                            default: 0
-                          - name: TRANS_PARA
-                            type: vector
-                            value_type:
-                              type: double
-                            description: "parameters for transference number"
-                            required: false
-                            default: []
-                          - name: THERM_PARA_NUM
-                            type: int
-                            description: "number of parameters for thermodynamic factor"
-                            required: false
-                            default: 0
-                          - name: THERM_PARA
-                            type: vector
-                            value_type:
-                              type: double
-                            description: "parameters for thermodynamic factor"
-                            required: false
-                            default: []
-                          - name: COND_PARA_NUM
-                            type: int
-                            description: "number of parameters for ionic conductivity"
-                            required: false
-                            default: 0
-                          - name: COND_PARA
-                            type: vector
-                            value_type:
-                              type: double
-                            description: "parameters for ionic conductivity"
-                            required: false
-                            default: []
-                          - name: COND_TEMP_SCALE_FUNCT_PARA_NUM
-                            type: int
-                            description: "number of parameters for temperature scaling of conductivity"
-                            required: false
-                            default: 0
-                          - name: COND_TEMP_SCALE_FUNCT_PARA
-                            type: vector
-                            value_type:
-                              type: double
-                            description: "parameters for temperature scaling of conductivity"
-                            required: false
-                            default: []
               - type: all_of
                 specs:
                   - name: MAT
@@ -39848,109 +39961,33 @@ sections:
                   - name: MAT
                     type: int
                     required: true
-                  - name: MAT_Struct_StVenantKirchhoffOrthotropic
+                  - name: MAT_Struct_StVenantKirchhoff
                     type: group
-                    description: St.Venant--Kirchhoff material with orthotropy
+                    description: St.Venant--Kirchhoff material
                     required: true
                     specs:
                       - type: all_of
                         specs:
                           - name: YOUNG
-                            type: selection
-                            description: "Input vector field of Young's moduli for the principal directions with the ordering [E1, E2, E3]."
+                            type: double
+                            description: "Young's modulus"
                             required: true
-                            choices:
-                              - name: constant
-                                spec:
-                                  name: constant
-                                  type: vector
-                                  size: 3
-                                  value_type:
-                                    type: double
-                                  description: "Constant value for the field."
-                                  required: true
-                              - name: from_file
-                                spec:
-                                  name: from_file
-                                  type: path
-                                  description: "Path to a file containing the input field data."
-                                  required: true
-                              - name: field_reference
-                                spec:
-                                  name: field_reference
-                                  type: string
-                                  description: "Refer to a globally defined field by a name."
-                                  required: true
-                              - name: from_mesh
-                                spec:
-                                  name: from_mesh
-                                  type: string
-                                  description: "Refer to a field defined in the input mesh by a name."
-                                  required: true
-                          - name: SHEAR
-                            type: selection
-                            description: "Input vector field of shear moduli with the ordering [G12, G23, G13]."
-                            required: true
-                            choices:
-                              - name: constant
-                                spec:
-                                  name: constant
-                                  type: vector
-                                  size: 3
-                                  value_type:
-                                    type: double
-                                  description: "Constant value for the field."
-                                  required: true
-                              - name: from_file
-                                spec:
-                                  name: from_file
-                                  type: path
-                                  description: "Path to a file containing the input field data."
-                                  required: true
-                              - name: field_reference
-                                spec:
-                                  name: field_reference
-                                  type: string
-                                  description: "Refer to a globally defined field by a name."
-                                  required: true
-                              - name: from_mesh
-                                spec:
-                                  name: from_mesh
-                                  type: string
-                                  description: "Refer to a field defined in the input mesh by a name."
-                                  required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
                           - name: NUE
-                            type: selection
-                            description: "Input vector field of Poisson's ratios with the ordering [nu12, nu23, nu13]."
+                            type: double
+                            description: "Poisson's ratio"
                             required: true
-                            choices:
-                              - name: constant
-                                spec:
-                                  name: constant
-                                  type: vector
-                                  size: 3
-                                  value_type:
-                                    type: double
-                                  description: "Constant value for the field."
-                                  required: true
-                              - name: from_file
-                                spec:
-                                  name: from_file
-                                  type: path
-                                  description: "Path to a file containing the input field data."
-                                  required: true
-                              - name: field_reference
-                                spec:
-                                  name: field_reference
-                                  type: string
-                                  description: "Refer to a globally defined field by a name."
-                                  required: true
-                              - name: from_mesh
-                                spec:
-                                  name: from_mesh
-                                  type: string
-                                  description: "Refer to a field defined in the input mesh by a name."
-                                  required: true
+                            validator:
+                              range:
+                                minimum: -1
+                                maximum: 0.5
+                                minimum_exclusive: false
+                                maximum_exclusive: true
                           - name: DENS
                             type: double
                             description: "mass density"
@@ -39995,6 +40032,30 @@ sections:
                   - name: MAT
                     type: int
                     required: true
+                  - name: ELAST_CoupLogNeoHooke
+                    type: group
+                    description: logarithmic neo-Hooke material acc. to Bonet and Wood
+                    required: true
+                    specs:
+                      - type: all_of
+                        specs:
+                          - name: MODE
+                            type: string
+                            description: "parameter set: YN (Young's modulus and Poisson's ration; default) or Lame (mue and lambda)"
+                            required: true
+                          - name: C1
+                            type: double
+                            description: "E or mue"
+                            required: true
+                          - name: C2
+                            type: double
+                            description: "nue or lambda"
+                            required: true
+              - type: all_of
+                specs:
+                  - name: MAT
+                    type: int
+                    required: true
                   - name: ELAST_CoupSVK
                     type: group
                     description: Saint-Venant-Kirchhoff as elastic summand
@@ -40009,87 +40070,6 @@ sections:
                           - name: NUE
                             type: double
                             description: "Poisson's ratio"
-                            required: true
-              - type: all_of
-                specs:
-                  - name: MAT
-                    type: int
-                    required: true
-                  - name: MAT_CNST_ART
-                    type: group
-                    description: artery with constant properties
-                    required: true
-                    specs:
-                      - type: all_of
-                        specs:
-                          - name: VISCOSITY
-                            type: double
-                            description: "viscosity (for CONSTANT viscosity law taken as blood viscosity, for BLOOD viscosity law taken as the viscosity of blood plasma)"
-                            required: true
-                          - name: DENS
-                            type: double
-                            description: "density of blood"
-                            required: true
-                          - name: YOUNG
-                            type: double
-                            description: "artery Youngs modulus of elasticity"
-                            required: true
-                          - name: NUE
-                            type: double
-                            description: "Poissons ratio of artery fiber"
-                            required: true
-                          - name: TH
-                            type: double
-                            description: "artery thickness"
-                            required: true
-                          - name: PEXT1
-                            type: double
-                            description: "artery fixed external pressure 1"
-                            required: true
-                          - name: PEXT2
-                            type: double
-                            description: "artery fixed external pressure 2"
-                            required: true
-                          - name: VISCOSITYLAW
-                            type: string
-                            description: "type of viscosity law, CONSTANT (default) or BLOOD"
-                            required: false
-                            default: "CONSTANT"
-                          - name: BLOOD_VISC_SCALE_DIAM_TO_MICRONS
-                            type: double
-                            description: "used to scale the diameter for blood viscosity law to microns if your problem is not given in microns, e.g., if you use mms, set this parameter to 1.0e3"
-                            required: false
-                            default: 1
-                          - name: VARYING_DIAMETERLAW
-                            type: string
-                            description: "type of variable diameter law, CONSTANT (default) or BY_FUNCTION"
-                            required: false
-                            default: "CONSTANT"
-                          - name: VARYING_DIAMETER_FUNCTION
-                            type: int
-                            description: "function for variable diameter law"
-                            required: false
-                            default: -1
-                          - name: COLLAPSE_THRESHOLD
-                            type: double
-                            description: "Collapse threshold for diameter (below this diameter element is assumed to be collapsed with zero diameter and is not evaluated)"
-                            required: false
-                            default: -1
-              - type: all_of
-                specs:
-                  - name: MAT
-                    type: int
-                    required: true
-                  - name: ELAST_CoupSimoPister
-                    type: group
-                    description: Simo-Pister type material
-                    required: true
-                    specs:
-                      - type: all_of
-                        specs:
-                          - name: MUE
-                            type: double
-                            description: "material constant"
                             required: true
               - type: all_of
                 specs:
@@ -40247,6 +40227,22 @@ sections:
                   - name: MAT
                     type: int
                     required: true
+                  - name: ELAST_CoupSimoPister
+                    type: group
+                    description: Simo-Pister type material
+                    required: true
+                    specs:
+                      - type: all_of
+                        specs:
+                          - name: MUE
+                            type: double
+                            description: "material constant"
+                            required: true
+              - type: all_of
+                specs:
+                  - name: MAT
+                    type: int
+                    required: true
                   - name: ELAST_CoupLogMixNeoHooke
                     type: group
                     description: mixed logarithmic neo-Hooke material
@@ -40290,6 +40286,93 @@ sections:
                             type: double
                             description: "material constant linear J"
                             required: true
+              - type: all_of
+                specs:
+                  - name: MAT
+                    type: int
+                    required: true
+                  - name: ELAST_CoupNeoHooke
+                    type: group
+                    description: compressible neo-Hooke material acc. to Holzapfel
+                    required: true
+                    specs:
+                      - type: all_of
+                        specs:
+                          - name: YOUNG
+                            type: double
+                            description: "Young's modulus"
+                            required: false
+                            default: 0
+                          - name: NUE
+                            type: double
+                            description: "Poisson's ratio"
+                            required: false
+                            default: 0
+              - type: all_of
+                specs:
+                  - name: MAT
+                    type: int
+                    required: true
+                  - name: MAT_CNST_ART
+                    type: group
+                    description: artery with constant properties
+                    required: true
+                    specs:
+                      - type: all_of
+                        specs:
+                          - name: VISCOSITY
+                            type: double
+                            description: "viscosity (for CONSTANT viscosity law taken as blood viscosity, for BLOOD viscosity law taken as the viscosity of blood plasma)"
+                            required: true
+                          - name: DENS
+                            type: double
+                            description: "density of blood"
+                            required: true
+                          - name: YOUNG
+                            type: double
+                            description: "artery Youngs modulus of elasticity"
+                            required: true
+                          - name: NUE
+                            type: double
+                            description: "Poissons ratio of artery fiber"
+                            required: true
+                          - name: TH
+                            type: double
+                            description: "artery thickness"
+                            required: true
+                          - name: PEXT1
+                            type: double
+                            description: "artery fixed external pressure 1"
+                            required: true
+                          - name: PEXT2
+                            type: double
+                            description: "artery fixed external pressure 2"
+                            required: true
+                          - name: VISCOSITYLAW
+                            type: string
+                            description: "type of viscosity law, CONSTANT (default) or BLOOD"
+                            required: false
+                            default: "CONSTANT"
+                          - name: BLOOD_VISC_SCALE_DIAM_TO_MICRONS
+                            type: double
+                            description: "used to scale the diameter for blood viscosity law to microns if your problem is not given in microns, e.g., if you use mms, set this parameter to 1.0e3"
+                            required: false
+                            default: 1
+                          - name: VARYING_DIAMETERLAW
+                            type: string
+                            description: "type of variable diameter law, CONSTANT (default) or BY_FUNCTION"
+                            required: false
+                            default: "CONSTANT"
+                          - name: VARYING_DIAMETER_FUNCTION
+                            type: int
+                            description: "function for variable diameter law"
+                            required: false
+                            default: -1
+                          - name: COLLAPSE_THRESHOLD
+                            type: double
+                            description: "Collapse threshold for diameter (below this diameter element is assumed to be collapsed with zero diameter and is not evaluated)"
+                            required: false
+                            default: -1
               - type: all_of
                 specs:
                   - name: MAT
@@ -40341,6 +40424,47 @@ sections:
                             type: double
                             description: "interpolation parameter"
                             required: true
+              - type: all_of
+                specs:
+                  - name: MAT
+                    type: int
+                    required: true
+                  - name: ELAST_IsoNeoHooke
+                    type: group
+                    description: isochoric part of neo-Hooke material acc. to Holzapfel
+                    required: true
+                    specs:
+                      - type: all_of
+                        specs:
+                          - name: MUE
+                            type: selection
+                            description: "Shear modulus"
+                            required: true
+                            choices:
+                              - name: constant
+                                spec:
+                                  name: constant
+                                  type: double
+                                  description: "Constant value for the field."
+                                  required: true
+                              - name: from_file
+                                spec:
+                                  name: from_file
+                                  type: path
+                                  description: "Path to a file containing the input field data."
+                                  required: true
+                              - name: field_reference
+                                spec:
+                                  name: field_reference
+                                  type: string
+                                  description: "Refer to a globally defined field by a name."
+                                  required: true
+                              - name: from_mesh
+                                spec:
+                                  name: from_mesh
+                                  type: string
+                                  description: "Refer to a field defined in the input mesh by a name."
+                                  required: true
               - type: all_of
                 specs:
                   - name: MAT
@@ -40822,36 +40946,16 @@ sections:
                   - name: MAT
                     type: int
                     required: true
-                  - name: ELAST_CoupAnisoExpoTwoCoup
+                  - name: ELAST_CoupAnisoNeoHooke
                     type: group
-                    description: anisotropic part with two exp. fibers
+                    description: anisotropic part with one neo Hookean fiber
                     required: true
                     specs:
                       - type: all_of
                         specs:
-                          - name: A4
+                          - name: C
                             type: double
-                            description: "linear anisotropic constant for fiber 1"
-                            required: true
-                          - name: B4
-                            type: double
-                            description: "exponential anisotropic constant for fiber 1"
-                            required: true
-                          - name: A6
-                            type: double
-                            description: "linear anisotropic constant for fiber 2"
-                            required: true
-                          - name: B6
-                            type: double
-                            description: "exponential anisotropic constant for fiber 2"
-                            required: true
-                          - name: A8
-                            type: double
-                            description: "linear anisotropic constant for fiber 1 relating fiber 2"
-                            required: true
-                          - name: B8
-                            type: double
-                            description: "exponential anisotropic constant for fiber 1 relating fiber 2"
+                            description: "linear constant"
                             required: true
                           - name: GAMMA
                             type: double
@@ -40866,11 +40970,6 @@ sections:
                             description: "initialization modus for fiber alignment"
                             required: false
                             default: 1
-                          - name: FIB_COMP
-                            type: bool
-                            description: "fibers support compression: yes (true) or no (false)"
-                            required: false
-                            default: true
                           - name: ADAPT_ANGLE
                             type: bool
                             description: "adapt angle during remodeling"
@@ -41118,22 +41217,6 @@ sections:
                   - name: MAT
                     type: int
                     required: true
-                  - name: VISCO_CoupMyocard
-                    type: group
-                    description: Isotropic viscous contribution of myocardial matrix
-                    required: true
-                    specs:
-                      - type: all_of
-                        specs:
-                          - name: N
-                            type: double
-                            description: "material parameter"
-                            required: true
-              - type: all_of
-                specs:
-                  - name: MAT
-                    type: int
-                    required: true
                   - name: VISCO_IsoRateDep
                     type: group
                     description: Isochoric rate dependent viscous material
@@ -41145,33 +41228,6 @@ sections:
                             type: double
                             description: "material parameter"
                             required: true
-              - type: all_of
-                specs:
-                  - name: MAT
-                    type: int
-                    required: true
-                  - name: VISCO_GeneralizedMaxwell
-                    type: group
-                    description: Generalized Maxwell model
-                    required: true
-                    specs:
-                      - type: all_of
-                        specs:
-                          - name: NUMBRANCH
-                            type: int
-                            description: "number of viscoelastic branches"
-                            required: true
-                          - name: MATIDS
-                            type: vector
-                            value_type:
-                              type: int
-                            description: "the list material IDs"
-                            required: true
-                          - name: SOLVE
-                            type: string
-                            description: "Solution for evolution equation: OneStepTheta (default) or ExponentialTimeDiscretization (convolution integral)"
-                            required: false
-                            default: "OneStepTheta"
               - type: all_of
                 specs:
                   - name: MAT
@@ -41306,6 +41362,287 @@ sections:
                   - name: MAT
                     type: int
                     required: true
+                  - name: MAT_InelasticDefgradTransvIsotropElastViscoplast
+                    type: group
+                    description: 'Versatile transversely isotropic (or isotropic) viscoplasticity model for finite deformations with isotropic hardening, using user-defined viscoplasticity laws (flow rule + hardening model)'
+                    required: true
+                    specs:
+                      - type: all_of
+                        specs:
+                          - name: VISCOPLAST_LAW_ID
+                            type: int
+                            description: "MAT ID of the corresponding viscoplastic law"
+                            required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: FIBER_READER_ID
+                            type: int
+                            description: "MAT ID of the used fiber direction reader for transversely isotropic behavior"
+                            required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: YIELD_COND_A
+                            noneable: true
+                            type: double
+                            description: "transversely isotropic version of the Hill(1948) yield condition: parameter A, following the notation in Dafalias 1989, International Journal of Plasticity, Vol. 5"
+                            required: false
+                            default: null
+                          - name: YIELD_COND_B
+                            noneable: true
+                            type: double
+                            description: "transversely isotropic version of the Hill(1948) yield condition: parameter B, following the notation in Dafalias 1989, International Journal of Plasticity, Vol. 5"
+                            required: false
+                            default: null
+                          - name: YIELD_COND_F
+                            noneable: true
+                            type: double
+                            description: "transversely isotropic version of the Hill(1948) yield condition: parameter F, following the notation in Dafalias 1989, International Journal of Plasticity, Vol. 5"
+                            required: false
+                            default: null
+                          - name: MAT_BEHAVIOR
+                            type: enum
+                            description: "Material behavior / anisotropy type"
+                            required: true
+                            choices:
+                              - name: isotropic
+                              - name: transv_isotropic
+                          - name: TIME_INTEGRATION_HIST_VARS
+                            type: enum
+                            description: "time integration of internal variables: standard | logarithmic (logarithmic transformation of the evolution equation for the plastic deformation gradient -> default)"
+                            required: false
+                            default: logarithmic
+                            choices:
+                              - name: standard
+                              - name: logarithmic
+                          - name: LINEARIZATION
+                            type: enum
+                            description: "utilized material linearization: analytic | perturb_based (based on perturbations of the current state)"
+                            required: false
+                            default: analytic
+                            choices:
+                              - name: analytic
+                              - name: perturbation_based
+                          - name: MAX_PLASTIC_STRAIN_INCR
+                            type: double
+                            description: "maximum evaluable plastic strain increment used for verifying overflow errors"
+                            required: false
+                            default: 1.0686474581524463e+13
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: MAX_PLASTIC_STRAIN_DERIV_INCR
+                            type: double
+                            description: "maximum evaluable increment of the plastic strain derivatives w.r.t. plastic strain and equivalent stress, used for verifying possible overflow errors"
+                            required: false
+                            default: 1.0686474581524463e+13
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: MATRIX_EXP_CALC_METHOD
+                            type: enum
+                            description: "chosen computation method for matrix exponential (default: automatic method selection based on matrix characteristics)"
+                            required: false
+                            default: automatic
+                            choices:
+                              - name: automatic
+                              - name: taylor_series
+                              - name: spectral_decomp
+                          - name: MATRIX_EXP_DERIV_CALC_METHOD
+                            type: enum
+                            description: "chosen computation method for the first derivative of the matrix exponential w.r.t. matrix (default: automatic method selection based on matrix characteristics)"
+                            required: false
+                            default: automatic
+                            choices:
+                              - name: automatic
+                              - name: taylor_series
+                          - name: MATRIX_LOG_CALC_METHOD
+                            type: enum
+                            description: "chosen computation method for matrix logarithm"
+                            required: false
+                            default: inv_scal_square
+                            choices:
+                              - name: automatic
+                              - name: taylor_series
+                              - name: gregory_series
+                              - name: spectral_decomp
+                              - name: inv_scal_square
+                              - name: pade_part_fract
+                          - name: MATRIX_LOG_DERIV_CALC_METHOD
+                            type: enum
+                            description: "chosen computation method for the first derivative of the matrix logarithm w.r.t. matrix"
+                            required: false
+                            default: pade_part_fract
+                            choices:
+                              - name: automatic
+                              - name: taylor_series
+                              - name: gregory_series
+                              - name: pade_part_fract
+                          - name: LOCAL_SUBSTEPPING
+                            type: group
+                            description: Settings for the usage of local substepping to integrate the viscoplastic evolution equations
+                            required: false
+                            specs:
+                              - type: all_of
+                                specs:
+                                  - name: USE_SUBSTEPPING
+                                    type: bool
+                                    description: "use substepping?"
+                                    required: false
+                                    default: false
+                                  - name: MAX_SUBSTEPPING_HALVE_NUM
+                                    type: int
+                                    description: "maximum number of times the global time step can be halved in the substepping procedure"
+                                    required: false
+                                    default: 10
+                                    validator:
+                                      range:
+                                        minimum: 0
+                                        maximum: 2147483647
+                                        minimum_exclusive: false
+                                        maximum_exclusive: false
+                          - name: LOCAL_NEWTON
+                            type: group
+                            description: Parameters used in the Local Newton--Raphson procedure (viscoplastic corrector stage)
+                            required: false
+                            specs:
+                              - type: all_of
+                                specs:
+                                  - name: CONV_CHECK
+                                    type: enum
+                                    description: "convergence check type"
+                                    required: false
+                                    default: residual_and_increment_ratio
+                                    choices:
+                                      - name: residual
+                                      - name: increment_ratio
+                                      - name: residual_and_increment_ratio
+                                  - name: MAX_ITER
+                                    type: int
+                                    description: "maximum number of iterations"
+                                    required: false
+                                    default: 100
+                                    validator:
+                                      range:
+                                        minimum: 0
+                                        maximum: 2147483647
+                                        minimum_exclusive: true
+                                        maximum_exclusive: false
+                                  - name: RES_TOL
+                                    type: double
+                                    description: "residual tolerance (absolute residual 2-norm)"
+                                    required: false
+                                    default: 1e-08
+                                    validator:
+                                      range:
+                                        minimum: 0
+                                        maximum: 1.7976931348623157e+308
+                                        minimum_exclusive: true
+                                        maximum_exclusive: false
+                                  - name: MAX_EXCEEDANCE_FACT_RES_TOL
+                                    type: double
+                                    description: "maximum exceedance factor for the specified residual tolerance (Local Newton divergence safeguard for continuing the simulation, if specified by the user via DIVER_CONT)"
+                                    required: false
+                                    default: 10
+                                    validator:
+                                      range:
+                                        minimum: 0
+                                        maximum: 1.7976931348623157e+308
+                                        minimum_exclusive: false
+                                        maximum_exclusive: false
+                                  - name: INCR_TOL
+                                    type: double
+                                    description: "increment tolerance (ratio of |increment| / |solution|)"
+                                    required: false
+                                    default: 1e-08
+                                    validator:
+                                      range:
+                                        minimum: 0
+                                        maximum: 1.7976931348623157e+308
+                                        minimum_exclusive: true
+                                        maximum_exclusive: false
+                                  - name: MAX_EXCEEDANCE_FACT_INCR_TOL
+                                    type: double
+                                    description: "maximum exceedance factor for the specified increment tolerance (Local Newton divergence safeguard for continuing the simulation, if specified by the user via DIVER_CONT)"
+                                    required: false
+                                    default: 10
+                                    validator:
+                                      range:
+                                        minimum: 0
+                                        maximum: 1.7976931348623157e+308
+                                        minimum_exclusive: false
+                                        maximum_exclusive: false
+                                  - name: DIVER_CONT
+                                    type: enum
+                                    description: "strategy to deal with divergence in the Local Newton Loop"
+                                    required: false
+                                    default: stop
+                                    choices:
+                                      - name: stop
+                                      - name: continue_sim
+                                      - name: continue_sim_with_safeguard
+              - type: all_of
+                specs:
+                  - name: MAT
+                    type: int
+                    required: true
+                  - name: MAT_Membrane_ActiveStrain
+                    type: group
+                    description: active strain membrane material
+                    required: true
+                    specs:
+                      - type: all_of
+                        specs:
+                          - name: MATIDPASSIVE
+                            type: int
+                            description: "MATID for the passive material"
+                            required: true
+                          - name: SCALIDVOLTAGE
+                            type: int
+                            description: "ID of the scalar that represents the (SMC) voltage"
+                            required: true
+                          - name: DENS
+                            type: double
+                            description: "material mass density"
+                            required: true
+                          - name: BETA1
+                            type: double
+                            description: "Ca2+ dynamics"
+                            required: true
+                          - name: BETA2
+                            type: double
+                            description: "opening dynamics of the VDCC"
+                            required: true
+                          - name: VOLTHRESH
+                            type: double
+                            description: "voltage threshold for activation"
+                            required: true
+                          - name: ALPHA1
+                            type: double
+                            description: "intensity of contraction in fiber direction 1"
+                            required: true
+                          - name: ALPHA2
+                            type: double
+                            description: "intensity of contraction in fiber direction 2"
+                            required: true
+              - type: all_of
+                specs:
+                  - name: MAT
+                    type: int
+                    required: true
                   - name: MAT_ViscoplasticLawReformulatedJohnsonCook
                     type: group
                     description: 'Reformulation of the Johnson-Cook viscoplastic law (comprising flow rule $\dot{P} = \dot{P}_0 \exp \left( \frac{ \sigma_{eq}}{C \sigma_{\mathrm{Y}}} - \frac{1}{C} \right) - \dot{P}_0$ and hardening law $\sigma_{\mathrm{Y}} = (A_0 + B_0 \cdot P^{n}) \cdot (1 - \frac{T^m - T_{0}^m}{T_{\mathrm{melt}}^m - T_{0}^m})$), as shown in Mareau et al. (Mechanics of Materials 143, 2020)'
@@ -41393,50 +41730,6 @@ sections:
                                 maximum: 1.7976931348623157e+308
                                 minimum_exclusive: true
                                 maximum_exclusive: false
-              - type: all_of
-                specs:
-                  - name: MAT
-                    type: int
-                    required: true
-                  - name: MAT_Membrane_ActiveStrain
-                    type: group
-                    description: active strain membrane material
-                    required: true
-                    specs:
-                      - type: all_of
-                        specs:
-                          - name: MATIDPASSIVE
-                            type: int
-                            description: "MATID for the passive material"
-                            required: true
-                          - name: SCALIDVOLTAGE
-                            type: int
-                            description: "ID of the scalar that represents the (SMC) voltage"
-                            required: true
-                          - name: DENS
-                            type: double
-                            description: "material mass density"
-                            required: true
-                          - name: BETA1
-                            type: double
-                            description: "Ca2+ dynamics"
-                            required: true
-                          - name: BETA2
-                            type: double
-                            description: "opening dynamics of the VDCC"
-                            required: true
-                          - name: VOLTHRESH
-                            type: double
-                            description: "voltage threshold for activation"
-                            required: true
-                          - name: ALPHA1
-                            type: double
-                            description: "intensity of contraction in fiber direction 1"
-                            required: true
-                          - name: ALPHA2
-                            type: double
-                            description: "intensity of contraction in fiber direction 2"
-                            required: true
               - type: all_of
                 specs:
                   - name: MAT
@@ -41765,6 +42058,26 @@ sections:
                   - name: MAT
                     type: int
                     required: true
+                  - name: MAT_ScDepInterp
+                    type: group
+                    description: integration point based and scalar dependent interpolation between two materials
+                    required: true
+                    specs:
+                      - type: all_of
+                        specs:
+                          - name: IDMATZEROSC
+                            type: int
+                            description: "material for lambda equal to zero"
+                            required: true
+                          - name: IDMATUNITSC
+                            type: int
+                            description: "material for lambda equal to one"
+                            required: true
+              - type: all_of
+                specs:
+                  - name: MAT
+                    type: int
+                    required: true
                   - name: MAT_InelasticDefgradPolyIntercalFracAniso
                     type: group
                     description: 'scalar dependent anisotropic growth law; growth in direction as given in input-file; volume change nonlinearly dependent on the intercalation fraction, that is calculated using the scalar concentration (in material configuration)'
@@ -41927,263 +42240,6 @@ sections:
                   - name: MAT
                     type: int
                     required: true
-                  - name: MAT_InelasticDefgradTransvIsotropElastViscoplast
-                    type: group
-                    description: 'Versatile transversely isotropic (or isotropic) viscoplasticity model for finite deformations with isotropic hardening, using user-defined viscoplasticity laws (flow rule + hardening model)'
-                    required: true
-                    specs:
-                      - type: all_of
-                        specs:
-                          - name: VISCOPLAST_LAW_ID
-                            type: int
-                            description: "MAT ID of the corresponding viscoplastic law"
-                            required: true
-                            validator:
-                              range:
-                                minimum: 0
-                                maximum: 2147483647
-                                minimum_exclusive: true
-                                maximum_exclusive: false
-                          - name: FIBER_READER_ID
-                            type: int
-                            description: "MAT ID of the used fiber direction reader for transversely isotropic behavior"
-                            required: true
-                            validator:
-                              range:
-                                minimum: 0
-                                maximum: 2147483647
-                                minimum_exclusive: true
-                                maximum_exclusive: false
-                          - name: YIELD_COND_A
-                            noneable: true
-                            type: double
-                            description: "transversely isotropic version of the Hill(1948) yield condition: parameter A, following the notation in Dafalias 1989, International Journal of Plasticity, Vol. 5"
-                            required: false
-                            default: null
-                          - name: YIELD_COND_B
-                            noneable: true
-                            type: double
-                            description: "transversely isotropic version of the Hill(1948) yield condition: parameter B, following the notation in Dafalias 1989, International Journal of Plasticity, Vol. 5"
-                            required: false
-                            default: null
-                          - name: YIELD_COND_F
-                            noneable: true
-                            type: double
-                            description: "transversely isotropic version of the Hill(1948) yield condition: parameter F, following the notation in Dafalias 1989, International Journal of Plasticity, Vol. 5"
-                            required: false
-                            default: null
-                          - name: MAT_BEHAVIOR
-                            type: enum
-                            description: "Material behavior / anisotropy type"
-                            required: true
-                            choices:
-                              - name: isotropic
-                              - name: transv_isotropic
-                          - name: TIME_INTEGRATION_HIST_VARS
-                            type: enum
-                            description: "time integration of internal variables: standard | logarithmic (logarithmic transformation of the evolution equation for the plastic deformation gradient -> default)"
-                            required: false
-                            default: logarithmic
-                            choices:
-                              - name: standard
-                              - name: logarithmic
-                          - name: LINEARIZATION
-                            type: enum
-                            description: "utilized material linearization: analytic | perturb_based (based on perturbations of the current state)"
-                            required: false
-                            default: analytic
-                            choices:
-                              - name: analytic
-                              - name: perturbation_based
-                          - name: MAX_PLASTIC_STRAIN_INCR
-                            type: double
-                            description: "maximum evaluable plastic strain increment used for verifying overflow errors"
-                            required: false
-                            default: 1.0686474581524463e+13
-                            validator:
-                              range:
-                                minimum: 0
-                                maximum: 1.7976931348623157e+308
-                                minimum_exclusive: true
-                                maximum_exclusive: false
-                          - name: MAX_PLASTIC_STRAIN_DERIV_INCR
-                            type: double
-                            description: "maximum evaluable increment of the plastic strain derivatives w.r.t. plastic strain and equivalent stress, used for verifying possible overflow errors"
-                            required: false
-                            default: 1.0686474581524463e+13
-                            validator:
-                              range:
-                                minimum: 0
-                                maximum: 1.7976931348623157e+308
-                                minimum_exclusive: true
-                                maximum_exclusive: false
-                          - name: MATRIX_EXP_CALC_METHOD
-                            type: enum
-                            description: "chosen computation method for matrix exponential (default: automatic method selection based on matrix characteristics)"
-                            required: false
-                            default: automatic
-                            choices:
-                              - name: automatic
-                              - name: taylor_series
-                              - name: spectral_decomp
-                          - name: MATRIX_EXP_DERIV_CALC_METHOD
-                            type: enum
-                            description: "chosen computation method for the first derivative of the matrix exponential w.r.t. matrix (default: automatic method selection based on matrix characteristics)"
-                            required: false
-                            default: automatic
-                            choices:
-                              - name: automatic
-                              - name: taylor_series
-                          - name: MATRIX_LOG_CALC_METHOD
-                            type: enum
-                            description: "chosen computation method for matrix logarithm"
-                            required: false
-                            default: inv_scal_square
-                            choices:
-                              - name: automatic
-                              - name: taylor_series
-                              - name: gregory_series
-                              - name: spectral_decomp
-                              - name: inv_scal_square
-                              - name: pade_part_fract
-                          - name: MATRIX_LOG_DERIV_CALC_METHOD
-                            type: enum
-                            description: "chosen computation method for the first derivative of the matrix logarithm w.r.t. matrix"
-                            required: false
-                            default: pade_part_fract
-                            choices:
-                              - name: automatic
-                              - name: taylor_series
-                              - name: gregory_series
-                              - name: pade_part_fract
-                          - name: LOCAL_SUBSTEPPING
-                            type: group
-                            description: Settings for the usage of local substepping to integrate the viscoplastic evolution equations
-                            required: false
-                            specs:
-                              - type: all_of
-                                specs:
-                                  - name: USE_SUBSTEPPING
-                                    type: bool
-                                    description: "use substepping?"
-                                    required: false
-                                    default: false
-                                  - name: MAX_SUBSTEPPING_HALVE_NUM
-                                    type: int
-                                    description: "maximum number of times the global time step can be halved in the substepping procedure"
-                                    required: false
-                                    default: 10
-                                    validator:
-                                      range:
-                                        minimum: 0
-                                        maximum: 2147483647
-                                        minimum_exclusive: false
-                                        maximum_exclusive: false
-                          - name: LOCAL_NEWTON
-                            type: group
-                            description: Parameters used in the Local Newton--Raphson procedure (viscoplastic corrector stage)
-                            required: false
-                            specs:
-                              - type: all_of
-                                specs:
-                                  - name: CONV_CHECK
-                                    type: enum
-                                    description: "convergence check type"
-                                    required: false
-                                    default: residual_and_increment_ratio
-                                    choices:
-                                      - name: residual
-                                      - name: increment_ratio
-                                      - name: residual_and_increment_ratio
-                                  - name: MAX_ITER
-                                    type: int
-                                    description: "maximum number of iterations"
-                                    required: false
-                                    default: 100
-                                    validator:
-                                      range:
-                                        minimum: 0
-                                        maximum: 2147483647
-                                        minimum_exclusive: true
-                                        maximum_exclusive: false
-                                  - name: RES_TOL
-                                    type: double
-                                    description: "residual tolerance (absolute residual 2-norm)"
-                                    required: false
-                                    default: 1e-08
-                                    validator:
-                                      range:
-                                        minimum: 0
-                                        maximum: 1.7976931348623157e+308
-                                        minimum_exclusive: true
-                                        maximum_exclusive: false
-                                  - name: MAX_EXCEEDANCE_FACT_RES_TOL
-                                    type: double
-                                    description: "maximum exceedance factor for the specified residual tolerance (Local Newton divergence safeguard for continuing the simulation, if specified by the user via DIVER_CONT)"
-                                    required: false
-                                    default: 10
-                                    validator:
-                                      range:
-                                        minimum: 0
-                                        maximum: 1.7976931348623157e+308
-                                        minimum_exclusive: false
-                                        maximum_exclusive: false
-                                  - name: INCR_TOL
-                                    type: double
-                                    description: "increment tolerance (ratio of |increment| / |solution|)"
-                                    required: false
-                                    default: 1e-08
-                                    validator:
-                                      range:
-                                        minimum: 0
-                                        maximum: 1.7976931348623157e+308
-                                        minimum_exclusive: true
-                                        maximum_exclusive: false
-                                  - name: MAX_EXCEEDANCE_FACT_INCR_TOL
-                                    type: double
-                                    description: "maximum exceedance factor for the specified increment tolerance (Local Newton divergence safeguard for continuing the simulation, if specified by the user via DIVER_CONT)"
-                                    required: false
-                                    default: 10
-                                    validator:
-                                      range:
-                                        minimum: 0
-                                        maximum: 1.7976931348623157e+308
-                                        minimum_exclusive: false
-                                        maximum_exclusive: false
-                                  - name: DIVER_CONT
-                                    type: enum
-                                    description: "strategy to deal with divergence in the Local Newton Loop"
-                                    required: false
-                                    default: stop
-                                    choices:
-                                      - name: stop
-                                      - name: continue_sim
-                                      - name: continue_sim_with_safeguard
-              - type: all_of
-                specs:
-                  - name: MAT
-                    type: int
-                    required: true
-                  - name: MAT_ScDepInterp
-                    type: group
-                    description: integration point based and scalar dependent interpolation between two materials
-                    required: true
-                    specs:
-                      - type: all_of
-                        specs:
-                          - name: IDMATZEROSC
-                            type: int
-                            description: "material for lambda equal to zero"
-                            required: true
-                          - name: IDMATUNITSC
-                            type: int
-                            description: "material for lambda equal to one"
-                            required: true
-              - type: all_of
-                specs:
-                  - name: MAT
-                    type: int
-                    required: true
                   - name: MAT_StructPoro
                     type: group
                     description: wrapper for structure poroelastic material
@@ -42263,26 +42319,6 @@ sections:
                     specs:
                       - type: all_of
                         specs: []
-              - type: all_of
-                specs:
-                  - name: MAT
-                    type: int
-                    required: true
-                  - name: MAT_PoroLawLinBiot
-                    type: group
-                    description: linear biot model for porosity law
-                    required: true
-                    specs:
-                      - type: all_of
-                        specs:
-                          - name: INVBIOTMODULUS
-                            type: double
-                            description: "inverse Biot modulus of porous medium"
-                            required: true
-                          - name: BIOTCEOFF
-                            type: double
-                            description: "Biot coefficient of porous medium"
-                            required: true
     - name: MESH PARTITIONING
       type: group
       required: false
@@ -50769,12 +50805,10 @@ sections:
                       description: "Relative tolerance for finite difference check"
                       required: false
                       default: 1e-06
-            - name: body_force
+            - name: body_force_function
               noneable: true
-              type: vector
-              value_type:
-                type: double
-              description: "External body force contribution vector. The vector must have the same dimension as the problem (2D/3D)."
+              type: int
+              description: "Function describing the external body force contribution vector. The function must have the same dimension (number of components) as the problem (2D/3D)."
               required: false
               default: null
             - name: calculate_error_to_analytical_solution
