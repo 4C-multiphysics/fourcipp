@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 42ded28c4829404d082d74e8e5a8027df5ea5d1b
+  commit_hash: f4db55442c285f35f919b576f6c95a3648501ad2
   version: 2026.3.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -37293,10 +37293,22 @@ sections:
                             type: double
                             description: "saturation value of intercalated Lithium concentration"
                             required: true
+                            validator:
+                              range:
+                                minimum: 1e-12
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: false
+                                maximum_exclusive: false
                           - name: CHI_MAX
                             type: double
                             description: "lithiation value corresponding to saturation value of intercalated Lithium concentration 'C_MAX'"
                             required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
                           - name: OCP_MODEL
                             type: group
                             required: true
@@ -37317,14 +37329,33 @@ sections:
                                                     type: int
                                                     description: "function number of function that is used to model the open circuit potential"
                                                     required: true
-                                          - name: X_MIN
-                                            type: double
-                                            description: "lower bound of range of validity as a fraction of C_MAX for ocp calculation model"
-                                            required: true
-                                          - name: X_MAX
-                                            type: double
-                                            description: "upper bound of range of validity as a fraction of C_MAX for ocp calculation model"
-                                            required: true
+                                          - name: LITHIATION_BOUNDS
+                                            type: group
+                                            description: Optional lithiation bounds of range of validity as a fraction of C_MAX for ocp calculation model
+                                            required: false
+                                            specs:
+                                              - type: all_of
+                                                specs:
+                                                  - name: X_MIN
+                                                    type: double
+                                                    description: "lower bound of range of validity as a fraction of C_MAX for ocp calculation model"
+                                                    required: true
+                                                    validator:
+                                                      range:
+                                                        minimum: 0
+                                                        maximum: 1
+                                                        minimum_exclusive: false
+                                                        maximum_exclusive: false
+                                                  - name: X_MAX
+                                                    type: double
+                                                    description: "upper bound of range of validity as a fraction of C_MAX for ocp calculation model"
+                                                    required: true
+                                                    validator:
+                                                      range:
+                                                        minimum: 0
+                                                        maximum: 1
+                                                        minimum_exclusive: false
+                                                        maximum_exclusive: false
                                       - type: all_of
                                         specs:
                                           - name: Redlich-Kister
@@ -37333,24 +37364,39 @@ sections:
                                             specs:
                                               - type: all_of
                                                 specs:
-                                                  - name: OCP_PARA_NUM
-                                                    type: int
-                                                    description: "number of parameters underlying half cell open circuit potential model"
-                                                    required: true
                                                   - name: OCP_PARA
                                                     type: vector
                                                     value_type:
                                                       type: double
-                                                    description: "parameters underlying half cell open circuit potential model"
+                                                    description: "parameters underlying open circuit potential model"
                                                     required: true
-                                          - name: X_MIN
-                                            type: double
-                                            description: "lower bound of range of validity as a fraction of C_MAX for ocp calculation model"
-                                            required: true
-                                          - name: X_MAX
-                                            type: double
-                                            description: "upper bound of range of validity as a fraction of C_MAX for ocp calculation model"
-                                            required: true
+                                          - name: LITHIATION_BOUNDS
+                                            type: group
+                                            description: Optional lithiation bounds of range of validity as a fraction of C_MAX for ocp calculation model
+                                            required: false
+                                            specs:
+                                              - type: all_of
+                                                specs:
+                                                  - name: X_MIN
+                                                    type: double
+                                                    description: "lower bound of range of validity as a fraction of C_MAX for ocp calculation model"
+                                                    required: true
+                                                    validator:
+                                                      range:
+                                                        minimum: 0
+                                                        maximum: 1
+                                                        minimum_exclusive: false
+                                                        maximum_exclusive: false
+                                                  - name: X_MAX
+                                                    type: double
+                                                    description: "upper bound of range of validity as a fraction of C_MAX for ocp calculation model"
+                                                    required: true
+                                                    validator:
+                                                      range:
+                                                        minimum: 0
+                                                        maximum: 1
+                                                        minimum_exclusive: false
+                                                        maximum_exclusive: false
                                       - type: all_of
                                         specs:
                                           - name: Taralov
@@ -37364,16 +37410,35 @@ sections:
                                                     size: 13
                                                     value_type:
                                                       type: double
-                                                    description: "parameters underlying half cell open circuit potential model"
+                                                    description: "parameters underlying open circuit potential model"
                                                     required: true
-                                          - name: X_MIN
-                                            type: double
-                                            description: "lower bound of range of validity as a fraction of C_MAX for ocp calculation model"
-                                            required: true
-                                          - name: X_MAX
-                                            type: double
-                                            description: "upper bound of range of validity as a fraction of C_MAX for ocp calculation model"
-                                            required: true
+                                          - name: LITHIATION_BOUNDS
+                                            type: group
+                                            description: Optional lithiation bounds of range of validity as a fraction of C_MAX for ocp calculation model
+                                            required: false
+                                            specs:
+                                              - type: all_of
+                                                specs:
+                                                  - name: X_MIN
+                                                    type: double
+                                                    description: "lower bound of range of validity as a fraction of C_MAX for ocp calculation model"
+                                                    required: true
+                                                    validator:
+                                                      range:
+                                                        minimum: 0
+                                                        maximum: 1
+                                                        minimum_exclusive: false
+                                                        maximum_exclusive: false
+                                                  - name: X_MAX
+                                                    type: double
+                                                    description: "upper bound of range of validity as a fraction of C_MAX for ocp calculation model"
+                                                    required: true
+                                                    validator:
+                                                      range:
+                                                        minimum: 0
+                                                        maximum: 1
+                                                        minimum_exclusive: false
+                                                        maximum_exclusive: false
               - type: all_of
                 specs:
                   - name: MAT
