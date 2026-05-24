@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: f4db55442c285f35f919b576f6c95a3648501ad2
+  commit_hash: b2a6e010ac149fce2f14a2e9696d463616de4f62
   version: 2026.3.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -32059,6 +32059,11 @@ sections:
               description: "write restart every RESTARTEVERY steps"
               required: false
               default: -1
+            - name: PER_RANK_EVAL_TIME
+              type: bool
+              description: "write per rank wall time for element evaluation to csv file"
+              required: false
+              default: false
     - name: IO/MONITOR STRUCTURE DBC
       type: group
       required: false
@@ -32104,6 +32109,11 @@ sections:
               description: "An offset added to the current step to shift the steps to be written."
               required: false
               default: 0
+            - name: ELEMENT_EVAL_TIME
+              type: bool
+              description: "Output element evaluation wall time [s]"
+              required: false
+              default: false
             - name: OUTPUT_DATA_FORMAT
               type: enum
               description: "data format for written numeric data"
