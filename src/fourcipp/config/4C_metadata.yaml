@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: b2a6e010ac149fce2f14a2e9696d463616de4f62
+  commit_hash: 8138317b51070754fffced24fa3f43d308094498
   version: 2026.3.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -33498,6 +33498,11 @@ sections:
                             description: "Id of the time function to scale the deposition stretch (Default: 0=None)"
                             required: false
                             default: 0
+                          - name: INELASTIC_GROWTH
+                            type: bool
+                            description: "Mixture rule has inelastic growth (default false)"
+                            required: false
+                            default: false
               - type: all_of
                 specs:
                   - name: MAT
@@ -46088,83 +46093,6 @@ sections:
                 - name: "octree3d"
                 - name: "quadtree2d"
                 - name: "quadtree3d"
-    - name: SEMI-SMOOTH PLASTICITY
-      type: group
-      required: false
-      specs:
-        - type: all_of
-          specs:
-            - name: SEMI_SMOOTH_CPL
-              type: double
-              description: "Weighting factor cpl for semi-smooth PDASS"
-              required: false
-              default: 1
-            - name: STABILIZATION_S
-              type: double
-              description: "Stabilization factor s for semi-smooth PDASS"
-              required: false
-              default: 1
-            - name: NORMCOMBI_RESFPLASTCONSTR
-              type: enum
-              description: "binary operator to combine plasticity constraints and residual force values"
-              required: false
-              default: "And"
-              choices:
-                - name: "And"
-                - name: "Or"
-            - name: NORMCOMBI_DISPPLASTINCR
-              type: enum
-              description: "binary operator to combine displacement increments and plastic flow (Delta Lp) increment values"
-              required: false
-              default: "And"
-              choices:
-                - name: "And"
-                - name: "Or"
-            - name: TOLPLASTCONSTR
-              type: double
-              description: "tolerance in the plastic constraint norm for the newton iteration"
-              required: false
-              default: 1e-08
-            - name: TOLDELTALP
-              type: double
-              description: "tolerance in the plastic flow (Delta Lp) norm for the Newton iteration"
-              required: false
-              default: 1e-08
-            - name: NORMCOMBI_EASRES
-              type: enum
-              description: "binary operator to combine EAS-residual and residual force values"
-              required: false
-              default: "And"
-              choices:
-                - name: "And"
-                - name: "Or"
-            - name: NORMCOMBI_EASINCR
-              type: enum
-              description: "binary operator to combine displacement increments and EAS increment values"
-              required: false
-              default: "And"
-              choices:
-                - name: "And"
-                - name: "Or"
-            - name: TOLEASRES
-              type: double
-              description: "tolerance in the EAS residual norm for the newton iteration"
-              required: false
-              default: 1e-08
-            - name: TOLEASINCR
-              type: double
-              description: "tolerance in the EAS increment norm for the Newton iteration"
-              required: false
-              default: 1e-08
-            - name: DISSIPATION_MODE
-              type: enum
-              description: "method to calculate the plastic dissipation"
-              required: false
-              default: pl_multiplier
-              choices:
-                - name: pl_multiplier
-                - name: pl_flow
-                - name: Taylor_Quinney
     - name: SOLVER 1
       type: group
       description: solver parameters for solver block 1
@@ -51139,12 +51067,10 @@ sections:
                       description: "time step size dt"
                       required: false
                       default: -1
-            - name: body_force
+            - name: body_force_function
               noneable: true
-              type: vector
-              value_type:
-                type: double
-              description: "External body force contribution vector. The vector must have the same dimension as the problem (2D/3D)."
+              type: int
+              description: "Function defining the external body force contribution vector. The vector must have the same dimension (number of components) as the problem (2D/3D)."
               required: false
               default: null
             - name: nonlinear_solver
