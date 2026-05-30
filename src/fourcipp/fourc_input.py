@@ -90,7 +90,7 @@ def sort_by_section_names(data: dict) -> dict:
         Dict sorted in 4C fashion
     """
 
-    required_sections = CONFIG.fourc_json_schema["required"]
+    required_sections = CONFIG.required_sections
     n_sections_splitter = len(CONFIG.sections.all_sections) * 1000
 
     # typed sections (sorted alphabetically + case insensitive, 'DESIGN *' + 'MATERIALS' at the end)
@@ -546,30 +546,30 @@ class FourCInput:
 
     def validate(
         self,
-        json_schema: dict = CONFIG.fourc_json_schema,
         sections_only: bool = False,
         convert_to_native_types: bool = True,
     ) -> bool:
         """Validate input file.
 
         Args:
-            json_schema: Schema to check the data
             sections_only: Validate each section independently.
                 Requiredness of the sections themselves is ignored.
             convert_to_native_types: Convert all sections to native Python types
         """
-        validation_schema = json_schema
-
-        # Remove the requiredness of the sections
-        if sections_only:
-            validation_schema = json_schema.copy()
-            validation_schema.pop("required")
 
         if convert_to_native_types:
             self.convert_to_native_types()
 
         # Validate sections using schema
-        validate_using_json_schema(self._sections, validation_schema)
+        if sections_only:
+            validator = CONFIG.sections_only_validator
+        else:
+            validator = CONFIG.validator
+
+        validate_using_json_schema(
+            self._sections,
+            validator=validator,
+        )
 
         # Legacy sections are only checked if they are of type string
         for section_name, section in inline_legacy_sections(

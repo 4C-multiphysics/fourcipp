@@ -575,13 +575,14 @@ def test_validation(fourc_input, error_context, sections_only):
 
 def test_sort_by_section_names():
     """Test sorting by section names."""
+    required_sections = CONFIG.required_sections
 
     # create list of typed sections without title and required sections
     typed_sections = [
         sec
         for sec in CONFIG.sections.typed_sections
         if sec != CONFIG.fourc_metadata["metadata"]["description_section_name"]
-        and sec not in set(CONFIG.fourc_json_schema["required"])
+        and sec not in set(required_sections)
     ]
 
     # also use end subset to also add some lowercase sections
@@ -599,7 +600,7 @@ def test_sort_by_section_names():
 
     correct_section_order = (
         [CONFIG.fourc_metadata["metadata"]["description_section_name"]]
-        + CONFIG.fourc_json_schema["required"]
+        + required_sections
         + typed_sections
         + ["MATERIALS"]
         + design_sections
