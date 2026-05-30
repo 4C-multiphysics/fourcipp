@@ -5,8 +5,8 @@ on:
     - cron: "0 5 * * *" # run each night at 5AM. Current nightly 4C test should be completed by then
 
 jobs:
-  update-4C-metadata-schema-file:
-    name: Update 4C metadata and schema file
+  update-4C-metadata-schema-files:
+    name: Update 4C metadata and schema files
     runs-on: ubuntu-latest
 
     steps:
@@ -32,6 +32,15 @@ jobs:
           workflow_conclusion: completed
           name: clang18_build-schema
           path: clang18_build-schema
+      - name: Pull latest completion schema file from 4C
+        uses: dawidd6/action-download-artifact@v21
+        with:
+          repo: 4C-multiphysics/4C
+          github_token: ${{ secrets.ORGANIZATION_TOKEN }}
+          workflow: nightly_tests.yml
+          workflow_conclusion: completed
+          name: clang18_build-completion-schema
+          path: clang18_build-completion-schema
       # Format new files with pre-commit (this needs to be done before the files are hashed to ensure that both are formatted)
       - name: Set up virtual environment and install fourcipp with requirements
         uses: ./.github/actions/setup-env
@@ -41,36 +50,47 @@ jobs:
       # pre-commit hook is run twice to not fail if the first run fails (due to formatting files)
       - name: Run pre-commit, i.e., format files
         run: |
-          SKIP=no-commit-to-branch pre-commit run --files clang18_build-metadata/4C_metadata.yaml clang18_build-schema/4C_schema.json || SKIP=no-commit-to-branch pre-commit run --files clang18_build-metadata/4C_metadata.yaml clang18_build-schema/4C_schema.json
+          SKIP=no-commit-to-branch pre-commit run --files clang18_build-metadata/4C_metadata.yaml clang18_build-schema/4C_schema.json clang18_build-completion-schema/4C_schema_completion.json || SKIP=no-commit-to-branch pre-commit run --files clang18_build-metadata/4C_metadata.yaml clang18_build-schema/4C_schema.json clang18_build-completion-schema/4C_schema_completion.json
       # Compare the hashes
-      - name: Check if metadata file has changed and overwrite old file if necessary
+      - name: Check if generated files changed and overwrite old files if necessary
         run: |
           set -euo pipefail
-          hash_current=$(grep -v 'commit_hash' src/fourcipp/config/4C_metadata.yaml | sha256sum | awk '{print $1}')
-          hash_new=$(grep -v 'commit_hash' clang18_build-metadata/4C_metadata.yaml | sha256sum | awk '{print $1}')
 
-          echo "Current metadata file hash: $hash_current"
-          echo "New metadata file hash:     $hash_new"
+          metadata_hash_current=$(grep -v 'commit_hash' src/fourcipp/config/4C_metadata.yaml | sha256sum | awk '{print $1}')
+          metadata_hash_new=$(grep -v 'commit_hash' clang18_build-metadata/4C_metadata.yaml | sha256sum | awk '{print $1}')
+          schema_hash_current=$(sha256sum src/fourcipp/config/4C_schema.json | awk '{print $1}')
+          schema_hash_new=$(sha256sum clang18_build-schema/4C_schema.json | awk '{print $1}')
+          completion_schema_hash_current=$(sha256sum src/fourcipp/config/4C_schema_completion.json | awk '{print $1}')
+          completion_schema_hash_new=$(sha256sum clang18_build-completion-schema/4C_schema_completion.json | awk '{print $1}')
 
-          if [ "$hash_current" != "$hash_new" ]; then
+          echo "Current metadata file hash:          $metadata_hash_current"
+          echo "New metadata file hash:              $metadata_hash_new"
+          echo "Current schema file hash:            $schema_hash_current"
+          echo "New schema file hash:                $schema_hash_new"
+          echo "Current completion schema file hash: $completion_schema_hash_current"
+          echo "New completion schema file hash:     $completion_schema_hash_new"
+
+          if [ "$metadata_hash_current" != "$metadata_hash_new" ] || [ "$schema_hash_current" != "$schema_hash_new" ] || [ "$completion_schema_hash_current" != "$completion_schema_hash_new" ]; then
               mv clang18_build-metadata/4C_metadata.yaml src/fourcipp/config/4C_metadata.yaml
               mv clang18_build-schema/4C_schema.json src/fourcipp/config/4C_schema.json
+              mv clang18_build-completion-schema/4C_schema_completion.json src/fourcipp/config/4C_schema_completion.json
               rm -r clang18_build-metadata
               rm -r clang18_build-schema
+              rm -r clang18_build-completion-schema
 
-              echo "metadata_file_changed=true" >> $GITHUB_ENV
+              echo "generated_files_changed=true" >> $GITHUB_ENV
           else
-              echo "metadata_file_changed=false" >> $GITHUB_ENV
+              echo "generated_files_changed=false" >> $GITHUB_ENV
           fi
       # Commit and push changes
       - name: Get 4C hash for commit message
-        if: env.metadata_file_changed == 'true'
+        if: env.generated_files_changed == 'true'
         run: echo "fourc_commit_hash=$(awk '/commit_hash:/ {print $2}' src/fourcipp/config/4C_metadata.yaml)" >> $GITHUB_ENV
       - name: Commit and push changes
-        if: env.metadata_file_changed == 'true'
+        if: env.generated_files_changed == 'true'
         uses: stefanzweifel/git-auto-commit-action@v7
         with:
-          commit_message: "Nightly update of 4C metadata and schema file (4C commit hash: ${{ env.fourc_commit_hash }})"
+          commit_message: "Nightly update of 4C metadata and schema files (4C commit hash: ${{ env.fourc_commit_hash }})"
           branch: main
           push_options: --force
           commit_options: "--no-verify"
