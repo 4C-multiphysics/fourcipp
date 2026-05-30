@@ -439,7 +439,11 @@ class SubprocessError(Exception):
     """Subprocess failure."""
 
 
-@pytest.mark.skipif(CONFIG.name != "4C_docker_main", reason="Not using docker config.")
+@pytest.mark.skipif(
+    not CONFIG.name == "4C_docker_main"
+    and not CONFIG.name == "4C_docker_main_completion_schema",
+    reason="Not using docker config.",
+)
 @pytest.mark.parametrize("fourc_file", FOURC_TEST_INPUT_FILES)
 def test_roundtrip_test(fourc_file, tmp_path):
     """Roundtrip test."""
@@ -469,7 +473,11 @@ def test_roundtrip_test(fourc_file, tmp_path):
         )
 
 
-@pytest.mark.skipif(CONFIG.name != "4C_docker_main", reason="Not using docker config.")
+@pytest.mark.skipif(
+    not CONFIG.name == "4C_docker_main"
+    and not CONFIG.name == "4C_docker_main_completion_schema",
+    reason="Not using docker config.",
+)
 @pytest.mark.parametrize(
     "fourc_file",
     [

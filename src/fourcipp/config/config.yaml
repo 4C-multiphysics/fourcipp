@@ -5,8 +5,18 @@ profiles:
     fourc_json_schema_path: "4C_schema.json"
     description: "Profile for the latest successful nightly 4C build"
     user_defaults_path: null
+  completion_schema:
+    fourc_metadata_path: "4C_metadata.yaml"
+    fourc_json_schema_path: "4C_schema_completion.json"
+    description: "Profile for the completion-oriented schema of the latest successful nightly 4C build. Note: this schema wraps the full schema, so it relies on the full schema being present in the same directory."
+    user_defaults_path: null
   4C_docker_main:
     fourc_metadata_path: "/home/user/4C/build/4C_metadata.yaml"
     fourc_json_schema_path: "/home/user/4C/build/4C_schema.json"
     description: "Profile for the 4C docker build main"
+    user_defaults_path: null
+  4C_docker_main_completion_schema:
+    fourc_metadata_path: "/home/user/4C/build/4C_metadata.yaml"
+    fourc_json_schema_path: "/home/user/4C/build/4C_schema_completion.json"
+    description: "Profile for the 4C docker build main for the completion-oriented schema."
     user_defaults_path: null
