@@ -20,6 +20,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ["3.10", "3.13"]
+        config_profile: [default, completion_schema]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -27,18 +28,22 @@ jobs:
         uses: ./.github/actions/setup-env
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Run pytest with full schema
+      - name: Run pytest with ${{ matrix.config_profile }} config
         run: |
-          pytest --color=yes -v --performance-tests --no-cov
-          cat timings.md >> $GITHUB_STEP_SUMMARY
-      - name: Run pytest with completion-oriented schema
-        run: |
-          fourcipp switch-config-profile completion_schema
+          fourcipp switch-config-profile ${{ matrix.config_profile }}
           pytest --color=yes -v --performance-tests --no-cov
           cat timings.md >> $GITHUB_STEP_SUMMARY
 
   run_pytest_with_4C:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - fourc_config_profile: 4C_docker_main
+            pytest_config_profile: default
+          - fourc_config_profile: 4C_docker_main_completion_schema
+            pytest_config_profile: completion_schema
     container:
       image: ghcr.io/4c-multiphysics/4c:main
     steps:
@@ -48,22 +53,13 @@ jobs:
         uses: ./.github/actions/setup-env
         with:
           python-version: 3.13
-      - name: Run pytest using 4C_docker_main config
+      - name: Run pytest using {{ matrix.fourc_config_profile }} config
         run: |
-          fourcipp switch-config-profile 4C_docker_main
-          pytest -n 4 --color=yes -v
-      - name: Run pytest using 4C_docker_main_completion_schema config
-        run: |
-          fourcipp switch-config-profile 4C_docker_main_completion_schema
+          fourcipp switch-config-profile ${{ matrix.fourc_config_profile }}
           pytest -n 4 --color=yes -v
       - name: Run pytest using default config
         # For this job coverage is turned off, otherwise the checks would fail.
         # Coverage is done in the 4C docker job, as here 4C test input files are available.
         run: |
-          fourcipp switch-config-profile default
+          fourcipp switch-config-profile ${{ matrix.pytest_config_profile }}
           pytest -n 4 --color=yes -v --no-cov
-      - name: Run pytest with completion_schema config
-        run: |
-          fourcipp switch-config-profile completion_schema
-          pytest --color=yes -v --performance-tests --no-cov
-          cat timings.md >> $GITHUB_STEP_SUMMARY
