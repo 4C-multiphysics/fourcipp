@@ -53,13 +53,25 @@ jobs:
         uses: ./.github/actions/setup-env
         with:
           python-version: 3.13
-      - name: Run pytest using {{ matrix.fourc_config_profile }} config
+      - name: Run pytest using ${{ matrix.fourc_config_profile }} config
         run: |
           fourcipp switch-config-profile ${{ matrix.fourc_config_profile }}
           pytest -n 4 --color=yes -v
-      - name: Run pytest using default config
+      - name: Run pytest using ${{ matrix.pytest_config_profile }} config
         # For this job coverage is turned off, otherwise the checks would fail.
         # Coverage is done in the 4C docker job, as here 4C test input files are available.
         run: |
           fourcipp switch-config-profile ${{ matrix.pytest_config_profile }}
           pytest -n 4 --color=yes -v --no-cov
+
+  ensure_all_tests_pass:
+    runs-on: ubuntu-latest
+    needs:
+      - run_pytest
+      - run_pytest_with_4C
+    if: always()
+    steps:
+      - name: Check matrix results
+        uses: re-actors/alls-green@release/v1
+        with:
+          jobs: ${{ toJSON(needs) }}
