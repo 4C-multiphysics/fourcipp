@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 12eb1e39626acc5c543a42f6945a754279b37580
+  commit_hash: 8943a6e1f73f6497a3d6c5411de422d0d3cfb056
   version: 2026.3.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -51497,6 +51497,15 @@ sections:
                       description: "Absolute increment norm tolerance for nonlinear convergence."
                       required: false
                       default: 1e-10
+                    - name: output_verbosity
+                      type: enum
+                      description: "Output verbosity level."
+                      required: false
+                      default: minimal
+                      choices:
+                        - name: minimal
+                        - name: medium
+                        - name: high
             - name: lung_tree
               type: group
               description: Definition of the reduced dimensional lung tree including model definitions and parameters
