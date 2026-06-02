@@ -20,6 +20,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ["3.10", "3.13"]
+        config_profile: [default, completion_schema]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -27,13 +28,23 @@ jobs:
         uses: ./.github/actions/setup-env
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Run pytest
+      - name: Run pytest with ${{ matrix.config_profile }} config
+        shell: bash
         run: |
+          fourcipp switch-config-profile ${{ matrix.config_profile }}
           pytest --color=yes -v --performance-tests --no-cov
           cat timings.md >> $GITHUB_STEP_SUMMARY
 
   run_pytest_with_4C:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - fourc_config_profile: 4C_docker_main
+            pytest_config_profile: default
+          - fourc_config_profile: 4C_docker_main_completion_schema
+            pytest_config_profile: completion_schema
     container:
       image: ghcr.io/4c-multiphysics/4c:main
     steps:
@@ -43,13 +54,25 @@ jobs:
         uses: ./.github/actions/setup-env
         with:
           python-version: 3.13
-      - name: Run pytest using 4C_docker_main config
+      - name: Run pytest using ${{ matrix.fourc_config_profile }} config
         run: |
-          fourcipp switch-config-profile 4C_docker_main
+          fourcipp switch-config-profile ${{ matrix.fourc_config_profile }}
           pytest -n 4 --color=yes -v
-      - name: Run pytest using default config
+      - name: Run pytest using ${{ matrix.pytest_config_profile }} config
         # For this job coverage is turned off, otherwise the checks would fail.
         # Coverage is done in the 4C docker job, as here 4C test input files are available.
         run: |
-          fourcipp switch-config-profile default
+          fourcipp switch-config-profile ${{ matrix.pytest_config_profile }}
           pytest -n 4 --color=yes -v --no-cov
+
+  ensure_all_tests_pass:
+    runs-on: ubuntu-latest
+    needs:
+      - run_pytest
+      - run_pytest_with_4C
+    if: always()
+    steps:
+      - name: Check matrix results
+        uses: re-actors/alls-green@release/v1
+        with:
+          jobs: ${{ toJSON(needs) }}

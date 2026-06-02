@@ -27,6 +27,7 @@ import copy
 import pathlib
 from dataclasses import dataclass, field
 
+import jsonschema_rs
 from loguru import logger
 
 from fourcipp.utils.type_hinting import Path, T
@@ -87,6 +88,13 @@ class ConfigProfile:
     user_defaults_path: Path | None = None
     fourc_metadata: dict = field(init=False)
     fourc_json_schema: dict = field(init=False)
+    required_sections: list[str] = field(init=False)
+    _validator: jsonschema_rs.Validator | None = field(
+        default=None, init=False, repr=False
+    )
+    _sections_only_validator: jsonschema_rs.Validator | None = field(
+        default=None, init=False, repr=False
+    )
     sections: Sections = field(init=False)
 
     def __post_init__(self) -> None:
@@ -98,8 +106,13 @@ class ConfigProfile:
         self.sections = Sections.from_metadata(self.fourc_metadata)
 
         self.fourc_json_schema_path = pathlib.Path(self.fourc_json_schema_path)
+        if not self.fourc_json_schema_path.is_absolute():
+            self.fourc_json_schema_path = CONFIG_PACKAGE / self.fourc_json_schema_path
         self.fourc_json_schema = ConfigProfile._load_data_from_path(
             self.fourc_json_schema_path
+        )
+        self.required_sections = ConfigProfile._resolve_required_sections(
+            self.fourc_json_schema, self.fourc_json_schema_path
         )
 
         if self.user_defaults_path is not None:
@@ -108,6 +121,82 @@ class ConfigProfile:
                 raise FileNotFoundError(
                     f"User defaults file '{self.user_defaults_path}' does not exist."
                 )
+
+    @property
+    def validator(self) -> jsonschema_rs.Validator:
+        """JSON schema validator for complete input files."""
+        if self._validator is None:
+            self._validator = jsonschema_rs.validator_for(
+                self.fourc_json_schema,
+                base_uri=pathlib.Path(self.fourc_json_schema_path).as_uri(),
+            )
+
+        return self._validator
+
+    @property
+    def sections_only_validator(self) -> jsonschema_rs.Validator:
+        """JSON schema validator for independent section validation."""
+        if self._sections_only_validator is None:
+            schema_without_required_sections = ConfigProfile._remove_required_sections(
+                self.fourc_json_schema,
+                self.fourc_json_schema_path,
+            )
+            self._sections_only_validator = jsonschema_rs.validator_for(
+                schema_without_required_sections,
+                base_uri=pathlib.Path(self.fourc_json_schema_path).as_uri(),
+            )
+
+        return self._sections_only_validator
+
+    @staticmethod
+    def _resolve_required_sections(json_schema: dict, schema_path: Path) -> list[str]:
+        """Resolve required top-level sections from a schema or schema
+        wrapper."""
+        if "required" in json_schema:
+            return list(json_schema["required"])
+
+        for clause in json_schema.get("allOf", []):
+            ref = clause.get("$ref")
+            if isinstance(ref, str) and not ref.startswith("#"):
+                referenced_schema = ConfigProfile._load_data_from_path(
+                    ConfigProfile._resolve_schema_ref(ref, schema_path)
+                )
+                return list(referenced_schema.get("required", []))
+
+        return []
+
+    @staticmethod
+    def _remove_required_sections(json_schema: dict, schema_path: Path) -> dict:
+        """Create a schema for section-only validation.
+
+        Schemas with top-level required entries are treated as non-wrapper
+        schemas and use a shallow copy with those entries removed. Otherwise,
+        the schema is treated as a completion wrapper and direct external refs
+        in ``allOf`` are replaced by shallow-copied referenced schemas with
+        their top-level required entries removed.
+        """
+        validation_schema = json_schema.copy()
+        if "required" in validation_schema:
+            validation_schema.pop("required")
+            return validation_schema
+
+        all_of = []
+        for subschema in json_schema.get("allOf", []):
+            ref = subschema.get("$ref")
+            if ref is None:
+                all_of.append(subschema.copy())
+                continue
+
+            referenced_schema = ConfigProfile._load_data_from_path(
+                ConfigProfile._resolve_schema_ref(ref, schema_path)
+            ).copy()
+            referenced_schema.pop("required", None)
+            all_of.append(referenced_schema)
+
+        if all_of:
+            validation_schema["allOf"] = all_of
+
+        return validation_schema
 
     @staticmethod
     def _load_data_from_path(path: Path) -> dict:
@@ -119,6 +208,14 @@ class ConfigProfile:
             )
             path = CONFIG_PACKAGE / path
         return load_yaml(path)
+
+    @staticmethod
+    def _resolve_schema_ref(ref: str, schema_path: Path) -> Path:
+        """Resolve a JSON schema ref path relative to the schema file."""
+        ref_path = pathlib.Path(ref)
+        if ref_path.is_absolute():
+            return ref_path
+        return pathlib.Path(schema_path).parent / ref_path
 
     @staticmethod
     def _resolve_references(metadata_dict: dict) -> dict:

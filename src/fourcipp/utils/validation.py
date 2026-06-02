@@ -128,17 +128,20 @@ def find_keys_exceeding_max_value(
         yield path_for_data, obj
 
 
-def validate_using_json_schema(data: dict, json_schema: dict) -> bool:
+def validate_using_json_schema(
+    data: dict,
+    validator: jsonschema_rs.Validator,
+) -> bool:
     """Validate data using a JSON schema.
 
     Args:
         data: Data to validate
-        json_schema: Schema for validation
+        validator: Validator for validation
 
     Returns:
         True if successful
     """
-    validator = jsonschema_rs.validator_for(json_schema)
+
     try:
         validator.validate(data)
     except jsonschema_rs.ValidationError as exception:
