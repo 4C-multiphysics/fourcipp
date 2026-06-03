@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 8943a6e1f73f6497a3d6c5411de422d0d3cfb056
+  commit_hash: f18c3bc3af23613e24ab86fa118c9b3ae2e8257e
   version: 2026.3.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -26420,6 +26420,12 @@ sections:
               description: "Constant temperature (Kelvin)"
               required: false
               default: 298
+              validator:
+                range:
+                  minimum: 0
+                  maximum: 1.7976931348623157e+308
+                  minimum_exclusive: false
+                  maximum_exclusive: false
             - name: TEMPERATURE_FROM_FUNCT
               type: int
               description: "Homogeneous temperature within electrochemistry field that can be time dependent according to function definition"
@@ -26430,11 +26436,23 @@ sections:
               description: "Faraday constant (in unit system as chosen in input file)"
               required: false
               default: 96485.3399
+              validator:
+                range:
+                  minimum: 0
+                  maximum: 1.7976931348623157e+308
+                  minimum_exclusive: true
+                  maximum_exclusive: false
             - name: GAS_CONSTANT
               type: double
               description: "(universal) gas constant (in unit system as chosen in input file)"
               required: false
               default: 8.314472
+              validator:
+                range:
+                  minimum: 0
+                  maximum: 1.7976931348623157e+308
+                  minimum_exclusive: true
+                  maximum_exclusive: false
             - name: MOVINGBOUNDARY
               type: enum
               description: "ELCH algorithm for deforming meshes"
@@ -31838,6 +31856,25 @@ sections:
                                                       maximum: 1.7976931348623157e+308
                                                       minimum_exclusive: true
                                                       maximum_exclusive: false
+              - type: all_of
+                specs:
+                  - name: ARRHENIUS_FUNCTION
+                    type: group
+                    description: Arrhenius function exp(-Q/(R*T)) for temperature-dependent reaction rates using the universal gas constant 'R' from the ELCH_CONTROL section and the activation energy 'Q'.
+                    required: true
+                    specs:
+                      - type: all_of
+                        specs:
+                          - name: activation_energy
+                            type: double
+                            description: "Activation energy 'Q'"
+                            required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
     - name: INCLUDES
       noneable: true
       type: vector
