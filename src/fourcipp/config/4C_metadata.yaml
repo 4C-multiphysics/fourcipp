@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: f18c3bc3af23613e24ab86fa118c9b3ae2e8257e
+  commit_hash: 258537bf53202cb79fedc134c0cce0b2caa8a54a
   version: 2026.3.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -126,101 +126,194 @@ legacy_element_specs:
       spec:
         type: all_of
         specs:
-          - name: CONSTRAINT
-            type: enum
-            description: "Which type of Kirchhoff constraint enforcement should be used."
-            required: true
-            choices:
-              - name: strong
-              - name: weak
-          - name: PARAMETRIZATION
-            type: enum
-            description: "Which type of beam parametrization should be used."
-            required: true
-            choices:
-              - name: tan
-              - name: rot
-          - name: MAT
-            type: int
-            required: true
-          - name: TRIADS
-            type: vector
-            size: 6
-            value_type:
-              type: double
-            description: "Nodal triad rotation vectors in reference configuration"
-            required: true
-          - name: USE_FAD
-            type: bool
-            description: "Flag, if automatic differentiation should be used."
-            required: false
-            default: false
+          - type: one_of
+            specs:
+              - type: all_of
+                specs:
+                  - name: CONSTRAINT
+                    type: enum
+                    description: "Which type of Kirchhoff constraint enforcement should be used."
+                    required: true
+                    choices:
+                      - name: strong
+                      - name: weak
+                  - name: PARAMETRIZATION
+                    type: enum
+                    description: "Which type of beam parametrization should be used."
+                    required: true
+                    choices:
+                      - name: tan
+                      - name: rot
+                  - name: MAT
+                    type: int
+                    required: true
+                  - name: TRIADS
+                    type: vector
+                    size: 9
+                    value_type:
+                      type: double
+                    required: true
+                  - name: USE_FAD
+                    type: bool
+                    description: "Flag, if automatic differentiation should be used."
+                    required: false
+                    default: false
+              - type: all_of
+                specs:
+                  - name: CONSTRAINT
+                    type: enum
+                    description: "Which type of Kirchhoff constraint enforcement should be used."
+                    required: true
+                    choices:
+                      - name: strong
+                      - name: weak
+                  - name: PARAMETRIZATION
+                    type: enum
+                    description: "Which type of beam parametrization should be used."
+                    required: true
+                    choices:
+                      - name: tan
+                      - name: rot
+                  - name: MAT
+                    type: int
+                    required: true
+                  - name: NODAL_ROTATION_VECTORS
+                    type: string
+                    description: "Nodal triad rotation vectors in reference configuration."
+                    required: true
+                  - name: USE_FAD
+                    type: bool
+                    description: "Flag, if automatic differentiation should be used."
+                    required: false
+                    default: false
     - cell_type: LINE3
       spec:
         type: all_of
         specs:
-          - name: CONSTRAINT
-            type: enum
-            description: "Which type of Kirchhoff constraint enforcement should be used."
-            required: true
-            choices:
-              - name: strong
-              - name: weak
-          - name: PARAMETRIZATION
-            type: enum
-            description: "Which type of beam parametrization should be used."
-            required: true
-            choices:
-              - name: tan
-              - name: rot
-          - name: MAT
-            type: int
-            required: true
-          - name: TRIADS
-            type: vector
-            size: 9
-            value_type:
-              type: double
-            description: "Nodal triad rotation vectors in reference configuration"
-            required: true
-          - name: USE_FAD
-            type: bool
-            description: "Flag, if automatic differentiation should be used."
-            required: false
-            default: false
+          - type: one_of
+            specs:
+              - type: all_of
+                specs:
+                  - name: CONSTRAINT
+                    type: enum
+                    description: "Which type of Kirchhoff constraint enforcement should be used."
+                    required: true
+                    choices:
+                      - name: strong
+                      - name: weak
+                  - name: PARAMETRIZATION
+                    type: enum
+                    description: "Which type of beam parametrization should be used."
+                    required: true
+                    choices:
+                      - name: tan
+                      - name: rot
+                  - name: MAT
+                    type: int
+                    required: true
+                  - name: TRIADS
+                    type: vector
+                    size: 9
+                    value_type:
+                      type: double
+                    required: true
+                  - name: USE_FAD
+                    type: bool
+                    description: "Flag, if automatic differentiation should be used."
+                    required: false
+                    default: false
+              - type: all_of
+                specs:
+                  - name: CONSTRAINT
+                    type: enum
+                    description: "Which type of Kirchhoff constraint enforcement should be used."
+                    required: true
+                    choices:
+                      - name: strong
+                      - name: weak
+                  - name: PARAMETRIZATION
+                    type: enum
+                    description: "Which type of beam parametrization should be used."
+                    required: true
+                    choices:
+                      - name: tan
+                      - name: rot
+                  - name: MAT
+                    type: int
+                    required: true
+                  - name: NODAL_ROTATION_VECTORS
+                    type: string
+                    description: "Nodal triad rotation vectors in reference configuration."
+                    required: true
+                  - name: USE_FAD
+                    type: bool
+                    description: "Flag, if automatic differentiation should be used."
+                    required: false
+                    default: false
     - cell_type: LINE4
       spec:
         type: all_of
         specs:
-          - name: CONSTRAINT
-            type: enum
-            description: "Which type of Kirchhoff constraint enforcement should be used."
-            required: true
-            choices:
-              - name: strong
-              - name: weak
-          - name: PARAMETRIZATION
-            type: enum
-            description: "Which type of beam parametrization should be used."
-            required: true
-            choices:
-              - name: tan
-              - name: rot
-          - name: MAT
-            type: int
-            required: true
-          - name: TRIADS
-            type: vector
-            size: 12
-            value_type:
-              type: double
-            description: "Nodal triad rotation vectors in reference configuration"
-            required: true
-          - name: USE_FAD
-            type: bool
-            description: "Flag, if automatic differentiation should be used."
-            required: false
-            default: false
+          - type: one_of
+            specs:
+              - type: all_of
+                specs:
+                  - name: CONSTRAINT
+                    type: enum
+                    description: "Which type of Kirchhoff constraint enforcement should be used."
+                    required: true
+                    choices:
+                      - name: strong
+                      - name: weak
+                  - name: PARAMETRIZATION
+                    type: enum
+                    description: "Which type of beam parametrization should be used."
+                    required: true
+                    choices:
+                      - name: tan
+                      - name: rot
+                  - name: MAT
+                    type: int
+                    required: true
+                  - name: TRIADS
+                    type: vector
+                    size: 9
+                    value_type:
+                      type: double
+                    required: true
+                  - name: USE_FAD
+                    type: bool
+                    description: "Flag, if automatic differentiation should be used."
+                    required: false
+                    default: false
+              - type: all_of
+                specs:
+                  - name: CONSTRAINT
+                    type: enum
+                    description: "Which type of Kirchhoff constraint enforcement should be used."
+                    required: true
+                    choices:
+                      - name: strong
+                      - name: weak
+                  - name: PARAMETRIZATION
+                    type: enum
+                    description: "Which type of beam parametrization should be used."
+                    required: true
+                    choices:
+                      - name: tan
+                      - name: rot
+                  - name: MAT
+                    type: int
+                    required: true
+                  - name: NODAL_ROTATION_VECTORS
+                    type: string
+                    description: "Nodal triad rotation vectors in reference configuration."
+                    required: true
+                  - name: USE_FAD
+                    type: bool
+                    description: "Flag, if automatic differentiation should be used."
+                    required: false
+                    default: false
   BEAM3R:
     - cell_type: LINE2
       spec:
@@ -32011,28 +32104,6 @@ sections:
               type: bool
               required: false
               default: false
-            - name: THERM_HEATFLUX
-              type: enum
-              required: false
-              default: "NO"
-              choices:
-                - name: "Current"
-                - name: "Initial"
-                - name: "NO"
-                - name: "No"
-                - name: "None"
-                - name: "no"
-            - name: THERM_TEMPGRAD
-              type: enum
-              required: false
-              default: "NO"
-              choices:
-                - name: "Current"
-                - name: "Initial"
-                - name: "NO"
-                - name: "No"
-                - name: "None"
-                - name: "no"
             - name: FILESTEPS
               type: int
               description: "Amount of timesteps written to a single result file"
@@ -49121,6 +49192,24 @@ sections:
               description: "write conductivity output"
               required: false
               default: false
+            - name: HEATFLUX
+              type: enum
+              description: "write heatflux output"
+              required: false
+              default: None
+              choices:
+                - name: None
+                - name: Current
+                - name: Initial
+            - name: TEMPGRAD
+              type: enum
+              description: "write tempgrad output"
+              required: false
+              default: None
+              choices:
+                - name: None
+                - name: Current
+                - name: Initial
             - name: ELEMENT_OWNER
               type: bool
               description: "write element owner"
@@ -53453,35 +53542,66 @@ $references:
                                     specs:
                                       - type: all_of
                                         specs:
-                                          - name: CONSTRAINT
-                                            type: enum
-                                            description: "Which type of Kirchhoff constraint enforcement should be used."
-                                            required: true
-                                            choices:
-                                              - name: strong
-                                              - name: weak
-                                          - name: PARAMETRIZATION
-                                            type: enum
-                                            description: "Which type of beam parametrization should be used."
-                                            required: true
-                                            choices:
-                                              - name: tan
-                                              - name: rot
-                                          - name: MAT
-                                            type: int
-                                            required: true
-                                          - name: TRIADS
-                                            type: vector
-                                            size: 6
-                                            value_type:
-                                              type: double
-                                            description: "Nodal triad rotation vectors in reference configuration"
-                                            required: true
-                                          - name: USE_FAD
-                                            type: bool
-                                            description: "Flag, if automatic differentiation should be used."
-                                            required: false
-                                            default: false
+                                          - type: one_of
+                                            specs:
+                                              - type: all_of
+                                                specs:
+                                                  - name: CONSTRAINT
+                                                    type: enum
+                                                    description: "Which type of Kirchhoff constraint enforcement should be used."
+                                                    required: true
+                                                    choices:
+                                                      - name: strong
+                                                      - name: weak
+                                                  - name: PARAMETRIZATION
+                                                    type: enum
+                                                    description: "Which type of beam parametrization should be used."
+                                                    required: true
+                                                    choices:
+                                                      - name: tan
+                                                      - name: rot
+                                                  - name: MAT
+                                                    type: int
+                                                    required: true
+                                                  - name: TRIADS
+                                                    type: vector
+                                                    size: 9
+                                                    value_type:
+                                                      type: double
+                                                    required: true
+                                                  - name: USE_FAD
+                                                    type: bool
+                                                    description: "Flag, if automatic differentiation should be used."
+                                                    required: false
+                                                    default: false
+                                              - type: all_of
+                                                specs:
+                                                  - name: CONSTRAINT
+                                                    type: enum
+                                                    description: "Which type of Kirchhoff constraint enforcement should be used."
+                                                    required: true
+                                                    choices:
+                                                      - name: strong
+                                                      - name: weak
+                                                  - name: PARAMETRIZATION
+                                                    type: enum
+                                                    description: "Which type of beam parametrization should be used."
+                                                    required: true
+                                                    choices:
+                                                      - name: tan
+                                                      - name: rot
+                                                  - name: MAT
+                                                    type: int
+                                                    required: true
+                                                  - name: NODAL_ROTATION_VECTORS
+                                                    type: string
+                                                    description: "Nodal triad rotation vectors in reference configuration."
+                                                    required: true
+                                                  - name: USE_FAD
+                                                    type: bool
+                                                    description: "Flag, if automatic differentiation should be used."
+                                                    required: false
+                                                    default: false
                               - type: all_of
                                 specs:
                                   - name: LINE3
@@ -53490,35 +53610,66 @@ $references:
                                     specs:
                                       - type: all_of
                                         specs:
-                                          - name: CONSTRAINT
-                                            type: enum
-                                            description: "Which type of Kirchhoff constraint enforcement should be used."
-                                            required: true
-                                            choices:
-                                              - name: strong
-                                              - name: weak
-                                          - name: PARAMETRIZATION
-                                            type: enum
-                                            description: "Which type of beam parametrization should be used."
-                                            required: true
-                                            choices:
-                                              - name: tan
-                                              - name: rot
-                                          - name: MAT
-                                            type: int
-                                            required: true
-                                          - name: TRIADS
-                                            type: vector
-                                            size: 9
-                                            value_type:
-                                              type: double
-                                            description: "Nodal triad rotation vectors in reference configuration"
-                                            required: true
-                                          - name: USE_FAD
-                                            type: bool
-                                            description: "Flag, if automatic differentiation should be used."
-                                            required: false
-                                            default: false
+                                          - type: one_of
+                                            specs:
+                                              - type: all_of
+                                                specs:
+                                                  - name: CONSTRAINT
+                                                    type: enum
+                                                    description: "Which type of Kirchhoff constraint enforcement should be used."
+                                                    required: true
+                                                    choices:
+                                                      - name: strong
+                                                      - name: weak
+                                                  - name: PARAMETRIZATION
+                                                    type: enum
+                                                    description: "Which type of beam parametrization should be used."
+                                                    required: true
+                                                    choices:
+                                                      - name: tan
+                                                      - name: rot
+                                                  - name: MAT
+                                                    type: int
+                                                    required: true
+                                                  - name: TRIADS
+                                                    type: vector
+                                                    size: 9
+                                                    value_type:
+                                                      type: double
+                                                    required: true
+                                                  - name: USE_FAD
+                                                    type: bool
+                                                    description: "Flag, if automatic differentiation should be used."
+                                                    required: false
+                                                    default: false
+                                              - type: all_of
+                                                specs:
+                                                  - name: CONSTRAINT
+                                                    type: enum
+                                                    description: "Which type of Kirchhoff constraint enforcement should be used."
+                                                    required: true
+                                                    choices:
+                                                      - name: strong
+                                                      - name: weak
+                                                  - name: PARAMETRIZATION
+                                                    type: enum
+                                                    description: "Which type of beam parametrization should be used."
+                                                    required: true
+                                                    choices:
+                                                      - name: tan
+                                                      - name: rot
+                                                  - name: MAT
+                                                    type: int
+                                                    required: true
+                                                  - name: NODAL_ROTATION_VECTORS
+                                                    type: string
+                                                    description: "Nodal triad rotation vectors in reference configuration."
+                                                    required: true
+                                                  - name: USE_FAD
+                                                    type: bool
+                                                    description: "Flag, if automatic differentiation should be used."
+                                                    required: false
+                                                    default: false
                               - type: all_of
                                 specs:
                                   - name: LINE4
@@ -53527,35 +53678,66 @@ $references:
                                     specs:
                                       - type: all_of
                                         specs:
-                                          - name: CONSTRAINT
-                                            type: enum
-                                            description: "Which type of Kirchhoff constraint enforcement should be used."
-                                            required: true
-                                            choices:
-                                              - name: strong
-                                              - name: weak
-                                          - name: PARAMETRIZATION
-                                            type: enum
-                                            description: "Which type of beam parametrization should be used."
-                                            required: true
-                                            choices:
-                                              - name: tan
-                                              - name: rot
-                                          - name: MAT
-                                            type: int
-                                            required: true
-                                          - name: TRIADS
-                                            type: vector
-                                            size: 12
-                                            value_type:
-                                              type: double
-                                            description: "Nodal triad rotation vectors in reference configuration"
-                                            required: true
-                                          - name: USE_FAD
-                                            type: bool
-                                            description: "Flag, if automatic differentiation should be used."
-                                            required: false
-                                            default: false
+                                          - type: one_of
+                                            specs:
+                                              - type: all_of
+                                                specs:
+                                                  - name: CONSTRAINT
+                                                    type: enum
+                                                    description: "Which type of Kirchhoff constraint enforcement should be used."
+                                                    required: true
+                                                    choices:
+                                                      - name: strong
+                                                      - name: weak
+                                                  - name: PARAMETRIZATION
+                                                    type: enum
+                                                    description: "Which type of beam parametrization should be used."
+                                                    required: true
+                                                    choices:
+                                                      - name: tan
+                                                      - name: rot
+                                                  - name: MAT
+                                                    type: int
+                                                    required: true
+                                                  - name: TRIADS
+                                                    type: vector
+                                                    size: 9
+                                                    value_type:
+                                                      type: double
+                                                    required: true
+                                                  - name: USE_FAD
+                                                    type: bool
+                                                    description: "Flag, if automatic differentiation should be used."
+                                                    required: false
+                                                    default: false
+                                              - type: all_of
+                                                specs:
+                                                  - name: CONSTRAINT
+                                                    type: enum
+                                                    description: "Which type of Kirchhoff constraint enforcement should be used."
+                                                    required: true
+                                                    choices:
+                                                      - name: strong
+                                                      - name: weak
+                                                  - name: PARAMETRIZATION
+                                                    type: enum
+                                                    description: "Which type of beam parametrization should be used."
+                                                    required: true
+                                                    choices:
+                                                      - name: tan
+                                                      - name: rot
+                                                  - name: MAT
+                                                    type: int
+                                                    required: true
+                                                  - name: NODAL_ROTATION_VECTORS
+                                                    type: string
+                                                    description: "Nodal triad rotation vectors in reference configuration."
+                                                    required: true
+                                                  - name: USE_FAD
+                                                    type: bool
+                                                    description: "Flag, if automatic differentiation should be used."
+                                                    required: false
+                                                    default: false
               - type: all_of
                 specs:
                   - name: BEAM3R
@@ -63395,35 +63577,66 @@ $references:
                                   specs:
                                     - type: all_of
                                       specs:
-                                        - name: CONSTRAINT
-                                          type: enum
-                                          description: "Which type of Kirchhoff constraint enforcement should be used."
-                                          required: true
-                                          choices:
-                                            - name: strong
-                                            - name: weak
-                                        - name: PARAMETRIZATION
-                                          type: enum
-                                          description: "Which type of beam parametrization should be used."
-                                          required: true
-                                          choices:
-                                            - name: tan
-                                            - name: rot
-                                        - name: MAT
-                                          type: int
-                                          required: true
-                                        - name: TRIADS
-                                          type: vector
-                                          size: 6
-                                          value_type:
-                                            type: double
-                                          description: "Nodal triad rotation vectors in reference configuration"
-                                          required: true
-                                        - name: USE_FAD
-                                          type: bool
-                                          description: "Flag, if automatic differentiation should be used."
-                                          required: false
-                                          default: false
+                                        - type: one_of
+                                          specs:
+                                            - type: all_of
+                                              specs:
+                                                - name: CONSTRAINT
+                                                  type: enum
+                                                  description: "Which type of Kirchhoff constraint enforcement should be used."
+                                                  required: true
+                                                  choices:
+                                                    - name: strong
+                                                    - name: weak
+                                                - name: PARAMETRIZATION
+                                                  type: enum
+                                                  description: "Which type of beam parametrization should be used."
+                                                  required: true
+                                                  choices:
+                                                    - name: tan
+                                                    - name: rot
+                                                - name: MAT
+                                                  type: int
+                                                  required: true
+                                                - name: TRIADS
+                                                  type: vector
+                                                  size: 9
+                                                  value_type:
+                                                    type: double
+                                                  required: true
+                                                - name: USE_FAD
+                                                  type: bool
+                                                  description: "Flag, if automatic differentiation should be used."
+                                                  required: false
+                                                  default: false
+                                            - type: all_of
+                                              specs:
+                                                - name: CONSTRAINT
+                                                  type: enum
+                                                  description: "Which type of Kirchhoff constraint enforcement should be used."
+                                                  required: true
+                                                  choices:
+                                                    - name: strong
+                                                    - name: weak
+                                                - name: PARAMETRIZATION
+                                                  type: enum
+                                                  description: "Which type of beam parametrization should be used."
+                                                  required: true
+                                                  choices:
+                                                    - name: tan
+                                                    - name: rot
+                                                - name: MAT
+                                                  type: int
+                                                  required: true
+                                                - name: NODAL_ROTATION_VECTORS
+                                                  type: string
+                                                  description: "Nodal triad rotation vectors in reference configuration."
+                                                  required: true
+                                                - name: USE_FAD
+                                                  type: bool
+                                                  description: "Flag, if automatic differentiation should be used."
+                                                  required: false
+                                                  default: false
                             - type: all_of
                               specs:
                                 - name: LINE3
@@ -63432,35 +63645,66 @@ $references:
                                   specs:
                                     - type: all_of
                                       specs:
-                                        - name: CONSTRAINT
-                                          type: enum
-                                          description: "Which type of Kirchhoff constraint enforcement should be used."
-                                          required: true
-                                          choices:
-                                            - name: strong
-                                            - name: weak
-                                        - name: PARAMETRIZATION
-                                          type: enum
-                                          description: "Which type of beam parametrization should be used."
-                                          required: true
-                                          choices:
-                                            - name: tan
-                                            - name: rot
-                                        - name: MAT
-                                          type: int
-                                          required: true
-                                        - name: TRIADS
-                                          type: vector
-                                          size: 9
-                                          value_type:
-                                            type: double
-                                          description: "Nodal triad rotation vectors in reference configuration"
-                                          required: true
-                                        - name: USE_FAD
-                                          type: bool
-                                          description: "Flag, if automatic differentiation should be used."
-                                          required: false
-                                          default: false
+                                        - type: one_of
+                                          specs:
+                                            - type: all_of
+                                              specs:
+                                                - name: CONSTRAINT
+                                                  type: enum
+                                                  description: "Which type of Kirchhoff constraint enforcement should be used."
+                                                  required: true
+                                                  choices:
+                                                    - name: strong
+                                                    - name: weak
+                                                - name: PARAMETRIZATION
+                                                  type: enum
+                                                  description: "Which type of beam parametrization should be used."
+                                                  required: true
+                                                  choices:
+                                                    - name: tan
+                                                    - name: rot
+                                                - name: MAT
+                                                  type: int
+                                                  required: true
+                                                - name: TRIADS
+                                                  type: vector
+                                                  size: 9
+                                                  value_type:
+                                                    type: double
+                                                  required: true
+                                                - name: USE_FAD
+                                                  type: bool
+                                                  description: "Flag, if automatic differentiation should be used."
+                                                  required: false
+                                                  default: false
+                                            - type: all_of
+                                              specs:
+                                                - name: CONSTRAINT
+                                                  type: enum
+                                                  description: "Which type of Kirchhoff constraint enforcement should be used."
+                                                  required: true
+                                                  choices:
+                                                    - name: strong
+                                                    - name: weak
+                                                - name: PARAMETRIZATION
+                                                  type: enum
+                                                  description: "Which type of beam parametrization should be used."
+                                                  required: true
+                                                  choices:
+                                                    - name: tan
+                                                    - name: rot
+                                                - name: MAT
+                                                  type: int
+                                                  required: true
+                                                - name: NODAL_ROTATION_VECTORS
+                                                  type: string
+                                                  description: "Nodal triad rotation vectors in reference configuration."
+                                                  required: true
+                                                - name: USE_FAD
+                                                  type: bool
+                                                  description: "Flag, if automatic differentiation should be used."
+                                                  required: false
+                                                  default: false
                             - type: all_of
                               specs:
                                 - name: LINE4
@@ -63469,35 +63713,66 @@ $references:
                                   specs:
                                     - type: all_of
                                       specs:
-                                        - name: CONSTRAINT
-                                          type: enum
-                                          description: "Which type of Kirchhoff constraint enforcement should be used."
-                                          required: true
-                                          choices:
-                                            - name: strong
-                                            - name: weak
-                                        - name: PARAMETRIZATION
-                                          type: enum
-                                          description: "Which type of beam parametrization should be used."
-                                          required: true
-                                          choices:
-                                            - name: tan
-                                            - name: rot
-                                        - name: MAT
-                                          type: int
-                                          required: true
-                                        - name: TRIADS
-                                          type: vector
-                                          size: 12
-                                          value_type:
-                                            type: double
-                                          description: "Nodal triad rotation vectors in reference configuration"
-                                          required: true
-                                        - name: USE_FAD
-                                          type: bool
-                                          description: "Flag, if automatic differentiation should be used."
-                                          required: false
-                                          default: false
+                                        - type: one_of
+                                          specs:
+                                            - type: all_of
+                                              specs:
+                                                - name: CONSTRAINT
+                                                  type: enum
+                                                  description: "Which type of Kirchhoff constraint enforcement should be used."
+                                                  required: true
+                                                  choices:
+                                                    - name: strong
+                                                    - name: weak
+                                                - name: PARAMETRIZATION
+                                                  type: enum
+                                                  description: "Which type of beam parametrization should be used."
+                                                  required: true
+                                                  choices:
+                                                    - name: tan
+                                                    - name: rot
+                                                - name: MAT
+                                                  type: int
+                                                  required: true
+                                                - name: TRIADS
+                                                  type: vector
+                                                  size: 9
+                                                  value_type:
+                                                    type: double
+                                                  required: true
+                                                - name: USE_FAD
+                                                  type: bool
+                                                  description: "Flag, if automatic differentiation should be used."
+                                                  required: false
+                                                  default: false
+                                            - type: all_of
+                                              specs:
+                                                - name: CONSTRAINT
+                                                  type: enum
+                                                  description: "Which type of Kirchhoff constraint enforcement should be used."
+                                                  required: true
+                                                  choices:
+                                                    - name: strong
+                                                    - name: weak
+                                                - name: PARAMETRIZATION
+                                                  type: enum
+                                                  description: "Which type of beam parametrization should be used."
+                                                  required: true
+                                                  choices:
+                                                    - name: tan
+                                                    - name: rot
+                                                - name: MAT
+                                                  type: int
+                                                  required: true
+                                                - name: NODAL_ROTATION_VECTORS
+                                                  type: string
+                                                  description: "Nodal triad rotation vectors in reference configuration."
+                                                  required: true
+                                                - name: USE_FAD
+                                                  type: bool
+                                                  description: "Flag, if automatic differentiation should be used."
+                                                  required: false
+                                                  default: false
             - type: all_of
               specs:
                 - name: ID
