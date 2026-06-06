@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 258537bf53202cb79fedc134c0cce0b2caa8a54a
+  commit_hash: d85e25e6bdd27e11cc9b0f34a7fbede44faff78b
   version: 2026.3.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -41577,6 +41577,17 @@ sections:
                                 maximum: 2147483647
                                 minimum_exclusive: true
                                 maximum_exclusive: false
+                          - name: TAYLOR_QUINNEY_COEFFICIENT
+                            type: double
+                            description: "Taylor-Quinney coefficient $\\xi_{TQ}$ modeling the internal dissipation"
+                            required: false
+                            default: 0
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: false
+                                maximum_exclusive: false
                           - name: YIELD_COND_A
                             noneable: true
                             type: double
@@ -42060,6 +42071,22 @@ sections:
                             type: double
                             description: "material mass density"
                             required: true
+                          - name: REF_TEMPERATURE
+                            type: double
+                            description: "reference temperature for thermoelastic expansion."
+                            required: false
+                            default: 0
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: false
+                                maximum_exclusive: false
+                          - name: THERMAL_EXPANSION_COEFFICIENT
+                            type: double
+                            description: "coefficient of thermal expansion $\\alpha_T$"
+                            required: false
+                            default: 0
               - type: all_of
                 specs:
                   - name: MAT
