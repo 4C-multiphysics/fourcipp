@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: d85e25e6bdd27e11cc9b0f34a7fbede44faff78b
+  commit_hash: dad215ae962f2416b8196d287f1ea4aa736e1258
   version: 2026.3.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -33807,6 +33807,11 @@ sections:
                                 maximum: 2147483647
                                 minimum_exclusive: false
                                 maximum_exclusive: false
+                          - name: IMPLICIT_INTEGRATION
+                            type: bool
+                            description: "Integrate growth_scalar and lambda_r implicitly at each Newton iteration. Default: false."
+                            required: false
+                            default: false
               - type: all_of
                 specs:
                   - name: MAT
@@ -36306,7 +36311,7 @@ sections:
                     required: true
                   - name: VISCO_GeneralizedMaxwell
                     type: group
-                    description: Generalized Maxwell model
+                    description: Top-level generalized Maxwell visco summand
                     required: true
                     specs:
                       - type: all_of
@@ -36755,7 +36760,7 @@ sections:
                     required: true
                   - name: VISCO_GeneralizedMaxwellBranch
                     type: group
-                    description: Viscoelastic branch for generalized Maxwell model
+                    description: Branch definition for a generalized Maxwell visco summand
                     required: true
                     specs:
                       - type: all_of
@@ -36940,7 +36945,7 @@ sections:
                     required: true
                   - name: VISCO_FSLS
                     type: group
-                    description: Viscous contribution according to FSLS-Model
+                    description: Fractional standard linear solid visco summand
                     required: true
                     specs:
                       - type: all_of
@@ -37149,7 +37154,7 @@ sections:
                     required: true
                   - name: MAT_ViscoElastHyper
                     type: group
-                    description: Viscohyperelastic material compatible with the collection of hyperelastic materials
+                    description: Viscohyperelastic material. Uses NUMMAT/MATIDS as the complete summand list and supports explicit elastic/visco splits with NUMELAST/ELAST_MATIDS and NUMVISCO/VISCO_MATIDS.
                     required: true
                     specs:
                       - type: all_of
@@ -37164,6 +37169,34 @@ sections:
                               type: int
                             description: "the list material/potential IDs"
                             required: true
+                          - name: NUMELAST
+                            noneable: true
+                            type: int
+                            description: "explicit number of purely elastic summands"
+                            required: false
+                            default: null
+                          - name: ELAST_MATIDS
+                            noneable: true
+                            type: vector
+                            value_type:
+                              type: int
+                            description: "explicit purely elastic summand IDs"
+                            required: false
+                            default: null
+                          - name: NUMVISCO
+                            noneable: true
+                            type: int
+                            description: "explicit number of visco summands"
+                            required: false
+                            default: null
+                          - name: VISCO_MATIDS
+                            noneable: true
+                            type: vector
+                            value_type:
+                              type: int
+                            description: "explicit visco summand IDs"
+                            required: false
+                            default: null
                           - name: DENS
                             type: double
                             description: "material mass density"
@@ -38549,7 +38582,7 @@ sections:
                     required: true
                   - name: VISCO_CoupMyocard
                     type: group
-                    description: Isotropic viscous contribution of myocardial matrix
+                    description: Iso-rate viscous contribution of myocardial matrix
                     required: true
                     specs:
                       - type: all_of
@@ -41407,7 +41440,7 @@ sections:
                     required: true
                   - name: VISCO_IsoRateDep
                     type: group
-                    description: Isochoric rate dependent viscous material
+                    description: Isochoric iso-rate viscous summand
                     required: true
                     specs:
                       - type: all_of
