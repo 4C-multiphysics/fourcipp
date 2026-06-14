@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 86596f8aacb1115f8b287a067b4005ca87c389a4
+  commit_hash: 93b0707359025002e0d8a3ee6b5a88b1f22bf9a3
   version: 2026.3.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -34352,10 +34352,6 @@ sections:
                     specs:
                       - type: all_of
                         specs:
-                          - name: NUMMAT
-                            type: int
-                            description: "number of summands"
-                            required: true
                           - name: MATIDS
                             type: vector
                             value_type:
