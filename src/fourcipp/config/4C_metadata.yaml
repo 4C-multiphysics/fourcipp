@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 93b0707359025002e0d8a3ee6b5a88b1f22bf9a3
+  commit_hash: 328a8884736e3dd9f2f48a7daa01d081ffae46d9
   version: 2026.3.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -37426,70 +37426,74 @@ sections:
                     specs:
                       - type: all_of
                         specs:
-                          - name: DIFF_COEF_CONC_DEP_FUNCT
-                            type: int
-                            description: "function number of function describing concentration dependence of diffusion coefficient"
+                          - name: DIFF_COEF
+                            type: double
+                            description: "value of the diffusion coefficient without concentration or temperature dependence"
                             required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: DIFF_COEF_CONC_SCALE_FUNCT
+                            noneable: true
+                            type: int
+                            description: "optional function number describing concentration scaling of the diffusion coefficient"
+                            required: false
+                            default: null
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
                           - name: DIFF_COEF_TEMP_SCALE_FUNCT
+                            noneable: true
                             type: int
-                            description: "FUNCT number describing temperature scaling of diffusion coefficient"
+                            description: "optional function number describing temperature scaling of thediffusion coefficient"
+                            required: false
+                            default: null
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: COND
+                            type: double
+                            description: "value of the conductivity without concentration or temperature dependence"
                             required: true
-                          - name: COND_CONC_DEP_FUNCT
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: COND_CONC_SCALE_FUNCT
+                            noneable: true
                             type: int
-                            description: "function number of function describing concentration dependence of conductivity"
-                            required: true
+                            description: "optional function number describing the concentration scaling of the conductivity"
+                            required: false
+                            default: null
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
                           - name: COND_TEMP_SCALE_FUNCT
+                            noneable: true
                             type: int
-                            description: "FUNCT number describing temperature scaling of conductivity"
-                            required: true
-                          - name: DIFF_PARA_NUM
-                            type: int
-                            description: "number of parameters for diffusion coefficient"
+                            description: "optional function number describing the temperature scaling of the conductivity"
                             required: false
-                            default: 0
-                          - name: DIFF_PARA
-                            type: vector
-                            value_type:
-                              type: double
-                            description: "parameters for diffusion coefficient"
-                            required: false
-                            default: []
-                          - name: DIFF_COEF_TEMP_SCALE_FUNCT_PARA_NUM
-                            type: int
-                            description: "number of parameters for scaling function describing temperature dependence of diffusion coefficient"
-                            required: false
-                            default: 0
-                          - name: DIFF_COEF_TEMP_SCALE_FUNCT_PARA
-                            type: vector
-                            value_type:
-                              type: double
-                            description: "parameters for function describing temperature dependence of diffusion coefficient"
-                            required: false
-                            default: []
-                          - name: COND_PARA_NUM
-                            type: int
-                            description: "number of parameters for electronic conductivity"
-                            required: false
-                            default: 0
-                          - name: COND_PARA
-                            type: vector
-                            value_type:
-                              type: double
-                            description: "parameters for electronic conductivity"
-                            required: false
-                            default: []
-                          - name: COND_TEMP_SCALE_FUNCT_PARA_NUM
-                            type: int
-                            description: "number of parameters for temperature scaling of conductivity"
-                            required: false
-                            default: 0
-                          - name: COND_TEMP_SCALE_FUNCT_PARA
-                            type: vector
-                            value_type:
-                              type: double
-                            description: "parameters for temperature scaling of conductivity"
-                            required: false
-                            default: []
+                            default: null
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
                           - name: C_MAX
                             type: double
                             description: "saturation value of intercalated Lithium concentration"
@@ -37676,86 +37680,96 @@ sections:
                             type: double
                             description: "valence/charge number"
                             required: true
-                          - name: DIFF_COEF_CONC_DEP_FUNCT
-                            type: int
-                            description: "function number of function describing concentration dependence of diffusion coefficient"
+                          - name: DIFF_COEF
+                            type: double
+                            description: "value of the diffusion coefficient without concentration or temperature dependence"
                             required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: DIFF_COEF_CONC_SCALE_FUNCT
+                            noneable: true
+                            type: int
+                            description: "optional function number describing concentration scaling of the diffusion coefficient"
+                            required: false
+                            default: null
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
                           - name: DIFF_COEF_TEMP_SCALE_FUNCT
+                            noneable: true
                             type: int
-                            description: "function number describing temperature scaling of diffusion coefficient"
+                            description: "optional function number describing temperature scaling of thediffusion coefficient"
+                            required: false
+                            default: null
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: COND
+                            type: double
+                            description: "value of the conductivity without concentration or temperature dependence"
                             required: true
-                          - name: TRANSNR
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: COND_CONC_SCALE_FUNCT
+                            noneable: true
                             type: int
-                            description: "curve number for transference number"
-                            required: true
-                          - name: COND_CONC_DEP_FUNCT
-                            type: int
-                            description: "function number of function describing concentration dependence of conductivity"
-                            required: true
+                            description: "optional function number describing the concentration scaling of the conductivity"
+                            required: false
+                            default: null
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
                           - name: COND_TEMP_SCALE_FUNCT
+                            noneable: true
                             type: int
-                            description: "function number describing temperature scaling of conductivity"
+                            description: "optional function number describing the temperature scaling of the conductivity"
+                            required: false
+                            default: null
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: TRANSFERENCE_NR
+                            type: double
+                            description: "value of the transference number without concentration dependence"
                             required: true
-                          - name: DIFF_PARA_NUM
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: TRANSFERENCE_NR_CONC_SCALE_FUNCT
+                            noneable: true
                             type: int
-                            description: "number of parameters for diffusion coefficient"
+                            description: "optional function number describing the concentration scaling of the transference number"
                             required: false
-                            default: 0
-                          - name: DIFF_PARA
-                            type: vector
-                            value_type:
-                              type: double
-                            description: "parameters for diffusion coefficient"
-                            required: false
-                            default: []
-                          - name: DIFF_COEF_TEMP_SCALE_FUNCT_PARA_NUM
-                            type: int
-                            description: "number of parameters for scaling function describing temperature dependence of diffusion coefficient"
-                            required: false
-                            default: 0
-                          - name: DIFF_COEF_TEMP_SCALE_FUNCT_PARA
-                            type: vector
-                            value_type:
-                              type: double
-                            description: "parameters for function describing temperature dependence of diffusion coefficient"
-                            required: false
-                            default: []
-                          - name: TRANS_PARA_NUM
-                            type: int
-                            description: "number of parameters for transference number"
-                            required: false
-                            default: 0
-                          - name: TRANS_PARA
-                            type: vector
-                            value_type:
-                              type: double
-                            description: "parameters for transference number"
-                            required: false
-                            default: []
-                          - name: COND_PARA_NUM
-                            type: int
-                            description: "number of parameters for conductivity"
-                            required: false
-                            default: 0
-                          - name: COND_PARA
-                            type: vector
-                            value_type:
-                              type: double
-                            description: "parameters for conductivity"
-                            required: false
-                            default: []
-                          - name: COND_TEMP_SCALE_FUNCT_PARA_NUM
-                            type: int
-                            description: "number of parameters for temperature scaling of conductivity"
-                            required: false
-                            default: 0
-                          - name: COND_TEMP_SCALE_FUNCT_PARA
-                            type: vector
-                            value_type:
-                              type: double
-                            description: "parameters for temperature scaling of conductivity"
-                            required: false
-                            default: []
+                            default: null
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
                           - name: MAX_CONC
                             type: double
                             description: "maximum cation concentration"
@@ -37797,30 +37811,118 @@ sections:
                             type: double
                             description: "valence (= charge number)"
                             required: true
-                          - name: DIFF_COEF_CONC_DEP_FUNCT
-                            type: int
-                            description: "function number of function describing concentration dependence of diffusion coefficient"
+                          - name: DIFF_COEF
+                            type: double
+                            description: "value of the diffusion coefficient without concentration or temperature dependence"
                             required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: DIFF_COEF_CONC_SCALE_FUNCT
+                            noneable: true
+                            type: int
+                            description: "optional function number describing concentration scaling of the diffusion coefficient"
+                            required: false
+                            default: null
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
                           - name: DIFF_COEF_TEMP_SCALE_FUNCT
+                            noneable: true
                             type: int
-                            description: "FUNCT number describing temperature scaling of diffusion coefficient"
+                            description: "optional function number describing temperature scaling of thediffusion coefficient"
+                            required: false
+                            default: null
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: TRANSFERENCE_NR
+                            type: double
+                            description: "value of the transference number without concentration dependence"
                             required: true
-                          - name: TRANSNR
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: TRANSFERENCE_NR_CONC_SCALE_FUNCT
+                            noneable: true
                             type: int
-                            description: "curve number for transference number"
+                            description: "optional function number describing the concentration scaling of the transference number"
+                            required: false
+                            default: null
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: THERM_FAC
+                            type: double
+                            description: "value of the thermodynamic factor without concentration dependence"
                             required: true
-                          - name: THERMFAC
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: THERM_FAC_CONC_SCALE_FUNCT
+                            noneable: true
                             type: int
-                            description: "curve number for thermodynamic factor"
+                            description: "optional function number describing the concentration scaling of the thermodynamic factor"
+                            required: false
+                            default: null
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: COND
+                            type: double
+                            description: "value of the conductivity without concentration or temperature dependence"
                             required: true
-                          - name: COND_CONC_DEP_FUNCT
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: COND_CONC_SCALE_FUNCT
+                            noneable: true
                             type: int
-                            description: "function number of function describing concentration dependence of conductivity"
-                            required: true
+                            description: "optional function number describing the concentration scaling of the conductivity"
+                            required: false
+                            default: null
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
                           - name: COND_TEMP_SCALE_FUNCT
+                            noneable: true
                             type: int
-                            description: "FUNCT number describing temperature scaling of conductivity"
-                            required: true
+                            description: "optional function number describing the temperature scaling of the conductivity"
+                            required: false
+                            default: null
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
                           - name: ELECTRONIC_COND
                             type: double
                             description: "electronic conductivity"
@@ -37842,78 +37944,6 @@ sections:
                             type: int
                             description: "number of micro-scale discretization"
                             required: true
-                          - name: DIFF_PARA_NUM
-                            type: int
-                            description: "number of parameters for diffusion coefficient"
-                            required: false
-                            default: 0
-                          - name: DIFF_PARA
-                            type: vector
-                            value_type:
-                              type: double
-                            description: "parameters for diffusion coefficient"
-                            required: false
-                            default: []
-                          - name: DIFF_COEF_TEMP_SCALE_FUNCT_PARA_NUM
-                            type: int
-                            description: "number of parameters for scaling function describing temperature dependence of diffusion coefficient"
-                            required: false
-                            default: 0
-                          - name: DIFF_COEF_TEMP_SCALE_FUNCT_PARA
-                            type: vector
-                            value_type:
-                              type: double
-                            description: "parameters for function describing temperature dependence of diffusion coefficient"
-                            required: false
-                            default: []
-                          - name: TRANS_PARA_NUM
-                            type: int
-                            description: "number of parameters for transference number"
-                            required: false
-                            default: 0
-                          - name: TRANS_PARA
-                            type: vector
-                            value_type:
-                              type: double
-                            description: "parameters for transference number"
-                            required: false
-                            default: []
-                          - name: THERM_PARA_NUM
-                            type: int
-                            description: "number of parameters for thermodynamic factor"
-                            required: false
-                            default: 0
-                          - name: THERM_PARA
-                            type: vector
-                            value_type:
-                              type: double
-                            description: "parameters for thermodynamic factor"
-                            required: false
-                            default: []
-                          - name: COND_PARA_NUM
-                            type: int
-                            description: "number of parameters for ionic conductivity"
-                            required: false
-                            default: 0
-                          - name: COND_PARA
-                            type: vector
-                            value_type:
-                              type: double
-                            description: "parameters for ionic conductivity"
-                            required: false
-                            default: []
-                          - name: COND_TEMP_SCALE_FUNCT_PARA_NUM
-                            type: int
-                            description: "number of parameters for temperature scaling of conductivity"
-                            required: false
-                            default: 0
-                          - name: COND_TEMP_SCALE_FUNCT_PARA
-                            type: vector
-                            value_type:
-                              type: double
-                            description: "parameters for temperature scaling of conductivity"
-                            required: false
-                            default: []
               - type: all_of
                 specs:
                   - name: MAT
@@ -38946,102 +38976,118 @@ sections:
                             type: double
                             description: "valence (= charge number)"
                             required: true
-                          - name: DIFF_COEF_CONC_DEP_FUNCT
-                            type: int
-                            description: "function number of function describing concentration dependence of diffusion coefficient"
+                          - name: DIFF_COEF
+                            type: double
+                            description: "value of the diffusion coefficient without concentration or temperature dependence"
                             required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: DIFF_COEF_CONC_SCALE_FUNCT
+                            noneable: true
+                            type: int
+                            description: "optional function number describing concentration scaling of the diffusion coefficient"
+                            required: false
+                            default: null
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
                           - name: DIFF_COEF_TEMP_SCALE_FUNCT
+                            noneable: true
                             type: int
-                            description: "FUNCT number describing temperature scaling of diffusion coefficient"
+                            description: "optional function number describing temperature scaling of thediffusion coefficient"
+                            required: false
+                            default: null
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: TRANSFERENCE_NR
+                            type: double
+                            description: "value of the transference number without concentration dependence"
                             required: true
-                          - name: TRANSNR
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: TRANSFERENCE_NR_CONC_SCALE_FUNCT
+                            noneable: true
                             type: int
-                            description: "curve number for transference number"
+                            description: "optional function number describing the concentration scaling of the transference number"
+                            required: false
+                            default: null
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: THERM_FAC
+                            type: double
+                            description: "value of the thermodynamic factor without concentration dependence"
                             required: true
-                          - name: THERMFAC
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: THERM_FAC_CONC_SCALE_FUNCT
+                            noneable: true
                             type: int
-                            description: "curve number for thermodynamic factor"
+                            description: "optional function number describing the concentration scaling of the thermodynamic factor"
+                            required: false
+                            default: null
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: COND
+                            type: double
+                            description: "value of the conductivity without concentration or temperature dependence"
                             required: true
-                          - name: COND_CONC_DEP_FUNCT
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: COND_CONC_SCALE_FUNCT
+                            noneable: true
                             type: int
-                            description: "function number of function describing concentration dependence of conductivity"
-                            required: true
+                            description: "optional function number describing the concentration scaling of the conductivity"
+                            required: false
+                            default: null
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
                           - name: COND_TEMP_SCALE_FUNCT
+                            noneable: true
                             type: int
-                            description: "FUNCT number describing temperature scaling of conductivity"
-                            required: true
-                          - name: DIFF_PARA_NUM
-                            type: int
-                            description: "number of parameters for diffusion coefficient"
+                            description: "optional function number describing the temperature scaling of the conductivity"
                             required: false
-                            default: 0
-                          - name: DIFF_PARA
-                            type: vector
-                            value_type:
-                              type: double
-                            description: "parameters for diffusion coefficient"
-                            required: false
-                            default: []
-                          - name: DIFF_COEF_TEMP_SCALE_FUNCT_PARA_NUM
-                            type: int
-                            description: "number of parameters for scaling function describing temperature dependence of diffusion coefficient"
-                            required: false
-                            default: 0
-                          - name: DIFF_COEF_TEMP_SCALE_FUNCT_PARA
-                            type: vector
-                            value_type:
-                              type: double
-                            description: "parameters for function describing temperature dependence of diffusion coefficient"
-                            required: false
-                            default: []
-                          - name: TRANS_PARA_NUM
-                            type: int
-                            description: "number of parameters for transference number"
-                            required: false
-                            default: 0
-                          - name: TRANS_PARA
-                            type: vector
-                            value_type:
-                              type: double
-                            description: "parameters for transference number"
-                            required: false
-                            default: []
-                          - name: THERM_PARA_NUM
-                            type: int
-                            description: "number of parameters for thermodynamic factor"
-                            required: false
-                            default: 0
-                          - name: THERM_PARA
-                            type: vector
-                            value_type:
-                              type: double
-                            description: "parameters for thermodynamic factor"
-                            required: false
-                            default: []
-                          - name: COND_PARA_NUM
-                            type: int
-                            description: "number of parameters for conductivity"
-                            required: false
-                            default: 0
-                          - name: COND_PARA
-                            type: vector
-                            value_type:
-                              type: double
-                            description: "parameters for conductivity"
-                            required: false
-                            default: []
-                          - name: COND_TEMP_SCALE_FUNCT_PARA_NUM
-                            type: int
-                            description: "number of parameters for temperature scaling of conductivity"
-                            required: false
-                            default: 0
-                          - name: COND_TEMP_SCALE_FUNCT_PARA
-                            type: vector
-                            value_type:
-                              type: double
-                            description: "parameters for temperature scaling of conductivity"
-                            required: false
-                            default: []
+                            default: null
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
               - type: all_of
                 specs:
                   - name: MAT
@@ -39145,7 +39191,10 @@ sections:
                     specs:
                       - type: all_of
                         specs:
-                          - type: one_of
+                          - name: PASSIVE
+                            type: group
+                            description: Passive material parameters
+                            required: true
                             specs:
                               - type: all_of
                                 specs:
@@ -39179,10 +39228,6 @@ sections:
                                         maximum: 1.7976931348623157e+308
                                         minimum_exclusive: true
                                         maximum_exclusive: false
-                                  - name: KAPPA
-                                    type: double
-                                    description: "material parameter for coupled volumetric contribution"
-                                    required: true
                                   - name: OMEGA0
                                     type: double
                                     description: "weighting factor for isotropic tissue constituents"
@@ -39193,235 +39238,170 @@ sections:
                                         maximum: 1
                                         minimum_exclusive: false
                                         maximum_exclusive: false
-                                  - name: POPT
+                                  - name: KAPPA
                                     type: double
-                                    description: "tetanised optimal (maximal) active stress"
+                                    description: "material parameter for coupled volumetric contribution"
                                     required: true
-                                    validator:
-                                      range:
-                                        minimum: 0
-                                        maximum: 1.7976931348623157e+308
-                                        minimum_exclusive: false
-                                        maximum_exclusive: false
-                                  - name: LAMBDAMIN
-                                    type: double
-                                    description: "minimal active fiber stretch"
-                                    required: true
-                                    validator:
-                                      range:
-                                        minimum: 0
-                                        maximum: 1.7976931348623157e+308
-                                        minimum_exclusive: true
-                                        maximum_exclusive: false
-                                  - name: LAMBDAOPT
-                                    type: double
-                                    description: "optimal active fiber stretch related to active nominal stress maximum"
-                                    required: true
-                                    validator:
-                                      range:
-                                        minimum: 0
-                                        maximum: 1.7976931348623157e+308
-                                        minimum_exclusive: true
-                                        maximum_exclusive: false
-                                  - name: ACTIVATION_FUNCTION_ID
-                                    type: int
-                                    description: "function id for time- and space-dependency of muscle activation"
-                                    required: true
-                                  - name: DENS
-                                    type: double
-                                    description: "density"
-                                    required: true
-                                    validator:
-                                      range:
-                                        minimum: 0
-                                        maximum: 1.7976931348623157e+308
-                                        minimum_exclusive: false
-                                        maximum_exclusive: false
-                                  - name: FIBER_ORIENTATION
-                                    type: selection
-                                    description: "A unit vector field pointing in the direction of the fibers."
-                                    required: true
-                                    choices:
-                                      - name: constant
-                                        spec:
-                                          name: constant
-                                          type: vector
-                                          size: 3
-                                          value_type:
-                                            type: double
-                                          description: "Constant value for the field."
-                                          required: true
-                                      - name: from_file
-                                        spec:
-                                          name: from_file
-                                          type: path
-                                          description: "Path to a file containing the input field data."
-                                          required: true
-                                      - name: field_reference
-                                        spec:
-                                          name: field_reference
-                                          type: string
-                                          description: "Refer to a globally defined field by a name."
-                                          required: true
-                                      - name: from_mesh
-                                        spec:
-                                          name: from_mesh
-                                          type: string
-                                          description: "Refer to a field defined in the input mesh by a name."
-                                          required: true
+                          - name: ACTIVE
+                            type: group
+                            description: Active material parameters
+                            required: false
+                            specs:
                               - type: all_of
                                 specs:
-                                  - name: ALPHA
-                                    type: double
-                                    description: "experimentally fitted material parameter"
-                                    required: true
-                                    validator:
-                                      range:
-                                        minimum: 0
-                                        maximum: 1.7976931348623157e+308
-                                        minimum_exclusive: true
-                                        maximum_exclusive: false
-                                  - name: BETA
-                                    type: double
-                                    description: "experimentally fitted material parameter"
-                                    required: true
-                                    validator:
-                                      range:
-                                        minimum: 0
-                                        maximum: 1.7976931348623157e+308
-                                        minimum_exclusive: true
-                                        maximum_exclusive: false
-                                  - name: GAMMA
-                                    type: double
-                                    description: "experimentally fitted material parameter"
-                                    required: true
-                                    validator:
-                                      range:
-                                        minimum: 0
-                                        maximum: 1.7976931348623157e+308
-                                        minimum_exclusive: true
-                                        maximum_exclusive: false
-                                  - name: KAPPA
-                                    type: double
-                                    description: "material parameter for coupled volumetric contribution"
-                                    required: true
-                                  - name: OMEGA0
-                                    type: double
-                                    description: "weighting factor for isotropic tissue constituents"
-                                    required: true
-                                    validator:
-                                      range:
-                                        minimum: 0
-                                        maximum: 1
-                                        minimum_exclusive: false
-                                        maximum_exclusive: false
-                                  - name: POPT
-                                    type: double
-                                    description: "tetanised optimal (maximal) active stress"
-                                    required: true
-                                    validator:
-                                      range:
-                                        minimum: 0
-                                        maximum: 1.7976931348623157e+308
-                                        minimum_exclusive: false
-                                        maximum_exclusive: false
-                                  - name: LAMBDAMIN
-                                    type: double
-                                    description: "minimal active fiber stretch"
-                                    required: true
-                                    validator:
-                                      range:
-                                        minimum: 0
-                                        maximum: 1.7976931348623157e+308
-                                        minimum_exclusive: true
-                                        maximum_exclusive: false
-                                  - name: LAMBDAOPT
-                                    type: double
-                                    description: "optimal active fiber stretch related to active nominal stress maximum"
-                                    required: true
-                                    validator:
-                                      range:
-                                        minimum: 0
-                                        maximum: 1.7976931348623157e+308
-                                        minimum_exclusive: true
-                                        maximum_exclusive: false
-                                  - name: ACTIVATION_VALUES
-                                    type: selection
-                                    description: "json input file containing a map of elementwise-defined discrete values for time- and space-dependency of muscle activation"
-                                    required: true
-                                    choices:
-                                      - name: constant
-                                        spec:
-                                          name: constant
-                                          type: vector
-                                          value_type:
-                                            type: tuple
-                                            size: 2
-                                            value_types:
-                                              - type: double
-                                              - type: double
-                                          description: "Constant value for the field."
-                                          required: true
-                                      - name: from_file
-                                        spec:
-                                          name: from_file
-                                          type: path
-                                          description: "Path to a file containing the input field data."
-                                          required: true
-                                      - name: field_reference
-                                        spec:
-                                          name: field_reference
-                                          type: string
-                                          description: "Refer to a globally defined field by a name."
-                                          required: true
-                                      - name: from_mesh
-                                        spec:
-                                          name: from_mesh
-                                          type: string
-                                          description: "Refer to a field defined in the input mesh by a name."
-                                          required: true
-                                  - name: DENS
-                                    type: double
-                                    description: "density"
-                                    required: true
-                                    validator:
-                                      range:
-                                        minimum: 0
-                                        maximum: 1.7976931348623157e+308
-                                        minimum_exclusive: false
-                                        maximum_exclusive: false
-                                  - name: FIBER_ORIENTATION
-                                    type: selection
-                                    description: "A unit vector field pointing in the direction of the fibers."
-                                    required: true
-                                    choices:
-                                      - name: constant
-                                        spec:
-                                          name: constant
-                                          type: vector
-                                          size: 3
-                                          value_type:
+                                  - type: one_of
+                                    specs:
+                                      - type: all_of
+                                        specs:
+                                          - name: POPT
                                             type: double
-                                          description: "Constant value for the field."
-                                          required: true
-                                      - name: from_file
-                                        spec:
-                                          name: from_file
-                                          type: path
-                                          description: "Path to a file containing the input field data."
-                                          required: true
-                                      - name: field_reference
-                                        spec:
-                                          name: field_reference
-                                          type: string
-                                          description: "Refer to a globally defined field by a name."
-                                          required: true
-                                      - name: from_mesh
-                                        spec:
-                                          name: from_mesh
-                                          type: string
-                                          description: "Refer to a field defined in the input mesh by a name."
-                                          required: true
+                                            description: "tetanised optimal (maximal) active stress"
+                                            required: true
+                                            validator:
+                                              range:
+                                                minimum: 0
+                                                maximum: 1.7976931348623157e+308
+                                                minimum_exclusive: false
+                                                maximum_exclusive: false
+                                          - name: LAMBDAMIN
+                                            type: double
+                                            description: "minimal active fiber stretch"
+                                            required: true
+                                            validator:
+                                              range:
+                                                minimum: 0
+                                                maximum: 1.7976931348623157e+308
+                                                minimum_exclusive: true
+                                                maximum_exclusive: false
+                                          - name: LAMBDAOPT
+                                            type: double
+                                            description: "optimal active fiber stretch related to active nominal stress maximum"
+                                            required: true
+                                            validator:
+                                              range:
+                                                minimum: 0
+                                                maximum: 1.7976931348623157e+308
+                                                minimum_exclusive: true
+                                                maximum_exclusive: false
+                                          - name: ACTIVATION_FUNCTION_ID
+                                            type: int
+                                            description: "function id for time- and space-dependency of muscle activation"
+                                            required: true
+                                            validator:
+                                              range:
+                                                minimum: 0
+                                                maximum: 2147483647
+                                                minimum_exclusive: true
+                                                maximum_exclusive: false
+                                      - type: all_of
+                                        specs:
+                                          - name: POPT
+                                            type: double
+                                            description: "tetanised optimal (maximal) active stress"
+                                            required: true
+                                            validator:
+                                              range:
+                                                minimum: 0
+                                                maximum: 1.7976931348623157e+308
+                                                minimum_exclusive: false
+                                                maximum_exclusive: false
+                                          - name: LAMBDAMIN
+                                            type: double
+                                            description: "minimal active fiber stretch"
+                                            required: true
+                                            validator:
+                                              range:
+                                                minimum: 0
+                                                maximum: 1.7976931348623157e+308
+                                                minimum_exclusive: true
+                                                maximum_exclusive: false
+                                          - name: LAMBDAOPT
+                                            type: double
+                                            description: "optimal active fiber stretch related to active nominal stress maximum"
+                                            required: true
+                                            validator:
+                                              range:
+                                                minimum: 0
+                                                maximum: 1.7976931348623157e+308
+                                                minimum_exclusive: true
+                                                maximum_exclusive: false
+                                          - name: ACTIVATION_VALUES
+                                            type: selection
+                                            description: "json input file containing a map of elementwise-defined discrete values for time- and space-dependency of muscle activation"
+                                            required: true
+                                            choices:
+                                              - name: constant
+                                                spec:
+                                                  name: constant
+                                                  type: vector
+                                                  value_type:
+                                                    type: tuple
+                                                    size: 2
+                                                    value_types:
+                                                      - type: double
+                                                      - type: double
+                                                  description: "Constant value for the field."
+                                                  required: true
+                                              - name: from_file
+                                                spec:
+                                                  name: from_file
+                                                  type: path
+                                                  description: "Path to a file containing the input field data."
+                                                  required: true
+                                              - name: field_reference
+                                                spec:
+                                                  name: field_reference
+                                                  type: string
+                                                  description: "Refer to a globally defined field by a name."
+                                                  required: true
+                                              - name: from_mesh
+                                                spec:
+                                                  name: from_mesh
+                                                  type: string
+                                                  description: "Refer to a field defined in the input mesh by a name."
+                                                  required: true
+                          - name: DENS
+                            type: double
+                            description: "density"
+                            required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: false
+                                maximum_exclusive: false
+                          - name: FIBER_ORIENTATION
+                            type: selection
+                            description: "A unit vector field pointing in the direction of the fibers."
+                            required: true
+                            choices:
+                              - name: constant
+                                spec:
+                                  name: constant
+                                  type: vector
+                                  size: 3
+                                  value_type:
+                                    type: double
+                                  description: "Constant value for the field."
+                                  required: true
+                              - name: from_file
+                                spec:
+                                  name: from_file
+                                  type: path
+                                  description: "Path to a file containing the input field data."
+                                  required: true
+                              - name: field_reference
+                                spec:
+                                  name: field_reference
+                                  type: string
+                                  description: "Refer to a globally defined field by a name."
+                                  required: true
+                              - name: from_mesh
+                                spec:
+                                  name: from_mesh
+                                  type: string
+                                  description: "Refer to a field defined in the input mesh by a name."
+                                  required: true
               - type: all_of
                 specs:
                   - name: MAT
