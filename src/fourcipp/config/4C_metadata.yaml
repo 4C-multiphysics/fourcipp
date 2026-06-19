@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: c3dba5e30366e2245a3dc30e7f593a32c449ba6a
+  commit_hash: 84fbf7f7f451aaa0a85d9f9826052ea792284bc8
   version: 2026.3.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -50682,6 +50682,15 @@ sections:
                   maximum: 1.7976931348623157e+308
                   minimum_exclusive: true
                   maximum_exclusive: false
+            - name: potential_reduction_function
+              type: enum
+              description: "Function which describes the reduction of the potential at target beam end points (only applicable in combination with potential reduction strategy)."
+              required: false
+              default: cosine
+              choices:
+                - name: cosine
+                - name: polynomial_5
+                - name: polynomial_7
             - name: regularization
               type: group
               description: Regularization of the potential at small separations
