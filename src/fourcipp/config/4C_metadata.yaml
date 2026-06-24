@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 365b9be99ae481a904fd6e8137c6adb0f32047af
+  commit_hash: 841e321c5703cc2d1352a947989e4d397beb7969
   version: 2026.3.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -41829,28 +41829,6 @@ sections:
                             choices:
                               - name: analytic
                               - name: perturbation_based
-                          - name: MAX_PLASTIC_STRAIN_INCR
-                            type: double
-                            description: "maximum evaluable plastic strain increment used for verifying overflow errors"
-                            required: false
-                            default: 1.0686474581524463e+13
-                            validator:
-                              range:
-                                minimum: 0
-                                maximum: 1.7976931348623157e+308
-                                minimum_exclusive: true
-                                maximum_exclusive: false
-                          - name: MAX_PLASTIC_STRAIN_DERIV_INCR
-                            type: double
-                            description: "maximum evaluable increment of the plastic strain derivatives w.r.t. plastic strain and equivalent stress, used for verifying possible overflow errors"
-                            required: false
-                            default: 1.0686474581524463e+13
-                            validator:
-                              range:
-                                minimum: 0
-                                maximum: 1.7976931348623157e+308
-                                minimum_exclusive: true
-                                maximum_exclusive: false
                           - name: MATRIX_EXP_CALC_METHOD
                             type: enum
                             description: "chosen computation method for matrix exponential (default: automatic method selection based on matrix characteristics)"
@@ -41993,6 +41971,45 @@ sections:
                                       - name: stop
                                       - name: continue_sim
                                       - name: continue_sim_with_safeguard
+                          - name: ERROR_REGISTRATION_SETTINGS
+                            type: group
+                            description: Settings for registering errors within the procedures used for constitutive update
+                            required: false
+                            specs:
+                              - type: all_of
+                                specs:
+                                  - name: REGISTER_PLASTIC_STRAIN_INCR_OVERFLOW
+                                    type: bool
+                                    description: "should overflow error be registered via ErrorType when the plastic strain increment exceeds the specified tolerance?"
+                                    required: false
+                                    default: true
+                                  - name: MAX_PLASTIC_STRAIN_INCR
+                                    type: double
+                                    description: "maximum evaluable plastic strain increment used for registering overflow errors"
+                                    required: false
+                                    default: 1.0686474581524463e+13
+                                    validator:
+                                      range:
+                                        minimum: 0
+                                        maximum: 1.7976931348623157e+308
+                                        minimum_exclusive: true
+                                        maximum_exclusive: false
+                                  - name: REGISTER_PLASTIC_STRAIN_DERIV_INCR_OVERFLOW
+                                    type: bool
+                                    description: "should overflow error be registered via ErrorType when any of the plastic strain derivative increments exceeds the specified tolerance?"
+                                    required: false
+                                    default: false
+                                  - name: MAX_PLASTIC_STRAIN_DERIV_INCR
+                                    type: double
+                                    description: "maximum evaluable increment of the plastic strain derivatives w.r.t. plastic strain and equivalent stress, used for registering overflow errors"
+                                    required: false
+                                    default: 1.0686474581524463e+13
+                                    validator:
+                                      range:
+                                        minimum: 0
+                                        maximum: 1.7976931348623157e+308
+                                        minimum_exclusive: true
+                                        maximum_exclusive: false
               - type: all_of
                 specs:
                   - name: MAT
