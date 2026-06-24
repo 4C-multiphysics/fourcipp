@@ -23,7 +23,7 @@ jobs:
         config_profile: [default, completion_schema]
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Set up virtual environment and install fourcipp with requirements
         uses: ./.github/actions/setup-env
         with:
@@ -49,7 +49,7 @@ jobs:
       image: ghcr.io/4c-multiphysics/4c:main
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Set up virtual environment and install fourcipp with requirements
         uses: ./.github/actions/setup-env
         with:
