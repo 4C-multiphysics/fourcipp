@@ -58,8 +58,8 @@ jobs:
 
           metadata_hash_current=$(grep -v 'commit_hash' src/fourcipp/config/4C_metadata.yaml | sha256sum | awk '{print $1}')
           metadata_hash_new=$(grep -v 'commit_hash' clang18_build-metadata/4C_metadata.yaml | sha256sum | awk '{print $1}')
-          schema_hash_current=$(sha256sum src/fourcipp/config/4C_schema.json | awk '{print $1}')
-          schema_hash_new=$(sha256sum clang18_build-schema/4C_schema.json | awk '{print $1}')
+          schema_hash_current=$(grep -v -E 'Commit hash|\$id' src/fourcipp/config/4C_schema.json | sha256sum | awk '{print $1}')
+          schema_hash_new=$(grep -v -E 'Commit hash|\$id' clang18_build-schema/4C_schema.json | sha256sum | awk '{print $1}')
           completion_schema_hash_current=$(sha256sum src/fourcipp/config/4C_schema_completion.json | awk '{print $1}')
           completion_schema_hash_new=$(sha256sum clang18_build-completion-schema/4C_schema_completion.json | awk '{print $1}')
 
