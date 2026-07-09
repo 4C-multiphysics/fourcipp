@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: ca492cd502f283c630435d9596c5b0c01fd37bc2
+  commit_hash: 55490c3d5d25b8ca5bbc653962be8ac2df47931a
   version: 2026.3.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -9556,6 +9556,7 @@ sections:
                 - name: line2
                 - name: line3
                 - name: line4
+                - name: dual_hermite
             - name: GEOMETRY_PAIR_STRATEGY
               type: enum
               description: "Type of employed segmentation strategy"
@@ -9710,6 +9711,7 @@ sections:
                 - name: line2
                 - name: line3
                 - name: line4
+                - name: dual_hermite
             - name: PENALTY_PARAMETER
               type: double
               description: "Penalty parameter for beam-to-solid surface meshtying"
@@ -9927,6 +9929,7 @@ sections:
                 - name: line2
                 - name: line3
                 - name: line4
+                - name: dual_hermite
             - name: LAGRANGE_FORMULATION
               type: enum
               description: "Type of employed Lagrange Formulation while using Lagrange Multipliers for constraint enforcement "
@@ -10002,6 +10005,7 @@ sections:
                 - name: line2
                 - name: line3
                 - name: line4
+                - name: dual_hermite
             - name: ROTATION_COUPLING_PENALTY_PARAMETER
               type: double
               description: "Penalty parameter for rotational coupling in beam-to-solid volume mesh tying"
@@ -50737,6 +50741,11 @@ sections:
                 - name: cosine
                 - name: polynomial_5
                 - name: polynomial_7
+            - name: potential_reduction_endpoint_moment_compensation
+              type: bool
+              description: "Option to compensate/remove the distributed endpoint moment arising in the potential reduction strategy"
+              required: false
+              default: false
             - name: regularization
               type: group
               description: Regularization of the potential at small separations
