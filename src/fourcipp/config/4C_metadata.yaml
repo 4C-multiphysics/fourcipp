@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 55490c3d5d25b8ca5bbc653962be8ac2df47931a
+  commit_hash: 3bdfd7cdbff950935048ad58728430aef2b5ca29
   version: 2026.3.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -37216,11 +37216,6 @@ sections:
                             type: double
                             description: "initial temperature"
                             required: true
-                          - name: THERMOMAT
-                            type: int
-                            description: "mat id of thermal material part"
-                            required: false
-                            default: -1
               - type: all_of
                 specs:
                   - name: MAT
@@ -37981,11 +37976,6 @@ sections:
                             type: double
                             description: "tolerance for local Newton iteration"
                             required: true
-                          - name: THERMOMAT
-                            type: int
-                            description: "mat id of thermal material part"
-                            required: false
-                            default: -1
               - type: all_of
                 specs:
                   - name: MAT
@@ -38082,11 +38072,6 @@ sections:
                             description: "tolerance for local Newton iteration"
                             required: false
                             default: 1e-08
-                          - name: THERMOMAT
-                            type: int
-                            description: "mat id of thermal material part"
-                            required: false
-                            default: -1
               - type: all_of
                 specs:
                   - name: MAT
@@ -38756,11 +38741,6 @@ sections:
                             type: double
                             description: "'H'"
                             required: true
-                          - name: THERMOMAT
-                            type: int
-                            description: "mat id of thermal material part"
-                            required: false
-                            default: -1
               - type: all_of
                 specs:
                   - name: MAT
