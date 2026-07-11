@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 3bdfd7cdbff950935048ad58728430aef2b5ca29
+  commit_hash: d1335b68fc06248b4df2fb37021ca3a61522d64c
   version: 2026.3.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -50726,6 +50726,18 @@ sections:
               description: "Option to compensate/remove the distributed endpoint moment arising in the potential reduction strategy"
               required: false
               default: false
+            - name: potential_reduction_adaptive_n_gauss_points
+              noneable: true
+              type: int
+              description: "Number of Gauss points used per integration segment if the target beam element lies within the potential reduction length."
+              required: false
+              default: null
+              validator:
+                range:
+                  minimum: 0
+                  maximum: 2147483647
+                  minimum_exclusive: true
+                  maximum_exclusive: false
             - name: regularization
               type: group
               description: Regularization of the potential at small separations
