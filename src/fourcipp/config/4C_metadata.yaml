@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: d1335b68fc06248b4df2fb37021ca3a61522d64c
+  commit_hash: f7d93213b10fb5b802976a7acd674a5821740c54
   version: 2026.3.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -36418,7 +36418,7 @@ sections:
                     required: true
                   - name: MAT_Struct_DruckerPrager
                     type: group
-                    description: elastic St.Venant Kirchhoff / plastic drucker prager
+                    description: 'Linear-elasto-plastic material with a Drucker-Prager yield surface: $\phi = \sqrt{J_2} + \eta \, \mathrm{tr}(\mathbf{\sigma}) - \xi\, (c + H_\mathrm{iso}\varepsilon_\mathrm{p}^\mathrm{acc}$ and a potentially non-associated plastic potential: = \sqrt{J_2} + \overline{\eta} \, \mathrm{tr}(\mathbf{\sigma}) - \xi\, (c + H_\mathrm{iso}\varepsilon_\mathrm{p}^\mathrm{acc}$'
                     required: true
                     specs:
                       - type: all_of
@@ -36427,48 +36427,94 @@ sections:
                             type: double
                             description: "Young's modulus"
                             required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
                           - name: NUE
                             type: double
-                            description: "Poisson's ratio"
+                            description: "Poisson's ratio (must be in (-1, 0.5) for stability)"
                             required: true
+                            validator:
+                              range:
+                                minimum: -1
+                                maximum: 0.5
+                                minimum_exclusive: true
+                                maximum_exclusive: true
                           - name: DENS
                             type: double
                             description: "Density"
                             required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: false
+                                maximum_exclusive: false
                           - name: ISOHARD
                             type: double
-                            description: "linear isotropic hardening"
+                            description: "linear isotropic hardening modulus $H_\\mathrm{iso}$"
                             required: true
-                          - name: TOL
-                            type: double
-                            description: "Local Newton iteration tolerance"
-                            required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: false
+                                maximum_exclusive: false
                           - name: C
                             type: double
-                            description: "cohesion"
+                            description: "cohesion $c$"
                             required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
                           - name: ETA
                             type: double
-                            description: "Drucker Prager Constant Eta"
+                            description: "Drucker Prager Constant $\\eta$"
                             required: true
                           - name: XI
                             type: double
-                            description: "Drucker Prager Constant Xi"
+                            description: "Drucker Prager Constant $\\xi$"
                             required: true
                           - name: ETABAR
                             type: double
-                            description: "Drucker Prager Constant Etabar"
+                            description: "Drucker Prager Constant $\\overline{\\eta}$ (set $\\overline{\\eta} = \\eta$ for associative flow rule)"
                             required: true
                           - name: TANG
-                            type: string
-                            description: "Method to compute the material tangent"
+                            type: enum
+                            description: "Method to compute the material tangent (consistent / elastic)"
                             required: false
-                            default: "consistent"
+                            default: consistent
+                            choices:
+                              - name: consistent
+                              - name: elastic
+                          - name: TOL
+                            type: double
+                            description: "Local Newton iteration tolerance"
+                            required: false
+                            default: 1e-08
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
                           - name: MAXITER
                             type: int
-                            description: "Maximum Iterations for local Neutron Raphson"
+                            description: "Maximum Iterations for local Newton Raphson"
                             required: false
                             default: 50
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
               - type: all_of
                 specs:
                   - name: MAT
