@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: f7d93213b10fb5b802976a7acd674a5821740c54
+  commit_hash: 3672cb684e03e301b86aeef2e207f769e262edc3
   version: 2026.3.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -9959,7 +9959,7 @@ sections:
                 range:
                   minimum: 0
                   maximum: 1.7976931348623157e+308
-                  minimum_exclusive: true
+                  minimum_exclusive: false
                   maximum_exclusive: false
             - name: AUGMENTATION_SCALING_PARAMETER_SOLID
               type: double
@@ -9970,7 +9970,7 @@ sections:
                 range:
                   minimum: 0
                   maximum: 1.7976931348623157e+308
-                  minimum_exclusive: true
+                  minimum_exclusive: false
                   maximum_exclusive: false
             - name: COUPLE_RESTART_STATE
               type: bool
@@ -10400,11 +10400,37 @@ sections:
       specs:
         - type: all_of
           specs:
-            - name: BEAM_RADIUS_EXTENSION_FACTOR
-              type: double
-              description: "Beams radius is multiplied with the factor and then the bounding volume only depending on the beam centerline is extended in all directions (+ and -) by that value."
+            - name: BEAM_BOUNDING_VOLUME
+              type: group
               required: false
-              default: 2
+              specs:
+                - type: all_of
+                  specs:
+                    - name: BOUNDING_VOLUME_TYPE
+                      type: enum
+                      description: "Type of bounding volume for beams."
+                      required: false
+                      default: centerline_kdop
+                      choices:
+                        - name: centerline_kdop
+                        - name: integration_points_surface
+                    - name: RADIUS_EXTENSION_FACTOR
+                      type: double
+                      description: "Beams radius is multiplied with the factor and then the bounding volume only depending on the beam centerline is extended in all directions (+ and -) by that value."
+                      required: false
+                      default: 2
+                    - name: INTEGRATION_POINTS_AXIAL
+                      noneable: true
+                      type: int
+                      description: "Number of axial Gauss points for the bounding volume of beams."
+                      required: false
+                      default: null
+                    - name: INTEGRATION_POINTS_CIRCUMFERENCE
+                      noneable: true
+                      type: int
+                      description: "Number of circumferential Gauss points for the bounding volume of beams."
+                      required: false
+                      default: null
             - name: SPHERE_RADIUS_EXTENSION_FACTOR
               type: double
               description: "Bounding volume of the sphere is the sphere center extended by this factor times the sphere radius in all directions (+ and -)."

@@ -1,5 +1,5 @@
 {
-  "description": "Schema for 4C\nCommit hash: f7d93213b10fb5b802976a7acd674a5821740c54\nVersion: 2026.3.0-dev",
+  "description": "Schema for 4C\nCommit hash: 3672cb684e03e301b86aeef2e207f769e262edc3\nVersion: 2026.3.0-dev",
   "type": "object",
   "properties": {
     "ALE DOMAIN": {
@@ -79259,7 +79259,7 @@
           "description": "For the augmented Lagrange formulation, this parameter scales all penalty terms in the beam equations.",
           "default": 1,
           "type": "number",
-          "exclusiveMinimum": 0,
+          "minimum": 0,
           "maximum": 1.7976931348623157e+308
         },
         "AUGMENTATION_SCALING_PARAMETER_SOLID": {
@@ -79267,7 +79267,7 @@
           "description": "For the augmented Lagrange formulation, this parameter scales all penalty terms in the solid equations.",
           "default": 1,
           "type": "number",
-          "exclusiveMinimum": 0,
+          "minimum": 0,
           "maximum": 1.7976931348623157e+308
         },
         "COUPLE_RESTART_STATE": {
@@ -79815,11 +79815,47 @@
       "description": "No description yet.",
       "type": "object",
       "properties": {
-        "BEAM_RADIUS_EXTENSION_FACTOR": {
-          "title": "BEAM_RADIUS_EXTENSION_FACTOR (double)",
-          "description": "Beams radius is multiplied with the factor and then the bounding volume only depending on the beam centerline is extended in all directions (+ and -) by that value.",
-          "default": 2,
-          "type": "number"
+        "BEAM_BOUNDING_VOLUME": {
+          "title": "BEAM_BOUNDING_VOLUME (group)",
+          "description": "No description yet.",
+          "type": "object",
+          "properties": {
+            "BOUNDING_VOLUME_TYPE": {
+              "title": "BOUNDING_VOLUME_TYPE (enum)",
+              "description": "Type of bounding volume for beams.",
+              "default": "centerline_kdop",
+              "type": "string",
+              "enum": [
+                "centerline_kdop",
+                "integration_points_surface"
+              ]
+            },
+            "RADIUS_EXTENSION_FACTOR": {
+              "title": "RADIUS_EXTENSION_FACTOR (double)",
+              "description": "Beams radius is multiplied with the factor and then the bounding volume only depending on the beam centerline is extended in all directions (+ and -) by that value.",
+              "default": 2,
+              "type": "number"
+            },
+            "INTEGRATION_POINTS_AXIAL": {
+              "title": "INTEGRATION_POINTS_AXIAL (int)",
+              "description": "Number of axial Gauss points for the bounding volume of beams.",
+              "default": null,
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "INTEGRATION_POINTS_CIRCUMFERENCE": {
+              "title": "INTEGRATION_POINTS_CIRCUMFERENCE (int)",
+              "description": "Number of circumferential Gauss points for the bounding volume of beams.",
+              "default": null,
+              "type": [
+                "integer",
+                "null"
+              ]
+            }
+          },
+          "additionalProperties": false
         },
         "SPHERE_RADIUS_EXTENSION_FACTOR": {
           "title": "SPHERE_RADIUS_EXTENSION_FACTOR (double)",
@@ -457939,5 +457975,5 @@
     "PROBLEM TYPE"
   ],
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "f7d93213b10fb5b802976a7acd674a5821740c54"
+  "$id": "3672cb684e03e301b86aeef2e207f769e262edc3"
 }
