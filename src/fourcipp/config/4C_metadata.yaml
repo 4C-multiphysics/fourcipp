@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 5724bd12a6cb62d265340a2c7a80c98647257ef5
+  commit_hash: 4deb35bc72b806f8cb78d7414b35ca62541a0f17
   version: 2026.3.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -48827,6 +48827,63 @@ sections:
               description: "Function for Initial displacement"
               required: false
               default: -1
+            - name: DYNAMIC REBALANCE
+              type: group
+              required: false
+              specs:
+                - type: all_of
+                  specs:
+                    - name: ENABLED
+                      type: bool
+                      description: "Enable dynamic rebalance for this run."
+                      required: false
+                      default: false
+                    - name: IMBALANCE_THRESHOLD
+                      type: double
+                      description: "Trigger rebalance if the rolling average of the max-to-mean rank evaluation time ratio exceeds this value."
+                      required: false
+                      default: 1.5
+                    - name: WINDOW_STEPS
+                      type: int
+                      description: "Number of time steps used in the rolling imbalance average."
+                      required: false
+                      default: 3
+                    - name: COOLDOWN_STEPS
+                      type: int
+                      description: "Minimum number of converged time steps between rebalances."
+                      required: false
+                      default: 5
+                    - name: EDGE_WEIGHT_MULTIPLIER
+                      type: double
+                      description: "Multiplier applied graph edge weights during dynamic rebalance. Represents the inter-rank communication overhead per edge."
+                      required: false
+                      default: 2
+                    - name: MESH PARTITIONING
+                      type: group
+                      required: false
+                      specs:
+                        - type: all_of
+                          specs:
+                            - name: METHOD
+                              type: enum
+                              description: "Type of rebalance/partition algorithm to be used for dynamic rebalances."
+                              required: false
+                              default: hypergraph
+                              choices:
+                                - name: none
+                                - name: hypergraph
+                                - name: multijagged
+                                - name: monolithic
+                            - name: IMBALANCE_TOL
+                              type: double
+                              description: "Target vertex imbalance passed to the repartitioner. Higher values allow edge weights to have greater effect."
+                              required: false
+                              default: 1.4
+                            - name: MIN_ELE_PER_PROC
+                              type: int
+                              description: "Minimum number of elements per processor used for dynamic rebalances."
+                              required: false
+                              default: 0
     - name: STRUCTURAL DYNAMIC/ERROR EVALUATION
       type: group
       required: false

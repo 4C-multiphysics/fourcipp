@@ -1,5 +1,5 @@
 {
-  "description": "Schema for 4C\nCommit hash: 5724bd12a6cb62d265340a2c7a80c98647257ef5\nVersion: 2026.3.0-dev",
+  "description": "Schema for 4C\nCommit hash: 4deb35bc72b806f8cb78d7414b35ca62541a0f17\nVersion: 2026.3.0-dev",
   "type": "object",
   "properties": {
     "ALE DOMAIN": {
@@ -292668,6 +292668,76 @@
           "description": "Function for Initial displacement",
           "default": -1,
           "type": "integer"
+        },
+        "DYNAMIC REBALANCE": {
+          "title": "DYNAMIC REBALANCE (group)",
+          "description": "No description yet.",
+          "type": "object",
+          "properties": {
+            "ENABLED": {
+              "title": "ENABLED (bool)",
+              "description": "Enable dynamic rebalance for this run.",
+              "default": false,
+              "type": "boolean"
+            },
+            "IMBALANCE_THRESHOLD": {
+              "title": "IMBALANCE_THRESHOLD (double)",
+              "description": "Trigger rebalance if the rolling average of the max-to-mean rank evaluation time ratio exceeds this value.",
+              "default": 1.5,
+              "type": "number"
+            },
+            "WINDOW_STEPS": {
+              "title": "WINDOW_STEPS (int)",
+              "description": "Number of time steps used in the rolling imbalance average.",
+              "default": 3,
+              "type": "integer"
+            },
+            "COOLDOWN_STEPS": {
+              "title": "COOLDOWN_STEPS (int)",
+              "description": "Minimum number of converged time steps between rebalances.",
+              "default": 5,
+              "type": "integer"
+            },
+            "EDGE_WEIGHT_MULTIPLIER": {
+              "title": "EDGE_WEIGHT_MULTIPLIER (double)",
+              "description": "Multiplier applied graph edge weights during dynamic rebalance. Represents the inter-rank communication overhead per edge.",
+              "default": 2,
+              "type": "number"
+            },
+            "MESH PARTITIONING": {
+              "title": "MESH PARTITIONING (group)",
+              "description": "No description yet.",
+              "type": "object",
+              "properties": {
+                "METHOD": {
+                  "title": "METHOD (enum)",
+                  "description": "Type of rebalance/partition algorithm to be used for dynamic rebalances.",
+                  "default": "hypergraph",
+                  "type": "string",
+                  "enum": [
+                    "none",
+                    "hypergraph",
+                    "multijagged",
+                    "monolithic"
+                  ]
+                },
+                "IMBALANCE_TOL": {
+                  "title": "IMBALANCE_TOL (double)",
+                  "description": "Target vertex imbalance passed to the repartitioner. Higher values allow edge weights to have greater effect.",
+                  "default": 1.4,
+                  "type": "number"
+                },
+                "MIN_ELE_PER_PROC": {
+                  "title": "MIN_ELE_PER_PROC (int)",
+                  "description": "Minimum number of elements per processor used for dynamic rebalances.",
+                  "default": 0,
+                  "type": "integer"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
         }
       },
       "additionalProperties": false
@@ -458042,5 +458112,5 @@
     "PROBLEM TYPE"
   ],
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "5724bd12a6cb62d265340a2c7a80c98647257ef5"
+  "$id": "4deb35bc72b806f8cb78d7414b35ca62541a0f17"
 }
