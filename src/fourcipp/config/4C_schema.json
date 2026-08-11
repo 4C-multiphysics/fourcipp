@@ -1,5 +1,5 @@
 {
-  "description": "Schema for 4C\nCommit hash: 4deb35bc72b806f8cb78d7414b35ca62541a0f17\nVersion: 2026.3.0-dev",
+  "description": "Schema for 4C\nCommit hash: cfbed34d499753c5a4a7e08c71b547b327c30793\nVersion: 2026.3.0-dev",
   "type": "object",
   "properties": {
     "ALE DOMAIN": {
@@ -452027,336 +452027,42 @@
             "linear_solver"
           ]
         },
+        "geometry": {
+          "title": "geometry (group)",
+          "description": "Geometry of the reduced lung tree.",
+          "type": "object",
+          "properties": {
+            "file": {
+              "title": "file (path)",
+              "description": "Path to the VTU mesh file describing the reduced lung tree. Either absolute or relative to the input file. The mesh provides the nodes and the line2 cells of the tree and is also the source of all input fields that are given as `from_mesh`. Such fields are read from the cell data of the mesh; point data is not supported.",
+              "type": "string"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "file"
+          ]
+        },
         "lung_tree": {
           "title": "lung_tree (group)",
           "description": "Definition of the reduced dimensional lung tree including model definitions and parameters",
           "type": "object",
           "properties": {
-            "topology": {
-              "title": "topology (group)",
-              "description": "Topology of the reduced lung tree.",
-              "type": "object",
-              "properties": {
-                "num_nodes": {
-                  "title": "num_nodes (int)",
-                  "description": "Total number of nodes in the reduced lung tree.",
-                  "type": "integer"
-                },
-                "num_elements": {
-                  "title": "num_elements (int)",
-                  "description": "Total number of elements in the reduced lung tree.",
-                  "type": "integer"
-                },
-                "node_coordinates": {
-                  "title": "node_coordinates (selection)",
-                  "description": "Nodal coordinates as 3-component vectors indexed by 1-based node id (map keys 1-based).",
-                  "type": "object",
-                  "oneOf": [
-                    {
-                      "title": "constant",
-                      "description": "Constant value for the field.",
-                      "type": "object",
-                      "properties": {
-                        "constant": {
-                          "title": "constant (vector)",
-                          "description": "Constant value for the field.",
-                          "type": "array",
-                          "items": {
-                            "title": "double",
-                            "type": "number"
-                          }
-                        }
-                      },
-                      "additionalProperties": false,
-                      "required": [
-                        "constant"
-                      ]
-                    },
-                    {
-                      "title": "from_file",
-                      "description": "Path to a file containing the input field data.",
-                      "type": "object",
-                      "properties": {
-                        "from_file": {
-                          "title": "from_file (path)",
-                          "description": "Path to a file containing the input field data.",
-                          "type": "string"
-                        }
-                      },
-                      "additionalProperties": false,
-                      "required": [
-                        "from_file"
-                      ]
-                    },
-                    {
-                      "title": "field_reference",
-                      "description": "Refer to a globally defined field by a name.",
-                      "type": "object",
-                      "properties": {
-                        "field_reference": {
-                          "title": "field_reference (string)",
-                          "description": "Refer to a globally defined field by a name.",
-                          "type": "string"
-                        }
-                      },
-                      "additionalProperties": false,
-                      "required": [
-                        "field_reference"
-                      ]
-                    },
-                    {
-                      "title": "from_mesh",
-                      "description": "Refer to a field defined in the input mesh by a name.",
-                      "type": "object",
-                      "properties": {
-                        "from_mesh": {
-                          "title": "from_mesh (string)",
-                          "description": "Refer to a field defined in the input mesh by a name.",
-                          "type": "string"
-                        }
-                      },
-                      "additionalProperties": false,
-                      "required": [
-                        "from_mesh"
-                      ]
-                    }
-                  ]
-                },
-                "element_nodes": {
-                  "title": "element_nodes (selection)",
-                  "description": "Element connectivity as [node_in, node_out] with 1-based node ids, indexed by 1-based element id (map keys 1-based).",
-                  "type": "object",
-                  "oneOf": [
-                    {
-                      "title": "constant",
-                      "description": "Constant value for the field.",
-                      "type": "object",
-                      "properties": {
-                        "constant": {
-                          "title": "constant (vector)",
-                          "description": "Constant value for the field.",
-                          "type": "array",
-                          "items": {
-                            "title": "int",
-                            "type": "integer"
-                          }
-                        }
-                      },
-                      "additionalProperties": false,
-                      "required": [
-                        "constant"
-                      ]
-                    },
-                    {
-                      "title": "from_file",
-                      "description": "Path to a file containing the input field data.",
-                      "type": "object",
-                      "properties": {
-                        "from_file": {
-                          "title": "from_file (path)",
-                          "description": "Path to a file containing the input field data.",
-                          "type": "string"
-                        }
-                      },
-                      "additionalProperties": false,
-                      "required": [
-                        "from_file"
-                      ]
-                    },
-                    {
-                      "title": "field_reference",
-                      "description": "Refer to a globally defined field by a name.",
-                      "type": "object",
-                      "properties": {
-                        "field_reference": {
-                          "title": "field_reference (string)",
-                          "description": "Refer to a globally defined field by a name.",
-                          "type": "string"
-                        }
-                      },
-                      "additionalProperties": false,
-                      "required": [
-                        "field_reference"
-                      ]
-                    },
-                    {
-                      "title": "from_mesh",
-                      "description": "Refer to a field defined in the input mesh by a name.",
-                      "type": "object",
-                      "properties": {
-                        "from_mesh": {
-                          "title": "from_mesh (string)",
-                          "description": "Refer to a field defined in the input mesh by a name.",
-                          "type": "string"
-                        }
-                      },
-                      "additionalProperties": false,
-                      "required": [
-                        "from_mesh"
-                      ]
-                    }
-                  ]
-                }
-              },
-              "additionalProperties": false,
-              "required": [
-                "num_nodes",
-                "num_elements",
-                "node_coordinates",
-                "element_nodes"
-              ]
-            },
-            "element_type": {
-              "title": "element_type (selection)",
-              "description": "Type of reduced lung elements.",
-              "type": "object",
-              "oneOf": [
-                {
-                  "title": "constant",
-                  "description": "Constant value for the field.",
-                  "type": "object",
-                  "properties": {
-                    "constant": {
-                      "title": "constant (enum)",
-                      "description": "Constant value for the field.",
-                      "type": "string",
-                      "enum": [
-                        "Airway",
-                        "TerminalUnit"
-                      ]
-                    }
-                  },
-                  "additionalProperties": false,
-                  "required": [
-                    "constant"
-                  ]
-                },
-                {
-                  "title": "from_file",
-                  "description": "Path to a file containing the input field data.",
-                  "type": "object",
-                  "properties": {
-                    "from_file": {
-                      "title": "from_file (path)",
-                      "description": "Path to a file containing the input field data.",
-                      "type": "string"
-                    }
-                  },
-                  "additionalProperties": false,
-                  "required": [
-                    "from_file"
-                  ]
-                },
-                {
-                  "title": "field_reference",
-                  "description": "Refer to a globally defined field by a name.",
-                  "type": "object",
-                  "properties": {
-                    "field_reference": {
-                      "title": "field_reference (string)",
-                      "description": "Refer to a globally defined field by a name.",
-                      "type": "string"
-                    }
-                  },
-                  "additionalProperties": false,
-                  "required": [
-                    "field_reference"
-                  ]
-                },
-                {
-                  "title": "from_mesh",
-                  "description": "Refer to a field defined in the input mesh by a name.",
-                  "type": "object",
-                  "properties": {
-                    "from_mesh": {
-                      "title": "from_mesh (string)",
-                      "description": "Refer to a field defined in the input mesh by a name.",
-                      "type": "string"
-                    }
-                  },
-                  "additionalProperties": false,
-                  "required": [
-                    "from_mesh"
-                  ]
-                }
-              ]
-            },
-            "generation": {
-              "title": "generation (selection)",
-              "description": "Generation of the airway elements.",
-              "type": "object",
-              "oneOf": [
-                {
-                  "title": "constant",
-                  "description": "Constant value for the field.",
-                  "type": "object",
-                  "properties": {
-                    "constant": {
-                      "title": "constant (int)",
-                      "description": "Constant value for the field.",
-                      "type": "integer"
-                    }
-                  },
-                  "additionalProperties": false,
-                  "required": [
-                    "constant"
-                  ]
-                },
-                {
-                  "title": "from_file",
-                  "description": "Path to a file containing the input field data.",
-                  "type": "object",
-                  "properties": {
-                    "from_file": {
-                      "title": "from_file (path)",
-                      "description": "Path to a file containing the input field data.",
-                      "type": "string"
-                    }
-                  },
-                  "additionalProperties": false,
-                  "required": [
-                    "from_file"
-                  ]
-                },
-                {
-                  "title": "field_reference",
-                  "description": "Refer to a globally defined field by a name.",
-                  "type": "object",
-                  "properties": {
-                    "field_reference": {
-                      "title": "field_reference (string)",
-                      "description": "Refer to a globally defined field by a name.",
-                      "type": "string"
-                    }
-                  },
-                  "additionalProperties": false,
-                  "required": [
-                    "field_reference"
-                  ]
-                },
-                {
-                  "title": "from_mesh",
-                  "description": "Refer to a field defined in the input mesh by a name.",
-                  "type": "object",
-                  "properties": {
-                    "from_mesh": {
-                      "title": "from_mesh (string)",
-                      "description": "Refer to a field defined in the input mesh by a name.",
-                      "type": "string"
-                    }
-                  },
-                  "additionalProperties": false,
-                  "required": [
-                    "from_mesh"
-                  ]
-                }
-              ]
-            },
             "airways": {
               "title": "airways (group)",
               "description": "Definition of the airway model.",
               "type": "object",
               "properties": {
+                "element_blocks": {
+                  "title": "element_blocks (vector)",
+                  "description": "Ids of the cell blocks of the mesh that hold the airway elements. Every cell block of the mesh must be claimed by exactly one element type.",
+                  "default": [],
+                  "type": "array",
+                  "items": {
+                    "title": "int",
+                    "type": "integer"
+                  }
+                },
                 "radius": {
                   "title": "radius (selection)",
                   "description": "Radius of the Airway.",
@@ -453160,6 +452866,16 @@
               "description": "Terminal units.",
               "type": "object",
               "properties": {
+                "element_blocks": {
+                  "title": "element_blocks (vector)",
+                  "description": "Ids of the cell blocks of the mesh that hold the terminal unit elements. Every cell block of the mesh must be claimed by exactly one element type.",
+                  "default": [],
+                  "type": "array",
+                  "items": {
+                    "title": "int",
+                    "type": "integer"
+                  }
+                },
                 "rheological_model": {
                   "title": "rheological_model (group)",
                   "description": "Rheological model of the terminal unit.",
@@ -453886,9 +453602,6 @@
           },
           "additionalProperties": false,
           "required": [
-            "topology",
-            "element_type",
-            "generation",
             "airways",
             "terminal_units"
           ]
@@ -453898,336 +453611,58 @@
           "description": "Boundary conditions for the reduced lung tree.",
           "type": "object",
           "properties": {
-            "num_conditions": {
-              "title": "num_conditions (int)",
-              "description": "Total number of boundary conditions.",
-              "type": "integer"
+            "pressure": {
+              "title": "pressure (list)",
+              "description": "Reusable pressure boundary condition definitions.",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "title": "id (int)",
+                    "description": "Unique positive id of this definition. It is referenced by the `bc_id` point data of the mesh: every node with this `bc_id` carries this boundary condition.",
+                    "type": "integer"
+                  },
+                  "function_id": {
+                    "title": "function_id (int)",
+                    "description": "Id of the function of time prescribing the boundary value.",
+                    "type": "integer"
+                  }
+                },
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "function_id"
+                ]
+              }
             },
-            "bc_type": {
-              "title": "bc_type (selection)",
-              "description": "Boundary condition type (Pressure or Flow).",
-              "type": "object",
-              "oneOf": [
-                {
-                  "title": "constant",
-                  "description": "Constant value for the field.",
-                  "type": "object",
-                  "properties": {
-                    "constant": {
-                      "title": "constant (enum)",
-                      "description": "Constant value for the field.",
-                      "type": "string",
-                      "enum": [
-                        "Pressure",
-                        "Flow"
-                      ]
-                    }
+            "flow": {
+              "title": "flow (list)",
+              "description": "Reusable volumetric flow boundary condition definitions.",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "title": "id (int)",
+                    "description": "Unique positive id of this definition. It is referenced by the `bc_id` point data of the mesh: every node with this `bc_id` carries this boundary condition.",
+                    "type": "integer"
                   },
-                  "additionalProperties": false,
-                  "required": [
-                    "constant"
-                  ]
+                  "function_id": {
+                    "title": "function_id (int)",
+                    "description": "Id of the function of time prescribing the boundary value.",
+                    "type": "integer"
+                  }
                 },
-                {
-                  "title": "from_file",
-                  "description": "Path to a file containing the input field data.",
-                  "type": "object",
-                  "properties": {
-                    "from_file": {
-                      "title": "from_file (path)",
-                      "description": "Path to a file containing the input field data.",
-                      "type": "string"
-                    }
-                  },
-                  "additionalProperties": false,
-                  "required": [
-                    "from_file"
-                  ]
-                },
-                {
-                  "title": "field_reference",
-                  "description": "Refer to a globally defined field by a name.",
-                  "type": "object",
-                  "properties": {
-                    "field_reference": {
-                      "title": "field_reference (string)",
-                      "description": "Refer to a globally defined field by a name.",
-                      "type": "string"
-                    }
-                  },
-                  "additionalProperties": false,
-                  "required": [
-                    "field_reference"
-                  ]
-                },
-                {
-                  "title": "from_mesh",
-                  "description": "Refer to a field defined in the input mesh by a name.",
-                  "type": "object",
-                  "properties": {
-                    "from_mesh": {
-                      "title": "from_mesh (string)",
-                      "description": "Refer to a field defined in the input mesh by a name.",
-                      "type": "string"
-                    }
-                  },
-                  "additionalProperties": false,
-                  "required": [
-                    "from_mesh"
-                  ]
-                }
-              ]
-            },
-            "bc_node_id": {
-              "title": "bc_node_id (selection)",
-              "description": "Boundary node id (1-based).",
-              "type": "object",
-              "oneOf": [
-                {
-                  "title": "constant",
-                  "description": "Constant value for the field.",
-                  "type": "object",
-                  "properties": {
-                    "constant": {
-                      "title": "constant (int)",
-                      "description": "Constant value for the field.",
-                      "type": "integer"
-                    }
-                  },
-                  "additionalProperties": false,
-                  "required": [
-                    "constant"
-                  ]
-                },
-                {
-                  "title": "from_file",
-                  "description": "Path to a file containing the input field data.",
-                  "type": "object",
-                  "properties": {
-                    "from_file": {
-                      "title": "from_file (path)",
-                      "description": "Path to a file containing the input field data.",
-                      "type": "string"
-                    }
-                  },
-                  "additionalProperties": false,
-                  "required": [
-                    "from_file"
-                  ]
-                },
-                {
-                  "title": "field_reference",
-                  "description": "Refer to a globally defined field by a name.",
-                  "type": "object",
-                  "properties": {
-                    "field_reference": {
-                      "title": "field_reference (string)",
-                      "description": "Refer to a globally defined field by a name.",
-                      "type": "string"
-                    }
-                  },
-                  "additionalProperties": false,
-                  "required": [
-                    "field_reference"
-                  ]
-                },
-                {
-                  "title": "from_mesh",
-                  "description": "Refer to a field defined in the input mesh by a name.",
-                  "type": "object",
-                  "properties": {
-                    "from_mesh": {
-                      "title": "from_mesh (string)",
-                      "description": "Refer to a field defined in the input mesh by a name.",
-                      "type": "string"
-                    }
-                  },
-                  "additionalProperties": false,
-                  "required": [
-                    "from_mesh"
-                  ]
-                }
-              ]
-            },
-            "boundary_value": {
-              "title": "boundary_value (selection)",
-              "description": "Boundary condition value definition.",
-              "type": "object",
-              "oneOf": [
-                {
-                  "title": "bc_function_id",
-                  "description": "Function id for time-dependent boundary values.",
-                  "type": "object",
-                  "properties": {
-                    "bc_function_id": {
-                      "title": "bc_function_id (selection)",
-                      "description": "Function id for time-dependent boundary values.",
-                      "type": "object",
-                      "oneOf": [
-                        {
-                          "title": "constant",
-                          "description": "Constant value for the field.",
-                          "type": "object",
-                          "properties": {
-                            "constant": {
-                              "title": "constant (int)",
-                              "description": "Constant value for the field.",
-                              "type": "integer"
-                            }
-                          },
-                          "additionalProperties": false,
-                          "required": [
-                            "constant"
-                          ]
-                        },
-                        {
-                          "title": "from_file",
-                          "description": "Path to a file containing the input field data.",
-                          "type": "object",
-                          "properties": {
-                            "from_file": {
-                              "title": "from_file (path)",
-                              "description": "Path to a file containing the input field data.",
-                              "type": "string"
-                            }
-                          },
-                          "additionalProperties": false,
-                          "required": [
-                            "from_file"
-                          ]
-                        },
-                        {
-                          "title": "field_reference",
-                          "description": "Refer to a globally defined field by a name.",
-                          "type": "object",
-                          "properties": {
-                            "field_reference": {
-                              "title": "field_reference (string)",
-                              "description": "Refer to a globally defined field by a name.",
-                              "type": "string"
-                            }
-                          },
-                          "additionalProperties": false,
-                          "required": [
-                            "field_reference"
-                          ]
-                        },
-                        {
-                          "title": "from_mesh",
-                          "description": "Refer to a field defined in the input mesh by a name.",
-                          "type": "object",
-                          "properties": {
-                            "from_mesh": {
-                              "title": "from_mesh (string)",
-                              "description": "Refer to a field defined in the input mesh by a name.",
-                              "type": "string"
-                            }
-                          },
-                          "additionalProperties": false,
-                          "required": [
-                            "from_mesh"
-                          ]
-                        }
-                      ]
-                    }
-                  },
-                  "additionalProperties": false,
-                  "required": [
-                    "bc_function_id"
-                  ]
-                },
-                {
-                  "title": "bc_value",
-                  "description": "Constant boundary value.",
-                  "type": "object",
-                  "properties": {
-                    "bc_value": {
-                      "title": "bc_value (selection)",
-                      "description": "Constant boundary value.",
-                      "type": "object",
-                      "oneOf": [
-                        {
-                          "title": "constant",
-                          "description": "Constant value for the field.",
-                          "type": "object",
-                          "properties": {
-                            "constant": {
-                              "title": "constant (double)",
-                              "description": "Constant value for the field.",
-                              "type": "number"
-                            }
-                          },
-                          "additionalProperties": false,
-                          "required": [
-                            "constant"
-                          ]
-                        },
-                        {
-                          "title": "from_file",
-                          "description": "Path to a file containing the input field data.",
-                          "type": "object",
-                          "properties": {
-                            "from_file": {
-                              "title": "from_file (path)",
-                              "description": "Path to a file containing the input field data.",
-                              "type": "string"
-                            }
-                          },
-                          "additionalProperties": false,
-                          "required": [
-                            "from_file"
-                          ]
-                        },
-                        {
-                          "title": "field_reference",
-                          "description": "Refer to a globally defined field by a name.",
-                          "type": "object",
-                          "properties": {
-                            "field_reference": {
-                              "title": "field_reference (string)",
-                              "description": "Refer to a globally defined field by a name.",
-                              "type": "string"
-                            }
-                          },
-                          "additionalProperties": false,
-                          "required": [
-                            "field_reference"
-                          ]
-                        },
-                        {
-                          "title": "from_mesh",
-                          "description": "Refer to a field defined in the input mesh by a name.",
-                          "type": "object",
-                          "properties": {
-                            "from_mesh": {
-                              "title": "from_mesh (string)",
-                              "description": "Refer to a field defined in the input mesh by a name.",
-                              "type": "string"
-                            }
-                          },
-                          "additionalProperties": false,
-                          "required": [
-                            "from_mesh"
-                          ]
-                        }
-                      ]
-                    }
-                  },
-                  "additionalProperties": false,
-                  "required": [
-                    "bc_value"
-                  ]
-                }
-              ]
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "function_id"
+                ]
+              }
             }
           },
-          "additionalProperties": false,
-          "required": [
-            "num_conditions",
-            "bc_type",
-            "bc_node_id",
-            "boundary_value"
-          ]
+          "additionalProperties": false
         },
         "air_properties": {
           "title": "air_properties (group)",
@@ -454255,6 +453690,7 @@
       "additionalProperties": false,
       "required": [
         "dynamics",
+        "geometry",
         "lung_tree",
         "boundary_conditions",
         "air_properties"
@@ -458112,5 +457548,5 @@
     "PROBLEM TYPE"
   ],
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "4deb35bc72b806f8cb78d7414b35ca62541a0f17"
+  "$id": "cfbed34d499753c5a4a7e08c71b547b327c30793"
 }
