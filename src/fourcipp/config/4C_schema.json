@@ -1,5 +1,5 @@
 {
-  "description": "Schema for 4C\nCommit hash: 75a6a972f948cd018ad85eb0b51e618d01964903\nVersion: 2026.3.0-dev",
+  "description": "Schema for 4C\nCommit hash: 42514433738bf41eceb5f61160b8d54786ddf2e2\nVersion: 2026.3.0-dev",
   "type": "object",
   "properties": {
     "ALE DOMAIN": {
@@ -427875,7 +427875,8 @@
                           "type": "string",
                           "enum": [
                             "RheologicalElasticity",
-                            "Windkessel"
+                            "Windkessel",
+                            "StructuredTree"
                           ]
                         }
                       },
@@ -429018,6 +429019,520 @@
                     "compliance_C",
                     "distal_resistance_R_d",
                     "pressure_peripheral"
+                  ]
+                },
+                "structured_tree_model": {
+                  "title": "structured_tree_model (group)",
+                  "description": "Structured tree outflow model (Olufsen et al., doi: 10.1152/ajpheart.1999.276.1.H257) for terminal units.",
+                  "type": "object",
+                  "properties": {
+                    "exponent_xi": {
+                      "title": "exponent_xi (selection)",
+                      "description": "Power-law exponent in $r_p^{\\xi} = r_{d1}^{\\xi} + r_{d2}^{\\xi}$ (Olufsen: 2.76).",
+                      "type": "object",
+                      "oneOf": [
+                        {
+                          "title": "constant",
+                          "description": "Constant value for the field.",
+                          "type": "object",
+                          "properties": {
+                            "constant": {
+                              "title": "constant (double)",
+                              "description": "Constant value for the field.",
+                              "type": "number"
+                            }
+                          },
+                          "additionalProperties": false,
+                          "required": [
+                            "constant"
+                          ]
+                        },
+                        {
+                          "title": "from_file",
+                          "description": "Path to a file containing the input field data.",
+                          "type": "object",
+                          "properties": {
+                            "from_file": {
+                              "title": "from_file (path)",
+                              "description": "Path to a file containing the input field data.",
+                              "type": "string"
+                            }
+                          },
+                          "additionalProperties": false,
+                          "required": [
+                            "from_file"
+                          ]
+                        },
+                        {
+                          "title": "field_reference",
+                          "description": "Refer to a globally defined field by a name.",
+                          "type": "object",
+                          "properties": {
+                            "field_reference": {
+                              "title": "field_reference (string)",
+                              "description": "Refer to a globally defined field by a name.",
+                              "type": "string"
+                            }
+                          },
+                          "additionalProperties": false,
+                          "required": [
+                            "field_reference"
+                          ]
+                        },
+                        {
+                          "title": "from_mesh",
+                          "description": "Refer to a field defined in the input mesh by a name.",
+                          "type": "object",
+                          "properties": {
+                            "from_mesh": {
+                              "title": "from_mesh (string)",
+                              "description": "Refer to a field defined in the input mesh by a name.",
+                              "type": "string"
+                            }
+                          },
+                          "additionalProperties": false,
+                          "required": [
+                            "from_mesh"
+                          ]
+                        }
+                      ]
+                    },
+                    "asymmetry_ratio_gamma": {
+                      "title": "asymmetry_ratio_gamma (selection)",
+                      "description": "$\\gamma = (r_{small} / r_{large})^2$ (Olufsen: 0.41).",
+                      "type": "object",
+                      "oneOf": [
+                        {
+                          "title": "constant",
+                          "description": "Constant value for the field.",
+                          "type": "object",
+                          "properties": {
+                            "constant": {
+                              "title": "constant (double)",
+                              "description": "Constant value for the field.",
+                              "type": "number"
+                            }
+                          },
+                          "additionalProperties": false,
+                          "required": [
+                            "constant"
+                          ]
+                        },
+                        {
+                          "title": "from_file",
+                          "description": "Path to a file containing the input field data.",
+                          "type": "object",
+                          "properties": {
+                            "from_file": {
+                              "title": "from_file (path)",
+                              "description": "Path to a file containing the input field data.",
+                              "type": "string"
+                            }
+                          },
+                          "additionalProperties": false,
+                          "required": [
+                            "from_file"
+                          ]
+                        },
+                        {
+                          "title": "field_reference",
+                          "description": "Refer to a globally defined field by a name.",
+                          "type": "object",
+                          "properties": {
+                            "field_reference": {
+                              "title": "field_reference (string)",
+                              "description": "Refer to a globally defined field by a name.",
+                              "type": "string"
+                            }
+                          },
+                          "additionalProperties": false,
+                          "required": [
+                            "field_reference"
+                          ]
+                        },
+                        {
+                          "title": "from_mesh",
+                          "description": "Refer to a field defined in the input mesh by a name.",
+                          "type": "object",
+                          "properties": {
+                            "from_mesh": {
+                              "title": "from_mesh (string)",
+                              "description": "Refer to a field defined in the input mesh by a name.",
+                              "type": "string"
+                            }
+                          },
+                          "additionalProperties": false,
+                          "required": [
+                            "from_mesh"
+                          ]
+                        }
+                      ]
+                    },
+                    "termination_radius_r_min": {
+                      "title": "termination_radius_r_min (selection)",
+                      "description": "Minimum radius where the structured tree terminates.",
+                      "type": "object",
+                      "oneOf": [
+                        {
+                          "title": "constant",
+                          "description": "Constant value for the field.",
+                          "type": "object",
+                          "properties": {
+                            "constant": {
+                              "title": "constant (double)",
+                              "description": "Constant value for the field.",
+                              "type": "number"
+                            }
+                          },
+                          "additionalProperties": false,
+                          "required": [
+                            "constant"
+                          ]
+                        },
+                        {
+                          "title": "from_file",
+                          "description": "Path to a file containing the input field data.",
+                          "type": "object",
+                          "properties": {
+                            "from_file": {
+                              "title": "from_file (path)",
+                              "description": "Path to a file containing the input field data.",
+                              "type": "string"
+                            }
+                          },
+                          "additionalProperties": false,
+                          "required": [
+                            "from_file"
+                          ]
+                        },
+                        {
+                          "title": "field_reference",
+                          "description": "Refer to a globally defined field by a name.",
+                          "type": "object",
+                          "properties": {
+                            "field_reference": {
+                              "title": "field_reference (string)",
+                              "description": "Refer to a globally defined field by a name.",
+                              "type": "string"
+                            }
+                          },
+                          "additionalProperties": false,
+                          "required": [
+                            "field_reference"
+                          ]
+                        },
+                        {
+                          "title": "from_mesh",
+                          "description": "Refer to a field defined in the input mesh by a name.",
+                          "type": "object",
+                          "properties": {
+                            "from_mesh": {
+                              "title": "from_mesh (string)",
+                              "description": "Refer to a field defined in the input mesh by a name.",
+                              "type": "string"
+                            }
+                          },
+                          "additionalProperties": false,
+                          "required": [
+                            "from_mesh"
+                          ]
+                        }
+                      ]
+                    },
+                    "peripheral_resistance_R_peri": {
+                      "title": "peripheral_resistance_R_peri (selection)",
+                      "description": "Peripheral resistance at the terminal arterioles.",
+                      "type": "object",
+                      "oneOf": [
+                        {
+                          "title": "constant",
+                          "description": "Constant value for the field.",
+                          "type": "object",
+                          "properties": {
+                            "constant": {
+                              "title": "constant (double)",
+                              "description": "Constant value for the field.",
+                              "type": "number"
+                            }
+                          },
+                          "additionalProperties": false,
+                          "required": [
+                            "constant"
+                          ]
+                        },
+                        {
+                          "title": "from_file",
+                          "description": "Path to a file containing the input field data.",
+                          "type": "object",
+                          "properties": {
+                            "from_file": {
+                              "title": "from_file (path)",
+                              "description": "Path to a file containing the input field data.",
+                              "type": "string"
+                            }
+                          },
+                          "additionalProperties": false,
+                          "required": [
+                            "from_file"
+                          ]
+                        },
+                        {
+                          "title": "field_reference",
+                          "description": "Refer to a globally defined field by a name.",
+                          "type": "object",
+                          "properties": {
+                            "field_reference": {
+                              "title": "field_reference (string)",
+                              "description": "Refer to a globally defined field by a name.",
+                              "type": "string"
+                            }
+                          },
+                          "additionalProperties": false,
+                          "required": [
+                            "field_reference"
+                          ]
+                        },
+                        {
+                          "title": "from_mesh",
+                          "description": "Refer to a field defined in the input mesh by a name.",
+                          "type": "object",
+                          "properties": {
+                            "from_mesh": {
+                              "title": "from_mesh (string)",
+                              "description": "Refer to a field defined in the input mesh by a name.",
+                              "type": "string"
+                            }
+                          },
+                          "additionalProperties": false,
+                          "required": [
+                            "from_mesh"
+                          ]
+                        }
+                      ]
+                    },
+                    "stiffness_function_id": {
+                      "title": "stiffness_function_id (selection)",
+                      "description": "FUNCT ID defining the arterial stiffness $\\frac{Eh}{r}$ must be a VARFUNCTION with variable $r$.",
+                      "type": "object",
+                      "oneOf": [
+                        {
+                          "title": "constant",
+                          "description": "Constant value for the field.",
+                          "type": "object",
+                          "properties": {
+                            "constant": {
+                              "title": "constant (int)",
+                              "description": "Constant value for the field.",
+                              "type": "integer"
+                            }
+                          },
+                          "additionalProperties": false,
+                          "required": [
+                            "constant"
+                          ]
+                        },
+                        {
+                          "title": "from_file",
+                          "description": "Path to a file containing the input field data.",
+                          "type": "object",
+                          "properties": {
+                            "from_file": {
+                              "title": "from_file (path)",
+                              "description": "Path to a file containing the input field data.",
+                              "type": "string"
+                            }
+                          },
+                          "additionalProperties": false,
+                          "required": [
+                            "from_file"
+                          ]
+                        },
+                        {
+                          "title": "field_reference",
+                          "description": "Refer to a globally defined field by a name.",
+                          "type": "object",
+                          "properties": {
+                            "field_reference": {
+                              "title": "field_reference (string)",
+                              "description": "Refer to a globally defined field by a name.",
+                              "type": "string"
+                            }
+                          },
+                          "additionalProperties": false,
+                          "required": [
+                            "field_reference"
+                          ]
+                        },
+                        {
+                          "title": "from_mesh",
+                          "description": "Refer to a field defined in the input mesh by a name.",
+                          "type": "object",
+                          "properties": {
+                            "from_mesh": {
+                              "title": "from_mesh (string)",
+                              "description": "Refer to a field defined in the input mesh by a name.",
+                              "type": "string"
+                            }
+                          },
+                          "additionalProperties": false,
+                          "required": [
+                            "from_mesh"
+                          ]
+                        }
+                      ]
+                    },
+                    "length_coefficient": {
+                      "title": "length_coefficient (selection)",
+                      "description": "$k_l$ in $l = k_l \\cdot r^{k_{exp}}$.",
+                      "type": "object",
+                      "oneOf": [
+                        {
+                          "title": "constant",
+                          "description": "Constant value for the field.",
+                          "type": "object",
+                          "properties": {
+                            "constant": {
+                              "title": "constant (double)",
+                              "description": "Constant value for the field.",
+                              "type": "number"
+                            }
+                          },
+                          "additionalProperties": false,
+                          "required": [
+                            "constant"
+                          ]
+                        },
+                        {
+                          "title": "from_file",
+                          "description": "Path to a file containing the input field data.",
+                          "type": "object",
+                          "properties": {
+                            "from_file": {
+                              "title": "from_file (path)",
+                              "description": "Path to a file containing the input field data.",
+                              "type": "string"
+                            }
+                          },
+                          "additionalProperties": false,
+                          "required": [
+                            "from_file"
+                          ]
+                        },
+                        {
+                          "title": "field_reference",
+                          "description": "Refer to a globally defined field by a name.",
+                          "type": "object",
+                          "properties": {
+                            "field_reference": {
+                              "title": "field_reference (string)",
+                              "description": "Refer to a globally defined field by a name.",
+                              "type": "string"
+                            }
+                          },
+                          "additionalProperties": false,
+                          "required": [
+                            "field_reference"
+                          ]
+                        },
+                        {
+                          "title": "from_mesh",
+                          "description": "Refer to a field defined in the input mesh by a name.",
+                          "type": "object",
+                          "properties": {
+                            "from_mesh": {
+                              "title": "from_mesh (string)",
+                              "description": "Refer to a field defined in the input mesh by a name.",
+                              "type": "string"
+                            }
+                          },
+                          "additionalProperties": false,
+                          "required": [
+                            "from_mesh"
+                          ]
+                        }
+                      ]
+                    },
+                    "length_exponent": {
+                      "title": "length_exponent (selection)",
+                      "description": "$k_{exp}$ in $l = k_l \\cdot r^{k_{exp}}$.",
+                      "type": "object",
+                      "oneOf": [
+                        {
+                          "title": "constant",
+                          "description": "Constant value for the field.",
+                          "type": "object",
+                          "properties": {
+                            "constant": {
+                              "title": "constant (double)",
+                              "description": "Constant value for the field.",
+                              "type": "number"
+                            }
+                          },
+                          "additionalProperties": false,
+                          "required": [
+                            "constant"
+                          ]
+                        },
+                        {
+                          "title": "from_file",
+                          "description": "Path to a file containing the input field data.",
+                          "type": "object",
+                          "properties": {
+                            "from_file": {
+                              "title": "from_file (path)",
+                              "description": "Path to a file containing the input field data.",
+                              "type": "string"
+                            }
+                          },
+                          "additionalProperties": false,
+                          "required": [
+                            "from_file"
+                          ]
+                        },
+                        {
+                          "title": "field_reference",
+                          "description": "Refer to a globally defined field by a name.",
+                          "type": "object",
+                          "properties": {
+                            "field_reference": {
+                              "title": "field_reference (string)",
+                              "description": "Refer to a globally defined field by a name.",
+                              "type": "string"
+                            }
+                          },
+                          "additionalProperties": false,
+                          "required": [
+                            "field_reference"
+                          ]
+                        },
+                        {
+                          "title": "from_mesh",
+                          "description": "Refer to a field defined in the input mesh by a name.",
+                          "type": "object",
+                          "properties": {
+                            "from_mesh": {
+                              "title": "from_mesh (string)",
+                              "description": "Refer to a field defined in the input mesh by a name.",
+                              "type": "string"
+                            }
+                          },
+                          "additionalProperties": false,
+                          "required": [
+                            "from_mesh"
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "exponent_xi",
+                    "asymmetry_ratio_gamma",
+                    "termination_radius_r_min",
+                    "peripheral_resistance_R_peri",
+                    "stiffness_function_id",
+                    "length_coefficient",
+                    "length_exponent"
                   ]
                 }
               },
@@ -431348,5 +431863,5 @@
     "PROBLEM TYPE"
   ],
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "75a6a972f948cd018ad85eb0b51e618d01964903"
+  "$id": "42514433738bf41eceb5f61160b8d54786ddf2e2"
 }

@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 75a6a972f948cd018ad85eb0b51e618d01964903
+  commit_hash: 42514433738bf41eceb5f61160b8d54786ddf2e2
   version: 2026.3.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -52953,6 +52953,7 @@ sections:
                                     choices:
                                       - name: RheologicalElasticity
                                       - name: Windkessel
+                                      - name: StructuredTree
                                 - name: from_file
                                   spec:
                                     name: from_file
@@ -53406,6 +53407,216 @@ sections:
                                     - name: pressure_peripheral
                                       type: selection
                                       description: "Peripheral pressure after Windkessel model."
+                                      required: true
+                                      choices:
+                                        - name: constant
+                                          spec:
+                                            name: constant
+                                            type: double
+                                            description: "Constant value for the field."
+                                            required: true
+                                        - name: from_file
+                                          spec:
+                                            name: from_file
+                                            type: path
+                                            description: "Path to a file containing the input field data."
+                                            required: true
+                                        - name: field_reference
+                                          spec:
+                                            name: field_reference
+                                            type: string
+                                            description: "Refer to a globally defined field by a name."
+                                            required: true
+                                        - name: from_mesh
+                                          spec:
+                                            name: from_mesh
+                                            type: string
+                                            description: "Refer to a field defined in the input mesh by a name."
+                                            required: true
+                            - name: structured_tree_model
+                              type: group
+                              description: 'Structured tree outflow model (Olufsen et al., doi: 10.1152/ajpheart.1999.276.1.H257) for terminal units.'
+                              required: false
+                              specs:
+                                - type: all_of
+                                  specs:
+                                    - name: exponent_xi
+                                      type: selection
+                                      description: "Power-law exponent in $r_p^{\\xi} = r_{d1}^{\\xi} + r_{d2}^{\\xi}$ (Olufsen: 2.76)."
+                                      required: true
+                                      choices:
+                                        - name: constant
+                                          spec:
+                                            name: constant
+                                            type: double
+                                            description: "Constant value for the field."
+                                            required: true
+                                        - name: from_file
+                                          spec:
+                                            name: from_file
+                                            type: path
+                                            description: "Path to a file containing the input field data."
+                                            required: true
+                                        - name: field_reference
+                                          spec:
+                                            name: field_reference
+                                            type: string
+                                            description: "Refer to a globally defined field by a name."
+                                            required: true
+                                        - name: from_mesh
+                                          spec:
+                                            name: from_mesh
+                                            type: string
+                                            description: "Refer to a field defined in the input mesh by a name."
+                                            required: true
+                                    - name: asymmetry_ratio_gamma
+                                      type: selection
+                                      description: "$\\gamma = (r_{small} / r_{large})^2$ (Olufsen: 0.41)."
+                                      required: true
+                                      choices:
+                                        - name: constant
+                                          spec:
+                                            name: constant
+                                            type: double
+                                            description: "Constant value for the field."
+                                            required: true
+                                        - name: from_file
+                                          spec:
+                                            name: from_file
+                                            type: path
+                                            description: "Path to a file containing the input field data."
+                                            required: true
+                                        - name: field_reference
+                                          spec:
+                                            name: field_reference
+                                            type: string
+                                            description: "Refer to a globally defined field by a name."
+                                            required: true
+                                        - name: from_mesh
+                                          spec:
+                                            name: from_mesh
+                                            type: string
+                                            description: "Refer to a field defined in the input mesh by a name."
+                                            required: true
+                                    - name: termination_radius_r_min
+                                      type: selection
+                                      description: "Minimum radius where the structured tree terminates."
+                                      required: true
+                                      choices:
+                                        - name: constant
+                                          spec:
+                                            name: constant
+                                            type: double
+                                            description: "Constant value for the field."
+                                            required: true
+                                        - name: from_file
+                                          spec:
+                                            name: from_file
+                                            type: path
+                                            description: "Path to a file containing the input field data."
+                                            required: true
+                                        - name: field_reference
+                                          spec:
+                                            name: field_reference
+                                            type: string
+                                            description: "Refer to a globally defined field by a name."
+                                            required: true
+                                        - name: from_mesh
+                                          spec:
+                                            name: from_mesh
+                                            type: string
+                                            description: "Refer to a field defined in the input mesh by a name."
+                                            required: true
+                                    - name: peripheral_resistance_R_peri
+                                      type: selection
+                                      description: "Peripheral resistance at the terminal arterioles."
+                                      required: true
+                                      choices:
+                                        - name: constant
+                                          spec:
+                                            name: constant
+                                            type: double
+                                            description: "Constant value for the field."
+                                            required: true
+                                        - name: from_file
+                                          spec:
+                                            name: from_file
+                                            type: path
+                                            description: "Path to a file containing the input field data."
+                                            required: true
+                                        - name: field_reference
+                                          spec:
+                                            name: field_reference
+                                            type: string
+                                            description: "Refer to a globally defined field by a name."
+                                            required: true
+                                        - name: from_mesh
+                                          spec:
+                                            name: from_mesh
+                                            type: string
+                                            description: "Refer to a field defined in the input mesh by a name."
+                                            required: true
+                                    - name: stiffness_function_id
+                                      type: selection
+                                      description: "FUNCT ID defining the arterial stiffness $\\frac{Eh}{r}$ must be a VARFUNCTION with variable $r$."
+                                      required: true
+                                      choices:
+                                        - name: constant
+                                          spec:
+                                            name: constant
+                                            type: int
+                                            description: "Constant value for the field."
+                                            required: true
+                                        - name: from_file
+                                          spec:
+                                            name: from_file
+                                            type: path
+                                            description: "Path to a file containing the input field data."
+                                            required: true
+                                        - name: field_reference
+                                          spec:
+                                            name: field_reference
+                                            type: string
+                                            description: "Refer to a globally defined field by a name."
+                                            required: true
+                                        - name: from_mesh
+                                          spec:
+                                            name: from_mesh
+                                            type: string
+                                            description: "Refer to a field defined in the input mesh by a name."
+                                            required: true
+                                    - name: length_coefficient
+                                      type: selection
+                                      description: "$k_l$ in $l = k_l \\cdot r^{k_{exp}}$."
+                                      required: true
+                                      choices:
+                                        - name: constant
+                                          spec:
+                                            name: constant
+                                            type: double
+                                            description: "Constant value for the field."
+                                            required: true
+                                        - name: from_file
+                                          spec:
+                                            name: from_file
+                                            type: path
+                                            description: "Path to a file containing the input field data."
+                                            required: true
+                                        - name: field_reference
+                                          spec:
+                                            name: field_reference
+                                            type: string
+                                            description: "Refer to a globally defined field by a name."
+                                            required: true
+                                        - name: from_mesh
+                                          spec:
+                                            name: from_mesh
+                                            type: string
+                                            description: "Refer to a field defined in the input mesh by a name."
+                                            required: true
+                                    - name: length_exponent
+                                      type: selection
+                                      description: "$k_{exp}$ in $l = k_l \\cdot r^{k_{exp}}$."
                                       required: true
                                       choices:
                                         - name: constant
