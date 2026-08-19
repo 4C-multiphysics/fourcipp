@@ -1,6 +1,6 @@
 metadata:
-  commit_hash: 42514433738bf41eceb5f61160b8d54786ddf2e2
-  version: 2026.3.0-dev
+  commit_hash: 59d99225d93811abbbee634cdf87949d22206efd
+  version: 2026.3.0
   description_section_name: TITLE
 legacy_element_specs:
   ALE2:
@@ -52830,9 +52830,9 @@ sections:
                       specs:
                         - type: all_of
                           specs:
-                            - name: reference_area_A0
+                            - name: reference_radius_r0
                               type: selection
-                              description: "Reference area of element"
+                              description: "Reference radius of element"
                               required: true
                               choices:
                                 - name: constant
@@ -52920,18 +52920,6 @@ sections:
                               type: double
                               description: "Condition applied at the outlet, either pressure or reflection."
                               required: true
-                            - name: cycle_period
-                              noneable: true
-                              type: double
-                              description: "Duration of one cycle until next one starts, to implement pulsatility (systolic vs diastolic)."
-                              required: false
-                              default: null
-                            - name: pulse_width
-                              noneable: true
-                              type: double
-                              description: "Duration of input pulse in the cycle - Heaviside function = 1."
-                              required: false
-                              default: null
                     - name: terminal_units
                       type: group
                       description: Terminal units.
@@ -53643,6 +53631,12 @@ sections:
                                             type: string
                                             description: "Refer to a field defined in the input mesh by a name."
                                             required: true
+                                    - name: cardiac_period
+                                      noneable: true
+                                      type: double
+                                      description: "Duration of one cardiac cycle on which the structured tree impulse response is built. Defaults to the final time."
+                                      required: false
+                                      default: null
 $references:
   "0":
     name: elements

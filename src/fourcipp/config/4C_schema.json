@@ -1,5 +1,5 @@
 {
-  "description": "Schema for 4C\nCommit hash: 42514433738bf41eceb5f61160b8d54786ddf2e2\nVersion: 2026.3.0-dev",
+  "description": "Schema for 4C\nCommit hash: 59d99225d93811abbbee634cdf87949d22206efd\nVersion: 2026.3.0",
   "type": "object",
   "properties": {
     "ALE DOMAIN": {
@@ -427642,9 +427642,9 @@
               "description": "Geometry of pulmonary vasculature",
               "type": "object",
               "properties": {
-                "reference_area_A0": {
-                  "title": "reference_area_A0 (selection)",
-                  "description": "Reference area of element",
+                "reference_radius_r0": {
+                  "title": "reference_radius_r0 (selection)",
+                  "description": "Reference radius of element",
                   "type": "object",
                   "oneOf": [
                     {
@@ -427787,7 +427787,7 @@
               },
               "additionalProperties": false,
               "required": [
-                "reference_area_A0",
+                "reference_radius_r0",
                 "thickness_th"
               ]
             },
@@ -427826,24 +427826,6 @@
                   "title": "condition_outflow (double)",
                   "description": "Condition applied at the outlet, either pressure or reflection.",
                   "type": "number"
-                },
-                "cycle_period": {
-                  "title": "cycle_period (double)",
-                  "description": "Duration of one cycle until next one starts, to implement pulsatility (systolic vs diastolic).",
-                  "default": null,
-                  "type": [
-                    "number",
-                    "null"
-                  ]
-                },
-                "pulse_width": {
-                  "title": "pulse_width (double)",
-                  "description": "Duration of input pulse in the cycle - Heaviside function = 1.",
-                  "default": null,
-                  "type": [
-                    "number",
-                    "null"
-                  ]
                 }
               },
               "additionalProperties": false,
@@ -429521,6 +429503,15 @@
                             "from_mesh"
                           ]
                         }
+                      ]
+                    },
+                    "cardiac_period": {
+                      "title": "cardiac_period (double)",
+                      "description": "Duration of one cardiac cycle on which the structured tree impulse response is built. Defaults to the final time.",
+                      "default": null,
+                      "type": [
+                        "number",
+                        "null"
                       ]
                     }
                   },
@@ -431863,5 +431854,5 @@
     "PROBLEM TYPE"
   ],
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "42514433738bf41eceb5f61160b8d54786ddf2e2"
+  "$id": "59d99225d93811abbbee634cdf87949d22206efd"
 }
