@@ -1,5 +1,5 @@
 {
-  "description": "Schema for 4C\nCommit hash: 59d99225d93811abbbee634cdf87949d22206efd\nVersion: 2026.3.0",
+  "description": "Schema for 4C\nCommit hash: ac2f198ca81d5d4a5b90f72564772ba7c0400581\nVersion: 2026.4.0-dev",
   "type": "object",
   "properties": {
     "ALE DOMAIN": {
@@ -431854,5 +431854,5 @@
     "PROBLEM TYPE"
   ],
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "59d99225d93811abbbee634cdf87949d22206efd"
+  "$id": "ac2f198ca81d5d4a5b90f72564772ba7c0400581"
 }
