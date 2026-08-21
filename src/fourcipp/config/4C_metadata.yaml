@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: ac2f198ca81d5d4a5b90f72564772ba7c0400581
+  commit_hash: 96b9fa915eb3354ad016b35e2b97a22d9ccbff45
   version: 2026.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -47360,12 +47360,12 @@ sections:
               type: enum
               description: "Type of coupling strategy between fields"
               required: false
-              default: "volume_matching"
+              default: volume_matching
               choices:
-                - name: "boundary_nonmatching"
-                - name: "volume_matching"
-                - name: "volume_nonmatching"
-                - name: "volumeboundary_matching"
+                - name: volume_matching
+                - name: volume_nonmatching
+                - name: boundary_nonmatching
+                - name: volumeboundary_matching
             - name: COUPALGO
               type: enum
               description: "Coupling strategies for SSI solvers"
