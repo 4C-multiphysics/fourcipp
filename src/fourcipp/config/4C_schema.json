@@ -1,5 +1,5 @@
 {
-  "description": "Schema for 4C\nCommit hash: 96b9fa915eb3354ad016b35e2b97a22d9ccbff45\nVersion: 2026.4.0-dev",
+  "description": "Schema for 4C\nCommit hash: a9e7728a33654e6c2e17b06aba1af6cdb20e3dbf\nVersion: 2026.4.0-dev",
   "type": "object",
   "properties": {
     "ALE DOMAIN": {
@@ -427420,13 +427420,17 @@
                 "properties": {
                   "id": {
                     "title": "id (int)",
-                    "description": "Unique positive id of this definition. It is referenced by the `bc_id` point data of the mesh: every node with this `bc_id` carries this boundary condition.",
-                    "type": "integer"
+                    "description": "Unique positive id of this definition. It is referenced by the `bc_id` point data of the mesh: every node with this `bc_id` carries this boundary condition. The id 0 marks nodes without a boundary condition and cannot be defined.",
+                    "type": "integer",
+                    "exclusiveMinimum": 0,
+                    "maximum": 2147483647
                   },
                   "function_id": {
                     "title": "function_id (int)",
                     "description": "Id of the function of time prescribing the boundary value.",
-                    "type": "integer"
+                    "type": "integer",
+                    "exclusiveMinimum": 0,
+                    "maximum": 2147483647
                   }
                 },
                 "additionalProperties": false,
@@ -427445,19 +427449,104 @@
                 "properties": {
                   "id": {
                     "title": "id (int)",
-                    "description": "Unique positive id of this definition. It is referenced by the `bc_id` point data of the mesh: every node with this `bc_id` carries this boundary condition.",
-                    "type": "integer"
+                    "description": "Unique positive id of this definition. It is referenced by the `bc_id` point data of the mesh: every node with this `bc_id` carries this boundary condition. The id 0 marks nodes without a boundary condition and cannot be defined.",
+                    "type": "integer",
+                    "exclusiveMinimum": 0,
+                    "maximum": 2147483647
                   },
                   "function_id": {
                     "title": "function_id (int)",
                     "description": "Id of the function of time prescribing the boundary value.",
-                    "type": "integer"
+                    "type": "integer",
+                    "exclusiveMinimum": 0,
+                    "maximum": 2147483647
                   }
                 },
                 "additionalProperties": false,
                 "required": [
                   "id",
                   "function_id"
+                ]
+              }
+            },
+            "volume_dependent_pleural_pressure": {
+              "title": "volume_dependent_pleural_pressure (list)",
+              "description": "Reusable definitions of a pleural pressure that follows the total volume of all terminal units. Every node carrying one of these ids has its pressure dof constrained to the pleural pressure, evaluated from the curve given below at the total terminal unit volume.",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "title": "id (int)",
+                    "description": "Unique positive id of this definition. It is referenced by the `bc_id` point data of the mesh: every node with this `bc_id` carries this boundary condition. The id 0 marks nodes without a boundary condition and cannot be defined.",
+                    "type": "integer",
+                    "exclusiveMinimum": 0,
+                    "maximum": 2147483647
+                  },
+                  "coupling": {
+                    "title": "coupling (enum)",
+                    "description": "How the pleural pressure follows the terminal unit volume. 'Frozen' evaluates it from the total volume of the last converged timestep, which makes it an explicit source term without Jacobian contribution.",
+                    "default": "Frozen",
+                    "type": "string",
+                    "enum": [
+                      "Frozen"
+                    ]
+                  },
+                  "residual_volume": {
+                    "title": "residual_volume (double)",
+                    "description": "Total terminal unit volume at which the normalized volume is zero. Must be smaller than total_lung_capacity.",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1.7976931348623157e+308
+                  },
+                  "total_lung_capacity": {
+                    "title": "total_lung_capacity (double)",
+                    "description": "Total terminal unit volume at which the normalized volume is one. Must be larger than residual_volume.",
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1.7976931348623157e+308
+                  },
+                  "normalized_linear_exponential": {
+                    "title": "normalized_linear_exponential (group)",
+                    "description": "p_pl(xi) = pressure_offset + linear_coefficient * xi + exponential_coefficient * (exp(exponential_rate * xi) - 1), with the normalized volume xi = (V - residual_volume) / (total_lung_capacity - residual_volume).",
+                    "type": "object",
+                    "properties": {
+                      "pressure_offset": {
+                        "title": "pressure_offset (double)",
+                        "description": "Pleural pressure at the residual volume, where the linear and the exponential term both vanish.",
+                        "type": "number"
+                      },
+                      "linear_coefficient": {
+                        "title": "linear_coefficient (double)",
+                        "description": "Factor of the linear term.",
+                        "type": "number"
+                      },
+                      "exponential_coefficient": {
+                        "title": "exponential_coefficient (double)",
+                        "description": "Factor of the exponential term.",
+                        "type": "number"
+                      },
+                      "exponential_rate": {
+                        "title": "exponential_rate (double)",
+                        "description": "Rate inside the exponential term.",
+                        "type": "number"
+                      }
+                    },
+                    "additionalProperties": false,
+                    "required": [
+                      "pressure_offset",
+                      "linear_coefficient",
+                      "exponential_coefficient",
+                      "exponential_rate"
+                    ]
+                  }
+                },
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "residual_volume",
+                  "total_lung_capacity",
+                  "normalized_linear_exponential"
                 ]
               }
             }
@@ -431854,5 +431943,5 @@
     "PROBLEM TYPE"
   ],
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "96b9fa915eb3354ad016b35e2b97a22d9ccbff45"
+  "$id": "a9e7728a33654e6c2e17b06aba1af6cdb20e3dbf"
 }

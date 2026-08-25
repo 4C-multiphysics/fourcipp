@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 96b9fa915eb3354ad016b35e2b97a22d9ccbff45
+  commit_hash: a9e7728a33654e6c2e17b06aba1af6cdb20e3dbf
   version: 2026.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -52688,12 +52688,24 @@ sections:
                         specs:
                           - name: id
                             type: int
-                            description: "Unique positive id of this definition. It is referenced by the `bc_id` point data of the mesh: every node with this `bc_id` carries this boundary condition."
+                            description: "Unique positive id of this definition. It is referenced by the `bc_id` point data of the mesh: every node with this `bc_id` carries this boundary condition. The id 0 marks nodes without a boundary condition and cannot be defined."
                             required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
                           - name: function_id
                             type: int
                             description: "Id of the function of time prescribing the boundary value."
                             required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
                     - name: flow
                       type: list
                       description: Reusable volumetric flow boundary condition definitions.
@@ -52703,12 +52715,91 @@ sections:
                         specs:
                           - name: id
                             type: int
-                            description: "Unique positive id of this definition. It is referenced by the `bc_id` point data of the mesh: every node with this `bc_id` carries this boundary condition."
+                            description: "Unique positive id of this definition. It is referenced by the `bc_id` point data of the mesh: every node with this `bc_id` carries this boundary condition. The id 0 marks nodes without a boundary condition and cannot be defined."
                             required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
                           - name: function_id
                             type: int
                             description: "Id of the function of time prescribing the boundary value."
                             required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                    - name: volume_dependent_pleural_pressure
+                      type: list
+                      description: 'Reusable definitions of a pleural pressure that follows the total volume of all terminal units. Every node carrying one of these ids has its pressure dof constrained to the pleural pressure, evaluated from the curve given below at the total terminal unit volume.'
+                      required: false
+                      spec:
+                        type: all_of
+                        specs:
+                          - name: id
+                            type: int
+                            description: "Unique positive id of this definition. It is referenced by the `bc_id` point data of the mesh: every node with this `bc_id` carries this boundary condition. The id 0 marks nodes without a boundary condition and cannot be defined."
+                            required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 2147483647
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: coupling
+                            type: enum
+                            description: "How the pleural pressure follows the terminal unit volume. 'Frozen' evaluates it from the total volume of the last converged timestep, which makes it an explicit source term without Jacobian contribution."
+                            required: false
+                            default: Frozen
+                            choices:
+                              - name: Frozen
+                          - name: residual_volume
+                            type: double
+                            description: "Total terminal unit volume at which the normalized volume is zero. Must be smaller than total_lung_capacity."
+                            required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: false
+                                maximum_exclusive: false
+                          - name: total_lung_capacity
+                            type: double
+                            description: "Total terminal unit volume at which the normalized volume is one. Must be larger than residual_volume."
+                            required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
+                          - name: normalized_linear_exponential
+                            type: group
+                            description: 'p_pl(xi) = pressure_offset + linear_coefficient * xi + exponential_coefficient * (exp(exponential_rate * xi) - 1), with the normalized volume xi = (V - residual_volume) / (total_lung_capacity - residual_volume).'
+                            required: true
+                            specs:
+                              - type: all_of
+                                specs:
+                                  - name: pressure_offset
+                                    type: double
+                                    description: "Pleural pressure at the residual volume, where the linear and the exponential term both vanish."
+                                    required: true
+                                  - name: linear_coefficient
+                                    type: double
+                                    description: "Factor of the linear term."
+                                    required: true
+                                  - name: exponential_coefficient
+                                    type: double
+                                    description: "Factor of the exponential term."
+                                    required: true
+                                  - name: exponential_rate
+                                    type: double
+                                    description: "Rate inside the exponential term."
+                                    required: true
             - name: air_properties
               type: group
               description: Air properties for the reduced dimensional lung simulation
