@@ -21,6 +21,7 @@ FourCIPP (**FourC** **I**nput **P**ython **P**arser) holds a Python Parser to si
   - [Installation from source](#installation-from-source)
 - [Quickstart example](#quickstart-example)
 - [Configuration](#configuration)
+- [Migrating input files](#migrating-input-files)
 - [Developing FourCIPP](#developing-fourcipp)
 - [Dependency Management](#dependency-management)
 - [License](#license)
@@ -146,6 +147,33 @@ profiles:
     description: 4C metadata in the main 4C docker image
 ```
 and select it using the `profile` entry.
+
+
+## Migrating input files
+4C input files carry an optional `input_version` field. Using it, and migrating input files
+across versions, is entirely optional: 4C never requires `input_version` to be set or kept
+up to date, it only warns on a mismatch.
+
+FourCIPP ships an optional migration tool that applies a versioned database of known,
+mechanical input file changes (parameter/section renames, removals, default changes, etc.),
+bundled under `src/fourcipp/migration/migrations/` (see the `README.md` there for the full
+schema). Run it via:
+```commandline
+fourcipp migrate path/to/input.4C.yaml
+```
+By default, since the migrated file is the one compatible with the current 4C version, it
+replaces the input file at its original path, while the pre-migration file is kept alongside
+with suffix `_old.4C.yaml` as a backup (no backup is created if no migration was actually
+necessary); use `-o`/`--overwrite` to migrate in place without keeping that backup. Use
+`--to-version` to migrate to a specific input file version instead of the newest known one,
+and `--migrations-dir` to use a custom migration database, e.g. one vendored from a specific
+4C version. The command always prints a short one-line summary, e.g.:
+```commandline
+File 'input.4C.yaml' migrated: 2 migrations applied, pre-migration file saved as 'input_old.4C.yaml'.
+```
+Changes that cannot be applied automatically (e.g. a
+feature removed without a replacement) are never silently dropped; they are reported so they
+can be resolved by hand.
 
 
 ## Developing FourCIPP

@@ -1,8 +1,8 @@
 profile: "default"
 profiles:
   default:
-    fourc_metadata_path: "4C_metadata.yaml"
-    fourc_json_schema_path: "4C_schema.json"
+    fourc_metadata_path: "/home/scheider/fourc/source/build/release/4C_metadata.yaml"
+    fourc_json_schema_path: "/home/scheider/fourc/source/build/release/4C_schema.json"
     description: "Profile for the latest successful nightly 4C build"
     user_defaults_path: null
   completion_schema:

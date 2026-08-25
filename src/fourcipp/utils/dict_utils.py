@@ -292,6 +292,26 @@ def replace_value(
         entry[last_key] = new_value
 
 
+def transform_value(
+    nested_dict: dict,
+    keys: Sequence,
+    function: Callable[[Any], Any],
+) -> None:
+    """Transform an existing value in place using a callable.
+
+    Unlike `replace_value`, this does not require the new value to be known upfront. This is
+    useful, e.g., to rescale a numeric value or an entry within a list, based on the entry's
+    current value, individually for every match of `keys`.
+
+    Args:
+        nested_dict: Nested data dict
+        keys: List of keys to the entry
+        function: Callable that receives the current value and returns the new value
+    """
+    for entry, last_key in _split_off_last_key(nested_dict, keys):
+        entry[last_key] = function(entry[last_key])
+
+
 def make_default_explicit(
     nested_dict: dict,
     keys: Sequence,
