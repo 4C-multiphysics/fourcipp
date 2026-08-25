@@ -23,12 +23,15 @@
 
 import argparse
 import pathlib
+import shutil
 import sys
+import tempfile
 
 from loguru import logger
 
 from fourcipp import CONFIG
 from fourcipp.fourc_input import FourCInput
+from fourcipp.migration.migrator import migrate_file
 from fourcipp.utils.configuration import (
     change_profile,
     show_config,
@@ -81,6 +84,67 @@ def format_file(
     else:
         # No config required, is purely a style question
         dump_yaml(load_yaml(input_file), input_file, use_fourcipp_yaml_style=True)
+
+
+def migrate_input_file(
+    input_file: str,
+    overwrite: bool,
+    to_version: str | None = None,
+    migrations_dir: str | None = None,
+) -> None:  # pragma: no cover
+    """Migrate an input file to a newer input file version.
+
+    Since the migrated file is the one that is actually compatible with the current 4C
+    version, by default it replaces the input file at its original path, while the
+    pre-migration file is kept alongside with suffix '_old.4C.yaml' as a backup. No backup
+    is created if no migration was actually necessary.
+
+    Args:
+        input_file: Input filename to migrate
+        overwrite: Whether to migrate the input file in place, without keeping a backup of
+                        the pre-migration file.
+        to_version: Version to migrate to (inclusive); defaults to the newest known version
+        migrations_dir: Directory containing `<version>.yaml` migration files; defaults to
+                             the migration database bundled with FourCIPP
+    """
+    backup_appendix = "_old"
+
+    input_path = pathlib.Path(input_file)
+    if not input_path.is_file():
+        raise FileNotFoundError(f"Input file '{input_path}' does not exist.")
+
+    # Migrate into a staging file first, so whether any migration was actually necessary is
+    # known before deciding whether to keep a backup of the pre-migration file.
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        staged_path = pathlib.Path(tmp_dir) / input_path.name
+        report = migrate_file(input_path, staged_path, migrations_dir, to_version)
+        logger.info(str(report))
+
+        if not report.changed:
+            shutil.copyfile(staged_path, input_path)
+            print(f"File '{input_path}' migrated: no changes necessary.")
+            return
+
+        n_applied = len(report.applied)
+        plural = "" if n_applied == 1 else "s"
+
+        if overwrite:
+            shutil.copyfile(staged_path, input_path)
+            print(
+                f"File '{input_path}' migrated: {n_applied} migration{plural} applied, "
+                "file overwritten in place."
+            )
+            return
+
+        names = input_path.name.split(".")
+        names[0] += backup_appendix
+        backup_path = input_path.parent / ".".join(names)
+        input_path.rename(backup_path)
+        shutil.copyfile(staged_path, input_path)
+        print(
+            f"File '{input_path}' migrated: {n_applied} migration{plural} applied, "
+            f"pre-migration file saved as '{backup_path}'."
+        )
 
 
 def main() -> None:
@@ -148,38 +212,73 @@ def main() -> None:
         action="store_true",
         help=f"Overwrite existing input file.",
     )
+
+    # Migrate parser
+    migrate_parser = subparsers.add_parser(
+        "migrate",
+        help="Migrate an input file to a newer input file version. This is entirely "
+        "optional, 4C never requires the input_version field to be set or up to date.",
+    )
+
+    migrate_parser.add_argument(
+        "input-file",
+        help=f"4C input file.",
+        type=str,
+    )
+
+    migrate_parser.add_argument(
+        "-o",
+        "--overwrite",
+        action="store_true",
+        help="Migrate the input file in place, without keeping a backup of the "
+        "pre-migration file. By default, the input file is replaced with the migrated "
+        "version, and the pre-migration file is kept alongside with suffix '_old.4C.yaml'.",
+    )
+
+    migrate_parser.add_argument(
+        "--to-version",
+        help="Input file version to migrate to. Defaults to the newest known version.",
+        type=str,
+        default=None,
+    )
+
+    migrate_parser.add_argument(
+        "--migrations-dir",
+        help="Directory containing the migration database. Defaults to the migration "
+        "database bundled with FourCIPP.",
+        type=str,
+        default=None,
+    )
     # Add global CLI logging options
     main_parser.add_argument(
         "--log-file",
-        help="Path to log file. If set, enables file logging.",
+        help="Path to log file. If set, enables logging to this file.",
         type=str,
         default=None,
     )
     main_parser.add_argument(
-        "--enable-log",
-        help="Enable logging to file according to configuration.",
+        "--log-screen",
+        help="Enable logging to screen (stdout).",
         action="store_true",
     )
 
     # Parse args and build kwargs for commands. Skip log-related global args.
     parsed_args = main_parser.parse_args(sys.argv[1:])
 
-    # Determine whether logging should be enabled.
-    # When enabled, if a file path is provided use it
-    # and open with mode='w' (replace any existing file). Otherwise log to stdout.
+    # Determine whether logging should be enabled. --log-file and --log-screen are
+    # independent: either, both, or neither may be given.
     try:
-        if getattr(parsed_args, "enable_log", False):
-            log_file_arg = getattr(parsed_args, "log_file", None)
+        log_file_arg = getattr(parsed_args, "log_file", None)
+        log_screen_arg = getattr(parsed_args, "log_screen", False)
+        if log_file_arg or log_screen_arg:
             logger.enable("fourcipp")
-            # Prefer CLI-specified path, then config path, otherwise stdout
             if log_file_arg:
                 target = pathlib.Path(log_file_arg)
                 logger.add(
                     target.as_posix(), mode="w", format="{time} {level} {message}"
                 )
                 logger.debug(f"Logging enabled to file: {target}")
-            else:
-                # No file path; log to stdout (screen)
+            if log_screen_arg:
                 logger.add(sys.stdout, format="{message}")
                 logger.debug("Logging enabled to stdout")
         else:
@@ -191,7 +290,7 @@ def main() -> None:
 
     kwargs: dict = {}
     for key, value in vars(parsed_args).items():
-        if key in ("log_file", "enable_log"):
+        if key in ("log_file", "log_screen"):
             continue
         kwargs[key.replace("-", "_")] = value
     command = kwargs.pop("command")
@@ -208,3 +307,5 @@ def main() -> None:
             modify_input_with_defaults(input_path, overwrite)
         case "format":
             format_file(**kwargs)
+        case "migrate":
+            migrate_input_file(**kwargs)
