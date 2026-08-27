@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: a9e7728a33654e6c2e17b06aba1af6cdb20e3dbf
+  commit_hash: 48c27df5b96f3359045b8337c1066a780d1e9742
   version: 2026.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -32474,6 +32474,16 @@ sections:
             - name: ELEMENT_OWNER
               type: bool
               description: "write element owner"
+              required: false
+              default: false
+            - name: NODE_OWNER
+              type: bool
+              description: "write node owner"
+              required: false
+              default: false
+            - name: MATERIAL_ELEMENT_QUANTITIES
+              type: bool
+              description: "write material element quantities"
               required: false
               default: false
             - name: ELEMENT_GID

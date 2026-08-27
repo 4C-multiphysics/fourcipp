@@ -1,5 +1,5 @@
 {
-  "description": "Schema for 4C\nCommit hash: a9e7728a33654e6c2e17b06aba1af6cdb20e3dbf\nVersion: 2026.4.0-dev",
+  "description": "Schema for 4C\nCommit hash: 48c27df5b96f3359045b8337c1066a780d1e9742\nVersion: 2026.4.0-dev",
   "type": "object",
   "properties": {
     "ALE DOMAIN": {
@@ -143651,6 +143651,18 @@
         "ELEMENT_OWNER": {
           "title": "ELEMENT_OWNER (bool)",
           "description": "write element owner",
+          "default": false,
+          "type": "boolean"
+        },
+        "NODE_OWNER": {
+          "title": "NODE_OWNER (bool)",
+          "description": "write node owner",
+          "default": false,
+          "type": "boolean"
+        },
+        "MATERIAL_ELEMENT_QUANTITIES": {
+          "title": "MATERIAL_ELEMENT_QUANTITIES (bool)",
+          "description": "write material element quantities",
           "default": false,
           "type": "boolean"
         },
@@ -431943,5 +431955,5 @@
     "PROBLEM TYPE"
   ],
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "a9e7728a33654e6c2e17b06aba1af6cdb20e3dbf"
+  "$id": "48c27df5b96f3359045b8337c1066a780d1e9742"
 }
