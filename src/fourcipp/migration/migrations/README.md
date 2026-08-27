@@ -56,30 +56,37 @@ as `MATERIALS` are lists of `{"<discriminator>": id, "<TypeName>": {...}}` dicts
 segment naming a type (e.g. `MAT_ElastHyper`) transparently fans out over every matching list
 entry - no separate scoping mechanism is required.
 
+Examples for these types are shown below in the "Examples" section.
+
 ## Migration types
 
-| `type`                      | Required fields                                | Notes |
-|------------------------------|------------------------------------------------|-------|
-| `parameter_removed`          | `path`                                          | Drops the parameter if present. |
-| `parameter_renamed`          | `path`, `new_name`                              | `path`'s last element is the old name. |
-| `parameter_default_changed`  | `path`, `old_default`, `new_default`             | Makes `old_default` explicit if absent; drops the parameter if it equals `new_default`. |
-| `parameter_added`            | `path`, `value`                                  | Only added if the parent section/list entry already exists. |
-| `section_renamed`            | `path`, `new_name`                               | Same mechanism as `parameter_renamed`, `path` is `[old_section_name]`. |
-| `section_merged`             | `old_path`, `new_path`                           | Merges a dict-valued section into another (created if missing); errors on key collisions. |
-| `parameter_value_renamed`    | `path`, `value_map`                              | Remaps enum-like values; unmapped values are left untouched. |
-| `parameter_moved`            | `old_path`, `new_path`                           | Moves a single parameter; only a single match is supported (no fan-out on the target). |
-| `parameter_rescaled`         | `path`, `factor` (optional `offset`)              | `new_value = old_value * factor + offset`, e.g. for a unit change. |
-| `parameters_merged`          | `old_paths`, `new_path`, `transform`              | Combines several parameters via a named transform (currently: `as_list`). |
-| `type_renamed`               | `path`, `new_name`                               | Renames a material/element/condition type discriminator; same mechanism as `parameter_renamed`. |
-| `reindexed`                  | `path`, `offset`                                 | Adds `offset` to an int value, or every int in a list (e.g. 0-based to 1-based). |
-| `section_added`              | `path`, `value`                                  | Adds a new, mandatory section if not already present. |
-| `removed_no_replacement`     | `path`, `message`                                | Never auto-migrated. Only flags the input file for manual attention if `path` is present. |
+| `type`                      | Required fields                                | Explanation                                                                                                                                                                                                       |
+|------------------------------|------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `parameter_removed`          | `path`                                          | Removes the parameter from every matching section entry. No action if the parameter, or any part of its parent path (e.g. the section or material type), does not exist.                                          |
+| `parameter_renamed`          | `path`, `new_name`                              | Renames a parameter in place, keeping its value unchanged. `path`'s last element is the old parameter name, `new_name` is the new one. No action if the parameter does not exist.                                 |
+| `parameter_default_changed`  | `path`, `old_default`, `new_default`             | Handles a change in a parameter's implicit default. If absent, writes out `old_default` explicitly; if present and equal to `new_default`, removes it again. No action if the parent section/type does not exist. |
+| `parameter_added`            | `path`, `value`                                  | Introduces a new parameter, together with its default `value`, that previously did not exist. No action if the parameter is already set (with any value), or if the parent section/type does not exist.           |
+| `section_renamed`            | `path`, `new_name`                               | Renames an entire top-level section (e.g. `FLUID DYNAMIC`), keeping its parameters unchanged. `path` is a single-element list: `[old_section_name]`. No action if the section does not exist.                     |
+| `section_merged`             | `old_path`, `new_path`                           | Merges every parameter of the section at `old_path` into the section at `new_path`, creating the target if missing. No action if the section at `old_path` does not exist. Errors on key collisions.              |
+| `parameter_value_renamed`    | `path`, `value_map`                              | Remaps an enum-like parameter's string values according to `value_map`. Values not listed in `value_map` are left untouched. No action if the parameter does not exist.                                           |
+| `parameter_moved`            | `old_path`, `new_path`                           | Moves a single parameter, with its current value, from `old_path` to `new_path`. No action if the parameter at `old_path` does not exist. Only a single match is supported; errors if the target already exists.  |
+| `type_renamed`               | `path`, `new_name`                               | Renames a material/element/condition type discriminator key (e.g. `MAT_Foo` to `MAT_Bar`), keeping its parameters unchanged. No action if no entry currently has that type.                                       |
+| `section_added`              | `path`, `value`                                  | Adds an entirely new, mandatory section, together with its default `value`, if not already present. No action if the section already exists. Can be restricted to specific problem types, see below. |
 
-> **Caveat:** For `parameter_moved`, `parameters_merged` and `section_merged`, the *write*
-> side (`new_path`, and its parent for `parameters_merged`) must resolve to a plain nested
-> dict; it cannot fan out through a list-of-dicts section such as `MATERIALS`. The *read*
-> side (`old_path`/`old_paths`) has no such restriction and can target entries inside such
-> lists (e.g. `["MATERIALS", "MAT_Foo", "TOL"]`), as long as it resolves to a single match.
+> **Caveat:** For `parameter_moved` and `section_merged`, the *write* side (`new_path`) must
+> resolve to a plain nested dict; it cannot fan out through a list-of-dicts section such as
+> `MATERIALS`. The *read* side (`old_path`) has no such restriction and can target entries
+> inside such lists (e.g. `["MATERIALS", "MAT_Foo", "TOL"]`), as long as it resolves to a
+> single match.
+
+### Restricting `section_added` to specific problem types
+
+Some sections are only meaningful for certain problem types (e.g. a structural-only I/O
+section). `section_added` entries may include an optional `restrict_to_problemtypes` field:
+a list of `PROBLEMTYPE` names (as found in the `PROBLEM TYPE` section). If given and
+non-empty, the section is only added when the input file's current `PROBLEMTYPE` is listed
+there. If `restrict_to_problemtypes` is absent or empty, or the input file does not specify
+`PROBLEMTYPE` at all, the section is always added, regardless of problem type.
 
 ## Examples
 
@@ -153,41 +160,6 @@ migrations:
       OST: "OneStepTheta"
       CONVOL: "Convolution"
 
-  # Rescaling a numeric value, e.g. for a unit change (new_value = old_value * factor +
-  # offset). Works transparently on both a single value and a list of values.
-  - id: mat-foo-density-kg-to-g
-    type: parameter_rescaled
-    description: "DENS is now given in g/mm^3 instead of kg/mm^3."
-    path: ["MATERIALS", "MAT_Foo", "DENS"]
-    factor: 1000.0
-
-  # Combining several separate parameters into one new list-valued parameter via a named
-  # transform (currently only "as_list" is available). All old_paths must exist; if any is
-  # missing, the whole entry is skipped as a no-op (e.g. the file was already migrated by
-  # hand). Here, three separate direction components in a plain (non-list) section are
-  # combined into a single vector. Note the target must be a plain section, see the caveat
-  # below the table above.
-  - id: foo-dynamic-merge-direction-components
-    type: parameters_merged
-    description: >
-      DIR_X, DIR_Y and DIR_Z were merged into a single 3-component DIRECTION vector.
-    old_paths:
-      - ["FOO DYNAMIC", "DIR_X"]
-      - ["FOO DYNAMIC", "DIR_Y"]
-      - ["FOO DYNAMIC", "DIR_Z"]
-    new_path: ["FOO DYNAMIC", "DIRECTION"]
-    transform: "as_list"
-    # Given FOO DYNAMIC: {DIR_X: 1.0, DIR_Y: 0.0, DIR_Z: 0.0, ...}, this produces
-    # FOO DYNAMIC: {DIRECTION: [1.0, 0.0, 0.0], ...} (DIR_X/DIR_Y/DIR_Z removed).
-
-  # Offsetting an index or list of indices, e.g. to switch from a 0-based to a 1-based
-  # convention.
-  - id: cond-foo-reindex-onoff
-    type: reindexed
-    description: "FUNCT indices are now 1-based instead of 0-based."
-    path: ["DESIGN SURF FOO CONDITIONS", "FUNCT"]
-    offset: 1
-
   # Adding a new, mandatory parameter to an existing section/list entry (only where the
   # parent context already exists, e.g. only for MAT_Foo entries, not everywhere).
   - id: mat-foo-add-scaling
@@ -196,20 +168,14 @@ migrations:
     path: ["MATERIALS", "MAT_Foo", "SCALING"]
     value: 1.0
 
-  # Adding a new, mandatory section if it is not already present.
+  # Adding a new, mandatory section, but only for input files with a matching PROBLEMTYPE
+  # (see "Restricting section_added to specific problem types" above). If PROBLEMTYPE is
+  # unset, or restrict_to_problemtypes is omitted/empty, the section is always added.
   - id: section-io-monitor-added
     type: section_added
+    restrict_to_problemtypes: ["Structure_Scalar_Interaction", "Structure"] # (optional)
     description: "IO/MONITOR STRUCTURE DBC is now always required, defaulting to disabled."
     path: ["IO/MONITOR STRUCTURE DBC"]
     value:
       INTERVAL_STEPS: -1
-
-  # Flags files for manual attention without touching any data; never auto-applied.
-  - id: mat-foo-remove-legacy-mode
-    type: removed_no_replacement
-    description: "LEGACY_MODE was removed with no automatic replacement."
-    path: ["MATERIALS", "MAT_Foo", "LEGACY_MODE"]
-    message: >
-      LEGACY_MODE was removed. Review your MAT_Foo definitions and choose an equivalent
-      combination of the new STRATEGY and TOLERANCE parameters.
 ```

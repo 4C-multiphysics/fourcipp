@@ -47,13 +47,6 @@ def fixture_database():
                 "path": ["STRUCTURAL DYNAMIC", "DYNAMICTYPE"],
                 "new_name": "DYNAMICTYP",
             },
-            {
-                "id": "flag-old-feature",
-                "type": "removed_no_replacement",
-                "description": "OLD_FEATURE was removed without a replacement.",
-                "path": ["OLD_SECTION", "OLD_FEATURE"],
-                "message": "Please contact the developers for a replacement.",
-            },
         ],
     }
 
@@ -66,7 +59,6 @@ def fixture_sections():
             {"MAT": 1, "MAT_ElastHyper": {"NUMMAT": 2, "MATIDS": [10, 11]}},
         ],
         "STRUCTURAL DYNAMIC": {"DYNAMICTYPE": "Statics"},
-        "OLD_SECTION": {"OLD_FEATURE": 42},
     }
 
 
@@ -82,8 +74,6 @@ def test_migrate_sections_applies_all_migrations(sections, database):
     assert report.to_version == (1, 2, 0)
     assert report.changed
     assert len(report.applied) == 2
-    assert len(report.manual_actions) == 1
-    assert "flag-old-feature" in report.manual_actions[0]
 
 
 def test_migrate_sections_is_idempotent(sections, database):
@@ -149,14 +139,14 @@ def test_migrate_sections_empty_database_is_noop():
 
 
 def test_migration_report_str_contains_summary(sections, database):
-    """Test that the report's string representation mentions applied and manual
-    actions."""
+    """Test that the report's string representation mentions applied
+    migrations."""
     report = migrate_sections(sections, database)
     report_string = str(report)
 
     assert "1.2.0" in report_string
     assert "remove-nummat" in report_string
-    assert "flag-old-feature" in report_string
+    assert "rename-dynamictype" in report_string
 
 
 def test_migration_report_str_no_migrations_applied():

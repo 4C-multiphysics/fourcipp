@@ -38,7 +38,7 @@ from fourcipp.utils.yaml_io import load_yaml
 Version = tuple[int, int, int]
 
 # All migration entry types known to the tool.
-KNOWN_TYPES = set(OPERATIONS) | {"removed_no_replacement"}
+KNOWN_TYPES = set(OPERATIONS)
 
 # Fields required on every migration entry, regardless of its type.
 _UNIVERSAL_FIELDS = {"id", "type", "description"}
@@ -53,12 +53,8 @@ _REQUIRED_FIELDS: dict[str, set[str]] = {
     "section_merged": {"old_path", "new_path"},
     "parameter_value_renamed": {"path", "value_map"},
     "parameter_moved": {"old_path", "new_path"},
-    "parameter_rescaled": {"path", "factor"},
-    "parameters_merged": {"old_paths", "new_path", "transform"},
     "type_renamed": {"path", "new_name"},
-    "reindexed": {"path", "offset"},
     "section_added": {"path", "value"},
-    "removed_no_replacement": {"path", "message"},
 }
 
 _VERSION_PATTERN = re.compile(r"(\d+)\.(\d+)\.(\d+)")

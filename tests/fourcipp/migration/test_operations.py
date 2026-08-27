@@ -24,7 +24,7 @@
 import pytest
 
 from fourcipp.migration.errors import MigrationError
-from fourcipp.migration.operations import OPERATIONS, TRANSFORMS
+from fourcipp.migration.operations import OPERATIONS
 
 
 @pytest.fixture(name="sections")
@@ -51,13 +51,9 @@ def test_operations_registry_covers_all_auto_fix_types():
         "section_merged",
         "parameter_value_renamed",
         "parameter_moved",
-        "parameter_rescaled",
-        "parameters_merged",
         "type_renamed",
-        "reindexed",
         "section_added",
     }
-    assert "removed_no_replacement" not in OPERATIONS
 
 
 def test_parameter_removed(sections):
@@ -161,6 +157,63 @@ def test_section_added_does_not_overwrite(sections):
         {"path": ["STRUCTURAL DYNAMIC"], "value": {"DYNAMICTYPE": "OtherValue"}},
     )
     assert sections["STRUCTURAL DYNAMIC"] == {"DYNAMICTYPE": "Statics"}
+
+
+def test_section_added_restrict_to_problemtypes_matching(sections):
+    """Test that the section is added if the current problem type is listed."""
+    sections["PROBLEM TYPE"] = {"PROBLEMTYPE": "Structure"}
+    OPERATIONS["section_added"](
+        sections,
+        {
+            "path": ["IO"],
+            "value": {"VERBOSITY": "standard"},
+            "restrict_to_problemtypes": ["Structure", "Fluid"],
+        },
+    )
+    assert sections["IO"] == {"VERBOSITY": "standard"}
+
+
+def test_section_added_restrict_to_problemtypes_not_matching(sections):
+    """Test that the section is not added if the current problem type is not
+    listed."""
+    sections["PROBLEM TYPE"] = {"PROBLEMTYPE": "Fluid"}
+    OPERATIONS["section_added"](
+        sections,
+        {
+            "path": ["IO"],
+            "value": {"VERBOSITY": "standard"},
+            "restrict_to_problemtypes": ["Structure"],
+        },
+    )
+    assert "IO" not in sections
+
+
+def test_section_added_restrict_to_problemtypes_missing_problemtype(sections):
+    """Test that the section is added if no problem type is set at all."""
+    OPERATIONS["section_added"](
+        sections,
+        {
+            "path": ["IO"],
+            "value": {"VERBOSITY": "standard"},
+            "restrict_to_problemtypes": ["Structure"],
+        },
+    )
+    assert sections["IO"] == {"VERBOSITY": "standard"}
+
+
+def test_section_added_restrict_to_problemtypes_empty_list(sections):
+    """Test that an empty restrict_to_problemtypes list behaves as
+    unrestricted."""
+    sections["PROBLEM TYPE"] = {"PROBLEMTYPE": "Fluid"}
+    OPERATIONS["section_added"](
+        sections,
+        {
+            "path": ["IO"],
+            "value": {"VERBOSITY": "standard"},
+            "restrict_to_problemtypes": [],
+        },
+    )
+    assert sections["IO"] == {"VERBOSITY": "standard"}
 
 
 def test_section_merged_into_existing(sections):
@@ -291,112 +344,3 @@ def test_parameter_value_renamed_unmapped_value_untouched(sections):
         },
     )
     assert sections["STRUCTURAL DYNAMIC"]["DYNAMICTYPE"] == "Statics"
-
-
-def test_parameter_rescaled(sections):
-    """Test rescaling a numeric parameter value, e.g. for a unit change."""
-    OPERATIONS["parameter_rescaled"](
-        sections,
-        {"path": ["MATERIALS", "MAT_StVenantKirchhoff", "YOUNG"], "factor": 1000.0},
-    )
-    assert sections["MATERIALS"][1]["MAT_StVenantKirchhoff"]["YOUNG"] == 1000.0
-
-
-def test_parameter_rescaled_with_offset(sections):
-    """Test rescaling with an additional offset."""
-    OPERATIONS["parameter_rescaled"](
-        sections,
-        {
-            "path": ["MATERIALS", "MAT_StVenantKirchhoff", "YOUNG"],
-            "factor": 2.0,
-            "offset": 1.0,
-        },
-    )
-    assert sections["MATERIALS"][1]["MAT_StVenantKirchhoff"]["YOUNG"] == 3.0
-
-
-def test_reindexed_scalar(sections):
-    """Test offsetting a single index."""
-    OPERATIONS["reindexed"](
-        sections, {"path": ["MATERIALS", "MAT_ElastHyper", "NUMMAT"], "offset": 1}
-    )
-    assert sections["MATERIALS"][0]["MAT_ElastHyper"]["NUMMAT"] == 3
-    assert sections["MATERIALS"][2]["MAT_ElastHyper"]["NUMMAT"] == 2
-
-
-def test_reindexed_list(sections):
-    """Test offsetting every index within a list."""
-    OPERATIONS["reindexed"](
-        sections, {"path": ["MATERIALS", "MAT_ElastHyper", "MATIDS"], "offset": -1}
-    )
-    assert sections["MATERIALS"][0]["MAT_ElastHyper"]["MATIDS"] == [9, 10]
-    assert sections["MATERIALS"][2]["MAT_ElastHyper"]["MATIDS"] == [11]
-
-
-def test_parameters_merged(sections):
-    """Test merging several parameters into a single new one."""
-    OPERATIONS["parameters_merged"](
-        sections,
-        {
-            "old_paths": [
-                ["MATERIALS", "MAT_StVenantKirchhoff", "YOUNG"],
-                ["MATERIALS", "MAT_StVenantKirchhoff", "NUE"],
-            ],
-            "new_path": ["MATERIALS_MERGED", "YOUNG_NUE"],
-            "transform": "as_list",
-        },
-    )
-    assert "YOUNG" not in sections["MATERIALS"][1]["MAT_StVenantKirchhoff"]
-    assert "NUE" not in sections["MATERIALS"][1]["MAT_StVenantKirchhoff"]
-    assert sections["MATERIALS_MERGED"]["YOUNG_NUE"] == [1.0, 0.3]
-
-
-def test_parameters_merged_missing_part_is_noop(sections):
-    """Test that a missing part of the merge leaves the file untouched."""
-    OPERATIONS["parameters_merged"](
-        sections,
-        {
-            "old_paths": [
-                ["MATERIALS", "MAT_StVenantKirchhoff", "YOUNG"],
-                ["MATERIALS", "MAT_StVenantKirchhoff", "DOES_NOT_EXIST"],
-            ],
-            "new_path": ["MATERIALS_MERGED", "YOUNG_NUE"],
-            "transform": "as_list",
-        },
-    )
-    assert "MATERIALS_MERGED" not in sections
-    assert sections["MATERIALS"][1]["MAT_StVenantKirchhoff"]["YOUNG"] == 1.0
-
-
-def test_parameters_merged_ambiguous_raises(sections):
-    """Test that an ambiguous (fanned-out) old_path raises."""
-    with pytest.raises(MigrationError):
-        OPERATIONS["parameters_merged"](
-            sections,
-            {
-                "old_paths": [
-                    ["MATERIALS", "MAT_ElastHyper", "NUMMAT"],
-                    ["MATERIALS", "MAT_StVenantKirchhoff", "YOUNG"],
-                ],
-                "new_path": ["MATERIALS_MERGED", "FOO"],
-                "transform": "as_list",
-            },
-        )
-
-
-def test_parameters_merged_unknown_transform_raises(sections):
-    """Test that an unknown transform name raises."""
-    with pytest.raises(MigrationError):
-        OPERATIONS["parameters_merged"](
-            sections,
-            {
-                "old_paths": [["MATERIALS", "MAT_StVenantKirchhoff", "YOUNG"]],
-                "new_path": ["MATERIALS_MERGED", "FOO"],
-                "transform": "does_not_exist",
-            },
-        )
-
-
-def test_transforms_registry_has_as_list():
-    """Test that the `as_list` transform combines values into a list."""
-    assert TRANSFORMS["as_list"]([1, 2, 3]) == [1, 2, 3]

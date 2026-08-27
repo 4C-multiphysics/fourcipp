@@ -38,7 +38,6 @@ from fourcipp.migration.database import (
     select_migrations,
 )
 from fourcipp.migration.operations import OPERATIONS
-from fourcipp.utils.dict_utils import get_entry
 from fourcipp.utils.type_hinting import Path
 from fourcipp.utils.yaml_io import dump_yaml, load_yaml
 
@@ -68,14 +67,11 @@ class MigrationReport:
         from_version: Version the input file was migrated from, or `None` if unknown
         to_version: Version the input file was migrated to
         applied: Human-readable description of every migration entry that changed the data
-        manual_actions: Human-readable description of every `removed_no_replacement` entry
-            that matched, and therefore requires manual attention
     """
 
     from_version: Version | None
     to_version: Version | None
     applied: list[str] = field(default_factory=list)
-    manual_actions: list[str] = field(default_factory=list)
 
     @property
     def changed(self) -> bool:
@@ -103,10 +99,6 @@ class MigrationReport:
         else:
             lines.append("No migrations were applied.")
 
-        if self.manual_actions:
-            lines.append("The following changes require manual attention:")
-            lines.extend(f"  - {description}" for description in self.manual_actions)
-
         return "\n".join(lines)
 
 
@@ -125,7 +117,7 @@ def migrate_sections(
         to_version: Version to migrate to (inclusive); defaults to the newest known version
 
     Returns:
-        A report of the applied migrations and any manual actions still required
+        A report of the applied migrations
 
     Raises:
         MigrationError: If a migration entry cannot be applied, see the individual operation
@@ -147,13 +139,6 @@ def migrate_sections(
 
         for _, entries in applicable:
             for entry in entries:
-                if entry["type"] == "removed_no_replacement":
-                    if list(get_entry(sections, entry["path"], optional=True)):
-                        report.manual_actions.append(
-                            f"[{entry['id']}] {entry['description']} {entry['message']}"
-                        )
-                    continue
-
                 before = copy.deepcopy(sections)
                 OPERATIONS[entry["type"]](sections, entry)
                 if sections != before:
@@ -187,7 +172,7 @@ def migrate_file(
             defaults to the newest known version
 
     Returns:
-        A report of the applied migrations and any manual actions still required
+        A report of the applied migrations
     """
     database = load_migration_database(migrations_dir or DEFAULT_MIGRATIONS_DIR)
     sections = load_yaml(input_path)

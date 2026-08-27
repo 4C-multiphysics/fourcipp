@@ -23,8 +23,7 @@
 
 Every handler has the signature ``(sections: dict, entry: dict) -> None`` and mutates
 ``sections`` in place. Handlers are looked up by the entry's ``type`` field via the
-``OPERATIONS`` registry. The ``removed_no_replacement`` type is intentionally not part of
-this registry, since it must never mutate data (see `fourcipp.migration.migrator`).
+``OPERATIONS`` registry.
 """
 
 from collections.abc import Callable, Sequence
@@ -92,22 +91,6 @@ def _single_match(sections: dict, path: Sequence[str]) -> list[Any]:
             "is supported for this migration type."
         )
     return matches
-
-
-def _apply_offset(value: Any, offset: int | float) -> Any:
-    """Add an offset to an int/float value or elementwise to a list of such
-    values.
-
-    Args:
-        value: Value (or list of values) to offset
-        offset: Offset to add
-
-    Returns:
-        The offset value (or list of offset values)
-    """
-    if isinstance(value, list):
-        return [_apply_offset(item, offset) for item in value]
-    return value + offset
 
 
 def _parameter_removed(sections: dict, entry: dict) -> None:
@@ -182,12 +165,28 @@ def _type_renamed(sections: dict, entry: dict) -> None:
 def _section_added(sections: dict, entry: dict) -> None:
     """Add a new, mandatory section if it is not already present.
 
+    Optionally restricted to specific problem types via `restrict_to_problemtypes`: the
+    section is only added if the input file's `PROBLEMTYPE` (in section `PROBLEM TYPE`) is
+    listed there. If `restrict_to_problemtypes` is empty/absent, or the input file does not
+    specify a problem type, the section is always added (subject to the usual
+    already-present check).
+
     See `fourcipp.utils.dict_utils.make_default_explicit`.
 
     Args:
         sections: Nested data dict
-        entry: Migration entry with `path` and `value` fields
+        entry: Migration entry with `path` and `value` fields, and an optional
+            `restrict_to_problemtypes` field (list of problem type names)
     """
+    restrict_to_problemtypes = entry.get("restrict_to_problemtypes")
+    if restrict_to_problemtypes:
+        current_problemtype = _single_match(sections, ["PROBLEM TYPE", "PROBLEMTYPE"])
+        if (
+            current_problemtype
+            and current_problemtype[0] not in restrict_to_problemtypes
+        ):
+            return
+
     make_default_explicit(sections, entry["path"], entry["value"])
 
 
@@ -262,73 +261,6 @@ def _parameter_value_renamed(sections: dict, entry: dict) -> None:
     transform_value(sections, entry["path"], lambda value: value_map.get(value, value))
 
 
-def _parameter_rescaled(sections: dict, entry: dict) -> None:
-    """Rescale a numeric parameter value, e.g. for a unit change.
-
-    Args:
-        sections: Nested data dict
-        entry: Migration entry with `path` and `factor` fields, and an optional `offset` field
-    """
-    factor = entry["factor"]
-    offset = entry.get("offset", 0)
-    transform_value(sections, entry["path"], lambda value: value * factor + offset)
-
-
-def _reindexed(sections: dict, entry: dict) -> None:
-    """Offset an index or a list of indices, e.g. to change a 0-based to
-    1-based convention.
-
-    Args:
-        sections: Nested data dict
-        entry: Migration entry with `path` and `offset` fields
-    """
-    offset = entry["offset"]
-    transform_value(sections, entry["path"], lambda value: _apply_offset(value, offset))
-
-
-def _parameters_merged(sections: dict, entry: dict) -> None:
-    """Merge multiple parameters into a single new one using a named transform.
-
-    All `old_paths` must resolve to exactly one match each; if any of them is missing, this
-    is treated as a no-op (e.g. the file was already migrated, or partially authored by hand).
-
-    Args:
-        sections: Nested data dict
-        entry: Migration entry with `old_paths`, `new_path` and `transform` fields
-
-    Raises:
-        MigrationError: If any `old_paths` entry matches more than one value, or `transform`
-            is not a known transform name
-    """
-    if entry["transform"] not in TRANSFORMS:
-        raise MigrationError(f"Unknown transform '{entry['transform']}'.")
-    transform = TRANSFORMS[entry["transform"]]
-
-    old_paths = entry["old_paths"]
-    values = []
-    for old_path in old_paths:
-        matches = _single_match(sections, old_path)
-        if not matches:
-            return
-        values.append(matches[0])
-
-    new_path = entry["new_path"]
-    parent = _get_or_create_dict(sections, new_path[:-1])
-    parent[new_path[-1]] = transform(values)
-
-    for old_path in old_paths:
-        remove(sections, old_path)
-
-
-TRANSFORMS: dict[str, Callable[[list[Any]], Any]] = {
-    "as_list": list,
-}
-# Named, reusable value combinators for `parameters_merged` entries.
-
-
-# Registry mapping a migration entry's `type` to its handler. `removed_no_replacement` is
-# deliberately not part of this registry: it must never mutate data and is handled directly
-# by `fourcipp.migration.migrator.migrate_sections`.
 OPERATIONS: dict[str, Callable[[dict, dict], None]] = {
     "parameter_removed": _parameter_removed,
     "parameter_renamed": _parameter_renamed,
@@ -338,9 +270,7 @@ OPERATIONS: dict[str, Callable[[dict, dict], None]] = {
     "section_merged": _section_merged,
     "parameter_value_renamed": _parameter_value_renamed,
     "parameter_moved": _parameter_moved,
-    "parameter_rescaled": _parameter_rescaled,
-    "parameters_merged": _parameters_merged,
     "type_renamed": _type_renamed,
-    "reindexed": _reindexed,
     "section_added": _section_added,
 }
+# Registry mapping a migration entry's `type` to its handler.

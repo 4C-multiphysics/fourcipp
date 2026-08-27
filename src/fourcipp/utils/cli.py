@@ -252,35 +252,33 @@ def main() -> None:
     # Add global CLI logging options
     main_parser.add_argument(
         "--log-file",
-        help="Path to log file. If set, enables file logging.",
+        help="Path to log file. If set, enables logging to this file.",
         type=str,
         default=None,
     )
     main_parser.add_argument(
-        "--enable-log",
-        help="Enable logging to file according to configuration.",
+        "--log-screen",
+        help="Enable logging to screen (stdout).",
         action="store_true",
     )
 
     # Parse args and build kwargs for commands. Skip log-related global args.
     parsed_args = main_parser.parse_args(sys.argv[1:])
 
-    # Determine whether logging should be enabled.
-    # When enabled, if a file path is provided use it
-    # and open with mode='w' (replace any existing file). Otherwise log to stdout.
+    # Determine whether logging should be enabled. --log-file and --log-screen are
+    # independent: either, both, or neither may be given.
     try:
-        if getattr(parsed_args, "enable_log", False):
-            log_file_arg = getattr(parsed_args, "log_file", None)
+        log_file_arg = getattr(parsed_args, "log_file", None)
+        log_screen_arg = getattr(parsed_args, "log_screen", False)
+        if log_file_arg or log_screen_arg:
             logger.enable("fourcipp")
-            # Prefer CLI-specified path, then config path, otherwise stdout
             if log_file_arg:
                 target = pathlib.Path(log_file_arg)
                 logger.add(
                     target.as_posix(), mode="w", format="{time} {level} {message}"
                 )
                 logger.debug(f"Logging enabled to file: {target}")
-            else:
-                # No file path; log to stdout (screen)
+            if log_screen_arg:
                 logger.add(sys.stdout, format="{message}")
                 logger.debug("Logging enabled to stdout")
         else:
@@ -292,7 +290,7 @@ def main() -> None:
 
     kwargs: dict = {}
     for key, value in vars(parsed_args).items():
-        if key in ("log_file", "enable_log"):
+        if key in ("log_file", "log_screen"):
             continue
         kwargs[key.replace("-", "_")] = value
     command = kwargs.pop("command")

@@ -24,7 +24,6 @@
 import pytest
 
 from fourcipp.migration.database import (
-    KNOWN_TYPES,
     load_migration_database,
     load_migration_file,
     parse_version,
@@ -55,12 +54,6 @@ def test_parse_version_invalid_raises(version_string):
         parse_version(version_string)
 
 
-def test_known_types_include_removed_no_replacement():
-    """Test that `removed_no_replacement` is a known, but not auto-fix,
-    type."""
-    assert "removed_no_replacement" in KNOWN_TYPES
-
-
 @pytest.mark.parametrize(
     "entry",
     [
@@ -76,13 +69,6 @@ def test_known_types_include_removed_no_replacement():
             "description": "Rename DYNAMICTYPE.",
             "path": ["STRUCTURAL DYNAMIC", "DYNAMICTYPE"],
             "new_name": "DYNAMICTYP",
-        },
-        {
-            "id": "flag-old-feature",
-            "type": "removed_no_replacement",
-            "description": "Old feature was removed.",
-            "path": ["OLD_SECTION", "OLD_PARAM"],
-            "message": "Please contact the developers for a replacement.",
         },
     ],
 )
