@@ -1,5 +1,5 @@
 {
-  "description": "Schema for 4C\nCommit hash: 48c27df5b96f3359045b8337c1066a780d1e9742\nVersion: 2026.4.0-dev",
+  "description": "Schema for 4C\nCommit hash: 746e7443dfeec18bf95e61ef2e6cb4dfdb7de92f\nVersion: 2026.4.0-dev",
   "type": "object",
   "properties": {
     "ALE DOMAIN": {
@@ -73212,9 +73212,11 @@
               },
               "MAX_NUMBER_OF_PAIRS_PER_ELEMENT": {
                 "title": "MAX_NUMBER_OF_PAIRS_PER_ELEMENT (int)",
-                "description": "How many Lagrange multipliers shall be allocated per beam element",
-                "default": 0,
-                "type": "integer"
+                "description": "Maximum number of pairs that can be handled per beam element. This decides how many Lagrange multipliers are allocated per element.",
+                "default": 1,
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 2147483647
               },
               "CONSTRAINT_ENFORCEMENT": {
                 "title": "CONSTRAINT_ENFORCEMENT (enum)",
@@ -431955,5 +431957,5 @@
     "PROBLEM TYPE"
   ],
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "48c27df5b96f3359045b8337c1066a780d1e9742"
+  "$id": "746e7443dfeec18bf95e61ef2e6cb4dfdb7de92f"
 }

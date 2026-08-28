@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 48c27df5b96f3359045b8337c1066a780d1e9742
+  commit_hash: 746e7443dfeec18bf95e61ef2e6cb4dfdb7de92f
   version: 2026.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -9360,9 +9360,15 @@ sections:
                     default: 2
                   - name: MAX_NUMBER_OF_PAIRS_PER_ELEMENT
                     type: int
-                    description: "How many Lagrange multipliers shall be allocated per beam element"
+                    description: "Maximum number of pairs that can be handled per beam element. This decides how many Lagrange multipliers are allocated per element."
                     required: false
-                    default: 0
+                    default: 1
+                    validator:
+                      range:
+                        minimum: 0
+                        maximum: 2147483647
+                        minimum_exclusive: true
+                        maximum_exclusive: false
                   - name: CONSTRAINT_ENFORCEMENT
                     type: enum
                     description: "Specifies the constraint enforcement technique for beam-to-beam point couplings."
