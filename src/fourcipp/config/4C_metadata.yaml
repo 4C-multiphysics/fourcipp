@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 746e7443dfeec18bf95e61ef2e6cb4dfdb7de92f
+  commit_hash: f6161d9dd1b476a0ce21e98284bb1e2f0f21659d
   version: 2026.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -52662,6 +52662,387 @@ sections:
                                             - name: ogden_parameter_beta
                                               type: selection
                                               description: "Parameter Beta in volumetric Ogden law."
+                                              required: true
+                                              choices:
+                                                - name: constant
+                                                  spec:
+                                                    name: constant
+                                                    type: double
+                                                    description: "Constant value for the field."
+                                                    required: true
+                                                - name: from_file
+                                                  spec:
+                                                    name: from_file
+                                                    type: path
+                                                    description: "Path to a file containing the input field data."
+                                                    required: true
+                                                - name: field_reference
+                                                  spec:
+                                                    name: field_reference
+                                                    type: string
+                                                    description: "Refer to a globally defined field by a name."
+                                                    required: true
+                                                - name: from_mesh
+                                                  spec:
+                                                    name: from_mesh
+                                                    type: string
+                                                    description: "Refer to a field defined in the input mesh by a name."
+                                                    required: true
+                            - name: recruitment_model
+                              type: group
+                              description: Recruitment model of the terminal unit.
+                              required: false
+                              specs:
+                                - type: all_of
+                                  specs:
+                                    - name: pressure_law_type
+                                      type: selection
+                                      description: "Pressure law driving the recruitment reference volume; None keeps it at the geometry-derived constant."
+                                      required: true
+                                      choices:
+                                        - name: constant
+                                          spec:
+                                            name: constant
+                                            type: enum
+                                            description: "Constant value for the field."
+                                            required: true
+                                            choices:
+                                              - name: None
+                                              - name: LinearPressure
+                                        - name: from_file
+                                          spec:
+                                            name: from_file
+                                            type: path
+                                            description: "Path to a file containing the input field data."
+                                            required: true
+                                        - name: field_reference
+                                          spec:
+                                            name: field_reference
+                                            type: string
+                                            description: "Refer to a globally defined field by a name."
+                                            required: true
+                                        - name: from_mesh
+                                          spec:
+                                            name: from_mesh
+                                            type: string
+                                            description: "Refer to a field defined in the input mesh by a name."
+                                            required: true
+                                    - name: time_law_type
+                                      type: selection
+                                      description: "Time law of the recruitment reference volume; None follows the pressure law instantaneously, ExponentialRelaxation relaxes towards it with the time constant 'tau'."
+                                      required: true
+                                      choices:
+                                        - name: constant
+                                          spec:
+                                            name: constant
+                                            type: enum
+                                            description: "Constant value for the field."
+                                            required: true
+                                            choices:
+                                              - name: None
+                                              - name: ExponentialRelaxation
+                                        - name: from_file
+                                          spec:
+                                            name: from_file
+                                            type: path
+                                            description: "Path to a file containing the input field data."
+                                            required: true
+                                        - name: field_reference
+                                          spec:
+                                            name: field_reference
+                                            type: string
+                                            description: "Refer to a globally defined field by a name."
+                                            required: true
+                                        - name: from_mesh
+                                          spec:
+                                            name: from_mesh
+                                            type: string
+                                            description: "Refer to a field defined in the input mesh by a name."
+                                            required: true
+                                    - name: reference_volume_linearization
+                                      type: selection
+                                      description: "Treatment of the reference volume in the Jacobian; Frozen holds it at the last converged value and drops dV0/dp, Coupled carries the derivative."
+                                      required: true
+                                      choices:
+                                        - name: constant
+                                          spec:
+                                            name: constant
+                                            type: enum
+                                            description: "Constant value for the field."
+                                            required: true
+                                            choices:
+                                              - name: Frozen
+                                              - name: Coupled
+                                        - name: from_file
+                                          spec:
+                                            name: from_file
+                                            type: path
+                                            description: "Path to a file containing the input field data."
+                                            required: true
+                                        - name: field_reference
+                                          spec:
+                                            name: field_reference
+                                            type: string
+                                            description: "Refer to a globally defined field by a name."
+                                            required: true
+                                        - name: from_mesh
+                                          spec:
+                                            name: from_mesh
+                                            type: string
+                                            description: "Refer to a field defined in the input mesh by a name."
+                                            required: true
+                                    - name: linear_pressure
+                                      type: group
+                                      description: Linear pressure law parameters for recruitment target volume.
+                                      required: false
+                                      specs:
+                                        - type: all_of
+                                          specs:
+                                            - name: v0_min
+                                              type: selection
+                                              description: "Minimal reference volume V0."
+                                              required: true
+                                              choices:
+                                                - name: constant
+                                                  spec:
+                                                    name: constant
+                                                    type: double
+                                                    description: "Constant value for the field."
+                                                    required: true
+                                                - name: from_file
+                                                  spec:
+                                                    name: from_file
+                                                    type: path
+                                                    description: "Path to a file containing the input field data."
+                                                    required: true
+                                                - name: field_reference
+                                                  spec:
+                                                    name: field_reference
+                                                    type: string
+                                                    description: "Refer to a globally defined field by a name."
+                                                    required: true
+                                                - name: from_mesh
+                                                  spec:
+                                                    name: from_mesh
+                                                    type: string
+                                                    description: "Refer to a field defined in the input mesh by a name."
+                                                    required: true
+                                            - name: v0_max
+                                              type: selection
+                                              description: "Maximal reference volume V0."
+                                              required: true
+                                              choices:
+                                                - name: constant
+                                                  spec:
+                                                    name: constant
+                                                    type: double
+                                                    description: "Constant value for the field."
+                                                    required: true
+                                                - name: from_file
+                                                  spec:
+                                                    name: from_file
+                                                    type: path
+                                                    description: "Path to a file containing the input field data."
+                                                    required: true
+                                                - name: field_reference
+                                                  spec:
+                                                    name: field_reference
+                                                    type: string
+                                                    description: "Refer to a globally defined field by a name."
+                                                    required: true
+                                                - name: from_mesh
+                                                  spec:
+                                                    name: from_mesh
+                                                    type: string
+                                                    description: "Refer to a field defined in the input mesh by a name."
+                                                    required: true
+                                            - name: p_closing_min
+                                              type: selection
+                                              description: "Minimal critical pressure on closing path."
+                                              required: true
+                                              choices:
+                                                - name: constant
+                                                  spec:
+                                                    name: constant
+                                                    type: double
+                                                    description: "Constant value for the field."
+                                                    required: true
+                                                - name: from_file
+                                                  spec:
+                                                    name: from_file
+                                                    type: path
+                                                    description: "Path to a file containing the input field data."
+                                                    required: true
+                                                - name: field_reference
+                                                  spec:
+                                                    name: field_reference
+                                                    type: string
+                                                    description: "Refer to a globally defined field by a name."
+                                                    required: true
+                                                - name: from_mesh
+                                                  spec:
+                                                    name: from_mesh
+                                                    type: string
+                                                    description: "Refer to a field defined in the input mesh by a name."
+                                                    required: true
+                                            - name: p_opening_min
+                                              type: selection
+                                              description: "Minimal critical pressure on opening path."
+                                              required: true
+                                              choices:
+                                                - name: constant
+                                                  spec:
+                                                    name: constant
+                                                    type: double
+                                                    description: "Constant value for the field."
+                                                    required: true
+                                                - name: from_file
+                                                  spec:
+                                                    name: from_file
+                                                    type: path
+                                                    description: "Path to a file containing the input field data."
+                                                    required: true
+                                                - name: field_reference
+                                                  spec:
+                                                    name: field_reference
+                                                    type: string
+                                                    description: "Refer to a globally defined field by a name."
+                                                    required: true
+                                                - name: from_mesh
+                                                  spec:
+                                                    name: from_mesh
+                                                    type: string
+                                                    description: "Refer to a field defined in the input mesh by a name."
+                                                    required: true
+                                            - name: delta_p_minmax
+                                              type: selection
+                                              description: "Pressure span between min and max critical pressure."
+                                              required: true
+                                              choices:
+                                                - name: constant
+                                                  spec:
+                                                    name: constant
+                                                    type: double
+                                                    description: "Constant value for the field."
+                                                    required: true
+                                                - name: from_file
+                                                  spec:
+                                                    name: from_file
+                                                    type: path
+                                                    description: "Path to a file containing the input field data."
+                                                    required: true
+                                                - name: field_reference
+                                                  spec:
+                                                    name: field_reference
+                                                    type: string
+                                                    description: "Refer to a globally defined field by a name."
+                                                    required: true
+                                                - name: from_mesh
+                                                  spec:
+                                                    name: from_mesh
+                                                    type: string
+                                                    description: "Refer to a field defined in the input mesh by a name."
+                                                    required: true
+                                            - name: epsilon_v0_switch
+                                              type: selection
+                                              description: "Distance to v0_min/v0_max, as a fraction of (v0_max - v0_min), at which an element counts as fully derecruited/recruited and switches to the other hysteresis path."
+                                              required: false
+                                              choices:
+                                                - name: constant
+                                                  spec:
+                                                    name: constant
+                                                    type: double
+                                                    description: "Constant value for the field."
+                                                    required: true
+                                                - name: from_file
+                                                  spec:
+                                                    name: from_file
+                                                    type: path
+                                                    description: "Path to a file containing the input field data."
+                                                    required: true
+                                                - name: field_reference
+                                                  spec:
+                                                    name: field_reference
+                                                    type: string
+                                                    description: "Refer to a globally defined field by a name."
+                                                    required: true
+                                                - name: from_mesh
+                                                  spec:
+                                                    name: from_mesh
+                                                    type: string
+                                                    description: "Refer to a field defined in the input mesh by a name."
+                                                    required: true
+                                            - name: initial_v0
+                                              type: selection
+                                              description: "Initial reference volume V0 at simulation start."
+                                              required: true
+                                              choices:
+                                                - name: constant
+                                                  spec:
+                                                    name: constant
+                                                    type: double
+                                                    description: "Constant value for the field."
+                                                    required: true
+                                                - name: from_file
+                                                  spec:
+                                                    name: from_file
+                                                    type: path
+                                                    description: "Path to a file containing the input field data."
+                                                    required: true
+                                                - name: field_reference
+                                                  spec:
+                                                    name: field_reference
+                                                    type: string
+                                                    description: "Refer to a globally defined field by a name."
+                                                    required: true
+                                                - name: from_mesh
+                                                  spec:
+                                                    name: from_mesh
+                                                    type: string
+                                                    description: "Refer to a field defined in the input mesh by a name."
+                                                    required: true
+                                            - name: initial_path
+                                              type: selection
+                                              description: "Initial hysteresis path (Opening or Closing)."
+                                              required: true
+                                              choices:
+                                                - name: constant
+                                                  spec:
+                                                    name: constant
+                                                    type: enum
+                                                    description: "Constant value for the field."
+                                                    required: true
+                                                    choices:
+                                                      - name: Opening
+                                                      - name: Closing
+                                                - name: from_file
+                                                  spec:
+                                                    name: from_file
+                                                    type: path
+                                                    description: "Path to a file containing the input field data."
+                                                    required: true
+                                                - name: field_reference
+                                                  spec:
+                                                    name: field_reference
+                                                    type: string
+                                                    description: "Refer to a globally defined field by a name."
+                                                    required: true
+                                                - name: from_mesh
+                                                  spec:
+                                                    name: from_mesh
+                                                    type: string
+                                                    description: "Refer to a field defined in the input mesh by a name."
+                                                    required: true
+                                    - name: exponential_relaxation
+                                      type: group
+                                      description: Exponential relaxation time-law parameters for recruitment.
+                                      required: false
+                                      specs:
+                                        - type: all_of
+                                          specs:
+                                            - name: tau
+                                              type: selection
+                                              description: "Time constant for exponential recruitment reference-volume relaxation."
                                               required: true
                                               choices:
                                                 - name: constant
