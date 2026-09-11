@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: f6161d9dd1b476a0ce21e98284bb1e2f0f21659d
+  commit_hash: 76c2aeaba76a213f7869de5007130e3987437b52
   version: 2026.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -36307,14 +36307,40 @@ sections:
                             type: double
                             description: "relaxation parameter"
                             required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: true
+                                maximum_exclusive: false
                           - name: ALPHA
                             type: double
                             description: "fractional order derivative"
                             required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1
+                                minimum_exclusive: false
+                                maximum_exclusive: true
                           - name: BETA
                             type: double
-                            description: "emphasis of viscous to elastic part"
+                            description: "weighting of viscous to elastic part"
                             required: true
+                            validator:
+                              range:
+                                minimum: 0
+                                maximum: 1.7976931348623157e+308
+                                minimum_exclusive: false
+                                maximum_exclusive: false
+                          - name: SOLVE
+                            type: enum
+                            description: "Time discretization of the fractional derivative: grunwald_letnikov (default, full-history convolution) or l1 (uniform-grid L1 scheme, closed-form affine update)"
+                            required: false
+                            default: grunwald_letnikov
+                            choices:
+                              - name: grunwald_letnikov
+                              - name: l1
               - type: all_of
                 specs:
                   - name: MAT

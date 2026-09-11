@@ -1,5 +1,5 @@
 {
-  "description": "Schema for 4C\nCommit hash: f6161d9dd1b476a0ce21e98284bb1e2f0f21659d\nVersion: 2026.4.0-dev",
+  "description": "Schema for 4C\nCommit hash: 76c2aeaba76a213f7869de5007130e3987437b52\nVersion: 2026.4.0-dev",
   "type": "object",
   "properties": {
     "ALE DOMAIN": {
@@ -186370,17 +186370,33 @@
                   "TAU": {
                     "title": "TAU (double)",
                     "description": "relaxation parameter",
-                    "type": "number"
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1.7976931348623157e+308
                   },
                   "ALPHA": {
                     "title": "ALPHA (double)",
                     "description": "fractional order derivative",
-                    "type": "number"
+                    "type": "number",
+                    "minimum": 0,
+                    "exclusiveMaximum": 1
                   },
                   "BETA": {
                     "title": "BETA (double)",
-                    "description": "emphasis of viscous to elastic part",
-                    "type": "number"
+                    "description": "weighting of viscous to elastic part",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1.7976931348623157e+308
+                  },
+                  "SOLVE": {
+                    "title": "SOLVE (enum)",
+                    "description": "Time discretization of the fractional derivative: grunwald_letnikov (default, full-history convolution) or l1 (uniform-grid L1 scheme, closed-form affine update)",
+                    "default": "grunwald_letnikov",
+                    "type": "string",
+                    "enum": [
+                      "grunwald_letnikov",
+                      "l1"
+                    ]
                   }
                 },
                 "additionalProperties": false,
@@ -432866,5 +432882,5 @@
     "PROBLEM TYPE"
   ],
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "f6161d9dd1b476a0ce21e98284bb1e2f0f21659d"
+  "$id": "76c2aeaba76a213f7869de5007130e3987437b52"
 }
