@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 76c2aeaba76a213f7869de5007130e3987437b52
+  commit_hash: 62383b45acb82d89112e04029bf3f05b36914f87
   version: 2026.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -26778,11 +26778,11 @@ sections:
               type: enum
               description: "Initial Field for scalar transport problem"
               required: false
-              default: "zero_field"
+              default: zero_field
               choices:
-                - name: "field_by_condition"
-                - name: "field_by_function"
-                - name: "zero_field"
+                - name: zero_field
+                - name: field_by_function
+                - name: field_by_condition
             - name: INITFUNCNO
               type: int
               description: "function number for scalar transport initial field"
@@ -30262,10 +30262,10 @@ sections:
               type: enum
               description: "Initial Field for structure scalar transport problem"
               required: false
-              default: "zero_field"
+              default: zero_field
               choices:
-                - name: "field_by_function"
-                - name: "zero_field"
+                - name: zero_field
+                - name: field_by_function
             - name: STRUCTSCAL_INITFUNCNO
               type: int
               description: "function number for structure scalar transport initial field"
@@ -45821,13 +45821,13 @@ sections:
               default: -1
             - name: VELOCITYFIELD
               type: enum
-              description: "type of velocity field used for scalar transport problems"
+              description: "The type of velocity field used for scalar transport problems. Available options are 'zero' velocity field, velocity field defined by a 'function', and velocity field defined 'from_other_field', where the velocity field is taken from another field (e.g. fluid, solid)."
               required: false
-              default: "zero"
+              default: zero
               choices:
-                - name: "Navier_Stokes"
-                - name: "function"
-                - name: "zero"
+                - name: zero
+                - name: function
+                - name: from_other_field
             - name: VELFUNCNO
               type: int
               description: "function number for scalar transport velocity field"
@@ -45837,21 +45837,14 @@ sections:
               type: enum
               description: "Initial Field for transport problem"
               required: false
-              default: "zero_field"
+              default: zero_field
               choices:
-                - name: "1D_DISCONTPV"
-                - name: "FLAME_VORTEX_INTERACTION"
-                - name: "L_shaped_domain"
-                - name: "RAYTAYMIXFRAC"
-                - name: "algebraic_field_dependence"
-                - name: "disturbed_field_by_function"
-                - name: "facing_flame_fronts"
-                - name: "field_by_condition"
-                - name: "field_by_function"
-                - name: "high_forced_hit"
-                - name: "low_forced_hit"
-                - name: "oracles_flame"
-                - name: "zero_field"
+                - name: zero_field
+                - name: field_by_function
+                - name: field_by_condition
+                - name: disturbed_field_by_function
+                - name: forced_hit_high_Sc
+                - name: forced_hit_low_Sc
             - name: INITFUNCNO
               type: int
               description: "function number for scalar transport initial field"
@@ -47483,11 +47476,11 @@ sections:
               type: enum
               description: "Initial field for scalar transport on manifold"
               required: false
-              default: "zero_field"
+              default: zero_field
               choices:
-                - name: "field_by_condition"
-                - name: "field_by_function"
-                - name: "zero_field"
+                - name: zero_field
+                - name: field_by_function
+                - name: field_by_condition
             - name: INITFUNCNO
               type: int
               description: "function number for scalar transport on manifold initial field"
@@ -47807,12 +47800,12 @@ sections:
               default: -1
             - name: INITIALFIELD
               type: enum
-              description: "defines, how to set the initial field"
+              description: "Initial Field for the thermo field of solid-scatra-thermo interaction problems"
               required: false
-              default: "field_by_function"
+              default: field_by_function
               choices:
-                - name: "field_by_condition"
-                - name: "field_by_function"
+                - name: field_by_function
+                - name: field_by_condition
     - name: STI DYNAMIC
       type: group
       required: false
@@ -47844,13 +47837,13 @@ sections:
                 - name: "Undefined"
             - name: THERMO_INITIALFIELD
               type: enum
-              description: "initial temperature field for scatra-thermo interaction problems"
+              description: "Initial Field for scatra-thermo interaction problems"
               required: false
-              default: "zero_field"
+              default: zero_field
               choices:
-                - name: "field_by_condition"
-                - name: "field_by_function"
-                - name: "zero_field"
+                - name: zero_field
+                - name: field_by_function
+                - name: field_by_condition
             - name: THERMO_INITFUNCNO
               type: int
               description: "function number for initial temperature field for scatra-thermo interaction problems"

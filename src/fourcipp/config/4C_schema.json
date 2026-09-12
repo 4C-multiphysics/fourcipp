@@ -1,5 +1,5 @@
 {
-  "description": "Schema for 4C\nCommit hash: 76c2aeaba76a213f7869de5007130e3987437b52\nVersion: 2026.4.0-dev",
+  "description": "Schema for 4C\nCommit hash: 62383b45acb82d89112e04029bf3f05b36914f87\nVersion: 2026.4.0-dev",
   "type": "object",
   "properties": {
     "ALE DOMAIN": {
@@ -100755,9 +100755,9 @@
           "default": "zero_field",
           "type": "string",
           "enum": [
-            "field_by_condition",
+            "zero_field",
             "field_by_function",
-            "zero_field"
+            "field_by_condition"
           ]
         },
         "INITFUNCNO": {
@@ -142242,8 +142242,8 @@
           "default": "zero_field",
           "type": "string",
           "enum": [
-            "field_by_function",
-            "zero_field"
+            "zero_field",
+            "field_by_function"
           ]
         },
         "STRUCTSCAL_INITFUNCNO": {
@@ -273186,13 +273186,13 @@
         },
         "VELOCITYFIELD": {
           "title": "VELOCITYFIELD (enum)",
-          "description": "type of velocity field used for scalar transport problems",
+          "description": "The type of velocity field used for scalar transport problems. Available options are 'zero' velocity field, velocity field defined by a 'function', and velocity field defined 'from_other_field', where the velocity field is taken from another field (e.g. fluid, solid).",
           "default": "zero",
           "type": "string",
           "enum": [
-            "Navier_Stokes",
+            "zero",
             "function",
-            "zero"
+            "from_other_field"
           ]
         },
         "VELFUNCNO": {
@@ -273207,19 +273207,12 @@
           "default": "zero_field",
           "type": "string",
           "enum": [
-            "1D_DISCONTPV",
-            "FLAME_VORTEX_INTERACTION",
-            "L_shaped_domain",
-            "RAYTAYMIXFRAC",
-            "algebraic_field_dependence",
-            "disturbed_field_by_function",
-            "facing_flame_fronts",
-            "field_by_condition",
+            "zero_field",
             "field_by_function",
-            "high_forced_hit",
-            "low_forced_hit",
-            "oracles_flame",
-            "zero_field"
+            "field_by_condition",
+            "disturbed_field_by_function",
+            "forced_hit_high_Sc",
+            "forced_hit_low_Sc"
           ]
         },
         "INITFUNCNO": {
@@ -275261,9 +275254,9 @@
           "default": "zero_field",
           "type": "string",
           "enum": [
-            "field_by_condition",
+            "zero_field",
             "field_by_function",
-            "zero_field"
+            "field_by_condition"
           ]
         },
         "INITFUNCNO": {
@@ -275653,12 +275646,12 @@
         },
         "INITIALFIELD": {
           "title": "INITIALFIELD (enum)",
-          "description": "defines, how to set the initial field",
+          "description": "Initial Field for the thermo field of solid-scatra-thermo interaction problems",
           "default": "field_by_function",
           "type": "string",
           "enum": [
-            "field_by_condition",
-            "field_by_function"
+            "field_by_function",
+            "field_by_condition"
           ]
         }
       },
@@ -275698,13 +275691,13 @@
         },
         "THERMO_INITIALFIELD": {
           "title": "THERMO_INITIALFIELD (enum)",
-          "description": "initial temperature field for scatra-thermo interaction problems",
+          "description": "Initial Field for scatra-thermo interaction problems",
           "default": "zero_field",
           "type": "string",
           "enum": [
-            "field_by_condition",
+            "zero_field",
             "field_by_function",
-            "zero_field"
+            "field_by_condition"
           ]
         },
         "THERMO_INITFUNCNO": {
@@ -432882,5 +432875,5 @@
     "PROBLEM TYPE"
   ],
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "76c2aeaba76a213f7869de5007130e3987437b52"
+  "$id": "62383b45acb82d89112e04029bf3f05b36914f87"
 }
