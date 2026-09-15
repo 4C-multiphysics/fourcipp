@@ -1,5 +1,5 @@
 {
-  "description": "Schema for 4C\nCommit hash: 62383b45acb82d89112e04029bf3f05b36914f87\nVersion: 2026.4.0-dev",
+  "description": "Schema for 4C\nCommit hash: 996bbfe501626c9eeddf0782985a7dbd7afdc3b5\nVersion: 2026.4.0-dev",
   "type": "object",
   "properties": {
     "ALE DOMAIN": {
@@ -276736,6 +276736,77 @@
           "default": 0.1,
           "type": "number"
         },
+        "time_step_control": {
+          "title": "time_step_control (group)",
+          "description": "Settings for time-step control",
+          "type": "object",
+          "properties": {
+            "decrease_factor": {
+              "title": "decrease_factor (double)",
+              "description": "Factor applied to the global time-step size when a time-step retry is requested",
+              "default": 0.5,
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "exclusiveMaximum": 1
+            },
+            "min_time_step_ratio": {
+              "title": "min_time_step_ratio (double)",
+              "description": "Minimum allowed global time-step size during time-step reduction, relative to the initial time-step size",
+              "default": 0.001,
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "exclusiveMaximum": 1
+            },
+            "steps_to_increase": {
+              "title": "steps_to_increase (int)",
+              "description": "Number of consecutively accepted time-steps on a reduced time-step size before increasing the global time-step size again",
+              "default": 10,
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 2147483647
+            },
+            "max_time_step": {
+              "title": "max_time_step (double)",
+              "description": "Maximum allowed global time-step size during time-step recovery. If omitted, the initial time-step size is used and increase is only attempted if the current time-step size is smaller than the initial time-step size. If this is larger than the initial time-step size, time-step increase is attempted even if the time-step size has never been reduced. If this is smaller than the initial time-step size, time-step increase is only attempted once the current time-step size has been reduced below this value.",
+              "default": null,
+              "type": [
+                "number",
+                "null"
+              ],
+              "exclusiveMinimum": 0,
+              "maximum": 1.7976931348623157e+308
+            },
+            "increase_factor": {
+              "title": "increase_factor (double)",
+              "description": "Factor applied when increasing the global time-step size during time-step increase. If omitted, increase_factor = 1/decrease_factor. If 1.0, the time step is never increased.",
+              "default": null,
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 1,
+              "maximum": 1.7976931348623157e+308
+            },
+            "max_average_nonlinear_iterations": {
+              "title": "max_average_nonlinear_iterations (double)",
+              "description": "Time-step increase is attempted only if the average number of Newton iterations over the last step_to_increase steps is below this value. If omitted, time-step increase is attempted regardless of the number of Newton iterations.",
+              "default": null,
+              "type": [
+                "number",
+                "null"
+              ],
+              "exclusiveMinimum": 0,
+              "maximum": 1.7976931348623157e+308
+            },
+            "reduce_to_max_time": {
+              "title": "reduce_to_max_time (bool)",
+              "description": "If true, the last time-step size of the simulation is reduced to exactly reach the specified maximum simulation time.",
+              "default": false,
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        },
         "TOLCONSTR": {
           "title": "TOLCONSTR (double)",
           "description": "tolerance in the constr error norm for the newton iteration",
@@ -276774,26 +276845,15 @@
         },
         "DIVERCONT": {
           "title": "DIVERCONT (enum)",
-          "description": "What to do with time integration when Newton-Raphson iteration failed",
+          "description": "Action to be taken in case the nonlinear solver does not converge. If `adapt_step`, the time-step size is adapted according to the `time_step_control` settings. `ignore` ignores the non-convergence and continues anyway.",
           "default": "stop",
           "type": "string",
           "enum": [
-            "adapt_penaltycontact",
+            "stop",
+            "ignore",
             "adapt_step",
-            "continue",
-            "halve_step",
-            "rand_adapt_step",
-            "rand_adapt_step_ele_err",
-            "repeat_simulation",
-            "repeat_step",
-            "stop"
+            "adapt_penaltycontact"
           ]
-        },
-        "MAXDIVCONREFINEMENTLEVEL": {
-          "title": "MAXDIVCONREFINEMENTLEVEL (int)",
-          "description": "number of times timestep is halved in case nonlinear solver diverges",
-          "default": 10,
-          "type": "integer"
         },
         "NLNSOL": {
           "title": "NLNSOL (enum)",
@@ -432875,5 +432935,5 @@
     "PROBLEM TYPE"
   ],
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "62383b45acb82d89112e04029bf3f05b36914f87"
+  "$id": "996bbfe501626c9eeddf0782985a7dbd7afdc3b5"
 }

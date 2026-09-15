@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 62383b45acb82d89112e04029bf3f05b36914f87
+  commit_hash: 996bbfe501626c9eeddf0782985a7dbd7afdc3b5
   version: 2026.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -48665,6 +48665,87 @@ sections:
               description: "pseudo time step for pseudo transient continuation (PTC) stabilized Newton procedure"
               required: false
               default: 0.1
+            - name: time_step_control
+              type: group
+              description: Settings for time-step control
+              required: false
+              specs:
+                - type: all_of
+                  specs:
+                    - name: decrease_factor
+                      type: double
+                      description: "Factor applied to the global time-step size when a time-step retry is requested"
+                      required: false
+                      default: 0.5
+                      validator:
+                        range:
+                          minimum: 0
+                          maximum: 1
+                          minimum_exclusive: true
+                          maximum_exclusive: true
+                    - name: min_time_step_ratio
+                      type: double
+                      description: "Minimum allowed global time-step size during time-step reduction, relative to the initial time-step size"
+                      required: false
+                      default: 0.001
+                      validator:
+                        range:
+                          minimum: 0
+                          maximum: 1
+                          minimum_exclusive: true
+                          maximum_exclusive: true
+                    - name: steps_to_increase
+                      type: int
+                      description: "Number of consecutively accepted time-steps on a reduced time-step size before increasing the global time-step size again"
+                      required: false
+                      default: 10
+                      validator:
+                        range:
+                          minimum: 0
+                          maximum: 2147483647
+                          minimum_exclusive: true
+                          maximum_exclusive: false
+                    - name: max_time_step
+                      noneable: true
+                      type: double
+                      description: "Maximum allowed global time-step size during time-step recovery. If omitted, the initial time-step size is used and increase is only attempted if the current time-step size is smaller than the initial time-step size. If this is larger than the initial time-step size, time-step increase is attempted even if the time-step size has never been reduced. If this is smaller than the initial time-step size, time-step increase is only attempted once the current time-step size has been reduced below this value."
+                      required: false
+                      default: null
+                      validator:
+                        range:
+                          minimum: 0
+                          maximum: 1.7976931348623157e+308
+                          minimum_exclusive: true
+                          maximum_exclusive: false
+                    - name: increase_factor
+                      noneable: true
+                      type: double
+                      description: "Factor applied when increasing the global time-step size during time-step increase. If omitted, increase_factor = 1/decrease_factor. If 1.0, the time step is never increased."
+                      required: false
+                      default: null
+                      validator:
+                        range:
+                          minimum: 1
+                          maximum: 1.7976931348623157e+308
+                          minimum_exclusive: false
+                          maximum_exclusive: false
+                    - name: max_average_nonlinear_iterations
+                      noneable: true
+                      type: double
+                      description: "Time-step increase is attempted only if the average number of Newton iterations over the last step_to_increase steps is below this value. If omitted, time-step increase is attempted regardless of the number of Newton iterations."
+                      required: false
+                      default: null
+                      validator:
+                        range:
+                          minimum: 0
+                          maximum: 1.7976931348623157e+308
+                          minimum_exclusive: true
+                          maximum_exclusive: false
+                    - name: reduce_to_max_time
+                      type: bool
+                      description: "If true, the last time-step size of the simulation is reduced to exactly reach the specified maximum simulation time."
+                      required: false
+                      default: false
             - name: TOLCONSTR
               type: double
               description: "tolerance in the constr error norm for the newton iteration"
@@ -48697,24 +48778,14 @@ sections:
                 - name: "Rms"
             - name: DIVERCONT
               type: enum
-              description: "What to do with time integration when Newton-Raphson iteration failed"
+              description: "Action to be taken in case the nonlinear solver does not converge. If `adapt_step`, the time-step size is adapted according to the `time_step_control` settings. `ignore` ignores the non-convergence and continues anyway."
               required: false
-              default: "stop"
+              default: stop
               choices:
-                - name: "adapt_penaltycontact"
-                - name: "adapt_step"
-                - name: "continue"
-                - name: "halve_step"
-                - name: "rand_adapt_step"
-                - name: "rand_adapt_step_ele_err"
-                - name: "repeat_simulation"
-                - name: "repeat_step"
-                - name: "stop"
-            - name: MAXDIVCONREFINEMENTLEVEL
-              type: int
-              description: "number of times timestep is halved in case nonlinear solver diverges"
-              required: false
-              default: 10
+                - name: stop
+                - name: ignore
+                - name: adapt_step
+                - name: adapt_penaltycontact
             - name: NLNSOL
               type: enum
               description: "Nonlinear solution technique"
