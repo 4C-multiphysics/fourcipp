@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 996bbfe501626c9eeddf0782985a7dbd7afdc3b5
+  commit_hash: 8d1e74229518644c81e2507a56bf713774c1cab4
   version: 2026.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -48083,7 +48083,7 @@ sections:
               default: 0.5
             - name: Allow Exceptions
               type: bool
-              description: "Set to true, if exceptions during the force evaluation and backtracking routine should be allowed."
+              description: "If set to true and if FOUR_C_ENABLE_FE_TRAPPING is enabled, floating point exceptions during trial evaluations will lead to a step reduction."
               required: false
               default: false
     - name: STRUCT NOX/Line Search/Full Step
@@ -53272,9 +53272,34 @@ sections:
                               - type: all_of
                                 specs:
                                   - name: pressure_offset
-                                    type: double
-                                    description: "Pleural pressure at the residual volume, where the linear and the exponential term both vanish."
+                                    type: selection
+                                    description: "Pleural pressure at the residual volume, where the linear and the exponential term both vanish. May vary spatially, e.g. to model a gravity-dependent pleural pressure gradient."
                                     required: true
+                                    choices:
+                                      - name: constant
+                                        spec:
+                                          name: constant
+                                          type: double
+                                          description: "Constant value for the field."
+                                          required: true
+                                      - name: from_file
+                                        spec:
+                                          name: from_file
+                                          type: path
+                                          description: "Path to a file containing the input field data."
+                                          required: true
+                                      - name: field_reference
+                                        spec:
+                                          name: field_reference
+                                          type: string
+                                          description: "Refer to a globally defined field by a name."
+                                          required: true
+                                      - name: from_mesh
+                                        spec:
+                                          name: from_mesh
+                                          type: string
+                                          description: "Refer to a field defined in the input mesh by a name."
+                                          required: true
                                   - name: linear_coefficient
                                     type: double
                                     description: "Factor of the linear term."

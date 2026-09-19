@@ -1,5 +1,5 @@
 {
-  "description": "Schema for 4C\nCommit hash: 996bbfe501626c9eeddf0782985a7dbd7afdc3b5\nVersion: 2026.4.0-dev",
+  "description": "Schema for 4C\nCommit hash: 8d1e74229518644c81e2507a56bf713774c1cab4\nVersion: 2026.4.0-dev",
   "type": "object",
   "properties": {
     "ALE DOMAIN": {
@@ -276000,7 +276000,7 @@
         },
         "Allow Exceptions": {
           "title": "Allow Exceptions (bool)",
-          "description": "Set to true, if exceptions during the force evaluation and backtracking routine should be allowed.",
+          "description": "If set to true and if FOUR_C_ENABLE_FE_TRAPPING is enabled, floating point exceptions during trial evaluations will lead to a step reduction.",
           "default": false,
           "type": "boolean"
         }
@@ -428504,9 +428504,75 @@
                     "type": "object",
                     "properties": {
                       "pressure_offset": {
-                        "title": "pressure_offset (double)",
-                        "description": "Pleural pressure at the residual volume, where the linear and the exponential term both vanish.",
-                        "type": "number"
+                        "title": "pressure_offset (selection)",
+                        "description": "Pleural pressure at the residual volume, where the linear and the exponential term both vanish. May vary spatially, e.g. to model a gravity-dependent pleural pressure gradient.",
+                        "type": "object",
+                        "oneOf": [
+                          {
+                            "title": "constant",
+                            "description": "Constant value for the field.",
+                            "type": "object",
+                            "properties": {
+                              "constant": {
+                                "title": "constant (double)",
+                                "description": "Constant value for the field.",
+                                "type": "number"
+                              }
+                            },
+                            "additionalProperties": false,
+                            "required": [
+                              "constant"
+                            ]
+                          },
+                          {
+                            "title": "from_file",
+                            "description": "Path to a file containing the input field data.",
+                            "type": "object",
+                            "properties": {
+                              "from_file": {
+                                "title": "from_file (path)",
+                                "description": "Path to a file containing the input field data.",
+                                "type": "string"
+                              }
+                            },
+                            "additionalProperties": false,
+                            "required": [
+                              "from_file"
+                            ]
+                          },
+                          {
+                            "title": "field_reference",
+                            "description": "Refer to a globally defined field by a name.",
+                            "type": "object",
+                            "properties": {
+                              "field_reference": {
+                                "title": "field_reference (string)",
+                                "description": "Refer to a globally defined field by a name.",
+                                "type": "string"
+                              }
+                            },
+                            "additionalProperties": false,
+                            "required": [
+                              "field_reference"
+                            ]
+                          },
+                          {
+                            "title": "from_mesh",
+                            "description": "Refer to a field defined in the input mesh by a name.",
+                            "type": "object",
+                            "properties": {
+                              "from_mesh": {
+                                "title": "from_mesh (string)",
+                                "description": "Refer to a field defined in the input mesh by a name.",
+                                "type": "string"
+                              }
+                            },
+                            "additionalProperties": false,
+                            "required": [
+                              "from_mesh"
+                            ]
+                          }
+                        ]
                       },
                       "linear_coefficient": {
                         "title": "linear_coefficient (double)",
@@ -432935,5 +433001,5 @@
     "PROBLEM TYPE"
   ],
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "996bbfe501626c9eeddf0782985a7dbd7afdc3b5"
+  "$id": "8d1e74229518644c81e2507a56bf713774c1cab4"
 }
