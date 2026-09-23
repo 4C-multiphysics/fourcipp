@@ -1,5 +1,5 @@
 {
-  "description": "Schema for 4C\nCommit hash: 8d1e74229518644c81e2507a56bf713774c1cab4\nVersion: 2026.4.0-dev",
+  "description": "Schema for 4C\nCommit hash: e3d284bae2a59992a224806f23b4f0f42cfc331f\nVersion: 2026.4.0-dev",
   "type": "object",
   "properties": {
     "ALE DOMAIN": {
@@ -426759,6 +426759,77 @@
                     "type": "integer"
                   }
                 },
+                "v0": {
+                  "title": "v0 (selection)",
+                  "description": "Reference volume of the terminal unit at simulation start. Constant without a recruitment law; initial value of the recruiting reference volume otherwise.",
+                  "type": "object",
+                  "oneOf": [
+                    {
+                      "title": "constant",
+                      "description": "Constant value for the field.",
+                      "type": "object",
+                      "properties": {
+                        "constant": {
+                          "title": "constant (double)",
+                          "description": "Constant value for the field.",
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "required": [
+                        "constant"
+                      ]
+                    },
+                    {
+                      "title": "from_file",
+                      "description": "Path to a file containing the input field data.",
+                      "type": "object",
+                      "properties": {
+                        "from_file": {
+                          "title": "from_file (path)",
+                          "description": "Path to a file containing the input field data.",
+                          "type": "string"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "required": [
+                        "from_file"
+                      ]
+                    },
+                    {
+                      "title": "field_reference",
+                      "description": "Refer to a globally defined field by a name.",
+                      "type": "object",
+                      "properties": {
+                        "field_reference": {
+                          "title": "field_reference (string)",
+                          "description": "Refer to a globally defined field by a name.",
+                          "type": "string"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "required": [
+                        "field_reference"
+                      ]
+                    },
+                    {
+                      "title": "from_mesh",
+                      "description": "Refer to a field defined in the input mesh by a name.",
+                      "type": "object",
+                      "properties": {
+                        "from_mesh": {
+                          "title": "from_mesh (string)",
+                          "description": "Refer to a field defined in the input mesh by a name.",
+                          "type": "string"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "required": [
+                        "from_mesh"
+                      ]
+                    }
+                  ]
+                },
                 "rheological_model": {
                   "title": "rheological_model (group)",
                   "description": "Rheological model of the terminal unit.",
@@ -427482,7 +427553,7 @@
                   "properties": {
                     "pressure_law_type": {
                       "title": "pressure_law_type (selection)",
-                      "description": "Pressure law driving the recruitment reference volume; None keeps it at the geometry-derived constant.",
+                      "description": "Pressure law driving the recruitment reference volume; None keeps it constant at v0.",
                       "type": "object",
                       "oneOf": [
                         {
@@ -428136,77 +428207,6 @@
                             }
                           ]
                         },
-                        "initial_v0": {
-                          "title": "initial_v0 (selection)",
-                          "description": "Initial reference volume V0 at simulation start.",
-                          "type": "object",
-                          "oneOf": [
-                            {
-                              "title": "constant",
-                              "description": "Constant value for the field.",
-                              "type": "object",
-                              "properties": {
-                                "constant": {
-                                  "title": "constant (double)",
-                                  "description": "Constant value for the field.",
-                                  "type": "number"
-                                }
-                              },
-                              "additionalProperties": false,
-                              "required": [
-                                "constant"
-                              ]
-                            },
-                            {
-                              "title": "from_file",
-                              "description": "Path to a file containing the input field data.",
-                              "type": "object",
-                              "properties": {
-                                "from_file": {
-                                  "title": "from_file (path)",
-                                  "description": "Path to a file containing the input field data.",
-                                  "type": "string"
-                                }
-                              },
-                              "additionalProperties": false,
-                              "required": [
-                                "from_file"
-                              ]
-                            },
-                            {
-                              "title": "field_reference",
-                              "description": "Refer to a globally defined field by a name.",
-                              "type": "object",
-                              "properties": {
-                                "field_reference": {
-                                  "title": "field_reference (string)",
-                                  "description": "Refer to a globally defined field by a name.",
-                                  "type": "string"
-                                }
-                              },
-                              "additionalProperties": false,
-                              "required": [
-                                "field_reference"
-                              ]
-                            },
-                            {
-                              "title": "from_mesh",
-                              "description": "Refer to a field defined in the input mesh by a name.",
-                              "type": "object",
-                              "properties": {
-                                "from_mesh": {
-                                  "title": "from_mesh (string)",
-                                  "description": "Refer to a field defined in the input mesh by a name.",
-                                  "type": "string"
-                                }
-                              },
-                              "additionalProperties": false,
-                              "required": [
-                                "from_mesh"
-                              ]
-                            }
-                          ]
-                        },
                         "initial_path": {
                           "title": "initial_path (selection)",
                           "description": "Initial hysteresis path (Opening or Closing).",
@@ -428290,7 +428290,6 @@
                         "p_closing_min",
                         "p_opening_min",
                         "delta_p_minmax",
-                        "initial_v0",
                         "initial_path"
                       ]
                     },
@@ -428387,6 +428386,7 @@
               },
               "additionalProperties": false,
               "required": [
+                "v0",
                 "rheological_model",
                 "elasticity_model"
               ]
@@ -433001,5 +433001,5 @@
     "PROBLEM TYPE"
   ],
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "8d1e74229518644c81e2507a56bf713774c1cab4"
+  "$id": "e3d284bae2a59992a224806f23b4f0f42cfc331f"
 }

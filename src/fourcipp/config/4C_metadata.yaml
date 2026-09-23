@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 8d1e74229518644c81e2507a56bf713774c1cab4
+  commit_hash: e3d284bae2a59992a224806f23b4f0f42cfc331f
   version: 2026.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -52469,6 +52469,35 @@ sections:
                               description: "Ids of the cell blocks of the mesh that hold the terminal unit elements. Every cell block of the mesh must be claimed by exactly one element type."
                               required: false
                               default: []
+                            - name: v0
+                              type: selection
+                              description: "Reference volume of the terminal unit at simulation start. Constant without a recruitment law; initial value of the recruiting reference volume otherwise."
+                              required: true
+                              choices:
+                                - name: constant
+                                  spec:
+                                    name: constant
+                                    type: double
+                                    description: "Constant value for the field."
+                                    required: true
+                                - name: from_file
+                                  spec:
+                                    name: from_file
+                                    type: path
+                                    description: "Path to a file containing the input field data."
+                                    required: true
+                                - name: field_reference
+                                  spec:
+                                    name: field_reference
+                                    type: string
+                                    description: "Refer to a globally defined field by a name."
+                                    required: true
+                                - name: from_mesh
+                                  spec:
+                                    name: from_mesh
+                                    type: string
+                                    description: "Refer to a field defined in the input mesh by a name."
+                                    required: true
                             - name: rheological_model
                               type: group
                               description: Rheological model of the terminal unit.
@@ -52787,7 +52816,7 @@ sections:
                                   specs:
                                     - name: pressure_law_type
                                       type: selection
-                                      description: "Pressure law driving the recruitment reference volume; None keeps it at the geometry-derived constant."
+                                      description: "Pressure law driving the recruitment reference volume; None keeps it constant at v0."
                                       required: true
                                       choices:
                                         - name: constant
@@ -53037,35 +53066,6 @@ sections:
                                               type: selection
                                               description: "Distance to v0_min/v0_max, as a fraction of (v0_max - v0_min), at which an element counts as fully derecruited/recruited and switches to the other hysteresis path."
                                               required: false
-                                              choices:
-                                                - name: constant
-                                                  spec:
-                                                    name: constant
-                                                    type: double
-                                                    description: "Constant value for the field."
-                                                    required: true
-                                                - name: from_file
-                                                  spec:
-                                                    name: from_file
-                                                    type: path
-                                                    description: "Path to a file containing the input field data."
-                                                    required: true
-                                                - name: field_reference
-                                                  spec:
-                                                    name: field_reference
-                                                    type: string
-                                                    description: "Refer to a globally defined field by a name."
-                                                    required: true
-                                                - name: from_mesh
-                                                  spec:
-                                                    name: from_mesh
-                                                    type: string
-                                                    description: "Refer to a field defined in the input mesh by a name."
-                                                    required: true
-                                            - name: initial_v0
-                                              type: selection
-                                              description: "Initial reference volume V0 at simulation start."
-                                              required: true
                                               choices:
                                                 - name: constant
                                                   spec:
