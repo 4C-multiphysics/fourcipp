@@ -39,17 +39,15 @@ from fourcipp.utils.yaml_io import dump_yaml, load_yaml
 def fixture_database():
     """Small, two-version migration database exercising several entry types."""
     return {
-        (1, 1, 0): [
+        1: [
             {
-                "id": "remove-nummat",
                 "type": "parameter_removed",
                 "description": "NUMMAT is redundant with the length of MATIDS.",
                 "path": ["MATERIALS", "MAT_ElastHyper", "NUMMAT"],
             }
         ],
-        (1, 2, 0): [
+        2: [
             {
-                "id": "rename-dynamictype",
                 "type": "parameter_renamed",
                 "description": "DYNAMICTYPE was renamed.",
                 "path": ["STRUCTURAL DYNAMIC", "DYNAMICTYPE"],
@@ -76,10 +74,10 @@ def test_migrate_sections_applies_all_migrations(sections, database):
 
     assert "NUMMAT" not in sections["MATERIALS"][0]["MAT_ElastHyper"]
     assert sections["STRUCTURAL DYNAMIC"] == {"DYNAMICTYP": "Statics"}
-    assert sections["input_version"] == "1.2.0"
+    assert sections["input_version"] == "00002"
 
     assert report.from_version is None
-    assert report.to_version == (1, 2, 0)
+    assert report.to_version == 2
     assert report.changed
     assert len(report.applied) == 2
 
@@ -91,8 +89,8 @@ def test_migrate_sections_is_idempotent(sections, database):
     report = migrate_sections(sections, database)
 
     assert not report.changed
-    assert report.from_version == (1, 2, 0)
-    assert report.to_version == (1, 2, 0)
+    assert report.from_version == 2
+    assert report.to_version == 2
 
 
 def test_migrate_sections_partial_from_version(database):
@@ -103,54 +101,54 @@ def test_migrate_sections_partial_from_version(database):
             {"MAT": 1, "MAT_ElastHyper": {"NUMMAT": 2, "MATIDS": [10, 11]}},
         ],
         "STRUCTURAL DYNAMIC": {"DYNAMICTYPE": "Statics"},
-        "input_version": "1.1.0",
+        "input_version": "00001",
     }
 
     report = migrate_sections(sections, database)
 
     assert "NUMMAT" in sections["MATERIALS"][0]["MAT_ElastHyper"]
     assert sections["STRUCTURAL DYNAMIC"] == {"DYNAMICTYP": "Statics"}
-    assert report.from_version == (1, 1, 0)
+    assert report.from_version == 1
     assert len(report.applied) == 1
 
 
 def test_migrate_sections_to_version_limits_range(sections, database):
     """Test that `to_version` limits which migrations are applied."""
-    report = migrate_sections(sections, database, to_version=(1, 1, 0))
+    report = migrate_sections(sections, database, to_version=1)
 
     assert "NUMMAT" not in sections["MATERIALS"][0]["MAT_ElastHyper"]
     assert sections["STRUCTURAL DYNAMIC"] == {"DYNAMICTYPE": "Statics"}
-    assert sections["input_version"] == "1.1.0"
-    assert report.to_version == (1, 1, 0)
+    assert sections["input_version"] == "00001"
+    assert report.to_version == 1
 
 
 def test_migrate_sections_clamps_to_version_to_newest_known(sections, database):
     """Test that a target version newer than the database is clamped to its
     newest version."""
-    report = migrate_sections(sections, database, to_version=(9, 9, 9))
+    report = migrate_sections(sections, database, to_version=99999)
 
-    # All known migrations are applied, but the file is not stamped 9.9.9: doing so would
-    # make future migrations up to 9.9.9 look like they had already been applied.
-    assert sections["input_version"] == "1.2.0"
-    assert report.to_version == (1, 2, 0)
-    assert report.clamped_from == (9, 9, 9)
-    assert "9.9.9" in report.clamp_warning
-    assert "1.2.0" in report.clamp_warning
+    # All known migrations are applied, but the file is not stamped 99999: doing so would
+    # make future migrations up to 99999 look like they had already been applied.
+    assert sections["input_version"] == "00002"
+    assert report.to_version == 2
+    assert report.clamped_from == 99999
+    assert "99999" in report.clamp_warning
+    assert "00002" in report.clamp_warning
 
 
 def test_migrate_sections_clamped_to_version_never_downgrades(database):
     """Test that clamping does not downgrade a file newer than the database."""
-    sections = {"input_version": "5.0.0"}
-    report = migrate_sections(sections, database, to_version=(9, 9, 9))
+    sections = {"input_version": "00099"}
+    report = migrate_sections(sections, database, to_version=99999)
 
-    assert sections["input_version"] == "5.0.0"
-    assert report.to_version == (5, 0, 0)
-    assert report.clamped_from == (9, 9, 9)
+    assert sections["input_version"] == "00099"
+    assert report.to_version == 99
+    assert report.clamped_from == 99999
 
 
 def test_migrate_sections_to_version_within_database_is_not_clamped(sections, database):
     """Test that a target version the database knows about is used as is."""
-    report = migrate_sections(sections, database, to_version=(1, 1, 0))
+    report = migrate_sections(sections, database, to_version=1)
 
     assert report.clamped_from is None
     assert report.clamp_warning is None
@@ -158,8 +156,7 @@ def test_migrate_sections_to_version_within_database_is_not_clamped(sections, da
 
 def test_migrate_sections_failure_leaves_sections_untouched(database):
     """Test that a failing migration entry rolls back all earlier ones."""
-    database[(1, 2, 0)][0] = {
-        "id": "rename-onto-existing",
+    database[2][0] = {
         "type": "section_renamed",
         "description": "Renames onto an already existing section.",
         "path": ["STRUCTURAL DYNAMIC"],
@@ -171,26 +168,26 @@ def test_migrate_sections_failure_leaves_sections_untouched(database):
         ],
         "STRUCTURAL DYNAMIC": {"DYNAMICTYPE": "Statics"},
         "SOLVER": {"NAME": "Structure_Solver"},
-        "input_version": "1.0.0",
+        "input_version": "00000",
     }
     original = copy.deepcopy(sections)
 
     with pytest.raises(MigrationError):
         migrate_sections(sections, database)
 
-    # The 1.1.0 migration succeeded before the 1.2.0 one failed, but must not persist.
+    # The 00001 migration succeeded before the 00002 one failed, but must not persist.
     assert sections == original
 
 
 def test_migrate_sections_never_downgrades_version(database):
     """Test that a file newer than the database's newest version is
     untouched."""
-    sections = {"input_version": "5.0.0"}
+    sections = {"input_version": "00099"}
     report = migrate_sections(sections, database)
 
-    assert sections["input_version"] == "5.0.0"
+    assert sections["input_version"] == "00099"
     assert not report.changed
-    assert report.to_version == (5, 0, 0)
+    assert report.to_version == 99
 
 
 def test_migrate_sections_empty_database_is_noop():
@@ -210,14 +207,14 @@ def test_migration_report_str_contains_summary(sections, database):
     report = migrate_sections(sections, database)
     report_string = str(report)
 
-    assert "1.2.0" in report_string
-    assert "remove-nummat" in report_string
-    assert "rename-dynamictype" in report_string
+    assert "00002" in report_string
+    assert "NUMMAT is redundant with the length of MATIDS." in report_string
+    assert "DYNAMICTYPE was renamed." in report_string
 
 
 def test_migration_report_str_no_migrations_applied():
     """Test the report's string representation when nothing was applied."""
-    report = MigrationReport(from_version=(1, 0, 0), to_version=(1, 0, 0))
+    report = MigrationReport(from_version=0, to_version=0)
     assert "No migrations were applied." in str(report)
 
 
@@ -225,8 +222,8 @@ def test_migrate_file(tmp_path, sections, database):
     """Test migrating an input file on disk."""
     migrations_dir = tmp_path / "migrations"
     migrations_dir.mkdir()
-    dump_yaml({"migrations": database[(1, 1, 0)]}, migrations_dir / "1.1.0.yaml")
-    dump_yaml({"migrations": database[(1, 2, 0)]}, migrations_dir / "1.2.0.yaml")
+    dump_yaml({"migrations": database[1]}, migrations_dir / "00001.yaml")
+    dump_yaml({"migrations": database[2]}, migrations_dir / "00002.yaml")
 
     input_path = tmp_path / "input.4C.yaml"
     dump_yaml(sections, input_path)
@@ -237,7 +234,7 @@ def test_migrate_file(tmp_path, sections, database):
     migrated_sections = load_yaml(output_path)
     assert "NUMMAT" not in migrated_sections["MATERIALS"][0]["MAT_ElastHyper"]
     assert migrated_sections["STRUCTURAL DYNAMIC"] == {"DYNAMICTYP": "Statics"}
-    assert migrated_sections["input_version"] == "1.2.0"
+    assert migrated_sections["input_version"] == "00002"
     assert report.changed
 
     # The original input file is untouched, since output_path != input_path.
@@ -249,7 +246,7 @@ def test_migrate_file_in_place(tmp_path, sections, database):
     """Test migrating an input file in place, overwriting the original."""
     migrations_dir = tmp_path / "migrations"
     migrations_dir.mkdir()
-    dump_yaml({"migrations": database[(1, 1, 0)]}, migrations_dir / "1.1.0.yaml")
+    dump_yaml({"migrations": database[1]}, migrations_dir / "00001.yaml")
 
     input_path = tmp_path / "input.4C.yaml"
     dump_yaml(sections, input_path)
@@ -258,23 +255,23 @@ def test_migrate_file_in_place(tmp_path, sections, database):
 
     migrated_sections = load_yaml(input_path)
     assert "NUMMAT" not in migrated_sections["MATERIALS"][0]["MAT_ElastHyper"]
-    assert migrated_sections["input_version"] == "1.1.0"
+    assert migrated_sections["input_version"] == "00001"
 
 
 def test_migrate_file_to_version_as_string(tmp_path, sections, database):
-    """Test that `to_version` can be passed as a `MAJOR.MINOR.PATCH` string."""
+    """Test that `to_version` can be passed as a version string."""
     migrations_dir = tmp_path / "migrations"
     migrations_dir.mkdir()
-    dump_yaml({"migrations": database[(1, 1, 0)]}, migrations_dir / "1.1.0.yaml")
-    dump_yaml({"migrations": database[(1, 2, 0)]}, migrations_dir / "1.2.0.yaml")
+    dump_yaml({"migrations": database[1]}, migrations_dir / "00001.yaml")
+    dump_yaml({"migrations": database[2]}, migrations_dir / "00002.yaml")
 
     input_path = tmp_path / "input.4C.yaml"
     dump_yaml(sections, input_path)
 
     output_path = tmp_path / "output.4C.yaml"
-    report = migrate_file(input_path, output_path, migrations_dir, to_version="1.1.0")
+    report = migrate_file(input_path, output_path, migrations_dir, to_version="00001")
 
-    assert report.to_version == (1, 1, 0)
+    assert report.to_version == 1
     migrated_sections = load_yaml(output_path)
     assert migrated_sections["STRUCTURAL DYNAMIC"] == {"DYNAMICTYPE": "Statics"}
 
@@ -284,8 +281,8 @@ def fixture_migrations_dir(tmp_path, database):
     """Migration database fixture written to disk."""
     migrations_dir = tmp_path / "migrations"
     migrations_dir.mkdir()
-    dump_yaml({"migrations": database[(1, 1, 0)]}, migrations_dir / "1.1.0.yaml")
-    dump_yaml({"migrations": database[(1, 2, 0)]}, migrations_dir / "1.2.0.yaml")
+    dump_yaml({"migrations": database[1]}, migrations_dir / "00001.yaml")
+    dump_yaml({"migrations": database[2]}, migrations_dir / "00002.yaml")
     return migrations_dir
 
 
@@ -335,7 +332,7 @@ def test_diff_migration_ignores_comments_and_quoting(tmp_path, migrations_dir):
     # not a migration change and must not appear in the diff.
     input_path.write_text(
         "# a comment that the round-trip drops\n"
-        "input_version: '1.2.0'\n"
+        "input_version: '00002'\n"
         "STRUCTURAL DYNAMIC:\n"
         "  DYNAMICTYP: Statics\n",
         encoding="utf-8",
@@ -362,12 +359,11 @@ def test_diff_migration_failure_writes_nothing(tmp_path, sections, database):
     """Test that a failing migration leaves the input file untouched."""
     migrations_dir = tmp_path / "migrations"
     migrations_dir.mkdir()
-    dump_yaml({"migrations": database[(1, 1, 0)]}, migrations_dir / "1.1.0.yaml")
+    dump_yaml({"migrations": database[1]}, migrations_dir / "00001.yaml")
     dump_yaml(
         {
             "migrations": [
                 {
-                    "id": "rename-onto-existing",
                     "type": "section_renamed",
                     "description": "Renames onto an already existing section.",
                     "path": ["STRUCTURAL DYNAMIC"],
@@ -375,7 +371,7 @@ def test_diff_migration_failure_writes_nothing(tmp_path, sections, database):
                 }
             ]
         },
-        migrations_dir / "1.2.0.yaml",
+        migrations_dir / "00002.yaml",
     )
 
     input_path = tmp_path / "input.4C.yaml"
@@ -397,7 +393,7 @@ def test_migrate_sections_detects_changes_without_copying_untouched_sections(dat
     """
     node_coords = [f"NODE {i} COORD 0.0 0.0 {i}" for i in range(100)]
     sections = {
-        "input_version": "1.0.0",
+        "input_version": "00000",
         "NODE COORDS": list(node_coords),
         "MATERIALS": [
             {"MAT": 1, "MAT_ElastHyper": {"NUMMAT": 2, "MATIDS": [10, 11]}},
@@ -414,9 +410,9 @@ def test_migrate_sections_detects_changes_without_copying_untouched_sections(dat
 
 def test_migrate_sections_does_not_report_noop_entries(database):
     """Test that entries matching nothing are not reported as applied."""
-    database[(1, 1, 0)][0]["path"] = ["MATERIALS", "MAT_DoesNotExist", "NUMMAT"]
+    database[1][0]["path"] = ["MATERIALS", "MAT_DoesNotExist", "NUMMAT"]
     sections = {
-        "input_version": "1.0.0",
+        "input_version": "00000",
         "MATERIALS": [
             {"MAT": 1, "MAT_ElastHyper": {"NUMMAT": 2, "MATIDS": [10, 11]}},
         ],
@@ -425,18 +421,15 @@ def test_migrate_sections_does_not_report_noop_entries(database):
 
     report = migrate_sections(sections, database)
 
-    assert [entry.split("]")[0].lstrip("[") for entry in report.applied] == [
-        "rename-dynamictype"
-    ]
+    assert report.applied == ["DYNAMICTYPE was renamed."]
     assert sections["MATERIALS"][0]["MAT_ElastHyper"]["NUMMAT"] == 2
 
 
 def test_migrate_sections_detects_cross_section_move():
     """Test change detection for an entry touching two different sections."""
     database = {
-        (1, 1, 0): [
+        1: [
             {
-                "id": "move-param",
                 "type": "parameter_moved",
                 "description": "Moved to another section.",
                 "old_path": ["OLD SECTION", "PARAM"],
@@ -451,3 +444,63 @@ def test_migrate_sections_detects_cross_section_move():
     assert sections["NEW SECTION"] == {"OTHER": 2, "PARAM": 1}
     assert "OLD SECTION" not in sections or "PARAM" not in sections["OLD SECTION"]
     assert len(report.applied) == 1
+
+
+def test_migrate_sections_applies_entries_in_file_order():
+    """Test that entries within one version are applied in the order listed.
+
+    The two renames form a chain (A -> B -> C), so applying them in the
+    listed order yields C, while any other order leaves the intermediate
+    B behind.
+    """
+    database = {
+        1: [
+            {
+                "type": "parameter_renamed",
+                "description": "A was renamed to B.",
+                "path": ["SECTION", "A"],
+                "new_name": "B",
+            },
+            {
+                "type": "parameter_renamed",
+                "description": "B was renamed to C.",
+                "path": ["SECTION", "B"],
+                "new_name": "C",
+            },
+        ]
+    }
+    sections = {"SECTION": {"A": 1}}
+
+    report = migrate_sections(sections, database)
+
+    assert sections["SECTION"] == {"C": 1}
+    assert report.applied == ["A was renamed to B.", "B was renamed to C."]
+
+
+def test_migrate_sections_applies_versions_in_ascending_order():
+    """Test that versions are applied in ascending order, not insertion
+    order."""
+    database = {
+        2: [
+            {
+                "type": "parameter_renamed",
+                "description": "B was renamed to C.",
+                "path": ["SECTION", "B"],
+                "new_name": "C",
+            }
+        ],
+        1: [
+            {
+                "type": "parameter_renamed",
+                "description": "A was renamed to B.",
+                "path": ["SECTION", "A"],
+                "new_name": "B",
+            }
+        ],
+    }
+    sections = {"SECTION": {"A": 1}}
+
+    report = migrate_sections(sections, database)
+
+    assert sections["SECTION"] == {"C": 1}
+    assert report.applied == ["A was renamed to B.", "B was renamed to C."]

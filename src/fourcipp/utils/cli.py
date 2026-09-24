@@ -103,7 +103,7 @@ def migrate_input_file(
     Since the migrated file is the one that is actually compatible with the current 4C
     version, by default it replaces the input file at its original path, while the
     pre-migration file is kept alongside as a backup, tagged with the version it was on
-    before the migration, e.g. '_v1.0.0.4C.yaml'. Input files without an `input_version`
+    before the migration, e.g. '_v00000.4C.yaml'. Input files without an `input_version`
     field are assumed to be on version `IMPLICIT_INPUT_VERSION`. No backup is created if no
     migration was actually necessary.
 
@@ -272,7 +272,7 @@ def main() -> None:
         help="Migrate the input file in place, without keeping a backup of the "
         "pre-migration file. By default, the input file is replaced with the migrated "
         "version, and the pre-migration file is kept alongside, tagged with the version it "
-        "was on before the migration, e.g. '_v1.0.0.4C.yaml'.",
+        "was on before the migration, e.g. '_v00000.4C.yaml'.",
     )
 
     migrate_parser.add_argument(

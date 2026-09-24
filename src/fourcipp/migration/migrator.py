@@ -49,14 +49,14 @@ from fourcipp.utils.yaml_io import dump_yaml, load_yaml
 DEFAULT_MIGRATIONS_DIR = pathlib.Path(__file__).parent / "migrations"
 # Bundled, versioned migration database shipped with FourCIPP.
 
-IMPLICIT_INPUT_VERSION: Version = (1, 0, 0)
-# Version an input file without an `input_version` field is assumed to be on. Note that
-# migration selection does not rely on this: an absent `input_version` selects every known
-# migration, regardless of this value.
+IMPLICIT_INPUT_VERSION: Version = 0
+# Version an input file without an `input_version` field is assumed to be on, i.e. before
+# any migration. Note that migration selection does not rely on this: an absent
+# `input_version` selects every known migration, regardless of this value.
 
 
 def _version_string(version: Version | None) -> str:
-    """Format a version tuple as a `MAJOR.MINOR.PATCH` string.
+    """Format a version as a zero-padded version string.
 
     Args:
         version: Version to format, or `None`
@@ -161,12 +161,8 @@ def migrate_sections(
         MigrationError: If a migration entry cannot be applied, see the individual operation
             handlers in `fourcipp.migration.operations`
     """
-    input_version_string = sections.get("input_version")
-    from_version = (
-        parse_version(input_version_string)
-        if input_version_string is not None
-        else None
-    )
+    input_version = sections.get("input_version")
+    from_version = parse_version(input_version) if input_version is not None else None
 
     # Resolve the target version upfront: default to the newest known migration, falling back
     # to the file's own version if the database is empty (e.g. no migrations bundled yet).
@@ -215,7 +211,7 @@ def migrate_sections(
 
                 after = {key: working[key] for key in roots if key in working}
                 if before != after:
-                    report.applied.append(f"[{entry['id']}] {entry['description']}")
+                    report.applied.append(entry["description"])
 
         # Never move backwards: the file may already be newer than the requested/known target.
         if from_version is not None and from_version > effective_to_version:
@@ -235,7 +231,7 @@ def migrate_file(
     input_path: Path,
     output_path: Path,
     migrations_dir: Path | None = None,
-    to_version: str | None = None,
+    to_version: str | int | None = None,
 ) -> MigrationReport:
     """Migrate a 4C input file on disk to a newer input file version.
 
@@ -245,7 +241,7 @@ def migrate_file(
             `input_path` to migrate in place)
         migrations_dir: Directory containing `<version>.yaml` migration files; defaults to
             the migration database bundled with FourCIPP
-        to_version: Version to migrate to (inclusive), as a `MAJOR.MINOR.PATCH` string;
+        to_version: Version to migrate to (inclusive), as a version string or number;
             defaults to the newest known version. A version newer than the newest known
             migration is clamped to the latter.
 
@@ -269,7 +265,7 @@ def migrate_file(
 def diff_migration(
     input_path: Path,
     migrations_dir: Path | None = None,
-    to_version: str | None = None,
+    to_version: str | int | None = None,
 ) -> tuple[MigrationReport, str]:
     """Migrate a 4C input file in memory and return a diff, without writing
     anything.
@@ -283,7 +279,7 @@ def diff_migration(
         input_path: Path to the input file to migrate
         migrations_dir: Directory containing `<version>.yaml` migration files; defaults to
             the migration database bundled with FourCIPP
-        to_version: Version to migrate to (inclusive), as a `MAJOR.MINOR.PATCH` string;
+        to_version: Version to migrate to (inclusive), as a version string or number;
             defaults to the newest known version. A version newer than the newest known
             migration is clamped to the latter.
 

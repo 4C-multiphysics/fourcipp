@@ -77,6 +77,8 @@ repos:
     hooks:
       - id: removestar
         name: Run removestar (remove wildcard imports)
+        # pyflakes >= 3.4 removed `_MAGIC_GLOBALS`, which removestar still imports
+        additional_dependencies: ["pyflakes<3.4"]
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.12.3
     hooks:

@@ -23,8 +23,8 @@
 
 The migration database is a directory of YAML files, one per input file version, each
 containing a list of migration entries under a top-level `migrations` key. The filename
-(without extension) is the version the file upgrades *to*, e.g. `1.1.0.yaml` contains the
-changes needed to go from the previous version to `1.1.0`.
+(without extension) is the version the file upgrades *to*, e.g. `00002.yaml` contains the
+changes needed to go from the previous version to version `00002`.
 """
 
 import re
@@ -37,13 +37,19 @@ from fourcipp.migration.operations import OPERATIONS
 from fourcipp.utils.type_hinting import Path
 from fourcipp.utils.yaml_io import load_yaml
 
-Version = tuple[int, int, int]
+Version = int
+
+VERSION_DIGITS = 5
+# Number of digits an input file version is zero-padded to. The padding keeps numeric and
+# lexicographic ordering identical, so versions sort correctly whether they are compared as
+# numbers or as plain text. Versions exceeding this width are not truncated, they simply
+# grow beyond it.
 
 # All migration entry types known to the tool.
 KNOWN_TYPES = set(OPERATIONS)
 
 # Fields required on every migration entry, regardless of its type.
-_UNIVERSAL_FIELDS = {"id", "type", "description"}
+_UNIVERSAL_FIELDS = {"type", "description"}
 
 # Fields required per migration entry `type`, in addition to `_UNIVERSAL_FIELDS`.
 _REQUIRED_FIELDS: dict[str, set[str]] = {
@@ -59,70 +65,104 @@ _REQUIRED_FIELDS: dict[str, set[str]] = {
     "section_added": {"path", "value"},
 }
 
-_VERSION_PATTERN = re.compile(r"(\d+)\.(\d+)\.(\d+)")
+_VERSION_PATTERN = re.compile(r"\d+")
 
 
-def parse_version(version_string: str) -> Version:
-    """Parse a `MAJOR.MINOR.PATCH` version string.
+def parse_version(version: str | int) -> Version:
+    """Parse an input file version.
+
+    Accepts both the zero-padded form written by FourCIPP (e.g. `"00002"`) and a plain
+    number, as a string or as an int. The latter matters because a hand-written, unquoted
+    `input_version` is loaded from YAML as an int.
 
     Args:
-        version_string: Version string to parse
+        version: Version to parse
 
     Returns:
-        The version as a `(major, minor, patch)` tuple of ints
+        The version as an int
 
     Raises:
-        MigrationError: If `version_string` is not a valid `MAJOR.MINOR.PATCH` version
+        MigrationError: If `version` is not a non-negative whole number
     """
-    match = _VERSION_PATTERN.fullmatch(version_string.strip())
-    if match is None:
+    if isinstance(version, bool) or not isinstance(version, (str, int)):
         raise MigrationError(
-            f"'{version_string}' is not a valid MAJOR.MINOR.PATCH version string."
+            f"'{version}' is not a valid input file version, expected a number."
         )
-    major, minor, patch = match.groups()
-    return int(major), int(minor), int(patch)
+
+    if isinstance(version, int):
+        if version < 0:
+            raise MigrationError(
+                f"'{version}' is not a valid input file version, expected a "
+                "non-negative number."
+            )
+        return version
+
+    if _VERSION_PATTERN.fullmatch(version.strip()) is None:
+        raise MigrationError(
+            f"'{version}' is not a valid input file version, expected a non-negative "
+            f"number, optionally zero-padded to {VERSION_DIGITS} digits, e.g. "
+            f"'{format_version(2)}'."
+        )
+    return int(version.strip())
 
 
 def format_version(version: Version) -> str:
-    """Format a version tuple as a `MAJOR.MINOR.PATCH` string.
+    """Format a version as a zero-padded version string.
 
     Args:
         version: Version to format
 
     Returns:
-        The formatted version string
+        The version, zero-padded to `VERSION_DIGITS` digits
     """
-    return ".".join(str(part) for part in version)
+    return f"{version:0{VERSION_DIGITS}d}"
 
 
-def validate_entry(entry: dict) -> None:
+def validate_entry(
+    entry: dict, position: int | None = None, source: Path | None = None
+) -> None:
     """Validate a single migration entry.
 
     Args:
         entry: Migration entry to validate
+        position: Optional 1-based position of the entry within its file, used to point at
+            the offending entry in error messages
+        source: Optional path of the file the entry was read from, used in error messages
 
     Raises:
         MigrationError: If a universal or type-specific required field is missing, or the
             entry's `type` is unknown
     """
+    label = "Migration entry"
+    if position is not None:
+        label += f" {position}"
+    if source is not None:
+        label += f" in '{source}'"
+
+    if not isinstance(entry, dict):
+        raise MigrationError(
+            f"{label} must be a mapping, got {type(entry).__name__}. Entry: {entry}"
+        )
+
     missing_universal = _UNIVERSAL_FIELDS - set(entry)
     if missing_universal:
         raise MigrationError(
-            f"Migration entry {entry} is missing required field(s): {missing_universal}."
+            f"{label} is missing required field(s): {sorted(missing_universal)}. "
+            f"Entry: {entry}"
         )
 
     entry_type = entry["type"]
     if entry_type not in KNOWN_TYPES:
         raise MigrationError(
-            f"Migration entry '{entry['id']}' has unknown type '{entry_type}'. Known types "
-            f"are: {sorted(KNOWN_TYPES)}."
+            f"{label} has unknown type '{entry_type}'. Known types are: "
+            f"{sorted(KNOWN_TYPES)}. Entry: {entry}"
         )
 
     missing_type_fields = _REQUIRED_FIELDS[entry_type] - set(entry)
     if missing_type_fields:
         raise MigrationError(
-            f"Migration entry '{entry['id']}' of type '{entry_type}' is missing required "
-            f"field(s): {missing_type_fields}."
+            f"{label} of type '{entry_type}' is missing required field(s): "
+            f"{sorted(missing_type_fields)}. Entry: {entry}"
         )
 
 
@@ -146,8 +186,8 @@ def load_migration_file(path: Path) -> list[dict]:
             f"Migration file '{path}' must contain a top-level 'migrations' list."
         )
 
-    for entry in entries:
-        validate_entry(entry)
+    for position, entry in enumerate(entries, start=1):
+        validate_entry(entry, position=position, source=path)
 
     return entries
 
@@ -156,8 +196,8 @@ def load_migration_database(migrations_dir: Path) -> dict[Version, list[dict]]:
     """Load all migration files from a directory, keyed by the version they
     upgrade to.
 
-    Files whose name is not a `<MAJOR.MINOR.PATCH>.yaml` version are ignored, so unrelated
-    YAML files can live alongside the migration database.
+    Files whose name is not a number, e.g. `00002.yaml`, are ignored, so unrelated YAML
+    files can live alongside the migration database.
 
     Args:
         migrations_dir: Directory containing `<version>.yaml` migration files
@@ -176,7 +216,7 @@ def load_migration_database(migrations_dir: Path) -> dict[Version, list[dict]]:
     for path in sorted(migration_path.glob("*.yaml")):
         if _VERSION_PATTERN.fullmatch(path.stem) is None:
             logger.debug(
-                f"Skipping '{path.name}': not a <MAJOR.MINOR.PATCH>.yaml migration file."
+                f"Skipping '{path.name}': not a <version>.yaml migration file."
             )
             continue
 

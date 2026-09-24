@@ -164,13 +164,13 @@ fourcipp migrate path/to/input.4C.yaml
 By default, since the migrated file is the one compatible with the current 4C version, it
 replaces the input file at its original path, while the pre-migration file is kept alongside
 as a backup, tagged with the input file version it was on before the migration, e.g.
-`_v1.0.0.4C.yaml` (no backup is created if no migration was actually
+`_v00000.4C.yaml` (no backup is created if no migration was actually
 necessary); use `-o`/`--overwrite` to migrate in place without keeping that backup. Use
 `--to-version` to migrate to a specific input file version instead of the newest known one,
 and `--migrations-dir` to use a custom migration database, e.g. one vendored from a specific
 4C version. The command always prints a short one-line summary, e.g.:
 ```commandline
-File 'input.4C.yaml' migrated: 2 migrations applied, pre-migration file saved as 'input_v1.0.0.4C.yaml'.
+File 'input.4C.yaml' migrated: 2 migrations applied, pre-migration file saved as 'input_v00000.4C.yaml'.
 ```
 To preview a migration without changing anything, use `--dry-run`, which prints a unified
 diff and writes no file:
