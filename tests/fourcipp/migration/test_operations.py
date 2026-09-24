@@ -23,8 +23,9 @@
 
 import pytest
 
+from fourcipp.migration.database import _REQUIRED_FIELDS
 from fourcipp.migration.errors import MigrationError
-from fourcipp.migration.operations import OPERATIONS
+from fourcipp.migration.operations import _PATH_FIELDS, OPERATIONS, entry_root_keys
 
 
 @pytest.fixture(name="sections")
@@ -81,6 +82,66 @@ def test_parameter_renamed(sections):
         {"path": ["STRUCTURAL DYNAMIC", "DYNAMICTYPE"], "new_name": "DYNAMICTYP"},
     )
     assert sections["STRUCTURAL DYNAMIC"] == {"DYNAMICTYP": "Statics"}
+
+
+def test_parameter_renamed_target_collision_raises(sections):
+    """Test that renaming onto an existing parameter raises instead of
+    overwriting."""
+    sections["STRUCTURAL DYNAMIC"]["DYNAMICTYP"] = "OneStepTheta"
+    with pytest.raises(MigrationError):
+        OPERATIONS["parameter_renamed"](
+            sections,
+            {"path": ["STRUCTURAL DYNAMIC", "DYNAMICTYPE"], "new_name": "DYNAMICTYP"},
+        )
+    assert sections["STRUCTURAL DYNAMIC"] == {
+        "DYNAMICTYPE": "Statics",
+        "DYNAMICTYP": "OneStepTheta",
+    }
+
+
+def test_parameter_renamed_collision_in_any_match_renames_nothing(sections):
+    """Test that a collision in a single fan-out match leaves all matches
+    untouched."""
+    sections["MATERIALS"][2]["MAT_ElastHyper"]["NUMMATS"] = 99
+    with pytest.raises(MigrationError):
+        OPERATIONS["parameter_renamed"](
+            sections,
+            {"path": ["MATERIALS", "MAT_ElastHyper", "NUMMAT"], "new_name": "NUMMATS"},
+        )
+    assert sections["MATERIALS"][0]["MAT_ElastHyper"] == {
+        "NUMMAT": 2,
+        "MATIDS": [10, 11],
+    }
+    assert sections["MATERIALS"][2]["MAT_ElastHyper"]["NUMMAT"] == 1
+    assert sections["MATERIALS"][2]["MAT_ElastHyper"]["NUMMATS"] == 99
+
+
+def test_section_renamed_target_collision_raises(sections):
+    """Test that renaming a section onto an existing section raises."""
+    sections["STRUCTURE DYNAMIC"] = {"DYNAMICTYPE": "OneStepTheta"}
+    with pytest.raises(MigrationError):
+        OPERATIONS["section_renamed"](
+            sections,
+            {"path": ["STRUCTURAL DYNAMIC"], "new_name": "STRUCTURE DYNAMIC"},
+        )
+    assert sections["STRUCTURAL DYNAMIC"] == {"DYNAMICTYPE": "Statics"}
+    assert sections["STRUCTURE DYNAMIC"] == {"DYNAMICTYPE": "OneStepTheta"}
+
+
+def test_type_renamed_target_collision_raises(sections):
+    """Test that renaming a type discriminator onto an existing key raises."""
+    sections["MATERIALS"][0]["MAT_HyperElast"] = {"NUMMAT": 7}
+    with pytest.raises(MigrationError):
+        OPERATIONS["type_renamed"](
+            sections,
+            {"path": ["MATERIALS", "MAT_ElastHyper"], "new_name": "MAT_HyperElast"},
+        )
+    assert sections["MATERIALS"][0]["MAT_ElastHyper"] == {
+        "NUMMAT": 2,
+        "MATIDS": [10, 11],
+    }
+    assert sections["MATERIALS"][0]["MAT_HyperElast"] == {"NUMMAT": 7}
+    assert "MAT_HyperElast" not in sections["MATERIALS"][2]
 
 
 def test_parameter_default_changed(sections):
@@ -344,3 +405,30 @@ def test_parameter_value_renamed_unmapped_value_untouched(sections):
         },
     )
     assert sections["STRUCTURAL DYNAMIC"]["DYNAMICTYPE"] == "Statics"
+
+
+def test_entry_root_keys_collects_every_path_field():
+    """Test that all root-anchored path fields contribute their top-level
+    key."""
+    assert entry_root_keys({"path": ["MATERIALS", "MAT_Fluid", "DENS"]}) == {
+        "MATERIALS"
+    }
+    assert entry_root_keys(
+        {"old_path": ["OLD SECTION", "A"], "new_path": ["NEW SECTION", "A"]}
+    ) == {"OLD SECTION", "NEW SECTION"}
+
+
+def test_entry_root_keys_covers_every_operation_type():
+    """Test that every migration type declares a root-anchored path.
+
+    The migrator relies on this to snapshot only the sections an entry
+    can touch when detecting changes. A handler type whose required
+    fields contain no path field would silently never be reported as
+    applied.
+    """
+    for entry_type in OPERATIONS:
+        required = _REQUIRED_FIELDS[entry_type]
+        assert required & set(_PATH_FIELDS), (
+            f"Migration type '{entry_type}' declares no root-anchored path field; "
+            "change detection in migrate_sections would not see its changes."
+        )

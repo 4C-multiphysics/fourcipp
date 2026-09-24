@@ -23,16 +23,22 @@
 
 This is entirely opt-in: 4C's `input_version` field is not required, and input files
 without it (or that are never migrated) continue to work as before. See
-`fourcipp.migration.migrator` for the main entry points, `migrate_sections` and
-`migrate_file`.
+`fourcipp.migration.migrator` for the main entry points, `migrate_sections`,
+`migrate_file` and `diff_migration`.
 """
 
 from fourcipp.migration.errors import MigrationError
-from fourcipp.migration.migrator import MigrationReport, migrate_file, migrate_sections
+from fourcipp.migration.migrator import (
+    MigrationReport,
+    diff_migration,
+    migrate_file,
+    migrate_sections,
+)
 
 __all__ = [
     "MigrationError",
     "MigrationReport",
+    "diff_migration",
     "migrate_file",
     "migrate_sections",
 ]

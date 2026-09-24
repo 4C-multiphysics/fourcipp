@@ -191,6 +191,31 @@ def test_load_migration_database(tmp_path):
     assert database[(1, 2, 0)][0]["id"] == "rename-dynamictype"
 
 
+def test_load_migration_database_skips_non_version_files(tmp_path):
+    """Test that YAML files not named after a version are ignored."""
+    dump_yaml(
+        {
+            "migrations": [
+                {
+                    "id": "remove-nummat",
+                    "type": "parameter_removed",
+                    "description": "Remove NUMMAT.",
+                    "path": ["MATERIALS", "MAT_ElastHyper", "NUMMAT"],
+                }
+            ]
+        },
+        tmp_path / "1.1.0.yaml",
+    )
+    # Work-in-progress and unrelated YAML files may live alongside the database. They are
+    # skipped rather than rejected, which would break every migration run.
+    (tmp_path / "latest_upgrade.yaml").write_text("migrations: []\n")
+    (tmp_path / "README.yaml").write_text("not even migrations\n")
+
+    database = load_migration_database(tmp_path)
+
+    assert set(database) == {(1, 1, 0)}
+
+
 def test_load_migration_database_empty_dir(tmp_path):
     """Test that an empty migrations directory yields an empty database."""
     assert load_migration_database(tmp_path) == {}

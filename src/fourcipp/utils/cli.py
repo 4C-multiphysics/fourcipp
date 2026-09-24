@@ -31,7 +31,12 @@ from loguru import logger
 
 from fourcipp import CONFIG
 from fourcipp.fourc_input import FourCInput
-from fourcipp.migration.migrator import migrate_file
+from fourcipp.migration.database import format_version
+from fourcipp.migration.migrator import (
+    IMPLICIT_INPUT_VERSION,
+    diff_migration,
+    migrate_file,
+)
 from fourcipp.utils.configuration import (
     change_profile,
     show_config,
@@ -91,27 +96,49 @@ def migrate_input_file(
     overwrite: bool,
     to_version: str | None = None,
     migrations_dir: str | None = None,
+    dry_run: bool = False,
 ) -> None:  # pragma: no cover
     """Migrate an input file to a newer input file version.
 
     Since the migrated file is the one that is actually compatible with the current 4C
     version, by default it replaces the input file at its original path, while the
-    pre-migration file is kept alongside with suffix '_old.4C.yaml' as a backup. No backup
-    is created if no migration was actually necessary.
+    pre-migration file is kept alongside as a backup, tagged with the version it was on
+    before the migration, e.g. '_v1.0.0.4C.yaml'. Input files without an `input_version`
+    field are assumed to be on version `IMPLICIT_INPUT_VERSION`. No backup is created if no
+    migration was actually necessary.
 
     Args:
         input_file: Input filename to migrate
         overwrite: Whether to migrate the input file in place, without keeping a backup of
                         the pre-migration file.
-        to_version: Version to migrate to (inclusive); defaults to the newest known version
+        to_version: Version to migrate to (inclusive); defaults to the newest known version.
+            A version newer than the newest known migration is clamped to the latter.
         migrations_dir: Directory containing `<version>.yaml` migration files; defaults to
                              the migration database bundled with FourCIPP
+        dry_run: Whether to only print the diff the migration would produce, without
+                      writing anything
     """
-    backup_appendix = "_old"
-
     input_path = pathlib.Path(input_file)
     if not input_path.is_file():
         raise FileNotFoundError(f"Input file '{input_path}' does not exist.")
+
+    if dry_run:
+        report, diff = diff_migration(input_path, migrations_dir, to_version)
+        logger.info(str(report))
+
+        if report.clamp_warning is not None:
+            print(f"Warning: {report.clamp_warning}")
+
+        if diff:
+            print(diff, end="" if diff.endswith("\n") else "\n")
+
+        n_applied = len(report.applied)
+        plural = "" if n_applied == 1 else "s"
+        print(
+            f"Dry run for '{input_path}': {n_applied} migration{plural} would be applied, "
+            "no file was written."
+        )
+        return
 
     # Migrate into a staging file first, so whether any migration was actually necessary is
     # known before deciding whether to keep a backup of the pre-migration file.
@@ -120,9 +147,13 @@ def migrate_input_file(
         report = migrate_file(input_path, staged_path, migrations_dir, to_version)
         logger.info(str(report))
 
+        if report.clamp_warning is not None:
+            print(f"Warning: {report.clamp_warning}")
+
         if not report.changed:
             shutil.copyfile(staged_path, input_path)
             print(f"File '{input_path}' migrated: no changes necessary.")
+            print(f"Updated the version number in input file.")
             return
 
         n_applied = len(report.applied)
@@ -135,6 +166,14 @@ def migrate_input_file(
                 "file overwritten in place."
             )
             return
+
+        # Tag the backup with the version the file was on before the migration.
+        original_version = (
+            report.from_version
+            if report.from_version is not None
+            else IMPLICIT_INPUT_VERSION
+        )
+        backup_appendix = f"_v{format_version(original_version)}"
 
         names = input_path.name.split(".")
         names[0] += backup_appendix
@@ -232,7 +271,8 @@ def main() -> None:
         action="store_true",
         help="Migrate the input file in place, without keeping a backup of the "
         "pre-migration file. By default, the input file is replaced with the migrated "
-        "version, and the pre-migration file is kept alongside with suffix '_old.4C.yaml'.",
+        "version, and the pre-migration file is kept alongside, tagged with the version it "
+        "was on before the migration, e.g. '_v1.0.0.4C.yaml'.",
     )
 
     migrate_parser.add_argument(
@@ -240,6 +280,15 @@ def main() -> None:
         help="Input file version to migrate to. Defaults to the newest known version.",
         type=str,
         default=None,
+    )
+
+    migrate_parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Print the unified diff the migration would produce and exit, without "
+        "writing or changing any file. The diff is semantic: both sides are written "
+        "through the same YAML round-trip, so it shows only what the migration changes, "
+        "not formatting differences such as dropped comments.",
     )
 
     migrate_parser.add_argument(

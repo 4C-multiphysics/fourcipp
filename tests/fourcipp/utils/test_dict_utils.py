@@ -701,6 +701,15 @@ def test_rename_parameter(nested_input_dict, keys, value):
     assert nested_input_dict == value
 
 
+def test_rename_parameter_collision_raises():
+    """Test that an existing destination name is never overwritten."""
+    nested_dict = {"a": [{"b": 1}, {"b": 2, "new_name": 3}]}
+    with pytest.raises(KeyError):
+        rename_parameter(nested_dict, ["a", "b"], "new_name")
+    # Nothing is renamed, not even the collision-free match.
+    assert nested_dict == {"a": [{"b": 1}, {"b": 2, "new_name": 3}]}
+
+
 @pytest.mark.parametrize("nested_dict", [{"a": "string"}, {"a": ["string"]}])
 def test_get_dict_failure(nested_dict):
     """Test _get_dict failure."""

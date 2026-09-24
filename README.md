@@ -163,14 +163,25 @@ fourcipp migrate path/to/input.4C.yaml
 ```
 By default, since the migrated file is the one compatible with the current 4C version, it
 replaces the input file at its original path, while the pre-migration file is kept alongside
-with suffix `_old.4C.yaml` as a backup (no backup is created if no migration was actually
+as a backup, tagged with the input file version it was on before the migration, e.g.
+`_v1.0.0.4C.yaml` (no backup is created if no migration was actually
 necessary); use `-o`/`--overwrite` to migrate in place without keeping that backup. Use
 `--to-version` to migrate to a specific input file version instead of the newest known one,
 and `--migrations-dir` to use a custom migration database, e.g. one vendored from a specific
 4C version. The command always prints a short one-line summary, e.g.:
 ```commandline
-File 'input.4C.yaml' migrated: 2 migrations applied, pre-migration file saved as 'input_old.4C.yaml'.
+File 'input.4C.yaml' migrated: 2 migrations applied, pre-migration file saved as 'input_v1.0.0.4C.yaml'.
 ```
+To preview a migration without changing anything, use `--dry-run`, which prints a unified
+diff and writes no file:
+```commandline
+fourcipp migrate path/to/input.4C.yaml --dry-run > migration.diff
+```
+The diff is *semantic*: both sides are written through the same YAML round-trip, so it shows
+only what the migration actually changes, not formatting differences (dropped comments,
+added quotes) that any rewrite of the file would introduce anyway. `--dry-run` also doubles
+as a validation mode, reporting migrations that cannot be applied without touching the file.
+
 Changes that cannot be applied automatically (e.g. a
 feature removed without a replacement) are never silently dropped; they are reported so they
 can be resolved by hand.
