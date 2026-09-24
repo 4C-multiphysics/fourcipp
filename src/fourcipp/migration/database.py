@@ -30,6 +30,8 @@ changes needed to go from the previous version to `1.1.0`.
 import re
 from pathlib import Path as PathlibPath
 
+from loguru import logger
+
 from fourcipp.migration.errors import MigrationError
 from fourcipp.migration.operations import OPERATIONS
 from fourcipp.utils.type_hinting import Path
@@ -79,6 +81,18 @@ def parse_version(version_string: str) -> Version:
         )
     major, minor, patch = match.groups()
     return int(major), int(minor), int(patch)
+
+
+def format_version(version: Version) -> str:
+    """Format a version tuple as a `MAJOR.MINOR.PATCH` string.
+
+    Args:
+        version: Version to format
+
+    Returns:
+        The formatted version string
+    """
+    return ".".join(str(part) for part in version)
 
 
 def validate_entry(entry: dict) -> None:
@@ -142,6 +156,9 @@ def load_migration_database(migrations_dir: Path) -> dict[Version, list[dict]]:
     """Load all migration files from a directory, keyed by the version they
     upgrade to.
 
+    Files whose name is not a `<MAJOR.MINOR.PATCH>.yaml` version are ignored, so unrelated
+    YAML files can live alongside the migration database.
+
     Args:
         migrations_dir: Directory containing `<version>.yaml` migration files
 
@@ -149,11 +166,20 @@ def load_migration_database(migrations_dir: Path) -> dict[Version, list[dict]]:
         Mapping from target version to its list of migration entries
 
     Raises:
-        MigrationError: If a filename is not a valid version, or two files target the same
+        MigrationError: If `migrations_dir` does not exist, or two files target the same
             version
     """
+    migration_path = PathlibPath(migrations_dir)
+    if not migration_path.is_dir():
+        raise MigrationError(f"Migration directory '{migrations_dir}' does not exist.")
     database: dict[Version, list[dict]] = {}
-    for path in sorted(PathlibPath(migrations_dir).glob("*.yaml")):
+    for path in sorted(migration_path.glob("*.yaml")):
+        if _VERSION_PATTERN.fullmatch(path.stem) is None:
+            logger.debug(
+                f"Skipping '{path.name}': not a <MAJOR.MINOR.PATCH>.yaml migration file."
+            )
+            continue
+
         version = parse_version(path.stem)
         if version in database:
             raise MigrationError(

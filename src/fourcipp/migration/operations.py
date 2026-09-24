@@ -39,6 +39,27 @@ from fourcipp.utils.dict_utils import (
     transform_value,
 )
 
+# Entry fields holding a root-anchored path into the sections dict. Every handler below only
+# ever mutates the top-level sections named by these paths, which lets callers snapshot just
+# those sections instead of the whole input file. Keep this invariant when adding handlers.
+_PATH_FIELDS = ("path", "old_path", "new_path")
+
+
+def entry_root_keys(entry: dict) -> set[str]:
+    """Top-level section keys a migration entry may modify.
+
+    Handlers never touch sections outside of these keys, so comparing only them is enough to
+    detect whether an entry changed anything. This matters for real 4C input files, whose
+    node/element sections are large and are left untouched by most migrations.
+
+    Args:
+        entry: Migration entry
+
+    Returns:
+        The top-level keys of every root-anchored path the entry declares
+    """
+    return {entry[field][0] for field in _PATH_FIELDS if entry.get(field)}
+
 
 def _get_or_create_dict(root: dict, path: Sequence[str]) -> dict:
     """Walk a path of dict keys, creating empty dicts for missing intermediate
@@ -93,6 +114,28 @@ def _single_match(sections: dict, path: Sequence[str]) -> list[Any]:
     return matches
 
 
+def _rename(sections: dict, entry: dict) -> None:
+    """Rename a key, refusing to overwrite an already existing destination.
+
+    Args:
+        sections: Nested data dict
+        entry: Migration entry with `path` and `new_name` fields
+
+    Raises:
+        MigrationError: If the destination name already exists next to one of the matched
+            entries. Nothing is renamed in that case.
+    """
+    path = entry["path"]
+    new_name = entry["new_name"]
+    try:
+        rename_parameter(sections, path, new_name)
+    except KeyError as error:
+        raise MigrationError(
+            f"Target {list(path[:-1]) + [new_name]} already exists, cannot rename "
+            "without overwriting."
+        ) from error
+
+
 def _parameter_removed(sections: dict, entry: dict) -> None:
     """Remove a parameter, see `fourcipp.utils.dict_utils.remove`.
 
@@ -109,8 +152,11 @@ def _parameter_renamed(sections: dict, entry: dict) -> None:
     Args:
         sections: Nested data dict
         entry: Migration entry with `path` and `new_name` fields
+
+    Raises:
+        MigrationError: If the target parameter already exists
     """
-    rename_parameter(sections, entry["path"], entry["new_name"])
+    _rename(sections, entry)
 
 
 def _parameter_default_changed(sections: dict, entry: dict) -> None:
@@ -146,8 +192,11 @@ def _section_renamed(sections: dict, entry: dict) -> None:
     Args:
         sections: Nested data dict
         entry: Migration entry with `path` and `new_name` fields
+
+    Raises:
+        MigrationError: If the target section/type already exists
     """
-    rename_parameter(sections, entry["path"], entry["new_name"])
+    _rename(sections, entry)
 
 
 def _type_renamed(sections: dict, entry: dict) -> None:
@@ -158,8 +207,11 @@ def _type_renamed(sections: dict, entry: dict) -> None:
     Args:
         sections: Nested data dict
         entry: Migration entry with `path` and `new_name` fields
+
+    Raises:
+        MigrationError: If the target type key already exists
     """
-    rename_parameter(sections, entry["path"], entry["new_name"])
+    _rename(sections, entry)
 
 
 def _section_added(sections: dict, entry: dict) -> None:

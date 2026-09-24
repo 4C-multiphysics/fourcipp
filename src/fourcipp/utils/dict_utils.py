@@ -389,9 +389,23 @@ def rename_parameter(
         nested_dict: Nested data dict
         keys: List of keys to the entry
         new_name: New name of the parameter
+
+    Raises:
+        KeyError: If `new_name` already exists next to one of the matched entries. Nothing
+            is renamed in that case.
     """
 
-    for entry, last_key in _split_off_last_key(nested_dict, keys):
+    matches = list(_split_off_last_key(nested_dict, keys))
+
+    # Validate all matches upfront to never rename partially
+    for entry, last_key in matches:
+        if new_name != last_key and new_name in entry:
+            raise KeyError(
+                f"Cannot rename '{last_key}' to '{new_name}': '{new_name}' already "
+                f"exists in {entry}."
+            )
+
+    for entry, last_key in matches:
         entry[new_name] = entry.pop(last_key)
 
 
