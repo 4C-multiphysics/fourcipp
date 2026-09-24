@@ -21,6 +21,8 @@
 # THE SOFTWARE.
 """Test the migration database loading and validation."""
 
+from pathlib import Path
+
 import pytest
 
 from fourcipp.migration.database import (
@@ -58,13 +60,11 @@ def test_parse_version_invalid_raises(version_string):
     "entry",
     [
         {
-            "id": "remove-nummat",
             "type": "parameter_removed",
             "description": "Remove NUMMAT.",
             "path": ["MATERIALS", "MAT_ElastHyper", "NUMMAT"],
         },
         {
-            "id": "rename-dynamictype",
             "type": "parameter_renamed",
             "description": "Rename DYNAMICTYPE.",
             "path": ["STRUCTURAL DYNAMIC", "DYNAMICTYPE"],
@@ -82,7 +82,6 @@ def test_validate_entry_missing_universal_field_raises():
     with pytest.raises(MigrationError):
         validate_entry(
             {
-                "id": "remove-nummat",
                 "type": "parameter_removed",
                 "path": ["MATERIALS", "MAT_ElastHyper", "NUMMAT"],
             }
@@ -94,7 +93,6 @@ def test_validate_entry_unknown_type_raises():
     with pytest.raises(MigrationError):
         validate_entry(
             {
-                "id": "some-id",
                 "type": "not_a_real_type",
                 "description": "Some description.",
             }
@@ -106,12 +104,53 @@ def test_validate_entry_missing_type_specific_field_raises():
     with pytest.raises(MigrationError):
         validate_entry(
             {
-                "id": "rename-dynamictype",
                 "type": "parameter_renamed",
                 "description": "Rename DYNAMICTYPE.",
                 "path": ["STRUCTURAL DYNAMIC", "DYNAMICTYPE"],
             }
         )
+
+
+def test_validate_entry_non_mapping_raises():
+    """Test that a list item that is not a mapping raises."""
+    with pytest.raises(MigrationError, match="must be a mapping, got str"):
+        validate_entry("just a string")
+
+
+def test_validate_entry_error_reports_position_source_and_entry():
+    """Test that errors locate the entry by position, file and full content."""
+    entry = {
+        "type": "parameter_renamed",
+        "description": "Rename DYNAMICTYPE.",
+        "path": ["STRUCTURAL DYNAMIC", "DYNAMICTYPE"],
+    }
+    with pytest.raises(MigrationError) as excinfo:
+        validate_entry(entry, position=3, source=Path("1.2.0.yaml"))
+
+    message = str(excinfo.value)
+    assert "Migration entry 3 in '1.2.0.yaml'" in message
+    assert "['new_name']" in message
+    assert str(entry) in message
+
+
+def test_load_migration_file_error_reports_one_based_position(tmp_path):
+    """Test that the reported position is the 1-based index within the file."""
+    migration_file = tmp_path / "1.1.0.yaml"
+    dump_yaml(
+        {
+            "migrations": [
+                {
+                    "type": "parameter_removed",
+                    "description": "Remove NUMMAT.",
+                    "path": ["MATERIALS", "MAT_ElastHyper", "NUMMAT"],
+                },
+                {"type": "parameter_removed", "description": "Missing its path."},
+            ]
+        },
+        migration_file,
+    )
+    with pytest.raises(MigrationError, match="Migration entry 2 in "):
+        load_migration_file(migration_file)
 
 
 def test_load_migration_file(tmp_path):
@@ -121,7 +160,6 @@ def test_load_migration_file(tmp_path):
         {
             "migrations": [
                 {
-                    "id": "remove-nummat",
                     "type": "parameter_removed",
                     "description": "Remove NUMMAT.",
                     "path": ["MATERIALS", "MAT_ElastHyper", "NUMMAT"],
@@ -132,7 +170,7 @@ def test_load_migration_file(tmp_path):
     )
     entries = load_migration_file(migration_file)
     assert len(entries) == 1
-    assert entries[0]["id"] == "remove-nummat"
+    assert entries[0]["description"] == "Remove NUMMAT."
 
 
 def test_load_migration_file_without_migrations_key_raises(tmp_path):
@@ -147,7 +185,7 @@ def test_load_migration_file_invalid_entry_raises(tmp_path):
     """Test that an invalid entry within the file raises."""
     migration_file = tmp_path / "1.1.0.yaml"
     dump_yaml(
-        {"migrations": [{"id": "bad-entry", "type": "parameter_removed"}]},
+        {"migrations": [{"type": "parameter_removed"}]},
         migration_file,
     )
     with pytest.raises(MigrationError):
@@ -160,7 +198,6 @@ def test_load_migration_database(tmp_path):
         {
             "migrations": [
                 {
-                    "id": "remove-nummat",
                     "type": "parameter_removed",
                     "description": "Remove NUMMAT.",
                     "path": ["MATERIALS", "MAT_ElastHyper", "NUMMAT"],
@@ -173,7 +210,6 @@ def test_load_migration_database(tmp_path):
         {
             "migrations": [
                 {
-                    "id": "rename-dynamictype",
                     "type": "parameter_renamed",
                     "description": "Rename DYNAMICTYPE.",
                     "path": ["STRUCTURAL DYNAMIC", "DYNAMICTYPE"],
@@ -187,8 +223,8 @@ def test_load_migration_database(tmp_path):
     database = load_migration_database(tmp_path)
 
     assert set(database) == {(1, 1, 0), (1, 2, 0)}
-    assert database[(1, 1, 0)][0]["id"] == "remove-nummat"
-    assert database[(1, 2, 0)][0]["id"] == "rename-dynamictype"
+    assert database[(1, 1, 0)][0]["description"] == "Remove NUMMAT."
+    assert database[(1, 2, 0)][0]["description"] == "Rename DYNAMICTYPE."
 
 
 def test_load_migration_database_skips_non_version_files(tmp_path):
@@ -197,7 +233,6 @@ def test_load_migration_database_skips_non_version_files(tmp_path):
         {
             "migrations": [
                 {
-                    "id": "remove-nummat",
                     "type": "parameter_removed",
                     "description": "Remove NUMMAT.",
                     "path": ["MATERIALS", "MAT_ElastHyper", "NUMMAT"],
@@ -231,7 +266,6 @@ def test_load_migration_database_duplicate_version_raises(tmp_path):
         {
             "migrations": [
                 {
-                    "id": "a",
                     "type": "parameter_removed",
                     "description": "d",
                     "path": ["A"],
@@ -260,9 +294,9 @@ def test_load_migration_database_duplicate_version_raises(tmp_path):
 def test_select_migrations(from_version, to_version, expected_versions):
     """Test selecting the applicable, half-open version range of migrations."""
     database = {
-        (1, 0, 0): [{"id": "a"}],
-        (1, 1, 0): [{"id": "b"}],
-        (1, 2, 0): [{"id": "c"}],
+        (1, 0, 0): [{"description": "a"}],
+        (1, 1, 0): [{"description": "b"}],
+        (1, 2, 0): [{"description": "c"}],
     }
     selected = select_migrations(database, from_version, to_version)
     assert [version for version, _ in selected] == expected_versions
@@ -271,3 +305,28 @@ def test_select_migrations(from_version, to_version, expected_versions):
 def test_select_migrations_empty_database():
     """Test that selecting from an empty database returns nothing."""
     assert select_migrations({}, None, None) == []
+
+
+def test_load_migration_file_preserves_entry_order(tmp_path):
+    """Test that loading a migration file preserves the order of its
+    entries."""
+    migration_file = tmp_path / "1.1.0.yaml"
+    dump_yaml(
+        {
+            "migrations": [
+                {
+                    "type": "parameter_removed",
+                    "description": f"Entry {index}.",
+                    "path": ["SECTION", f"PARAM_{index}"],
+                }
+                for index in range(10)
+            ]
+        },
+        migration_file,
+    )
+
+    entries = load_migration_file(migration_file)
+
+    assert [entry["description"] for entry in entries] == [
+        f"Entry {index}." for index in range(10)
+    ]

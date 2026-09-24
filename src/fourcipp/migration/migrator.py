@@ -215,7 +215,7 @@ def migrate_sections(
 
                 after = {key: working[key] for key in roots if key in working}
                 if before != after:
-                    report.applied.append(f"[{entry['id']}] {entry['description']}")
+                    report.applied.append(entry["description"])
 
         # Never move backwards: the file may already be newer than the requested/known target.
         if from_version is not None and from_version > effective_to_version:

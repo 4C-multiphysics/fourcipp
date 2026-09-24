@@ -41,7 +41,6 @@ def fixture_database():
     return {
         (1, 1, 0): [
             {
-                "id": "remove-nummat",
                 "type": "parameter_removed",
                 "description": "NUMMAT is redundant with the length of MATIDS.",
                 "path": ["MATERIALS", "MAT_ElastHyper", "NUMMAT"],
@@ -49,7 +48,6 @@ def fixture_database():
         ],
         (1, 2, 0): [
             {
-                "id": "rename-dynamictype",
                 "type": "parameter_renamed",
                 "description": "DYNAMICTYPE was renamed.",
                 "path": ["STRUCTURAL DYNAMIC", "DYNAMICTYPE"],
@@ -159,7 +157,6 @@ def test_migrate_sections_to_version_within_database_is_not_clamped(sections, da
 def test_migrate_sections_failure_leaves_sections_untouched(database):
     """Test that a failing migration entry rolls back all earlier ones."""
     database[(1, 2, 0)][0] = {
-        "id": "rename-onto-existing",
         "type": "section_renamed",
         "description": "Renames onto an already existing section.",
         "path": ["STRUCTURAL DYNAMIC"],
@@ -211,8 +208,8 @@ def test_migration_report_str_contains_summary(sections, database):
     report_string = str(report)
 
     assert "1.2.0" in report_string
-    assert "remove-nummat" in report_string
-    assert "rename-dynamictype" in report_string
+    assert "NUMMAT is redundant with the length of MATIDS." in report_string
+    assert "DYNAMICTYPE was renamed." in report_string
 
 
 def test_migration_report_str_no_migrations_applied():
@@ -367,7 +364,6 @@ def test_diff_migration_failure_writes_nothing(tmp_path, sections, database):
         {
             "migrations": [
                 {
-                    "id": "rename-onto-existing",
                     "type": "section_renamed",
                     "description": "Renames onto an already existing section.",
                     "path": ["STRUCTURAL DYNAMIC"],
@@ -425,9 +421,7 @@ def test_migrate_sections_does_not_report_noop_entries(database):
 
     report = migrate_sections(sections, database)
 
-    assert [entry.split("]")[0].lstrip("[") for entry in report.applied] == [
-        "rename-dynamictype"
-    ]
+    assert report.applied == ["DYNAMICTYPE was renamed."]
     assert sections["MATERIALS"][0]["MAT_ElastHyper"]["NUMMAT"] == 2
 
 
@@ -436,7 +430,6 @@ def test_migrate_sections_detects_cross_section_move():
     database = {
         (1, 1, 0): [
             {
-                "id": "move-param",
                 "type": "parameter_moved",
                 "description": "Moved to another section.",
                 "old_path": ["OLD SECTION", "PARAM"],
@@ -451,3 +444,63 @@ def test_migrate_sections_detects_cross_section_move():
     assert sections["NEW SECTION"] == {"OTHER": 2, "PARAM": 1}
     assert "OLD SECTION" not in sections or "PARAM" not in sections["OLD SECTION"]
     assert len(report.applied) == 1
+
+
+def test_migrate_sections_applies_entries_in_file_order():
+    """Test that entries within one version are applied in the order listed.
+
+    The two renames form a chain (A -> B -> C), so applying them in the
+    listed order yields C, while any other order leaves the intermediate
+    B behind.
+    """
+    database = {
+        (1, 1, 0): [
+            {
+                "type": "parameter_renamed",
+                "description": "A was renamed to B.",
+                "path": ["SECTION", "A"],
+                "new_name": "B",
+            },
+            {
+                "type": "parameter_renamed",
+                "description": "B was renamed to C.",
+                "path": ["SECTION", "B"],
+                "new_name": "C",
+            },
+        ]
+    }
+    sections = {"SECTION": {"A": 1}}
+
+    report = migrate_sections(sections, database)
+
+    assert sections["SECTION"] == {"C": 1}
+    assert report.applied == ["A was renamed to B.", "B was renamed to C."]
+
+
+def test_migrate_sections_applies_versions_in_ascending_order():
+    """Test that versions are applied in ascending order, not insertion
+    order."""
+    database = {
+        (1, 2, 0): [
+            {
+                "type": "parameter_renamed",
+                "description": "B was renamed to C.",
+                "path": ["SECTION", "B"],
+                "new_name": "C",
+            }
+        ],
+        (1, 1, 0): [
+            {
+                "type": "parameter_renamed",
+                "description": "A was renamed to B.",
+                "path": ["SECTION", "A"],
+                "new_name": "B",
+            }
+        ],
+    }
+    sections = {"SECTION": {"A": 1}}
+
+    report = migrate_sections(sections, database)
+
+    assert sections["SECTION"] == {"C": 1}
+    assert report.applied == ["A was renamed to B.", "B was renamed to C."]

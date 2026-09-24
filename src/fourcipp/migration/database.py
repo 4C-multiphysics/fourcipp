@@ -43,7 +43,7 @@ Version = tuple[int, int, int]
 KNOWN_TYPES = set(OPERATIONS)
 
 # Fields required on every migration entry, regardless of its type.
-_UNIVERSAL_FIELDS = {"id", "type", "description"}
+_UNIVERSAL_FIELDS = {"type", "description"}
 
 # Fields required per migration entry `type`, in addition to `_UNIVERSAL_FIELDS`.
 _REQUIRED_FIELDS: dict[str, set[str]] = {
@@ -95,34 +95,51 @@ def format_version(version: Version) -> str:
     return ".".join(str(part) for part in version)
 
 
-def validate_entry(entry: dict) -> None:
+def validate_entry(
+    entry: dict, position: int | None = None, source: Path | None = None
+) -> None:
     """Validate a single migration entry.
 
     Args:
         entry: Migration entry to validate
+        position: Optional 1-based position of the entry within its file, used to point at
+            the offending entry in error messages
+        source: Optional path of the file the entry was read from, used in error messages
 
     Raises:
         MigrationError: If a universal or type-specific required field is missing, or the
             entry's `type` is unknown
     """
+    label = "Migration entry"
+    if position is not None:
+        label += f" {position}"
+    if source is not None:
+        label += f" in '{source}'"
+
+    if not isinstance(entry, dict):
+        raise MigrationError(
+            f"{label} must be a mapping, got {type(entry).__name__}. Entry: {entry}"
+        )
+
     missing_universal = _UNIVERSAL_FIELDS - set(entry)
     if missing_universal:
         raise MigrationError(
-            f"Migration entry {entry} is missing required field(s): {missing_universal}."
+            f"{label} is missing required field(s): {sorted(missing_universal)}. "
+            f"Entry: {entry}"
         )
 
     entry_type = entry["type"]
     if entry_type not in KNOWN_TYPES:
         raise MigrationError(
-            f"Migration entry '{entry['id']}' has unknown type '{entry_type}'. Known types "
-            f"are: {sorted(KNOWN_TYPES)}."
+            f"{label} has unknown type '{entry_type}'. Known types are: "
+            f"{sorted(KNOWN_TYPES)}. Entry: {entry}"
         )
 
     missing_type_fields = _REQUIRED_FIELDS[entry_type] - set(entry)
     if missing_type_fields:
         raise MigrationError(
-            f"Migration entry '{entry['id']}' of type '{entry_type}' is missing required "
-            f"field(s): {missing_type_fields}."
+            f"{label} of type '{entry_type}' is missing required field(s): "
+            f"{sorted(missing_type_fields)}. Entry: {entry}"
         )
 
 
@@ -146,8 +163,8 @@ def load_migration_file(path: Path) -> list[dict]:
             f"Migration file '{path}' must contain a top-level 'migrations' list."
         )
 
-    for entry in entries:
-        validate_entry(entry)
+    for position, entry in enumerate(entries, start=1):
+        validate_entry(entry, position=position, source=path)
 
     return entries
 
