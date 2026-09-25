@@ -1,5 +1,5 @@
 {
-  "description": "Schema for 4C\nCommit hash: e3d284bae2a59992a224806f23b4f0f42cfc331f\nVersion: 2026.4.0-dev",
+  "description": "Schema for 4C\nCommit hash: b898ad943aa5c9fed6a619e613384f0b8d288aed\nVersion: 2026.4.0-dev",
   "type": "object",
   "properties": {
     "ALE DOMAIN": {
@@ -83644,7 +83644,7 @@
     },
     "DESIGN POINT COUPLED DOF EQUATION CONDITIONS": {
       "title": "DESIGN POINT COUPLED DOF EQUATION CONDITIONS (list)",
-      "description": "definition of the term of a linear couple equation coupling different degrees of freedom in 2d",
+      "description": "One term of a linear constraint sum_i c_i * dof_i = 0. Terms with the same EQUATION id form one equation.",
       "type": "array",
       "items": {
         "type": "object",
@@ -83684,30 +83684,31 @@
           },
           "EQUATION": {
             "title": "EQUATION (int)",
-            "description": "EQUATION",
+            "description": "Id of the equation this term belongs to",
             "type": "integer"
           },
           "ADD": {
             "title": "ADD (enum)",
-            "description": "degrees of freedom",
+            "description": "Dof of this node entering the equation",
             "default": "undefined",
             "type": "string",
             "enum": [
               "dispx",
               "dispy",
+              "dispz",
               "undefined"
             ]
           },
           "COEFFICIENT": {
             "title": "COEFFICIENT (double)",
-            "description": "No description yet.",
+            "description": "Coefficient c_i of this term",
+            "default": 1,
             "type": "number"
           }
         },
         "additionalProperties": false,
         "required": [
-          "EQUATION",
-          "COEFFICIENT"
+          "EQUATION"
         ]
       }
     },
@@ -190234,6 +190235,187 @@
                         "type": "number",
                         "exclusiveMinimum": 0,
                         "maximum": 1.7976931348623157e+308
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "ADAPTIVE_ESTIMATE_INTERPOLATION": {
+                    "title": "ADAPTIVE_ESTIMATE_INTERPOLATION (group)",
+                    "description": "Parameters used in the Adaptive Estimate Interpolation for Local Newton--Raphson estimates, as presented in Ana, Schmidt, Wall: An Adaptive Strategy for Initial Estimates in the Local Newton-Raphson Integration of (Visco)plasticity Models, Preprint",
+                    "type": "object",
+                    "properties": {
+                      "USE_ADAPTIVE_ESTIMATE_INTERPOLATION": {
+                        "title": "USE_ADAPTIVE_ESTIMATE_INTERPOLATION (bool)",
+                        "description": "use adaptive estimate interpolation?",
+                        "default": true,
+                        "type": "boolean"
+                      },
+                      "ELASTIC_PREDICTOR_ZERO_COMPONENT_THRESHOLD": {
+                        "title": "ELASTIC_PREDICTOR_ZERO_COMPONENT_THRESHOLD (double)",
+                        "description": "components of the elastic predictor (specifically: the respective elastic deformation gradient) smaller than this threshold are set to 0.0 to avoid unnecessary, numerical rotations",
+                        "default": 1e-13,
+                        "type": "number",
+                        "exclusiveMinimum": 0,
+                        "maximum": 1.7976931348623157e+308
+                      },
+                      "PLASTIC_PREDICTOR_CONSTRUCTION": {
+                        "title": "PLASTIC_PREDICTOR_CONSTRUCTION (group)",
+                        "description": "Parameters used for the iterative construction of the plastic predictor",
+                        "type": "object",
+                        "properties": {
+                          "ELASTIC_STRETCH_EIGENVAL_TYPE": {
+                            "title": "ELASTIC_STRETCH_EIGENVAL_TYPE (enum)",
+                            "description": "elastic stretch eigenvalue specification for the preliminary plastic predictor",
+                            "default": "scale_unit",
+                            "type": "string",
+                            "enum": [
+                              "scale_unit"
+                            ]
+                          },
+                          "ELASTIC_STRETCH_EIGENVECT_TYPE": {
+                            "title": "ELASTIC_STRETCH_EIGENVECT_TYPE (enum)",
+                            "description": "elastic stretch eigenvector specification for the preliminary plastic predictor",
+                            "default": "from_elastic_predictor",
+                            "type": "string",
+                            "enum": [
+                              "from_elastic_predictor"
+                            ]
+                          },
+                          "ELASTIC_ROTATION_TYPE": {
+                            "title": "ELASTIC_ROTATION_TYPE (enum)",
+                            "description": "elastic rotation specification for the preliminary plastic predictor",
+                            "default": "from_elastic_predictor",
+                            "type": "string",
+                            "enum": [
+                              "from_elastic_predictor"
+                            ]
+                          },
+                          "MAX_ITER": {
+                            "title": "MAX_ITER (int)",
+                            "description": "maximum number of construction iterations $ i_{\\text{C,max}} $",
+                            "default": 50,
+                            "type": "integer",
+                            "exclusiveMinimum": 0,
+                            "maximum": 2147483647
+                          },
+                          "RELATIVE_UNDERSTRESS_TOL": {
+                            "title": "RELATIVE_UNDERSTRESS_TOL (double)",
+                            "description": "relative understress tolerance $ \\kappa_{S} $ used to determine the plastic predictor according to $ 1 \\ge \\overline{\\sigma}^{(\\text{P})} / S \\ge 1 - \\kappa_{S} $ ",
+                            "default": 1e-06,
+                            "type": "number",
+                            "exclusiveMinimum": 0,
+                            "maximum": 1
+                          },
+                          "INTERVAL_SCANNING_PARAM": {
+                            "title": "INTERVAL_SCANNING_PARAM (double)",
+                            "description": "interval scanning parameter $s$ for updating the construction parameter $\\tau \\gets \\tau_{\\text{E}} + s \\, \\left( \\tau_{\\hat{\\text{P}}} - \\tau_{\\text{E}} \\right)$ (bisection: $ s = 1/2 $)",
+                            "default": 0.5,
+                            "type": "number",
+                            "exclusiveMinimum": 0,
+                            "exclusiveMaximum": 1
+                          }
+                        },
+                        "additionalProperties": false
+                      },
+                      "ESTIMATE_INTERPOLATION": {
+                        "title": "ESTIMATE_INTERPOLATION (group)",
+                        "description": "Parameters used for the estimate interpolation between predictors",
+                        "type": "object",
+                        "properties": {
+                          "STARTING_POINT_TYPE": {
+                            "title": "STARTING_POINT_TYPE (enum)",
+                            "description": "starting point type",
+                            "default": "equiv_stress_history",
+                            "type": "string",
+                            "enum": [
+                              "constant",
+                              "equiv_stress_history"
+                            ]
+                          },
+                          "USER_SET_STARTING_POINT": {
+                            "title": "USER_SET_STARTING_POINT (double)",
+                            "description": "specified starting point: for the constant starting point strategy, this value is set at the beginning of each local integration; for the history-based starting point strategy, this value is used only for the first time step",
+                            "default": 0.5,
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1
+                          },
+                          "MAX_ITER": {
+                            "title": "MAX_ITER (int)",
+                            "description": "maximum number of estimate interpolation iterations $i_{\\text{EI,max}}$",
+                            "default": 50,
+                            "type": "integer",
+                            "exclusiveMinimum": 0,
+                            "maximum": 2147483647
+                          },
+                          "INTERVAL_SCANNING_PARAM": {
+                            "title": "INTERVAL_SCANNING_PARAM (double)",
+                            "description": "interval scanning parameter $s$ for updating the interpolation parameter $\\xi \\gets \\xi_{\\text{E}} + s \\, \\left( \\xi_{\\text{P}} - \\xi_{\\text{E}} \\right) (bisection: = $ s = 1/2 $)",
+                            "default": 0.5,
+                            "type": "number",
+                            "exclusiveMinimum": 0,
+                            "exclusiveMaximum": 1
+                          }
+                        },
+                        "additionalProperties": false
+                      },
+                      "HARDENING_MANAGEMENT": {
+                        "title": "HARDENING_MANAGEMENT (group)",
+                        "description": "Parameters used for the management of hardening variables during interpolation",
+                        "type": "object",
+                        "properties": {
+                          "METHOD": {
+                            "title": "METHOD (enum)",
+                            "description": "method to be used for handling hardening variables within the adaptive estimate interpolation algorithm",
+                            "default": "integrate_via_evolution_equations",
+                            "type": "string",
+                            "enum": [
+                              "use_previous",
+                              "integrate_via_evolution_equations"
+                            ]
+                          },
+                          "MAX_ITER_INTEGRATION": {
+                            "title": "MAX_ITER_INTEGRATION (int)",
+                            "description": "maximum number of iterations for the integration of the hardening variables via the evolution equations",
+                            "default": 50,
+                            "type": "integer",
+                            "exclusiveMinimum": 0,
+                            "maximum": 2147483647
+                          },
+                          "TOL_INTEGRATION": {
+                            "title": "TOL_INTEGRATION (double)",
+                            "description": "tolerance for the integration of the hardening variables via the evolution equations",
+                            "default": 1e-08,
+                            "type": "number",
+                            "exclusiveMinimum": 0,
+                            "maximum": 1.7976931348623157e+308
+                          }
+                        },
+                        "additionalProperties": false
+                      },
+                      "REESTIMATION": {
+                        "title": "REESTIMATION (group)",
+                        "description": "Parameters used for the re-estimation procedures",
+                        "type": "object",
+                        "properties": {
+                          "MAX_NUM_REESTIMATIONS": {
+                            "title": "MAX_NUM_REESTIMATIONS (int)",
+                            "description": "maximum number of adaptive re-estimations allowed",
+                            "default": 10,
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 2147483647
+                          },
+                          "INTERVAL_SCANNING_PARAM": {
+                            "title": "INTERVAL_SCANNING_PARAM (double)",
+                            "description": "interval scanning parameter $s$ for determining the intermediate parameter $ \\xi_{\\mathrm{I}} \\gets \\xi_{\\mathrm{E}} + s \\, \\left( \\xi - \\xi_{\\mathrm{E}}\\right) $ (bisection: $ s = 1/2 $)",
+                            "default": 0.5,
+                            "type": "number",
+                            "exclusiveMinimum": 0,
+                            "exclusiveMaximum": 1
+                          }
+                        },
+                        "additionalProperties": false
                       }
                     },
                     "additionalProperties": false
@@ -433001,5 +433183,5 @@
     "PROBLEM TYPE"
   ],
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "e3d284bae2a59992a224806f23b4f0f42cfc331f"
+  "$id": "b898ad943aa5c9fed6a619e613384f0b8d288aed"
 }

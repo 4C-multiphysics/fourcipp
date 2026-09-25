@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: e3d284bae2a59992a224806f23b4f0f42cfc331f
+  commit_hash: b898ad943aa5c9fed6a619e613384f0b8d288aed
   version: 2026.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -16406,7 +16406,7 @@ sections:
               - name: "none"
     - name: DESIGN POINT COUPLED DOF EQUATION CONDITIONS
       type: list
-      description: definition of the term of a linear couple equation coupling different degrees of freedom in 2d
+      description: One term of a linear constraint sum_i c_i * dof_i = 0. Terms with the same EQUATION id form one equation.
       required: false
       spec:
         type: all_of
@@ -16435,20 +16435,23 @@ sections:
             default: null
           - name: EQUATION
             type: int
-            description: "EQUATION"
+            description: "Id of the equation this term belongs to"
             required: true
           - name: ADD
             type: enum
-            description: "degrees of freedom"
+            description: "Dof of this node entering the equation"
             required: false
             default: "undefined"
             choices:
               - name: "dispx"
               - name: "dispy"
+              - name: "dispz"
               - name: "undefined"
           - name: COEFFICIENT
             type: double
-            required: true
+            description: "Coefficient c_i of this term"
+            required: false
+            default: 1
     - name: DESIGN POINT COUPLING CONDITIONS
       type: list
       description: All nodes in this point set share the same displacement in the specified direction(s)
@@ -38935,6 +38938,204 @@ sections:
                                         maximum: 1.7976931348623157e+308
                                         minimum_exclusive: true
                                         maximum_exclusive: false
+                          - name: ADAPTIVE_ESTIMATE_INTERPOLATION
+                            type: group
+                            description: 'Parameters used in the Adaptive Estimate Interpolation for Local Newton--Raphson estimates, as presented in Ana, Schmidt, Wall: An Adaptive Strategy for Initial Estimates in the Local Newton-Raphson Integration of (Visco)plasticity Models, Preprint'
+                            required: false
+                            specs:
+                              - type: all_of
+                                specs:
+                                  - name: USE_ADAPTIVE_ESTIMATE_INTERPOLATION
+                                    type: bool
+                                    description: "use adaptive estimate interpolation?"
+                                    required: false
+                                    default: true
+                                  - name: ELASTIC_PREDICTOR_ZERO_COMPONENT_THRESHOLD
+                                    type: double
+                                    description: "components of the elastic predictor (specifically: the respective elastic deformation gradient) smaller than this threshold are set to 0.0 to avoid unnecessary, numerical rotations"
+                                    required: false
+                                    default: 1e-13
+                                    validator:
+                                      range:
+                                        minimum: 0
+                                        maximum: 1.7976931348623157e+308
+                                        minimum_exclusive: true
+                                        maximum_exclusive: false
+                                  - name: PLASTIC_PREDICTOR_CONSTRUCTION
+                                    type: group
+                                    description: Parameters used for the iterative construction of the plastic predictor
+                                    required: false
+                                    specs:
+                                      - type: all_of
+                                        specs:
+                                          - name: ELASTIC_STRETCH_EIGENVAL_TYPE
+                                            type: enum
+                                            description: "elastic stretch eigenvalue specification for the preliminary plastic predictor"
+                                            required: false
+                                            default: scale_unit
+                                            choices:
+                                              - name: scale_unit
+                                          - name: ELASTIC_STRETCH_EIGENVECT_TYPE
+                                            type: enum
+                                            description: "elastic stretch eigenvector specification for the preliminary plastic predictor"
+                                            required: false
+                                            default: from_elastic_predictor
+                                            choices:
+                                              - name: from_elastic_predictor
+                                          - name: ELASTIC_ROTATION_TYPE
+                                            type: enum
+                                            description: "elastic rotation specification for the preliminary plastic predictor"
+                                            required: false
+                                            default: from_elastic_predictor
+                                            choices:
+                                              - name: from_elastic_predictor
+                                          - name: MAX_ITER
+                                            type: int
+                                            description: "maximum number of construction iterations $ i_{\\text{C,max}} $"
+                                            required: false
+                                            default: 50
+                                            validator:
+                                              range:
+                                                minimum: 0
+                                                maximum: 2147483647
+                                                minimum_exclusive: true
+                                                maximum_exclusive: false
+                                          - name: RELATIVE_UNDERSTRESS_TOL
+                                            type: double
+                                            description: "relative understress tolerance $ \\kappa_{S} $ used to determine the plastic predictor according to $ 1 \\ge \\overline{\\sigma}^{(\\text{P})} / S \\ge 1 - \\kappa_{S} $ "
+                                            required: false
+                                            default: 1e-06
+                                            validator:
+                                              range:
+                                                minimum: 0
+                                                maximum: 1
+                                                minimum_exclusive: true
+                                                maximum_exclusive: false
+                                          - name: INTERVAL_SCANNING_PARAM
+                                            type: double
+                                            description: "interval scanning parameter $s$ for updating the construction parameter $\\tau \\gets \\tau_{\\text{E}} + s \\, \\left( \\tau_{\\hat{\\text{P}}} - \\tau_{\\text{E}} \\right)$ (bisection: $ s = 1/2 $)"
+                                            required: false
+                                            default: 0.5
+                                            validator:
+                                              range:
+                                                minimum: 0
+                                                maximum: 1
+                                                minimum_exclusive: true
+                                                maximum_exclusive: true
+                                  - name: ESTIMATE_INTERPOLATION
+                                    type: group
+                                    description: Parameters used for the estimate interpolation between predictors
+                                    required: false
+                                    specs:
+                                      - type: all_of
+                                        specs:
+                                          - name: STARTING_POINT_TYPE
+                                            type: enum
+                                            description: "starting point type"
+                                            required: false
+                                            default: equiv_stress_history
+                                            choices:
+                                              - name: constant
+                                              - name: equiv_stress_history
+                                          - name: USER_SET_STARTING_POINT
+                                            type: double
+                                            description: "specified starting point: for the constant starting point strategy, this value is set at the beginning of each local integration; for the history-based starting point strategy, this value is used only for the first time step"
+                                            required: false
+                                            default: 0.5
+                                            validator:
+                                              range:
+                                                minimum: 0
+                                                maximum: 1
+                                                minimum_exclusive: false
+                                                maximum_exclusive: false
+                                          - name: MAX_ITER
+                                            type: int
+                                            description: "maximum number of estimate interpolation iterations $i_{\\text{EI,max}}$"
+                                            required: false
+                                            default: 50
+                                            validator:
+                                              range:
+                                                minimum: 0
+                                                maximum: 2147483647
+                                                minimum_exclusive: true
+                                                maximum_exclusive: false
+                                          - name: INTERVAL_SCANNING_PARAM
+                                            type: double
+                                            description: "interval scanning parameter $s$ for updating the interpolation parameter $\\xi \\gets \\xi_{\\text{E}} + s \\, \\left( \\xi_{\\text{P}} - \\xi_{\\text{E}} \\right) (bisection: = $ s = 1/2 $)"
+                                            required: false
+                                            default: 0.5
+                                            validator:
+                                              range:
+                                                minimum: 0
+                                                maximum: 1
+                                                minimum_exclusive: true
+                                                maximum_exclusive: true
+                                  - name: HARDENING_MANAGEMENT
+                                    type: group
+                                    description: Parameters used for the management of hardening variables during interpolation
+                                    required: false
+                                    specs:
+                                      - type: all_of
+                                        specs:
+                                          - name: METHOD
+                                            type: enum
+                                            description: "method to be used for handling hardening variables within the adaptive estimate interpolation algorithm"
+                                            required: false
+                                            default: integrate_via_evolution_equations
+                                            choices:
+                                              - name: use_previous
+                                              - name: integrate_via_evolution_equations
+                                          - name: MAX_ITER_INTEGRATION
+                                            type: int
+                                            description: "maximum number of iterations for the integration of the hardening variables via the evolution equations"
+                                            required: false
+                                            default: 50
+                                            validator:
+                                              range:
+                                                minimum: 0
+                                                maximum: 2147483647
+                                                minimum_exclusive: true
+                                                maximum_exclusive: false
+                                          - name: TOL_INTEGRATION
+                                            type: double
+                                            description: "tolerance for the integration of the hardening variables via the evolution equations"
+                                            required: false
+                                            default: 1e-08
+                                            validator:
+                                              range:
+                                                minimum: 0
+                                                maximum: 1.7976931348623157e+308
+                                                minimum_exclusive: true
+                                                maximum_exclusive: false
+                                  - name: REESTIMATION
+                                    type: group
+                                    description: Parameters used for the re-estimation procedures
+                                    required: false
+                                    specs:
+                                      - type: all_of
+                                        specs:
+                                          - name: MAX_NUM_REESTIMATIONS
+                                            type: int
+                                            description: "maximum number of adaptive re-estimations allowed"
+                                            required: false
+                                            default: 10
+                                            validator:
+                                              range:
+                                                minimum: 0
+                                                maximum: 2147483647
+                                                minimum_exclusive: false
+                                                maximum_exclusive: false
+                                          - name: INTERVAL_SCANNING_PARAM
+                                            type: double
+                                            description: "interval scanning parameter $s$ for determining the intermediate parameter $ \\xi_{\\mathrm{I}} \\gets \\xi_{\\mathrm{E}} + s \\, \\left( \\xi - \\xi_{\\mathrm{E}}\\right) $ (bisection: $ s = 1/2 $)"
+                                            required: false
+                                            default: 0.5
+                                            validator:
+                                              range:
+                                                minimum: 0
+                                                maximum: 1
+                                                minimum_exclusive: true
+                                                maximum_exclusive: true
               - type: all_of
                 specs:
                   - name: MAT
