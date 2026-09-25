@@ -36,6 +36,7 @@ from fourcipp.utils.dict_utils import (
     replace_value,
     sort_alphabetically,
     sort_by_key_order,
+    transform_value,
 )
 
 
@@ -383,6 +384,55 @@ def test_replace_value(nested_input_dict, keys, value):
     "keys, value",
     [
         (
+            ("a", "b", "d", "h", "b"),
+            {
+                "a": {
+                    "b": [
+                        {
+                            "c": 1,
+                            "d": {
+                                "e": {"g": [5, 1]},
+                                "h": [{"a": 5}, {"b": 50}],
+                                "f": 2,
+                            },
+                            "i": 4,
+                        },
+                        {
+                            "c": 2,
+                            "d": {"e": {"g": [6, 2]}, "h": [{"a": 6}], "f": 2},
+                            "i": 5,
+                        },
+                        {
+                            "c": 1,
+                            "d": {
+                                "e": {"g": [7, 3]},
+                                "h": [{"a": 7}, {"b": 10}],
+                                "f": 2,
+                            },
+                        },
+                    ],
+                    "f": 3,
+                }
+            },
+        ),
+    ],
+)
+def test_transform_value(nested_input_dict, keys, value):
+    """Test transform value."""
+    transform_value(nested_input_dict, keys, lambda current: current * 10)
+    assert nested_input_dict == value
+
+
+def test_transform_value_scalar(nested_input_dict):
+    """Test transform value for a plain scalar entry."""
+    transform_value(nested_input_dict, ("a", "f"), lambda current: current * 10)
+    assert nested_input_dict["a"]["f"] == 30
+
+
+@pytest.mark.parametrize(
+    "keys, value",
+    [
+        (
             ("a", "j"),
             {
                 "a": {
@@ -649,6 +699,15 @@ def test_rename_parameter(nested_input_dict, keys, value):
     """Test renaming parameter."""
     rename_parameter(nested_input_dict, keys, "new_name")
     assert nested_input_dict == value
+
+
+def test_rename_parameter_collision_raises():
+    """Test that an existing destination name is never overwritten."""
+    nested_dict = {"a": [{"b": 1}, {"b": 2, "new_name": 3}]}
+    with pytest.raises(KeyError):
+        rename_parameter(nested_dict, ["a", "b"], "new_name")
+    # Nothing is renamed, not even the collision-free match.
+    assert nested_dict == {"a": [{"b": 1}, {"b": 2, "new_name": 3}]}
 
 
 @pytest.mark.parametrize("nested_dict", [{"a": "string"}, {"a": ["string"]}])
