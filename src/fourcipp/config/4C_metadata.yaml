@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: b898ad943aa5c9fed6a619e613384f0b8d288aed
+  commit_hash: f75c69ac730a8bf703288bf3ccdab7429f43f83a
   version: 2026.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -14687,7 +14687,7 @@ sections:
             required: true
           - name: TYPE
             type: enum
-            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section, `PressureGrad`: prescribed pressure gradient in fluids"
+            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section. For solids, spatially varying pressure functions are evaluated at quadrature-point coordinates, but their spatial derivatives are not included in the `orthopressure` load linearization. `PressureGrad`: prescribed pressure gradient in fluids"
             required: false
             default: "Live"
             choices:
@@ -15020,7 +15020,7 @@ sections:
             required: true
           - name: TYPE
             type: enum
-            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section, `PressureGrad`: prescribed pressure gradient in fluids"
+            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section. For solids, spatially varying pressure functions are evaluated at quadrature-point coordinates, but their spatial derivatives are not included in the `orthopressure` load linearization. `PressureGrad`: prescribed pressure gradient in fluids"
             required: false
             default: "Live"
             choices:
@@ -15455,7 +15455,7 @@ sections:
             required: true
           - name: TYPE
             type: enum
-            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section, `PressureGrad`: prescribed pressure gradient in fluids"
+            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section. For solids, spatially varying pressure functions are evaluated at quadrature-point coordinates, but their spatial derivatives are not included in the `orthopressure` load linearization. `PressureGrad`: prescribed pressure gradient in fluids"
             required: false
             default: "Live"
             choices:
@@ -15605,7 +15605,7 @@ sections:
             required: true
           - name: TYPE
             type: enum
-            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section, `PressureGrad`: prescribed pressure gradient in fluids"
+            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section. For solids, spatially varying pressure functions are evaluated at quadrature-point coordinates, but their spatial derivatives are not included in the `orthopressure` load linearization. `PressureGrad`: prescribed pressure gradient in fluids"
             required: false
             default: "Live"
             choices:
@@ -16775,7 +16775,7 @@ sections:
             required: true
           - name: TYPE
             type: enum
-            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section, `PressureGrad`: prescribed pressure gradient in fluids"
+            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section. For solids, spatially varying pressure functions are evaluated at quadrature-point coordinates, but their spatial derivatives are not included in the `orthopressure` load linearization. `PressureGrad`: prescribed pressure gradient in fluids"
             required: false
             default: "Live"
             choices:
@@ -16901,7 +16901,7 @@ sections:
             required: true
           - name: TYPE
             type: enum
-            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section, `PressureGrad`: prescribed pressure gradient in fluids"
+            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section. For solids, spatially varying pressure functions are evaluated at quadrature-point coordinates, but their spatial derivatives are not included in the `orthopressure` load linearization. `PressureGrad`: prescribed pressure gradient in fluids"
             required: false
             default: "Live"
             choices:
@@ -17152,7 +17152,7 @@ sections:
             required: true
           - name: TYPE
             type: enum
-            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section, `PressureGrad`: prescribed pressure gradient in fluids"
+            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section. For solids, spatially varying pressure functions are evaluated at quadrature-point coordinates, but their spatial derivatives are not included in the `orthopressure` load linearization. `PressureGrad`: prescribed pressure gradient in fluids"
             required: false
             default: "Live"
             choices:
@@ -17471,7 +17471,7 @@ sections:
             required: true
           - name: TYPE
             type: enum
-            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section, `PressureGrad`: prescribed pressure gradient in fluids"
+            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section. For solids, spatially varying pressure functions are evaluated at quadrature-point coordinates, but their spatial derivatives are not included in the `orthopressure` load linearization. `PressureGrad`: prescribed pressure gradient in fluids"
             required: false
             default: "Live"
             choices:
@@ -17589,7 +17589,7 @@ sections:
             required: true
           - name: TYPE
             type: enum
-            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section, `PressureGrad`: prescribed pressure gradient in fluids"
+            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section. For solids, spatially varying pressure functions are evaluated at quadrature-point coordinates, but their spatial derivatives are not included in the `orthopressure` load linearization. `PressureGrad`: prescribed pressure gradient in fluids"
             required: false
             default: "Live"
             choices:
@@ -22228,7 +22228,7 @@ sections:
             required: true
           - name: TYPE
             type: enum
-            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section, `PressureGrad`: prescribed pressure gradient in fluids"
+            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section. For solids, spatially varying pressure functions are evaluated at quadrature-point coordinates, but their spatial derivatives are not included in the `orthopressure` load linearization. `PressureGrad`: prescribed pressure gradient in fluids"
             required: false
             default: "Live"
             choices:
@@ -22505,7 +22505,7 @@ sections:
             required: true
           - name: TYPE
             type: enum
-            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section, `PressureGrad`: prescribed pressure gradient in fluids"
+            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section. For solids, spatially varying pressure functions are evaluated at quadrature-point coordinates, but their spatial derivatives are not included in the `orthopressure` load linearization. `PressureGrad`: prescribed pressure gradient in fluids"
             required: false
             default: "Live"
             choices:
@@ -22817,7 +22817,7 @@ sections:
             required: true
           - name: TYPE
             type: enum
-            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section, `PressureGrad`: prescribed pressure gradient in fluids"
+            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section. For solids, spatially varying pressure functions are evaluated at quadrature-point coordinates, but their spatial derivatives are not included in the `orthopressure` load linearization. `PressureGrad`: prescribed pressure gradient in fluids"
             required: false
             default: "Live"
             choices:
@@ -23049,7 +23049,7 @@ sections:
             required: true
           - name: TYPE
             type: enum
-            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section, `PressureGrad`: prescribed pressure gradient in fluids"
+            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section. For solids, spatially varying pressure functions are evaluated at quadrature-point coordinates, but their spatial derivatives are not included in the `orthopressure` load linearization. `PressureGrad`: prescribed pressure gradient in fluids"
             required: false
             default: "Live"
             choices:
@@ -24744,7 +24744,7 @@ sections:
             required: true
           - name: TYPE
             type: enum
-            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section, `PressureGrad`: prescribed pressure gradient in fluids"
+            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section. For solids, spatially varying pressure functions are evaluated at quadrature-point coordinates, but their spatial derivatives are not included in the `orthopressure` load linearization. `PressureGrad`: prescribed pressure gradient in fluids"
             required: false
             default: "Live"
             choices:
@@ -24918,7 +24918,7 @@ sections:
             required: true
           - name: TYPE
             type: enum
-            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section, `PressureGrad`: prescribed pressure gradient in fluids"
+            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section. For solids, spatially varying pressure functions are evaluated at quadrature-point coordinates, but their spatial derivatives are not included in the `orthopressure` load linearization. `PressureGrad`: prescribed pressure gradient in fluids"
             required: false
             default: "Live"
             choices:
@@ -25107,7 +25107,7 @@ sections:
             required: true
           - name: TYPE
             type: enum
-            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section, `PressureGrad`: prescribed pressure gradient in fluids"
+            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section. For solids, spatially varying pressure functions are evaluated at quadrature-point coordinates, but their spatial derivatives are not included in the `orthopressure` load linearization. `PressureGrad`: prescribed pressure gradient in fluids"
             required: false
             default: "Live"
             choices:
@@ -25225,7 +25225,7 @@ sections:
             required: true
           - name: TYPE
             type: enum
-            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section, `PressureGrad`: prescribed pressure gradient in fluids"
+            description: "`Live/Dead`: stress vector components (`Dead` is not avail. for solids), `[pseudo_]orthopressure`: pressure normal to surface (only 1 component); for `orthopressure` in a structural analysis one has to provide `LOADLIN:true` in the `STRUCTURAL DYNAMIC` section. For solids, spatially varying pressure functions are evaluated at quadrature-point coordinates, but their spatial derivatives are not included in the `orthopressure` load linearization. `PressureGrad`: prescribed pressure gradient in fluids"
             required: false
             default: "Live"
             choices:
