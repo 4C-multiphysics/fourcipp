@@ -97,6 +97,7 @@ def migrate_input_file(
     to_version: str | None = None,
     migrations_dir: str | None = None,
     dry_run: bool = False,
+    include_latest: bool = False,
 ) -> None:  # pragma: no cover
     """Migrate an input file to a newer input file version.
 
@@ -113,21 +114,32 @@ def migrate_input_file(
                         the pre-migration file.
         to_version: Version to migrate to (inclusive); defaults to the newest known version.
             A version newer than the newest known migration is clamped to the latter.
+            Mutually exclusive with `include_latest`.
         migrations_dir: Directory containing `<version>.yaml` migration files; defaults to
                              the migration database bundled with FourCIPP
         dry_run: Whether to only print the diff the migration would produce, without
                       writing anything
+        include_latest: Whether to additionally apply the optional, as-yet-unversioned
+            `latest_upgrade.yaml` migration file on top of the newest known version, for
+            local testing of in-progress migrations ahead of their target input file version
+            being decided. The resulting file is stamped with a provisional version number
+            and must not be committed. Mutually exclusive with `to_version`.
     """
     input_path = pathlib.Path(input_file)
     if not input_path.is_file():
         raise FileNotFoundError(f"Input file '{input_path}' does not exist.")
 
     if dry_run:
-        report, diff = diff_migration(input_path, migrations_dir, to_version)
+        report, diff = diff_migration(
+            input_path, migrations_dir, to_version, include_latest
+        )
         logger.info(str(report))
 
         if report.clamp_warning is not None:
             print(f"Warning: {report.clamp_warning}")
+
+        if report.latest_upgrade_warning is not None:
+            print(f"Warning: {report.latest_upgrade_warning}")
 
         if diff:
             print(diff, end="" if diff.endswith("\n") else "\n")
@@ -144,11 +156,16 @@ def migrate_input_file(
     # known before deciding whether to keep a backup of the pre-migration file.
     with tempfile.TemporaryDirectory() as tmp_dir:
         staged_path = pathlib.Path(tmp_dir) / input_path.name
-        report = migrate_file(input_path, staged_path, migrations_dir, to_version)
+        report = migrate_file(
+            input_path, staged_path, migrations_dir, to_version, include_latest
+        )
         logger.info(str(report))
 
         if report.clamp_warning is not None:
             print(f"Warning: {report.clamp_warning}")
+
+        if report.latest_upgrade_warning is not None:
+            print(f"Warning: {report.latest_upgrade_warning}")
 
         if not report.changed:
             shutil.copyfile(staged_path, input_path)
@@ -275,11 +292,25 @@ def main() -> None:
         "was on before the migration, e.g. '_v1.0.0.4C.yaml'.",
     )
 
-    migrate_parser.add_argument(
+    migrate_target_group = migrate_parser.add_mutually_exclusive_group()
+
+    migrate_target_group.add_argument(
         "--to-version",
-        help="Input file version to migrate to. Defaults to the newest known version.",
+        help="Input file version to migrate to. Defaults to the newest known version. "
+        "Mutually exclusive with '--include-latest'.",
         type=str,
         default=None,
+    )
+
+    migrate_target_group.add_argument(
+        "--include-latest",
+        action="store_true",
+        help="Additionally apply the draft migrations from 'latest_upgrade.yaml' on top "
+        "of the newest known version, for local testing of an in-progress migration before "
+        "its target input file version has been decided. The resulting file is stamped "
+        "with a provisional version number (the newest known version with its patch number "
+        "incremented by one) and must not be committed. Mutually exclusive with "
+        "'--to-version'.",
     )
 
     migrate_parser.add_argument(

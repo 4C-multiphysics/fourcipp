@@ -38,10 +38,12 @@ from loguru import logger
 from fourcipp.migration.database import (
     Version,
     format_version,
+    load_latest_upgrade_file,
     load_migration_database,
     parse_version,
     select_migrations,
 )
+from fourcipp.migration.errors import MigrationError
 from fourcipp.migration.operations import OPERATIONS, entry_root_keys
 from fourcipp.utils.type_hinting import Path
 from fourcipp.utils.yaml_io import dump_yaml, load_yaml
@@ -80,12 +82,16 @@ class MigrationReport:
         clamped_from: Requested target version that was newer than the newest known
             migration and therefore reduced to `to_version`, or `None` if no clamping
             happened
+        includes_latest: Whether the optional, as-yet-unversioned `latest_upgrade.yaml`
+            migrations were applied on top of the newest known version (see
+            `migrate_sections`'s `latest_upgrade` argument)
     """
 
     from_version: Version | None
     to_version: Version | None
     applied: list[str] = field(default_factory=list)
     clamped_from: Version | None = None
+    includes_latest: bool = False
 
     @property
     def changed(self) -> bool:
@@ -111,6 +117,24 @@ class MigrationReport:
             f"{_version_string(self.to_version)} instead."
         )
 
+    @property
+    def latest_upgrade_warning(self) -> str | None:
+        """Warning that the draft `latest_upgrade.yaml` migrations were
+        included.
+
+        Returns:
+            The formatted warning, or `None` if `latest_upgrade.yaml` was not included
+        """
+        if not self.includes_latest:
+            return None
+        return (
+            f"Input file stamped with provisional version {_version_string(self.to_version)}"
+            ", which includes the draft 'latest_upgrade.yaml' migrations ahead of their "
+            "real target input file version being decided. Do not commit this version "
+            "number or rely on it elsewhere; re-migrate from the pristine input file once "
+            "the real version is known."
+        )
+
     def __str__(self) -> str:
         """Human-readable, multi-line summary of the migration report.
 
@@ -126,6 +150,10 @@ class MigrationReport:
         if warning is not None:
             lines.append(warning)
 
+        latest_warning = self.latest_upgrade_warning
+        if latest_warning is not None:
+            lines.append(latest_warning)
+
         if self.applied:
             lines.append("Applied migrations:")
             lines.extend(f"  - {description}" for description in self.applied)
@@ -135,10 +163,40 @@ class MigrationReport:
         return "\n".join(lines)
 
 
+def _apply_migration_entries(
+    working: dict, entries: list[dict], report: MigrationReport
+) -> None:
+    """Apply a list of migration entries to `working`, recording changes in
+    `report`.
+
+    Args:
+        working: Sections dict to mutate in place
+        entries: Migration entries to apply, in order
+        report: Report to append applied migration descriptions to
+
+    Raises:
+        MigrationError: If a migration entry cannot be applied, see the individual operation
+            handlers in `fourcipp.migration.operations`
+    """
+    for entry in entries:
+        # Only snapshot the sections this entry can touch: deep-copying the whole input
+        # file per entry would scale with (file size x migration count), which is costly
+        # for the large node/element sections no migration touches.
+        roots = entry_root_keys(entry)
+        before = {key: copy.deepcopy(working[key]) for key in roots if key in working}
+
+        OPERATIONS[entry["type"]](working, entry)
+
+        after = {key: working[key] for key in roots if key in working}
+        if before != after:
+            report.applied.append(entry["description"])
+
+
 def migrate_sections(
     sections: dict,
     database: dict[Version, list[dict]],
     to_version: Version | None = None,
+    latest_upgrade: list[dict] | None = None,
 ) -> MigrationReport:
     """Migrate a raw, nested `sections` dict in place using a migration
     database.
@@ -152,15 +210,30 @@ def migrate_sections(
         database: Migration database, as returned by
             `fourcipp.migration.database.load_migration_database`
         to_version: Version to migrate to (inclusive); defaults to the newest known version.
-            A version newer than the newest known migration is clamped to the latter.
+            A version newer than the newest known migration is clamped to the latter. Mutually
+            exclusive with `latest_upgrade`.
+        latest_upgrade: Optional, as-yet-unversioned migration entries to apply on top of the
+            newest known version, as returned by
+            `fourcipp.migration.database.load_latest_upgrade_file`. Meant for local testing
+            of in-progress migrations ahead of their target input file version being decided.
+            The resulting file is stamped with the newest known version's PATCH number
+            incremented by one (or `IMPLICIT_INPUT_VERSION`'s, if the database is empty).
+            Mutually exclusive with `to_version`.
 
     Returns:
         A report of the applied migrations
 
     Raises:
-        MigrationError: If a migration entry cannot be applied, see the individual operation
-            handlers in `fourcipp.migration.operations`
+        MigrationError: If both `to_version` and `latest_upgrade` are given, or a migration
+            entry cannot be applied, see the individual operation handlers in
+            `fourcipp.migration.operations`
     """
+    if to_version is not None and latest_upgrade is not None:
+        raise MigrationError(
+            "'to_version' cannot be combined with 'latest_upgrade': the latter always "
+            "targets the newest known version plus one patch level."
+        )
+
     input_version_string = sections.get("input_version")
     from_version = (
         parse_version(input_version_string)
@@ -194,28 +267,38 @@ def migrate_sections(
         clamped_from=clamped_from,
     )
 
-    if effective_to_version is not None:
-        applicable = select_migrations(database, from_version, effective_to_version)
+    if effective_to_version is not None or latest_upgrade is not None:
+        applicable = (
+            select_migrations(database, from_version, effective_to_version)
+            if effective_to_version is not None
+            else []
+        )
 
         # Migrate a working copy, so a failing handler cannot leave the caller's dict
         # half-migrated (and still carrying its original, now wrong, `input_version`).
         working = copy.deepcopy(sections)
 
         for _, entries in applicable:
-            for entry in entries:
-                # Only snapshot the sections this entry can touch: deep-copying the whole
-                # input file per entry would scale with (file size x migration count), which
-                # is costly for the large node/element sections no migration touches.
-                roots = entry_root_keys(entry)
-                before = {
-                    key: copy.deepcopy(working[key]) for key in roots if key in working
-                }
+            _apply_migration_entries(working, entries, report)
 
-                OPERATIONS[entry["type"]](working, entry)
+        if latest_upgrade is not None:
+            base_version = (
+                effective_to_version
+                if effective_to_version is not None
+                else IMPLICIT_INPUT_VERSION
+            )
+            _apply_migration_entries(working, latest_upgrade, report)
+            effective_to_version = (
+                base_version[0],
+                base_version[1],
+                base_version[2] + 1,
+            )
+            report.to_version = effective_to_version
+            report.includes_latest = True
 
-                after = {key: working[key] for key in roots if key in working}
-                if before != after:
-                    report.applied.append(entry["description"])
+        # At this point effective_to_version is always set: either it was not None to begin
+        # with, or latest_upgrade is not None and the branch above just derived it.
+        assert effective_to_version is not None
 
         # Never move backwards: the file may already be newer than the requested/known target.
         if from_version is not None and from_version > effective_to_version:
@@ -236,6 +319,7 @@ def migrate_file(
     output_path: Path,
     migrations_dir: Path | None = None,
     to_version: str | None = None,
+    include_latest: bool = False,
 ) -> MigrationReport:
     """Migrate a 4C input file on disk to a newer input file version.
 
@@ -247,18 +331,32 @@ def migrate_file(
             the migration database bundled with FourCIPP
         to_version: Version to migrate to (inclusive), as a `MAJOR.MINOR.PATCH` string;
             defaults to the newest known version. A version newer than the newest known
-            migration is clamped to the latter.
+            migration is clamped to the latter. Mutually exclusive with `include_latest`.
+        include_latest: Whether to additionally apply the optional, as-yet-unversioned
+            `latest_upgrade.yaml` migration file on top of the newest known version, for
+            local testing of in-progress migrations ahead of their target input file version
+            being decided. Mutually exclusive with `to_version`.
 
     Returns:
         A report of the applied migrations
+
+    Raises:
+        MigrationError: If both `to_version` and `include_latest` are given, `include_latest`
+            is given but `migrations_dir` has no `latest_upgrade.yaml` file, or see
+            `migrate_sections`
     """
-    database = load_migration_database(migrations_dir or DEFAULT_MIGRATIONS_DIR)
+    resolved_migrations_dir = migrations_dir or DEFAULT_MIGRATIONS_DIR
+    database = load_migration_database(resolved_migrations_dir)
     sections = load_yaml(input_path)
+    latest_upgrade = (
+        load_latest_upgrade_file(resolved_migrations_dir) if include_latest else None
+    )
 
     report = migrate_sections(
         sections,
         database,
         parse_version(to_version) if to_version is not None else None,
+        latest_upgrade=latest_upgrade,
     )
 
     dump_yaml(sections, output_path)
@@ -270,6 +368,7 @@ def diff_migration(
     input_path: Path,
     migrations_dir: Path | None = None,
     to_version: str | None = None,
+    include_latest: bool = False,
 ) -> tuple[MigrationReport, str]:
     """Migrate a 4C input file in memory and return a diff, without writing
     anything.
@@ -285,18 +384,28 @@ def diff_migration(
             the migration database bundled with FourCIPP
         to_version: Version to migrate to (inclusive), as a `MAJOR.MINOR.PATCH` string;
             defaults to the newest known version. A version newer than the newest known
-            migration is clamped to the latter.
+            migration is clamped to the latter. Mutually exclusive with `include_latest`.
+        include_latest: Whether to additionally apply the optional, as-yet-unversioned
+            `latest_upgrade.yaml` migration file on top of the newest known version, for
+            local testing of in-progress migrations ahead of their target input file version
+            being decided. Mutually exclusive with `to_version`.
 
     Returns:
         A report of the applied migrations, and the unified diff of the migration as a
         string, which is empty if the migration would not change the file
 
     Raises:
-        MigrationError: If a migration entry cannot be applied, see the individual operation
-            handlers in `fourcipp.migration.operations`
+        MigrationError: If both `to_version` and `include_latest` are given, `include_latest`
+            is given but `migrations_dir` has no `latest_upgrade.yaml` file, or a migration
+            entry cannot be applied, see the individual operation handlers in
+            `fourcipp.migration.operations`
     """
-    database = load_migration_database(migrations_dir or DEFAULT_MIGRATIONS_DIR)
+    resolved_migrations_dir = migrations_dir or DEFAULT_MIGRATIONS_DIR
+    database = load_migration_database(resolved_migrations_dir)
     sections = load_yaml(input_path)
+    latest_upgrade = (
+        load_latest_upgrade_file(resolved_migrations_dir) if include_latest else None
+    )
 
     with tempfile.TemporaryDirectory() as tmp_dir:
         before_path = pathlib.Path(tmp_dir) / "before.yaml"
@@ -310,6 +419,7 @@ def diff_migration(
             sections,
             database,
             parse_version(to_version) if to_version is not None else None,
+            latest_upgrade=latest_upgrade,
         )
 
         dump_yaml(sections, after_path)

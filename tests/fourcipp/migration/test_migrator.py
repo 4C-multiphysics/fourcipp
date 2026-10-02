@@ -201,6 +201,96 @@ def test_migrate_sections_empty_database_is_noop():
     assert report.to_version is None
 
 
+def test_migrate_sections_to_version_and_latest_upgrade_raises(sections, database):
+    """Test that combining `to_version` and `latest_upgrade` raises."""
+    with pytest.raises(MigrationError):
+        migrate_sections(
+            sections,
+            database,
+            to_version=(1, 1, 0),
+            latest_upgrade=[
+                {
+                    "type": "parameter_removed",
+                    "description": "Draft removal.",
+                    "path": ["A"],
+                }
+            ],
+        )
+
+
+def test_migrate_sections_latest_upgrade_applies_on_top_of_newest_known(
+    sections, database
+):
+    """Test that `latest_upgrade` entries are applied after every known
+    migration, and the result is stamped with the newest known version's patch
+    number incremented by one."""
+    latest_upgrade = [
+        {
+            "type": "section_renamed",
+            "description": "Draft rename of STRUCTURAL DYNAMIC.",
+            "path": ["STRUCTURAL DYNAMIC"],
+            "new_name": "STRUCTURAL DYNAMIC DRAFT",
+        }
+    ]
+
+    report = migrate_sections(sections, database, latest_upgrade=latest_upgrade)
+
+    assert "NUMMAT" not in sections["MATERIALS"][0]["MAT_ElastHyper"]
+    assert sections["STRUCTURAL DYNAMIC DRAFT"] == {"DYNAMICTYP": "Statics"}
+    assert sections["input_version"] == "1.2.1"
+    assert report.to_version == (1, 2, 1)
+    assert report.includes_latest is True
+    assert "Draft rename of STRUCTURAL DYNAMIC." in report.applied
+
+
+def test_migrate_sections_latest_upgrade_with_empty_database(sections):
+    """Test that `latest_upgrade` still works against an empty database,
+    stamping `IMPLICIT_INPUT_VERSION`'s patch number incremented by one."""
+    latest_upgrade = [
+        {
+            "type": "parameter_removed",
+            "description": "Draft removal of NUMMAT.",
+            "path": ["MATERIALS", "MAT_ElastHyper", "NUMMAT"],
+        }
+    ]
+
+    report = migrate_sections(sections, {}, latest_upgrade=latest_upgrade)
+
+    assert "NUMMAT" not in sections["MATERIALS"][0]["MAT_ElastHyper"]
+    assert sections["input_version"] == "1.0.1"
+    assert report.to_version == (1, 0, 1)
+    assert report.includes_latest is True
+
+
+def test_migrate_sections_latest_upgrade_empty_entries_only_stamps_version(database):
+    """Test that an empty `latest_upgrade` list still stamps the provisional
+    version, even though nothing is applied."""
+    sections = {"STRUCTURAL DYNAMIC": {"DYNAMICTYPE": "Statics"}}
+    report = migrate_sections(sections, database, latest_upgrade=[])
+
+    assert sections["input_version"] == "1.2.1"
+    assert report.to_version == (1, 2, 1)
+    assert report.includes_latest is True
+
+
+def test_migration_report_latest_upgrade_warning(sections, database):
+    """Test that the report warns about the provisional version when
+    `latest_upgrade` was applied."""
+    report = migrate_sections(sections, database, latest_upgrade=[])
+
+    assert report.latest_upgrade_warning is not None
+    assert "1.2.1" in report.latest_upgrade_warning
+    assert "Do not commit" in report.latest_upgrade_warning
+    assert "1.2.1" in str(report)
+
+
+def test_migration_report_no_latest_upgrade_warning_by_default(sections, database):
+    """Test that the report does not warn when `latest_upgrade` was not
+    used."""
+    report = migrate_sections(sections, database)
+    assert report.latest_upgrade_warning is None
+
+
 def test_migration_report_str_contains_summary(sections, database):
     """Test that the report's string representation mentions applied
     migrations."""
@@ -276,6 +366,78 @@ def test_migrate_file_to_version_as_string(tmp_path, sections, database):
     assert migrated_sections["STRUCTURAL DYNAMIC"] == {"DYNAMICTYPE": "Statics"}
 
 
+def test_migrate_file_include_latest(tmp_path, sections, database):
+    """Test that `include_latest` applies `latest_upgrade.yaml` on top of the
+    newest known version and stamps a provisional version."""
+    migrations_dir = tmp_path / "migrations"
+    migrations_dir.mkdir()
+    dump_yaml({"migrations": database[(1, 1, 0)]}, migrations_dir / "1.1.0.yaml")
+    dump_yaml({"migrations": database[(1, 2, 0)]}, migrations_dir / "1.2.0.yaml")
+    dump_yaml(
+        {
+            "migrations": [
+                {
+                    "type": "section_renamed",
+                    "description": "Draft rename of STRUCTURAL DYNAMIC.",
+                    "path": ["STRUCTURAL DYNAMIC"],
+                    "new_name": "STRUCTURAL DYNAMIC DRAFT",
+                }
+            ]
+        },
+        migrations_dir / "latest_upgrade.yaml",
+    )
+
+    input_path = tmp_path / "input.4C.yaml"
+    dump_yaml(sections, input_path)
+
+    output_path = tmp_path / "output.4C.yaml"
+    report = migrate_file(input_path, output_path, migrations_dir, include_latest=True)
+
+    migrated_sections = load_yaml(output_path)
+    assert migrated_sections["STRUCTURAL DYNAMIC DRAFT"] == {"DYNAMICTYP": "Statics"}
+    assert migrated_sections["input_version"] == "1.2.1"
+    assert report.to_version == (1, 2, 1)
+    assert report.includes_latest is True
+
+
+def test_migrate_file_include_latest_and_to_version_raises(
+    tmp_path, sections, database
+):
+    """Test that `include_latest` and `to_version` cannot be combined."""
+    migrations_dir = tmp_path / "migrations"
+    migrations_dir.mkdir()
+    dump_yaml({"migrations": database[(1, 1, 0)]}, migrations_dir / "1.1.0.yaml")
+    dump_yaml({"migrations": []}, migrations_dir / "latest_upgrade.yaml")
+
+    input_path = tmp_path / "input.4C.yaml"
+    dump_yaml(sections, input_path)
+    output_path = tmp_path / "output.4C.yaml"
+
+    with pytest.raises(MigrationError):
+        migrate_file(
+            input_path,
+            output_path,
+            migrations_dir,
+            to_version="1.1.0",
+            include_latest=True,
+        )
+
+
+def test_migrate_file_include_latest_missing_file_raises(tmp_path, sections, database):
+    """Test that `include_latest` raises if `latest_upgrade.yaml` is
+    missing."""
+    migrations_dir = tmp_path / "migrations"
+    migrations_dir.mkdir()
+    dump_yaml({"migrations": database[(1, 1, 0)]}, migrations_dir / "1.1.0.yaml")
+
+    input_path = tmp_path / "input.4C.yaml"
+    dump_yaml(sections, input_path)
+    output_path = tmp_path / "output.4C.yaml"
+
+    with pytest.raises(MigrationError):
+        migrate_file(input_path, output_path, migrations_dir, include_latest=True)
+
+
 @pytest.fixture(name="migrations_dir")
 def fixture_migrations_dir(tmp_path, database):
     """Migration database fixture written to disk."""
@@ -284,6 +446,34 @@ def fixture_migrations_dir(tmp_path, database):
     dump_yaml({"migrations": database[(1, 1, 0)]}, migrations_dir / "1.1.0.yaml")
     dump_yaml({"migrations": database[(1, 2, 0)]}, migrations_dir / "1.2.0.yaml")
     return migrations_dir
+
+
+def test_diff_migration_include_latest(tmp_path, sections, migrations_dir):
+    """Test that `diff_migration(include_latest=True)` previews the draft
+    `latest_upgrade.yaml` migrations without writing anything."""
+    dump_yaml(
+        {
+            "migrations": [
+                {
+                    "type": "section_renamed",
+                    "description": "Draft rename of STRUCTURAL DYNAMIC.",
+                    "path": ["STRUCTURAL DYNAMIC"],
+                    "new_name": "STRUCTURAL DYNAMIC DRAFT",
+                }
+            ]
+        },
+        migrations_dir / "latest_upgrade.yaml",
+    )
+    input_path = tmp_path / "input.4C.yaml"
+    dump_yaml(sections, input_path)
+    original = input_path.read_text(encoding="utf-8")
+
+    report, diff = diff_migration(input_path, migrations_dir, include_latest=True)
+
+    assert input_path.read_text(encoding="utf-8") == original
+    assert report.to_version == (1, 2, 1)
+    assert report.includes_latest is True
+    assert "STRUCTURAL DYNAMIC DRAFT" in diff
 
 
 def test_diff_migration_writes_nothing(tmp_path, sections, migrations_dir):

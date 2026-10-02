@@ -61,6 +61,12 @@ _REQUIRED_FIELDS: dict[str, set[str]] = {
 
 _VERSION_PATTERN = re.compile(r"(\d+)\.(\d+)\.(\d+)")
 
+LATEST_UPGRADE_FILENAME = "latest_upgrade.yaml"
+# Name of the optional, unversioned migration file for local testing of in-progress
+# migrations ahead of their target input file version being decided (e.g. before opening a
+# 4C pull request). Like any other non-`<MAJOR.MINOR.PATCH>.yaml` file, it is ignored by
+# `load_migration_database` and only loaded on request via `load_latest_upgrade_file`.
+
 
 def parse_version(version_string: str) -> Version:
     """Parse a `MAJOR.MINOR.PATCH` version string.
@@ -205,6 +211,33 @@ def load_migration_database(migrations_dir: Path) -> dict[Version, list[dict]]:
         database[version] = load_migration_file(path)
 
     return database
+
+
+def load_latest_upgrade_file(migrations_dir: Path) -> list[dict]:
+    """Load and validate the optional `latest_upgrade.yaml` migration file.
+
+    This file is excluded from the regular, versioned migration database (see
+    `load_migration_database`), since it is not named `<MAJOR.MINOR.PATCH>.yaml`. It is meant
+    purely for local testing of in-progress migrations before their target input file
+    version has been decided, e.g. to preview their effect ahead of opening a 4C pull
+    request.
+
+    Args:
+        migrations_dir: Directory that may contain a `latest_upgrade.yaml` file
+
+    Returns:
+        List of validated migration entries, in file order
+
+    Raises:
+        MigrationError: If `migrations_dir` does not contain a `latest_upgrade.yaml` file,
+            or the file fails validation
+    """
+    path = PathlibPath(migrations_dir) / LATEST_UPGRADE_FILENAME
+    if not path.is_file():
+        raise MigrationError(
+            f"No '{LATEST_UPGRADE_FILENAME}' file found in '{migrations_dir}'."
+        )
+    return load_migration_file(path)
 
 
 def select_migrations(

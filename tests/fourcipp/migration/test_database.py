@@ -26,6 +26,7 @@ from pathlib import Path
 import pytest
 
 from fourcipp.migration.database import (
+    load_latest_upgrade_file,
     load_migration_database,
     load_migration_file,
     parse_version,
@@ -305,6 +306,42 @@ def test_select_migrations(from_version, to_version, expected_versions):
 def test_select_migrations_empty_database():
     """Test that selecting from an empty database returns nothing."""
     assert select_migrations({}, None, None) == []
+
+
+def test_load_latest_upgrade_file(tmp_path):
+    """Test loading the optional, non-versioned latest_upgrade.yaml file."""
+    dump_yaml(
+        {
+            "migrations": [
+                {
+                    "type": "parameter_removed",
+                    "description": "Remove NUMMAT.",
+                    "path": ["MATERIALS", "MAT_ElastHyper", "NUMMAT"],
+                }
+            ]
+        },
+        tmp_path / "latest_upgrade.yaml",
+    )
+
+    entries = load_latest_upgrade_file(tmp_path)
+
+    assert [entry["description"] for entry in entries] == ["Remove NUMMAT."]
+
+
+def test_load_latest_upgrade_file_missing_raises(tmp_path):
+    """Test that a missing latest_upgrade.yaml file raises."""
+    with pytest.raises(MigrationError):
+        load_latest_upgrade_file(tmp_path)
+
+
+def test_load_latest_upgrade_file_invalid_entry_raises(tmp_path):
+    """Test that an invalid entry in latest_upgrade.yaml still raises."""
+    (tmp_path / "latest_upgrade.yaml").write_text(
+        "migrations:\n  - type: not_a_real_type\n"
+    )
+
+    with pytest.raises(MigrationError):
+        load_latest_upgrade_file(tmp_path)
 
 
 def test_load_migration_file_preserves_entry_order(tmp_path):

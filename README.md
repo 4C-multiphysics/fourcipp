@@ -168,7 +168,11 @@ as a backup, tagged with the input file version it was on before the migration, 
 necessary); use `-o`/`--overwrite` to migrate in place without keeping that backup. Use
 `--to-version` to migrate to a specific input file version instead of the newest known one,
 and `--migrations-dir` to use a custom migration database, e.g. one vendored from a specific
-4C version. The command always prints a short one-line summary, e.g.:
+4C version. Use `--include-latest` instead of `--to-version` to additionally apply the draft
+migrations from `latest_upgrade.yaml` for local testing of an in-progress migration ahead of
+its real target version being decided (see the migrations `README.md` for details); the
+resulting file is stamped with a provisional version number and must not be committed. The
+command always prints a short one-line summary, e.g.:
 ```commandline
 File 'input.4C.yaml' migrated: 2 migrations applied, pre-migration file saved as 'input_v1.0.0.4C.yaml'.
 ```

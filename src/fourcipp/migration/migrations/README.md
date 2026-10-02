@@ -42,6 +42,30 @@ migrations:
 Migrations are applied strictly in ascending version/file order, and within a file in the
 order they are listed.
 
+## Testing an in-progress migration (`latest_upgrade.yaml`)
+
+`latest_upgrade.yaml` is a special, non-versioned file in this directory (it is deliberately
+not named `<MAJOR.MINOR.PATCH>.yaml`, so `load_migration_database` ignores it and it never
+affects a normal `fourcipp migrate` run). It exists so developers can draft and locally test
+migration entries for an in-progress 4C change *before* the resulting input file version is
+known, e.g. while a 4C pull request is still under review.
+
+To try it out, add your draft entries to `latest_upgrade.yaml` (same `migrations:` list
+format as any other file) and run `fourcipp migrate --include-latest` instead of
+`--to-version`; the two are mutually exclusive. This applies every normal migration up to the
+newest known version, then the draft entries on top, and stamps the resulting file with a
+*provisional* version: the newest known version with its `PATCH` number incremented by one
+(e.g. `1.2.0` becomes `1.2.1`). This number is only a local placeholder, picked purely because
+the `input_version` field must satisfy 4C's `MAJOR.MINOR.PATCH` schema; it does not reflect
+the migration's eventual, real target version. **Never commit an input file migrated this
+way, and never rely on this version number elsewhere** - re-migrate from the pristine input
+file once the real target version has been decided and added as a proper `<version>.yaml`
+file.
+
+Once the real target version is known, move the entries out of `latest_upgrade.yaml` into a
+new `<version>.yaml` file and clear `latest_upgrade.yaml` back out (`migrations: []`), so it
+is ready for the next round of in-progress testing.
+
 ## Common fields
 
 - `type` (required): One of the migration types below.
