@@ -1,5 +1,5 @@
 {
-  "description": "Schema for 4C\nCommit hash: 126af94211a6444d03e3cb6ee46cab4bd433cc36\nVersion: 2026.4.0-dev",
+  "description": "Schema for 4C\nCommit hash: 3a8c4c9971df1b8b6a36c04344bd1149ea8222db\nVersion: 2026.4.0-dev",
   "type": "object",
   "properties": {
     "ALE DOMAIN": {
@@ -185752,29 +185752,6 @@
             ]
           },
           {
-            "title": "MAT_PoroLawIncompSkel, MAT",
-            "description": "MAT_PoroLawIncompSkel, MAT",
-            "type": "object",
-            "properties": {
-              "MAT": {
-                "title": "MAT (int)",
-                "description": "No description yet.",
-                "type": "integer"
-              },
-              "MAT_PoroLawIncompSkel": {
-                "title": "MAT_PoroLawIncompSkel (group)",
-                "description": "porosity law for incompressible skeleton phase",
-                "type": "object",
-                "const": {}
-              }
-            },
-            "additionalProperties": false,
-            "required": [
-              "MAT",
-              "MAT_PoroLawIncompSkel"
-            ]
-          },
-          {
             "title": "MAT_Struct_Multiscale, MAT",
             "description": "MAT_Struct_Multiscale, MAT",
             "type": "object",
@@ -185986,150 +185963,6 @@
             "required": [
               "MAT",
               "ELAST_Iso1Pow"
-            ]
-          },
-          {
-            "title": "MAT_Struct_AAANeoHooke, MAT",
-            "description": "MAT_Struct_AAANeoHooke, MAT",
-            "type": "object",
-            "properties": {
-              "MAT": {
-                "title": "MAT (int)",
-                "description": "No description yet.",
-                "type": "integer"
-              },
-              "MAT_Struct_AAANeoHooke": {
-                "title": "MAT_Struct_AAANeoHooke (group)",
-                "description": "aneurysm wall material according to Raghavan and Vorp [2000]",
-                "type": "object",
-                "properties": {
-                  "YOUNG": {
-                    "title": "YOUNG (double)",
-                    "description": "Young's modulus",
-                    "type": "number"
-                  },
-                  "BETA": {
-                    "title": "BETA (double)",
-                    "description": "2nd parameter",
-                    "type": "number"
-                  },
-                  "NUE": {
-                    "title": "NUE (double)",
-                    "description": "Poisson's ratio",
-                    "type": "number"
-                  },
-                  "DENS": {
-                    "title": "DENS (double)",
-                    "description": "mass density",
-                    "type": "number"
-                  }
-                },
-                "additionalProperties": false,
-                "required": [
-                  "YOUNG",
-                  "BETA",
-                  "NUE",
-                  "DENS"
-                ]
-              }
-            },
-            "additionalProperties": false,
-            "required": [
-              "MAT",
-              "MAT_Struct_AAANeoHooke"
-            ]
-          },
-          {
-            "title": "ELAST_CoupAnisoExpoTwoCoup, MAT",
-            "description": "ELAST_CoupAnisoExpoTwoCoup, MAT",
-            "type": "object",
-            "properties": {
-              "MAT": {
-                "title": "MAT (int)",
-                "description": "No description yet.",
-                "type": "integer"
-              },
-              "ELAST_CoupAnisoExpoTwoCoup": {
-                "title": "ELAST_CoupAnisoExpoTwoCoup (group)",
-                "description": "anisotropic part with two exp. fibers",
-                "type": "object",
-                "properties": {
-                  "A4": {
-                    "title": "A4 (double)",
-                    "description": "linear anisotropic constant for fiber 1",
-                    "type": "number"
-                  },
-                  "B4": {
-                    "title": "B4 (double)",
-                    "description": "exponential anisotropic constant for fiber 1",
-                    "type": "number"
-                  },
-                  "A6": {
-                    "title": "A6 (double)",
-                    "description": "linear anisotropic constant for fiber 2",
-                    "type": "number"
-                  },
-                  "B6": {
-                    "title": "B6 (double)",
-                    "description": "exponential anisotropic constant for fiber 2",
-                    "type": "number"
-                  },
-                  "A8": {
-                    "title": "A8 (double)",
-                    "description": "linear anisotropic constant for fiber 1 relating fiber 2",
-                    "type": "number"
-                  },
-                  "B8": {
-                    "title": "B8 (double)",
-                    "description": "exponential anisotropic constant for fiber 1 relating fiber 2",
-                    "type": "number"
-                  },
-                  "GAMMA": {
-                    "title": "GAMMA (double)",
-                    "description": "angle",
-                    "type": "number"
-                  },
-                  "STR_TENS_ID": {
-                    "title": "STR_TENS_ID (int)",
-                    "description": "MAT ID for definition of Structural Tensor",
-                    "type": "integer"
-                  },
-                  "INIT": {
-                    "title": "INIT (int)",
-                    "description": "initialization modus for fiber alignment",
-                    "default": 1,
-                    "type": "integer"
-                  },
-                  "FIB_COMP": {
-                    "title": "FIB_COMP (bool)",
-                    "description": "fibers support compression: yes (true) or no (false)",
-                    "default": true,
-                    "type": "boolean"
-                  },
-                  "ADAPT_ANGLE": {
-                    "title": "ADAPT_ANGLE (bool)",
-                    "description": "adapt angle during remodeling",
-                    "default": false,
-                    "type": "boolean"
-                  }
-                },
-                "additionalProperties": false,
-                "required": [
-                  "A4",
-                  "B4",
-                  "A6",
-                  "B6",
-                  "A8",
-                  "B8",
-                  "GAMMA",
-                  "STR_TENS_ID"
-                ]
-              }
-            },
-            "additionalProperties": false,
-            "required": [
-              "MAT",
-              "ELAST_CoupAnisoExpoTwoCoup"
             ]
           },
           {
@@ -186900,6 +186733,51 @@
             "required": [
               "MAT",
               "MAT_Struct_StVenantKirchhoffOrthotropic"
+            ]
+          },
+          {
+            "title": "ELAST_CoupLogNeoHooke, MAT",
+            "description": "ELAST_CoupLogNeoHooke, MAT",
+            "type": "object",
+            "properties": {
+              "MAT": {
+                "title": "MAT (int)",
+                "description": "No description yet.",
+                "type": "integer"
+              },
+              "ELAST_CoupLogNeoHooke": {
+                "title": "ELAST_CoupLogNeoHooke (group)",
+                "description": "logarithmic neo-Hooke material acc. to Bonet and Wood",
+                "type": "object",
+                "properties": {
+                  "MODE": {
+                    "title": "MODE (string)",
+                    "description": "parameter set: YN (Young's modulus and Poisson's ration; default) or Lame (mue and lambda)",
+                    "type": "string"
+                  },
+                  "C1": {
+                    "title": "C1 (double)",
+                    "description": "E or mue",
+                    "type": "number"
+                  },
+                  "C2": {
+                    "title": "C2 (double)",
+                    "description": "nue or lambda",
+                    "type": "number"
+                  }
+                },
+                "additionalProperties": false,
+                "required": [
+                  "MODE",
+                  "C1",
+                  "C2"
+                ]
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "MAT",
+              "ELAST_CoupLogNeoHooke"
             ]
           },
           {
@@ -191999,51 +191877,6 @@
             ]
           },
           {
-            "title": "ELAST_CoupLogNeoHooke, MAT",
-            "description": "ELAST_CoupLogNeoHooke, MAT",
-            "type": "object",
-            "properties": {
-              "MAT": {
-                "title": "MAT (int)",
-                "description": "No description yet.",
-                "type": "integer"
-              },
-              "ELAST_CoupLogNeoHooke": {
-                "title": "ELAST_CoupLogNeoHooke (group)",
-                "description": "logarithmic neo-Hooke material acc. to Bonet and Wood",
-                "type": "object",
-                "properties": {
-                  "MODE": {
-                    "title": "MODE (string)",
-                    "description": "parameter set: YN (Young's modulus and Poisson's ration; default) or Lame (mue and lambda)",
-                    "type": "string"
-                  },
-                  "C1": {
-                    "title": "C1 (double)",
-                    "description": "E or mue",
-                    "type": "number"
-                  },
-                  "C2": {
-                    "title": "C2 (double)",
-                    "description": "nue or lambda",
-                    "type": "number"
-                  }
-                },
-                "additionalProperties": false,
-                "required": [
-                  "MODE",
-                  "C1",
-                  "C2"
-                ]
-              }
-            },
-            "additionalProperties": false,
-            "required": [
-              "MAT",
-              "ELAST_CoupLogNeoHooke"
-            ]
-          },
-          {
             "title": "ELAST_CoupSVK, MAT",
             "description": "ELAST_CoupSVK, MAT",
             "type": "object",
@@ -193788,6 +193621,99 @@
             "required": [
               "MAT",
               "ELAST_CoupAnisoPow"
+            ]
+          },
+          {
+            "title": "ELAST_CoupAnisoExpoTwoCoup, MAT",
+            "description": "ELAST_CoupAnisoExpoTwoCoup, MAT",
+            "type": "object",
+            "properties": {
+              "MAT": {
+                "title": "MAT (int)",
+                "description": "No description yet.",
+                "type": "integer"
+              },
+              "ELAST_CoupAnisoExpoTwoCoup": {
+                "title": "ELAST_CoupAnisoExpoTwoCoup (group)",
+                "description": "anisotropic part with two exp. fibers",
+                "type": "object",
+                "properties": {
+                  "A4": {
+                    "title": "A4 (double)",
+                    "description": "linear anisotropic constant for fiber 1",
+                    "type": "number"
+                  },
+                  "B4": {
+                    "title": "B4 (double)",
+                    "description": "exponential anisotropic constant for fiber 1",
+                    "type": "number"
+                  },
+                  "A6": {
+                    "title": "A6 (double)",
+                    "description": "linear anisotropic constant for fiber 2",
+                    "type": "number"
+                  },
+                  "B6": {
+                    "title": "B6 (double)",
+                    "description": "exponential anisotropic constant for fiber 2",
+                    "type": "number"
+                  },
+                  "A8": {
+                    "title": "A8 (double)",
+                    "description": "linear anisotropic constant for fiber 1 relating fiber 2",
+                    "type": "number"
+                  },
+                  "B8": {
+                    "title": "B8 (double)",
+                    "description": "exponential anisotropic constant for fiber 1 relating fiber 2",
+                    "type": "number"
+                  },
+                  "GAMMA": {
+                    "title": "GAMMA (double)",
+                    "description": "angle",
+                    "type": "number"
+                  },
+                  "STR_TENS_ID": {
+                    "title": "STR_TENS_ID (int)",
+                    "description": "MAT ID for definition of Structural Tensor",
+                    "type": "integer"
+                  },
+                  "INIT": {
+                    "title": "INIT (int)",
+                    "description": "initialization modus for fiber alignment",
+                    "default": 1,
+                    "type": "integer"
+                  },
+                  "FIB_COMP": {
+                    "title": "FIB_COMP (bool)",
+                    "description": "fibers support compression: yes (true) or no (false)",
+                    "default": true,
+                    "type": "boolean"
+                  },
+                  "ADAPT_ANGLE": {
+                    "title": "ADAPT_ANGLE (bool)",
+                    "description": "adapt angle during remodeling",
+                    "default": false,
+                    "type": "boolean"
+                  }
+                },
+                "additionalProperties": false,
+                "required": [
+                  "A4",
+                  "B4",
+                  "A6",
+                  "B6",
+                  "A8",
+                  "B8",
+                  "GAMMA",
+                  "STR_TENS_ID"
+                ]
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "MAT",
+              "ELAST_CoupAnisoExpoTwoCoup"
             ]
           },
           {
@@ -196034,6 +195960,29 @@
             "required": [
               "MAT",
               "MAT_PoroLawNeoHooke"
+            ]
+          },
+          {
+            "title": "MAT_PoroLawIncompSkel, MAT",
+            "description": "MAT_PoroLawIncompSkel, MAT",
+            "type": "object",
+            "properties": {
+              "MAT": {
+                "title": "MAT (int)",
+                "description": "No description yet.",
+                "type": "integer"
+              },
+              "MAT_PoroLawIncompSkel": {
+                "title": "MAT_PoroLawIncompSkel (group)",
+                "description": "porosity law for incompressible skeleton phase",
+                "type": "object",
+                "const": {}
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "MAT",
+              "MAT_PoroLawIncompSkel"
             ]
           }
         ]
@@ -432833,5 +432782,5 @@
     "PROBLEM TYPE"
   ],
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "126af94211a6444d03e3cb6ee46cab4bd433cc36"
+  "$id": "3a8c4c9971df1b8b6a36c04344bd1149ea8222db"
 }

@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 126af94211a6444d03e3cb6ee46cab4bd433cc36
+  commit_hash: 3a8c4c9971df1b8b6a36c04344bd1149ea8222db
   version: 2026.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -35946,18 +35946,6 @@ sections:
                   - name: MAT
                     type: int
                     required: true
-                  - name: MAT_PoroLawIncompSkel
-                    type: group
-                    description: porosity law for incompressible skeleton phase
-                    required: true
-                    specs:
-                      - type: all_of
-                        specs: []
-              - type: all_of
-                specs:
-                  - name: MAT
-                    type: int
-                    required: true
                   - name: MAT_Struct_Multiscale
                     type: group
                     description: 'Structural micro-scale approach: material parameters are calculated from microscale simulation'
@@ -36080,93 +36068,6 @@ sections:
                             type: int
                             description: "exponent"
                             required: true
-              - type: all_of
-                specs:
-                  - name: MAT
-                    type: int
-                    required: true
-                  - name: MAT_Struct_AAANeoHooke
-                    type: group
-                    description: 'aneurysm wall material according to Raghavan and Vorp [2000]'
-                    required: true
-                    specs:
-                      - type: all_of
-                        specs:
-                          - name: YOUNG
-                            type: double
-                            description: "Young's modulus"
-                            required: true
-                          - name: BETA
-                            type: double
-                            description: "2nd parameter"
-                            required: true
-                          - name: NUE
-                            type: double
-                            description: "Poisson's ratio"
-                            required: true
-                          - name: DENS
-                            type: double
-                            description: "mass density"
-                            required: true
-              - type: all_of
-                specs:
-                  - name: MAT
-                    type: int
-                    required: true
-                  - name: ELAST_CoupAnisoExpoTwoCoup
-                    type: group
-                    description: anisotropic part with two exp. fibers
-                    required: true
-                    specs:
-                      - type: all_of
-                        specs:
-                          - name: A4
-                            type: double
-                            description: "linear anisotropic constant for fiber 1"
-                            required: true
-                          - name: B4
-                            type: double
-                            description: "exponential anisotropic constant for fiber 1"
-                            required: true
-                          - name: A6
-                            type: double
-                            description: "linear anisotropic constant for fiber 2"
-                            required: true
-                          - name: B6
-                            type: double
-                            description: "exponential anisotropic constant for fiber 2"
-                            required: true
-                          - name: A8
-                            type: double
-                            description: "linear anisotropic constant for fiber 1 relating fiber 2"
-                            required: true
-                          - name: B8
-                            type: double
-                            description: "exponential anisotropic constant for fiber 1 relating fiber 2"
-                            required: true
-                          - name: GAMMA
-                            type: double
-                            description: "angle"
-                            required: true
-                          - name: STR_TENS_ID
-                            type: int
-                            description: "MAT ID for definition of Structural Tensor"
-                            required: true
-                          - name: INIT
-                            type: int
-                            description: "initialization modus for fiber alignment"
-                            required: false
-                            default: 1
-                          - name: FIB_COMP
-                            type: bool
-                            description: "fibers support compression: yes (true) or no (false)"
-                            required: false
-                            default: true
-                          - name: ADAPT_ANGLE
-                            type: bool
-                            description: "adapt angle during remodeling"
-                            required: false
-                            default: false
               - type: all_of
                 specs:
                   - name: MAT
@@ -36620,6 +36521,30 @@ sections:
                           - name: DENS
                             type: double
                             description: "mass density"
+                            required: true
+              - type: all_of
+                specs:
+                  - name: MAT
+                    type: int
+                    required: true
+                  - name: ELAST_CoupLogNeoHooke
+                    type: group
+                    description: logarithmic neo-Hooke material acc. to Bonet and Wood
+                    required: true
+                    specs:
+                      - type: all_of
+                        specs:
+                          - name: MODE
+                            type: string
+                            description: "parameter set: YN (Young's modulus and Poisson's ration; default) or Lame (mue and lambda)"
+                            required: true
+                          - name: C1
+                            type: double
+                            description: "E or mue"
+                            required: true
+                          - name: C2
+                            type: double
+                            description: "nue or lambda"
                             required: true
               - type: all_of
                 specs:
@@ -40086,30 +40011,6 @@ sections:
                   - name: MAT
                     type: int
                     required: true
-                  - name: ELAST_CoupLogNeoHooke
-                    type: group
-                    description: logarithmic neo-Hooke material acc. to Bonet and Wood
-                    required: true
-                    specs:
-                      - type: all_of
-                        specs:
-                          - name: MODE
-                            type: string
-                            description: "parameter set: YN (Young's modulus and Poisson's ration; default) or Lame (mue and lambda)"
-                            required: true
-                          - name: C1
-                            type: double
-                            description: "E or mue"
-                            required: true
-                          - name: C2
-                            type: double
-                            description: "nue or lambda"
-                            required: true
-              - type: all_of
-                specs:
-                  - name: MAT
-                    type: int
-                    required: true
                   - name: ELAST_CoupSVK
                     type: group
                     description: Saint-Venant-Kirchhoff as elastic summand
@@ -41134,6 +41035,65 @@ sections:
                             description: "initialization modus for fiber alignment"
                             required: false
                             default: 1
+                          - name: ADAPT_ANGLE
+                            type: bool
+                            description: "adapt angle during remodeling"
+                            required: false
+                            default: false
+              - type: all_of
+                specs:
+                  - name: MAT
+                    type: int
+                    required: true
+                  - name: ELAST_CoupAnisoExpoTwoCoup
+                    type: group
+                    description: anisotropic part with two exp. fibers
+                    required: true
+                    specs:
+                      - type: all_of
+                        specs:
+                          - name: A4
+                            type: double
+                            description: "linear anisotropic constant for fiber 1"
+                            required: true
+                          - name: B4
+                            type: double
+                            description: "exponential anisotropic constant for fiber 1"
+                            required: true
+                          - name: A6
+                            type: double
+                            description: "linear anisotropic constant for fiber 2"
+                            required: true
+                          - name: B6
+                            type: double
+                            description: "exponential anisotropic constant for fiber 2"
+                            required: true
+                          - name: A8
+                            type: double
+                            description: "linear anisotropic constant for fiber 1 relating fiber 2"
+                            required: true
+                          - name: B8
+                            type: double
+                            description: "exponential anisotropic constant for fiber 1 relating fiber 2"
+                            required: true
+                          - name: GAMMA
+                            type: double
+                            description: "angle"
+                            required: true
+                          - name: STR_TENS_ID
+                            type: int
+                            description: "MAT ID for definition of Structural Tensor"
+                            required: true
+                          - name: INIT
+                            type: int
+                            description: "initialization modus for fiber alignment"
+                            required: false
+                            default: 1
+                          - name: FIB_COMP
+                            type: bool
+                            description: "fibers support compression: yes (true) or no (false)"
+                            required: false
+                            default: true
                           - name: ADAPT_ANGLE
                             type: bool
                             description: "adapt angle during remodeling"
@@ -42747,6 +42707,18 @@ sections:
                             type: double
                             description: "penalty parameter of porous medium"
                             required: true
+              - type: all_of
+                specs:
+                  - name: MAT
+                    type: int
+                    required: true
+                  - name: MAT_PoroLawIncompSkel
+                    type: group
+                    description: porosity law for incompressible skeleton phase
+                    required: true
+                    specs:
+                      - type: all_of
+                        specs: []
     - name: MESH PARTITIONING
       type: group
       required: false
