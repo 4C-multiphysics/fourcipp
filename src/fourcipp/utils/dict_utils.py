@@ -292,6 +292,26 @@ def replace_value(
         entry[last_key] = new_value
 
 
+def transform_value(
+    nested_dict: dict,
+    keys: Sequence,
+    function: Callable[[Any], Any],
+) -> None:
+    """Transform an existing value in place using a callable.
+
+    Unlike `replace_value`, this does not require the new value to be known upfront. This is
+    useful, e.g., to rescale a numeric value or an entry within a list, based on the entry's
+    current value, individually for every match of `keys`.
+
+    Args:
+        nested_dict: Nested data dict
+        keys: List of keys to the entry
+        function: Callable that receives the current value and returns the new value
+    """
+    for entry, last_key in _split_off_last_key(nested_dict, keys):
+        entry[last_key] = function(entry[last_key])
+
+
 def make_default_explicit(
     nested_dict: dict,
     keys: Sequence,
@@ -369,9 +389,23 @@ def rename_parameter(
         nested_dict: Nested data dict
         keys: List of keys to the entry
         new_name: New name of the parameter
+
+    Raises:
+        KeyError: If `new_name` already exists next to one of the matched entries. Nothing
+            is renamed in that case.
     """
 
-    for entry, last_key in _split_off_last_key(nested_dict, keys):
+    matches = list(_split_off_last_key(nested_dict, keys))
+
+    # Validate all matches upfront to never rename partially
+    for entry, last_key in matches:
+        if new_name != last_key and new_name in entry:
+            raise KeyError(
+                f"Cannot rename '{last_key}' to '{new_name}': '{new_name}' already "
+                f"exists in {entry}."
+            )
+
+    for entry, last_key in matches:
         entry[new_name] = entry.pop(last_key)
 
 
