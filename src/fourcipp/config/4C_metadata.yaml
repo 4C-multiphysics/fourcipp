@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 3a8c4c9971df1b8b6a36c04344bd1149ea8222db
+  commit_hash: dd9c1a51c3124c3afb24b1ef5da4c8aae96fa185
   version: 2026.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -48770,7 +48770,6 @@ sections:
                 - name: "PythonWrapper"
                 - name: "TangDis"
                 - name: "TangDisConstFext"
-                - name: "Vague"
             - name: PYTHON_PREDICTOR_FILE
               type: path
               description: "Absolute or relative path to the Python script implementing the PythonWrapper predictor."

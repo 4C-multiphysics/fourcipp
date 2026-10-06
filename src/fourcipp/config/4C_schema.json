@@ -1,5 +1,5 @@
 {
-  "description": "Schema for 4C\nCommit hash: 3a8c4c9971df1b8b6a36c04344bd1149ea8222db\nVersion: 2026.4.0-dev",
+  "description": "Schema for 4C\nCommit hash: dd9c1a51c3124c3afb24b1ef5da4c8aae96fa185\nVersion: 2026.4.0-dev",
   "type": "object",
   "properties": {
     "ALE DOMAIN": {
@@ -276717,8 +276717,7 @@
             "ConstVel",
             "PythonWrapper",
             "TangDis",
-            "TangDisConstFext",
-            "Vague"
+            "TangDisConstFext"
           ]
         },
         "PYTHON_PREDICTOR_FILE": {
@@ -432782,5 +432781,5 @@
     "PROBLEM TYPE"
   ],
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "3a8c4c9971df1b8b6a36c04344bd1149ea8222db"
+  "$id": "dd9c1a51c3124c3afb24b1ef5da4c8aae96fa185"
 }
