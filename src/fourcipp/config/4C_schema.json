@@ -1,5 +1,5 @@
 {
-  "description": "Schema for 4C\nCommit hash: dd9c1a51c3124c3afb24b1ef5da4c8aae96fa185\nVersion: 2026.4.0-dev",
+  "description": "Schema for 4C\nCommit hash: 9b0ce29dd01b168140dccb681f840d11d7c50557\nVersion: 2026.4.0-dev",
   "type": "object",
   "properties": {
     "ALE DOMAIN": {
@@ -272367,6 +272367,60 @@
             ]
           },
           {
+            "title": "REDUCED_LUNG",
+            "description": "REDUCED_LUNG",
+            "type": "object",
+            "properties": {
+              "REDUCED_LUNG": {
+                "title": "REDUCED_LUNG (group)",
+                "description": "No description yet.",
+                "type": "object",
+                "properties": {
+                  "ELEMENT": {
+                    "title": "ELEMENT (int)",
+                    "description": "No description yet.",
+                    "type": "integer"
+                  },
+                  "QUANTITY": {
+                    "title": "QUANTITY (string)",
+                    "description": "No description yet.",
+                    "type": "string"
+                  },
+                  "VALUE": {
+                    "title": "VALUE (double)",
+                    "description": "No description yet.",
+                    "type": "number"
+                  },
+                  "TOLERANCE": {
+                    "title": "TOLERANCE (double)",
+                    "description": "No description yet.",
+                    "type": "number"
+                  },
+                  "NAME": {
+                    "title": "NAME (string)",
+                    "description": "No description yet.",
+                    "default": null,
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "additionalProperties": false,
+                "required": [
+                  "ELEMENT",
+                  "QUANTITY",
+                  "VALUE",
+                  "TOLERANCE"
+                ]
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "REDUCED_LUNG"
+            ]
+          },
+          {
             "title": "ARTNET",
             "description": "ARTNET",
             "type": "object",
@@ -425653,6 +425707,16 @@
               "description": "Number of linear solver used for reduced dimensional lung simulation.",
               "type": "integer"
             },
+            "nonlinear_solver": {
+              "title": "nonlinear_solver (enum)",
+              "description": "Nonlinear solver workflow: Nox uses the legacy NOX solver, and NewtonTree uses the serial structured-tree linear solver.",
+              "default": "Nox",
+              "type": "string",
+              "enum": [
+                "Nox",
+                "NewtonTree"
+              ]
+            },
             "max_nonlinear_iterations": {
               "title": "max_nonlinear_iterations (int)",
               "description": "Maximum number of nonlinear iterations.",
@@ -432781,5 +432845,5 @@
     "PROBLEM TYPE"
   ],
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "dd9c1a51c3124c3afb24b1ef5da4c8aae96fa185"
+  "$id": "9b0ce29dd01b168140dccb681f840d11d7c50557"
 }

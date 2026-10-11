@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: dd9c1a51c3124c3afb24b1ef5da4c8aae96fa185
+  commit_hash: 9b0ce29dd01b168140dccb681f840d11d7c50557
   version: 2026.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -45421,6 +45421,31 @@ sections:
                                     default: null
               - type: all_of
                 specs:
+                  - name: REDUCED_LUNG
+                    type: group
+                    required: true
+                    specs:
+                      - type: all_of
+                        specs:
+                          - name: ELEMENT
+                            type: int
+                            required: true
+                          - name: QUANTITY
+                            type: string
+                            required: true
+                          - name: VALUE
+                            type: double
+                            required: true
+                          - name: TOLERANCE
+                            type: double
+                            required: true
+                          - name: NAME
+                            noneable: true
+                            type: string
+                            required: false
+                            default: null
+              - type: all_of
+                specs:
                   - name: ARTNET
                     type: group
                     required: true
@@ -51966,6 +51991,14 @@ sections:
                       type: int
                       description: "Number of linear solver used for reduced dimensional lung simulation."
                       required: true
+                    - name: nonlinear_solver
+                      type: enum
+                      description: "Nonlinear solver workflow: Nox uses the legacy NOX solver, and NewtonTree uses the serial structured-tree linear solver."
+                      required: false
+                      default: Nox
+                      choices:
+                        - name: Nox
+                        - name: NewtonTree
                     - name: max_nonlinear_iterations
                       type: int
                       description: "Maximum number of nonlinear iterations."
