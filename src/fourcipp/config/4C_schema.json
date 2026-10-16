@@ -1,5 +1,5 @@
 {
-  "description": "Schema for 4C\nCommit hash: 9b0ce29dd01b168140dccb681f840d11d7c50557\nVersion: 2026.4.0-dev",
+  "description": "Schema for 4C\nCommit hash: 8843a5b5680da60e7ce6c626e425c8b31bc5d55e\nVersion: 2026.4.0-dev",
   "type": "object",
   "properties": {
     "ALE DOMAIN": {
@@ -273929,6 +273929,12 @@
             "null"
           ]
         },
+        "AUTO_DETECT_CONTIGUOUS_DOF_IDS": {
+          "title": "AUTO_DETECT_CONTIGUOUS_DOF_IDS (bool)",
+          "description": "Direct solvers only: If true, Amesos2 is told to skip its renumbering if the (serial) system has dof ids exactly [0, N) in the order of the local ids. Set to false to always use the general path, i.e., to opt out of this automatic detection.",
+          "default": true,
+          "type": "boolean"
+        },
         "NAME": {
           "title": "NAME (string)",
           "description": "User specified name for solver block",
@@ -274046,6 +274052,12 @@
             "string",
             "null"
           ]
+        },
+        "AUTO_DETECT_CONTIGUOUS_DOF_IDS": {
+          "title": "AUTO_DETECT_CONTIGUOUS_DOF_IDS (bool)",
+          "description": "Direct solvers only: If true, Amesos2 is told to skip its renumbering if the (serial) system has dof ids exactly [0, N) in the order of the local ids. Set to false to always use the general path, i.e., to opt out of this automatic detection.",
+          "default": true,
+          "type": "boolean"
         },
         "NAME": {
           "title": "NAME (string)",
@@ -274165,6 +274177,12 @@
             "null"
           ]
         },
+        "AUTO_DETECT_CONTIGUOUS_DOF_IDS": {
+          "title": "AUTO_DETECT_CONTIGUOUS_DOF_IDS (bool)",
+          "description": "Direct solvers only: If true, Amesos2 is told to skip its renumbering if the (serial) system has dof ids exactly [0, N) in the order of the local ids. Set to false to always use the general path, i.e., to opt out of this automatic detection.",
+          "default": true,
+          "type": "boolean"
+        },
         "NAME": {
           "title": "NAME (string)",
           "description": "User specified name for solver block",
@@ -274282,6 +274300,12 @@
             "string",
             "null"
           ]
+        },
+        "AUTO_DETECT_CONTIGUOUS_DOF_IDS": {
+          "title": "AUTO_DETECT_CONTIGUOUS_DOF_IDS (bool)",
+          "description": "Direct solvers only: If true, Amesos2 is told to skip its renumbering if the (serial) system has dof ids exactly [0, N) in the order of the local ids. Set to false to always use the general path, i.e., to opt out of this automatic detection.",
+          "default": true,
+          "type": "boolean"
         },
         "NAME": {
           "title": "NAME (string)",
@@ -274401,6 +274425,12 @@
             "null"
           ]
         },
+        "AUTO_DETECT_CONTIGUOUS_DOF_IDS": {
+          "title": "AUTO_DETECT_CONTIGUOUS_DOF_IDS (bool)",
+          "description": "Direct solvers only: If true, Amesos2 is told to skip its renumbering if the (serial) system has dof ids exactly [0, N) in the order of the local ids. Set to false to always use the general path, i.e., to opt out of this automatic detection.",
+          "default": true,
+          "type": "boolean"
+        },
         "NAME": {
           "title": "NAME (string)",
           "description": "User specified name for solver block",
@@ -274518,6 +274548,12 @@
             "string",
             "null"
           ]
+        },
+        "AUTO_DETECT_CONTIGUOUS_DOF_IDS": {
+          "title": "AUTO_DETECT_CONTIGUOUS_DOF_IDS (bool)",
+          "description": "Direct solvers only: If true, Amesos2 is told to skip its renumbering if the (serial) system has dof ids exactly [0, N) in the order of the local ids. Set to false to always use the general path, i.e., to opt out of this automatic detection.",
+          "default": true,
+          "type": "boolean"
         },
         "NAME": {
           "title": "NAME (string)",
@@ -274637,6 +274673,12 @@
             "null"
           ]
         },
+        "AUTO_DETECT_CONTIGUOUS_DOF_IDS": {
+          "title": "AUTO_DETECT_CONTIGUOUS_DOF_IDS (bool)",
+          "description": "Direct solvers only: If true, Amesos2 is told to skip its renumbering if the (serial) system has dof ids exactly [0, N) in the order of the local ids. Set to false to always use the general path, i.e., to opt out of this automatic detection.",
+          "default": true,
+          "type": "boolean"
+        },
         "NAME": {
           "title": "NAME (string)",
           "description": "User specified name for solver block",
@@ -274755,6 +274797,12 @@
             "null"
           ]
         },
+        "AUTO_DETECT_CONTIGUOUS_DOF_IDS": {
+          "title": "AUTO_DETECT_CONTIGUOUS_DOF_IDS (bool)",
+          "description": "Direct solvers only: If true, Amesos2 is told to skip its renumbering if the (serial) system has dof ids exactly [0, N) in the order of the local ids. Set to false to always use the general path, i.e., to opt out of this automatic detection.",
+          "default": true,
+          "type": "boolean"
+        },
         "NAME": {
           "title": "NAME (string)",
           "description": "User specified name for solver block",
@@ -274872,6 +274920,12 @@
             "string",
             "null"
           ]
+        },
+        "AUTO_DETECT_CONTIGUOUS_DOF_IDS": {
+          "title": "AUTO_DETECT_CONTIGUOUS_DOF_IDS (bool)",
+          "description": "Direct solvers only: If true, Amesos2 is told to skip its renumbering if the (serial) system has dof ids exactly [0, N) in the order of the local ids. Set to false to always use the general path, i.e., to opt out of this automatic detection.",
+          "default": true,
+          "type": "boolean"
         },
         "NAME": {
           "title": "NAME (string)",
@@ -432845,5 +432899,5 @@
     "PROBLEM TYPE"
   ],
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "9b0ce29dd01b168140dccb681f840d11d7c50557"
+  "$id": "8843a5b5680da60e7ce6c626e425c8b31bc5d55e"
 }

@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 9b0ce29dd01b168140dccb681f840d11d7c50557
+  commit_hash: 8843a5b5680da60e7ce6c626e425c8b31bc5d55e
   version: 2026.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -46498,6 +46498,11 @@ sections:
               description: "xml file defining any iterative solver"
               required: false
               default: null
+            - name: AUTO_DETECT_CONTIGUOUS_DOF_IDS
+              type: bool
+              description: "Direct solvers only: If true, Amesos2 is told to skip its renumbering if the (serial) system has dof ids exactly [0, N) in the order of the local ids. Set to false to always use the general path, i.e., to opt out of this automatic detection."
+              required: false
+              default: true
             - name: NAME
               type: string
               description: "User specified name for solver block"
@@ -46591,6 +46596,11 @@ sections:
               description: "xml file defining any iterative solver"
               required: false
               default: null
+            - name: AUTO_DETECT_CONTIGUOUS_DOF_IDS
+              type: bool
+              description: "Direct solvers only: If true, Amesos2 is told to skip its renumbering if the (serial) system has dof ids exactly [0, N) in the order of the local ids. Set to false to always use the general path, i.e., to opt out of this automatic detection."
+              required: false
+              default: true
             - name: NAME
               type: string
               description: "User specified name for solver block"
@@ -46684,6 +46694,11 @@ sections:
               description: "xml file defining any iterative solver"
               required: false
               default: null
+            - name: AUTO_DETECT_CONTIGUOUS_DOF_IDS
+              type: bool
+              description: "Direct solvers only: If true, Amesos2 is told to skip its renumbering if the (serial) system has dof ids exactly [0, N) in the order of the local ids. Set to false to always use the general path, i.e., to opt out of this automatic detection."
+              required: false
+              default: true
             - name: NAME
               type: string
               description: "User specified name for solver block"
@@ -46777,6 +46792,11 @@ sections:
               description: "xml file defining any iterative solver"
               required: false
               default: null
+            - name: AUTO_DETECT_CONTIGUOUS_DOF_IDS
+              type: bool
+              description: "Direct solvers only: If true, Amesos2 is told to skip its renumbering if the (serial) system has dof ids exactly [0, N) in the order of the local ids. Set to false to always use the general path, i.e., to opt out of this automatic detection."
+              required: false
+              default: true
             - name: NAME
               type: string
               description: "User specified name for solver block"
@@ -46870,6 +46890,11 @@ sections:
               description: "xml file defining any iterative solver"
               required: false
               default: null
+            - name: AUTO_DETECT_CONTIGUOUS_DOF_IDS
+              type: bool
+              description: "Direct solvers only: If true, Amesos2 is told to skip its renumbering if the (serial) system has dof ids exactly [0, N) in the order of the local ids. Set to false to always use the general path, i.e., to opt out of this automatic detection."
+              required: false
+              default: true
             - name: NAME
               type: string
               description: "User specified name for solver block"
@@ -46963,6 +46988,11 @@ sections:
               description: "xml file defining any iterative solver"
               required: false
               default: null
+            - name: AUTO_DETECT_CONTIGUOUS_DOF_IDS
+              type: bool
+              description: "Direct solvers only: If true, Amesos2 is told to skip its renumbering if the (serial) system has dof ids exactly [0, N) in the order of the local ids. Set to false to always use the general path, i.e., to opt out of this automatic detection."
+              required: false
+              default: true
             - name: NAME
               type: string
               description: "User specified name for solver block"
@@ -47056,6 +47086,11 @@ sections:
               description: "xml file defining any iterative solver"
               required: false
               default: null
+            - name: AUTO_DETECT_CONTIGUOUS_DOF_IDS
+              type: bool
+              description: "Direct solvers only: If true, Amesos2 is told to skip its renumbering if the (serial) system has dof ids exactly [0, N) in the order of the local ids. Set to false to always use the general path, i.e., to opt out of this automatic detection."
+              required: false
+              default: true
             - name: NAME
               type: string
               description: "User specified name for solver block"
@@ -47149,6 +47184,11 @@ sections:
               description: "xml file defining any iterative solver"
               required: false
               default: null
+            - name: AUTO_DETECT_CONTIGUOUS_DOF_IDS
+              type: bool
+              description: "Direct solvers only: If true, Amesos2 is told to skip its renumbering if the (serial) system has dof ids exactly [0, N) in the order of the local ids. Set to false to always use the general path, i.e., to opt out of this automatic detection."
+              required: false
+              default: true
             - name: NAME
               type: string
               description: "User specified name for solver block"
@@ -47242,6 +47282,11 @@ sections:
               description: "xml file defining any iterative solver"
               required: false
               default: null
+            - name: AUTO_DETECT_CONTIGUOUS_DOF_IDS
+              type: bool
+              description: "Direct solvers only: If true, Amesos2 is told to skip its renumbering if the (serial) system has dof ids exactly [0, N) in the order of the local ids. Set to false to always use the general path, i.e., to opt out of this automatic detection."
+              required: false
+              default: true
             - name: NAME
               type: string
               description: "User specified name for solver block"
