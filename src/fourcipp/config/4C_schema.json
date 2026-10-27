@@ -1,5 +1,5 @@
 {
-  "description": "Schema for 4C\nCommit hash: 8843a5b5680da60e7ce6c626e425c8b31bc5d55e\nVersion: 2026.4.0-dev",
+  "description": "Schema for 4C\nCommit hash: bc5f961f294335ce93dd97e00fcf173d2972ed99\nVersion: 2026.4.0-dev",
   "type": "object",
   "properties": {
     "ALE DOMAIN": {
@@ -81162,9 +81162,9 @@
             "description": "angle of rotation",
             "type": "number"
           },
-          "ABSTREETOL": {
-            "title": "ABSTREETOL (double)",
-            "description": "tolerance for nodematching in octree",
+          "TREETOL": {
+            "title": "TREETOL (double)",
+            "description": "tolerance for node-matching in octree in terms of the characteristic mesh length, i.e., the minimum distance between nodes",
             "type": "number"
           }
         },
@@ -81175,7 +81175,7 @@
           "PLANE",
           "LAYER",
           "ANGLE",
-          "ABSTREETOL"
+          "TREETOL"
         ]
       }
     },
@@ -93811,9 +93811,9 @@
             "description": "angle of rotation",
             "type": "number"
           },
-          "ABSTREETOL": {
-            "title": "ABSTREETOL (double)",
-            "description": "tolerance for nodematching in octree",
+          "TREETOL": {
+            "title": "TREETOL (double)",
+            "description": "tolerance for node-matching in octree in terms of the characteristic mesh length, i.e., the minimum distance between nodes",
             "type": "number"
           }
         },
@@ -93824,7 +93824,7 @@
           "PLANE",
           "LAYER",
           "ANGLE",
-          "ABSTREETOL"
+          "TREETOL"
         ]
       }
     },
@@ -432454,37 +432454,51 @@
                   "rho_oxy": {
                     "title": "rho_oxy (double)",
                     "description": "No description yet.",
-                    "type": "number"
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1.7976931348623157e+308
                   },
                   "DiffAdVTLC": {
                     "title": "DiffAdVTLC (double)",
                     "description": "No description yet.",
-                    "type": "number"
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1.7976931348623157e+308
                   },
                   "alpha_oxy": {
                     "title": "alpha_oxy (double)",
                     "description": "No description yet.",
-                    "type": "number"
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1.7976931348623157e+308
                   },
                   "rho_air": {
                     "title": "rho_air (double)",
                     "description": "No description yet.",
-                    "type": "number"
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1.7976931348623157e+308
                   },
                   "rho_bl": {
                     "title": "rho_bl (double)",
                     "description": "No description yet.",
-                    "type": "number"
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1.7976931348623157e+308
                   },
                   "n": {
                     "title": "n (double)",
-                    "description": "No description yet.",
-                    "type": "number"
+                    "description": "Too high values of the exponent can lead to overflow depending on the pressure and the units used in your problem type!Physiological limit for oxygen in blood is set.",
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 6
                   },
                   "P_oB50": {
                     "title": "P_oB50 (double)",
                     "description": "No description yet.",
-                    "type": "number"
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1.7976931348623157e+308
                   },
                   "NC_Hb": {
                     "title": "NC_Hb (double)",
@@ -432494,12 +432508,16 @@
                   "P_atmospheric": {
                     "title": "P_atmospheric (double)",
                     "description": "No description yet.",
-                    "type": "number"
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1.7976931348623157e+308
                   },
                   "volfrac_blood_ref": {
                     "title": "volfrac_blood_ref (double)",
                     "description": "No description yet.",
-                    "type": "number"
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1.7976931348623157e+308
                   }
                 },
                 "additionalProperties": false,
@@ -432544,72 +432562,100 @@
                   "rho_CO2": {
                     "title": "rho_CO2 (double)",
                     "description": "No description yet.",
-                    "type": "number"
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1.7976931348623157e+308
                   },
                   "DiffsolAdVTLC": {
                     "title": "DiffsolAdVTLC (double)",
                     "description": "No description yet.",
-                    "type": "number"
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1.7976931348623157e+308
                   },
                   "pH": {
                     "title": "pH (double)",
                     "description": "No description yet.",
-                    "type": "number"
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1.7976931348623157e+308
                   },
                   "rho_air": {
                     "title": "rho_air (double)",
                     "description": "No description yet.",
-                    "type": "number"
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1.7976931348623157e+308
                   },
                   "rho_bl": {
                     "title": "rho_bl (double)",
                     "description": "No description yet.",
-                    "type": "number"
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1.7976931348623157e+308
                   },
                   "rho_oxy": {
                     "title": "rho_oxy (double)",
                     "description": "No description yet.",
-                    "type": "number"
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1.7976931348623157e+308
                   },
                   "n": {
                     "title": "n (double)",
-                    "description": "No description yet.",
-                    "type": "number"
+                    "description": "Too high values of the exponent can lead to overflow depending on the pressure and the units used in your problem type! Physiological limit for oxygen in blood is set.",
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 6
                   },
                   "P_oB50": {
                     "title": "P_oB50 (double)",
                     "description": "No description yet.",
-                    "type": "number"
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1.7976931348623157e+308
                   },
                   "C_Hb": {
                     "title": "C_Hb (double)",
                     "description": "No description yet.",
-                    "type": "number"
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1.7976931348623157e+308
                   },
                   "NC_Hb": {
                     "title": "NC_Hb (double)",
                     "description": "No description yet.",
-                    "type": "number"
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1.7976931348623157e+308
                   },
                   "alpha_oxy": {
                     "title": "alpha_oxy (double)",
                     "description": "No description yet.",
-                    "type": "number"
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1.7976931348623157e+308
                   },
                   "P_atmospheric": {
                     "title": "P_atmospheric (double)",
                     "description": "No description yet.",
-                    "type": "number"
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1.7976931348623157e+308
                   },
                   "ScalingFormmHg": {
                     "title": "ScalingFormmHg (double)",
                     "description": "No description yet.",
-                    "type": "number"
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1.7976931348623157e+308
                   },
                   "volfrac_blood_ref": {
                     "title": "volfrac_blood_ref (double)",
                     "description": "No description yet.",
-                    "type": "number"
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1.7976931348623157e+308
                   }
                 },
                 "additionalProperties": false,
@@ -432899,5 +432945,5 @@
     "PROBLEM TYPE"
   ],
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "8843a5b5680da60e7ce6c626e425c8b31bc5d55e"
+  "$id": "bc5f961f294335ce93dd97e00fcf173d2972ed99"
 }

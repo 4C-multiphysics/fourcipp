@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 8843a5b5680da60e7ce6c626e425c8b31bc5d55e
+  commit_hash: bc5f961f294335ce93dd97e00fcf173d2972ed99
   version: 2026.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -14867,9 +14867,9 @@ sections:
             type: double
             description: "angle of rotation"
             required: true
-          - name: ABSTREETOL
+          - name: TREETOL
             type: double
-            description: "tolerance for nodematching in octree"
+            description: "tolerance for node-matching in octree in terms of the characteristic mesh length, i.e., the minimum distance between nodes"
             required: true
     - name: DESIGN LINE PERIODIC RVE 2D BOUNDARY CONDITIONS
       type: list
@@ -22350,9 +22350,9 @@ sections:
             type: double
             description: "angle of rotation"
             required: true
-          - name: ABSTREETOL
+          - name: TREETOL
             type: double
-            description: "tolerance for nodematching in octree"
+            description: "tolerance for node-matching in octree in terms of the characteristic mesh length, i.e., the minimum distance between nodes"
             required: true
     - name: DESIGN SURF PERIODIC RVE 3D BOUNDARY CONDITIONS
       type: list
@@ -31722,33 +31722,88 @@ sections:
                                   - name: rho_oxy
                                     type: double
                                     required: true
+                                    validator:
+                                      range:
+                                        minimum: 0
+                                        maximum: 1.7976931348623157e+308
+                                        minimum_exclusive: true
+                                        maximum_exclusive: false
                                   - name: DiffAdVTLC
                                     type: double
                                     required: true
+                                    validator:
+                                      range:
+                                        minimum: 0
+                                        maximum: 1.7976931348623157e+308
+                                        minimum_exclusive: true
+                                        maximum_exclusive: false
                                   - name: alpha_oxy
                                     type: double
                                     required: true
+                                    validator:
+                                      range:
+                                        minimum: 0
+                                        maximum: 1.7976931348623157e+308
+                                        minimum_exclusive: true
+                                        maximum_exclusive: false
                                   - name: rho_air
                                     type: double
                                     required: true
+                                    validator:
+                                      range:
+                                        minimum: 0
+                                        maximum: 1.7976931348623157e+308
+                                        minimum_exclusive: true
+                                        maximum_exclusive: false
                                   - name: rho_bl
                                     type: double
                                     required: true
+                                    validator:
+                                      range:
+                                        minimum: 0
+                                        maximum: 1.7976931348623157e+308
+                                        minimum_exclusive: true
+                                        maximum_exclusive: false
                                   - name: n
                                     type: double
+                                    description: "Too high values of the exponent can lead to overflow depending on the pressure and the units used in your problem type!Physiological limit for oxygen in blood is set."
                                     required: true
+                                    validator:
+                                      range:
+                                        minimum: 1
+                                        maximum: 6
+                                        minimum_exclusive: false
+                                        maximum_exclusive: false
                                   - name: P_oB50
                                     type: double
                                     required: true
+                                    validator:
+                                      range:
+                                        minimum: 0
+                                        maximum: 1.7976931348623157e+308
+                                        minimum_exclusive: true
+                                        maximum_exclusive: false
                                   - name: NC_Hb
                                     type: double
                                     required: true
                                   - name: P_atmospheric
                                     type: double
                                     required: true
+                                    validator:
+                                      range:
+                                        minimum: 0
+                                        maximum: 1.7976931348623157e+308
+                                        minimum_exclusive: true
+                                        maximum_exclusive: false
                                   - name: volfrac_blood_ref
                                     type: double
                                     required: true
+                                    validator:
+                                      range:
+                                        minimum: 0
+                                        maximum: 1.7976931348623157e+308
+                                        minimum_exclusive: true
+                                        maximum_exclusive: false
                       - type: all_of
                         specs:
                           - name: POROMULTIPHASESCATRA_FUNCTION
@@ -31765,45 +31820,130 @@ sections:
                                   - name: rho_CO2
                                     type: double
                                     required: true
+                                    validator:
+                                      range:
+                                        minimum: 0
+                                        maximum: 1.7976931348623157e+308
+                                        minimum_exclusive: true
+                                        maximum_exclusive: false
                                   - name: DiffsolAdVTLC
                                     type: double
                                     required: true
+                                    validator:
+                                      range:
+                                        minimum: 0
+                                        maximum: 1.7976931348623157e+308
+                                        minimum_exclusive: true
+                                        maximum_exclusive: false
                                   - name: pH
                                     type: double
                                     required: true
+                                    validator:
+                                      range:
+                                        minimum: 0
+                                        maximum: 1.7976931348623157e+308
+                                        minimum_exclusive: true
+                                        maximum_exclusive: false
                                   - name: rho_air
                                     type: double
                                     required: true
+                                    validator:
+                                      range:
+                                        minimum: 0
+                                        maximum: 1.7976931348623157e+308
+                                        minimum_exclusive: true
+                                        maximum_exclusive: false
                                   - name: rho_bl
                                     type: double
                                     required: true
+                                    validator:
+                                      range:
+                                        minimum: 0
+                                        maximum: 1.7976931348623157e+308
+                                        minimum_exclusive: true
+                                        maximum_exclusive: false
                                   - name: rho_oxy
                                     type: double
                                     required: true
+                                    validator:
+                                      range:
+                                        minimum: 0
+                                        maximum: 1.7976931348623157e+308
+                                        minimum_exclusive: true
+                                        maximum_exclusive: false
                                   - name: n
                                     type: double
+                                    description: "Too high values of the exponent can lead to overflow depending on the pressure and the units used in your problem type! Physiological limit for oxygen in blood is set."
                                     required: true
+                                    validator:
+                                      range:
+                                        minimum: 1
+                                        maximum: 6
+                                        minimum_exclusive: false
+                                        maximum_exclusive: false
                                   - name: P_oB50
                                     type: double
                                     required: true
+                                    validator:
+                                      range:
+                                        minimum: 0
+                                        maximum: 1.7976931348623157e+308
+                                        minimum_exclusive: true
+                                        maximum_exclusive: false
                                   - name: C_Hb
                                     type: double
                                     required: true
+                                    validator:
+                                      range:
+                                        minimum: 0
+                                        maximum: 1.7976931348623157e+308
+                                        minimum_exclusive: true
+                                        maximum_exclusive: false
                                   - name: NC_Hb
                                     type: double
                                     required: true
+                                    validator:
+                                      range:
+                                        minimum: 0
+                                        maximum: 1.7976931348623157e+308
+                                        minimum_exclusive: true
+                                        maximum_exclusive: false
                                   - name: alpha_oxy
                                     type: double
                                     required: true
+                                    validator:
+                                      range:
+                                        minimum: 0
+                                        maximum: 1.7976931348623157e+308
+                                        minimum_exclusive: true
+                                        maximum_exclusive: false
                                   - name: P_atmospheric
                                     type: double
                                     required: true
+                                    validator:
+                                      range:
+                                        minimum: 0
+                                        maximum: 1.7976931348623157e+308
+                                        minimum_exclusive: true
+                                        maximum_exclusive: false
                                   - name: ScalingFormmHg
                                     type: double
                                     required: true
+                                    validator:
+                                      range:
+                                        minimum: 0
+                                        maximum: 1.7976931348623157e+308
+                                        minimum_exclusive: true
+                                        maximum_exclusive: false
                                   - name: volfrac_blood_ref
                                     type: double
                                     required: true
+                                    validator:
+                                      range:
+                                        minimum: 0
+                                        maximum: 1.7976931348623157e+308
+                                        minimum_exclusive: true
+                                        maximum_exclusive: false
               - type: all_of
                 specs:
                   - name: SCATRA_FUNCTION
