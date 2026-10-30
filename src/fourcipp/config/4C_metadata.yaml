@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: bc5f961f294335ce93dd97e00fcf173d2972ed99
+  commit_hash: 1f2ed686d958fd955f82daaa3cd88620b20852ce
   version: 2026.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -10446,7 +10446,7 @@ sections:
               type: double
               description: "Tolerance for point objects"
               required: false
-              default: 0.0001
+              default: 1e-04
             - name: WRITE_GEOMETRIC_SEARCH_VISUALIZATION
               type: bool
               description: "If visualization output for the geometric search should be written"
@@ -10614,7 +10614,7 @@ sections:
               type: double
               description: "tidal volume (the total volume of inspired air, in a single breath)"
               required: false
-              default: 400000
+              default: 4e+05
             - name: V_lung_dead
               type: double
               description: "dead space volume"
@@ -11306,7 +11306,7 @@ sections:
               type: double
               description: "unstressed volume of systemic veins"
               required: false
-              default: 100000
+              default: 1e+05
             - name: V_at_r_u
               type: double
               description: "unstressed volume of right 0D atrium"
@@ -11556,7 +11556,7 @@ sections:
               type: double
               description: "unstressed volume of systemic splanchnic veins"
               required: false
-              default: 1.121e+06
+              default: 1121000
             - name: V_venespl_sys_u
               type: double
               description: "unstressed volume of systemic extra-splanchnic veins"
@@ -11617,7 +11617,7 @@ sections:
               type: double
               description: "Value of the penalty parameter"
               required: false
-              default: 100000
+              default: 1e+05
     - name: CONSTRAINT/EMBEDDED MESH COUPLING
       type: group
       required: false
@@ -30918,7 +30918,7 @@ sections:
               type: double
               description: "Limit minimally allowed time step size (>0)"
               required: false
-              default: 0.0001
+              default: 1e-04
             - name: LOCERRTOLFLUID
               type: double
               description: "Tolerance for the norm of local velocity error"
@@ -42019,7 +42019,7 @@ sections:
                                     type: double
                                     description: "maximum evaluable plastic strain increment used for registering overflow errors"
                                     required: false
-                                    default: 1.0686474581524463e+13
+                                    default: 10686474581524.463
                                     validator:
                                       range:
                                         minimum: 0
@@ -42035,7 +42035,7 @@ sections:
                                     type: double
                                     description: "maximum evaluable increment of the plastic strain derivatives w.r.t. plastic strain and equivalent stress, used for registering overflow errors"
                                     required: false
-                                    default: 1.0686474581524463e+13
+                                    default: 10686474581524.463
                                     validator:
                                       range:
                                         minimum: 0
@@ -46643,6 +46643,11 @@ sections:
               description: "Direct solvers only: If true, Amesos2 is told to skip its renumbering if the (serial) system has dof ids exactly [0, N) in the order of the local ids. Set to false to always use the general path, i.e., to opt out of this automatic detection."
               required: false
               default: true
+            - name: REUSE_SYMBOLIC_FACTORIZATION
+              type: bool
+              description: "Direct solvers KLU2, UMFPACK and MUMPS only: If true, the symbolic step of Amesos2 is skipped across solves as long as the sparsity pattern of the matrix is unchanged. KLU2 and MUMPS then repeat only the numeric factorization. UMFPACK still repeats its analysis in every solve, since Amesos2 releases it, only the reading of the matrix structure is saved. The pattern is verified at every solve. Set to false to always redo the symbolic step."
+              required: false
+              default: true
             - name: NAME
               type: string
               description: "User specified name for solver block"
@@ -46739,6 +46744,11 @@ sections:
             - name: AUTO_DETECT_CONTIGUOUS_DOF_IDS
               type: bool
               description: "Direct solvers only: If true, Amesos2 is told to skip its renumbering if the (serial) system has dof ids exactly [0, N) in the order of the local ids. Set to false to always use the general path, i.e., to opt out of this automatic detection."
+              required: false
+              default: true
+            - name: REUSE_SYMBOLIC_FACTORIZATION
+              type: bool
+              description: "Direct solvers KLU2, UMFPACK and MUMPS only: If true, the symbolic step of Amesos2 is skipped across solves as long as the sparsity pattern of the matrix is unchanged. KLU2 and MUMPS then repeat only the numeric factorization. UMFPACK still repeats its analysis in every solve, since Amesos2 releases it, only the reading of the matrix structure is saved. The pattern is verified at every solve. Set to false to always redo the symbolic step."
               required: false
               default: true
             - name: NAME
@@ -46839,6 +46849,11 @@ sections:
               description: "Direct solvers only: If true, Amesos2 is told to skip its renumbering if the (serial) system has dof ids exactly [0, N) in the order of the local ids. Set to false to always use the general path, i.e., to opt out of this automatic detection."
               required: false
               default: true
+            - name: REUSE_SYMBOLIC_FACTORIZATION
+              type: bool
+              description: "Direct solvers KLU2, UMFPACK and MUMPS only: If true, the symbolic step of Amesos2 is skipped across solves as long as the sparsity pattern of the matrix is unchanged. KLU2 and MUMPS then repeat only the numeric factorization. UMFPACK still repeats its analysis in every solve, since Amesos2 releases it, only the reading of the matrix structure is saved. The pattern is verified at every solve. Set to false to always redo the symbolic step."
+              required: false
+              default: true
             - name: NAME
               type: string
               description: "User specified name for solver block"
@@ -46935,6 +46950,11 @@ sections:
             - name: AUTO_DETECT_CONTIGUOUS_DOF_IDS
               type: bool
               description: "Direct solvers only: If true, Amesos2 is told to skip its renumbering if the (serial) system has dof ids exactly [0, N) in the order of the local ids. Set to false to always use the general path, i.e., to opt out of this automatic detection."
+              required: false
+              default: true
+            - name: REUSE_SYMBOLIC_FACTORIZATION
+              type: bool
+              description: "Direct solvers KLU2, UMFPACK and MUMPS only: If true, the symbolic step of Amesos2 is skipped across solves as long as the sparsity pattern of the matrix is unchanged. KLU2 and MUMPS then repeat only the numeric factorization. UMFPACK still repeats its analysis in every solve, since Amesos2 releases it, only the reading of the matrix structure is saved. The pattern is verified at every solve. Set to false to always redo the symbolic step."
               required: false
               default: true
             - name: NAME
@@ -47035,6 +47055,11 @@ sections:
               description: "Direct solvers only: If true, Amesos2 is told to skip its renumbering if the (serial) system has dof ids exactly [0, N) in the order of the local ids. Set to false to always use the general path, i.e., to opt out of this automatic detection."
               required: false
               default: true
+            - name: REUSE_SYMBOLIC_FACTORIZATION
+              type: bool
+              description: "Direct solvers KLU2, UMFPACK and MUMPS only: If true, the symbolic step of Amesos2 is skipped across solves as long as the sparsity pattern of the matrix is unchanged. KLU2 and MUMPS then repeat only the numeric factorization. UMFPACK still repeats its analysis in every solve, since Amesos2 releases it, only the reading of the matrix structure is saved. The pattern is verified at every solve. Set to false to always redo the symbolic step."
+              required: false
+              default: true
             - name: NAME
               type: string
               description: "User specified name for solver block"
@@ -47131,6 +47156,11 @@ sections:
             - name: AUTO_DETECT_CONTIGUOUS_DOF_IDS
               type: bool
               description: "Direct solvers only: If true, Amesos2 is told to skip its renumbering if the (serial) system has dof ids exactly [0, N) in the order of the local ids. Set to false to always use the general path, i.e., to opt out of this automatic detection."
+              required: false
+              default: true
+            - name: REUSE_SYMBOLIC_FACTORIZATION
+              type: bool
+              description: "Direct solvers KLU2, UMFPACK and MUMPS only: If true, the symbolic step of Amesos2 is skipped across solves as long as the sparsity pattern of the matrix is unchanged. KLU2 and MUMPS then repeat only the numeric factorization. UMFPACK still repeats its analysis in every solve, since Amesos2 releases it, only the reading of the matrix structure is saved. The pattern is verified at every solve. Set to false to always redo the symbolic step."
               required: false
               default: true
             - name: NAME
@@ -47231,6 +47261,11 @@ sections:
               description: "Direct solvers only: If true, Amesos2 is told to skip its renumbering if the (serial) system has dof ids exactly [0, N) in the order of the local ids. Set to false to always use the general path, i.e., to opt out of this automatic detection."
               required: false
               default: true
+            - name: REUSE_SYMBOLIC_FACTORIZATION
+              type: bool
+              description: "Direct solvers KLU2, UMFPACK and MUMPS only: If true, the symbolic step of Amesos2 is skipped across solves as long as the sparsity pattern of the matrix is unchanged. KLU2 and MUMPS then repeat only the numeric factorization. UMFPACK still repeats its analysis in every solve, since Amesos2 releases it, only the reading of the matrix structure is saved. The pattern is verified at every solve. Set to false to always redo the symbolic step."
+              required: false
+              default: true
             - name: NAME
               type: string
               description: "User specified name for solver block"
@@ -47329,6 +47364,11 @@ sections:
               description: "Direct solvers only: If true, Amesos2 is told to skip its renumbering if the (serial) system has dof ids exactly [0, N) in the order of the local ids. Set to false to always use the general path, i.e., to opt out of this automatic detection."
               required: false
               default: true
+            - name: REUSE_SYMBOLIC_FACTORIZATION
+              type: bool
+              description: "Direct solvers KLU2, UMFPACK and MUMPS only: If true, the symbolic step of Amesos2 is skipped across solves as long as the sparsity pattern of the matrix is unchanged. KLU2 and MUMPS then repeat only the numeric factorization. UMFPACK still repeats its analysis in every solve, since Amesos2 releases it, only the reading of the matrix structure is saved. The pattern is verified at every solve. Set to false to always redo the symbolic step."
+              required: false
+              default: true
             - name: NAME
               type: string
               description: "User specified name for solver block"
@@ -47425,6 +47465,11 @@ sections:
             - name: AUTO_DETECT_CONTIGUOUS_DOF_IDS
               type: bool
               description: "Direct solvers only: If true, Amesos2 is told to skip its renumbering if the (serial) system has dof ids exactly [0, N) in the order of the local ids. Set to false to always use the general path, i.e., to opt out of this automatic detection."
+              required: false
+              default: true
+            - name: REUSE_SYMBOLIC_FACTORIZATION
+              type: bool
+              description: "Direct solvers KLU2, UMFPACK and MUMPS only: If true, the symbolic step of Amesos2 is skipped across solves as long as the sparsity pattern of the matrix is unchanged. KLU2 and MUMPS then repeat only the numeric factorization. UMFPACK still repeats its analysis in every solve, since Amesos2 releases it, only the reading of the matrix structure is saved. The pattern is verified at every solve. Set to false to always redo the symbolic step."
               required: false
               default: true
             - name: NAME
@@ -48230,7 +48275,7 @@ sections:
               type: double
               description: "The ftol in the sufficient decrease condition"
               required: false
-              default: 0.0001
+              default: 1e-04
             - name: Curvature Condition
               type: double
               description: "The gtol in the curvature condition"
@@ -48354,7 +48399,7 @@ sections:
               type: double
               description: "Parameter choice for sufficient decrease condition"
               required: false
-              default: 0.0001
+              default: 1e-04
             - name: Force Interpolation
               type: bool
               description: "Set to true if at least one interpolation step should be used. The default is false which means that the line search will stop if the default step length satisfies the convergence criteria"
@@ -48545,7 +48590,7 @@ sections:
               type: double
               description: "Minimum improvement ratio to accept the step"
               required: false
-              default: 0.0001
+              default: 1e-04
             - name: Contraction Trigger Ratio
               type: double
               description: "If the improvement ratio is less than this value, then the trust region is contracted by the amount specified by the \"Contraction Factor\". Must be larger than \"Minimum Improvement Ratio\""
@@ -48938,7 +48983,7 @@ sections:
               type: double
               description: "sufficient descent factor in (Newton) line search scheme"
               required: false
-              default: 0.0001
+              default: 1e-04
             - name: MATERIALTANGENT
               type: enum
               description: "way of evaluating the constitutive matrix"

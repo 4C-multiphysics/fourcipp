@@ -1,5 +1,5 @@
 {
-  "description": "Schema for 4C\nCommit hash: bc5f961f294335ce93dd97e00fcf173d2972ed99\nVersion: 2026.4.0-dev",
+  "description": "Schema for 4C\nCommit hash: 1f2ed686d958fd955f82daaa3cd88620b20852ce\nVersion: 2026.4.0-dev",
   "type": "object",
   "properties": {
     "ALE DOMAIN": {
@@ -74836,7 +74836,7 @@
         "V_lung_tidal": {
           "title": "V_lung_tidal (double)",
           "description": "tidal volume (the total volume of inspired air, in a single breath)",
-          "default": 400000,
+          "default": 400000.0,
           "type": "number"
         },
         "V_lung_dead": {
@@ -75670,7 +75670,7 @@
         "V_ven_sys_u": {
           "title": "V_ven_sys_u (double)",
           "description": "unstressed volume of systemic veins",
-          "default": 100000,
+          "default": 100000.0,
           "type": "number"
         },
         "V_at_r_u": {
@@ -75970,7 +75970,7 @@
         "V_venspl_sys_u": {
           "title": "V_venspl_sys_u (double)",
           "description": "unstressed volume of systemic splanchnic veins",
-          "default": 1121000.0,
+          "default": 1121000,
           "type": "number"
         },
         "V_venespl_sys_u": {
@@ -76060,7 +76060,7 @@
         "PENALTY_PARAM": {
           "title": "PENALTY_PARAM (double)",
           "description": "Value of the penalty parameter",
-          "default": 100000,
+          "default": 100000.0,
           "type": "number"
         }
       },
@@ -273935,6 +273935,12 @@
           "default": true,
           "type": "boolean"
         },
+        "REUSE_SYMBOLIC_FACTORIZATION": {
+          "title": "REUSE_SYMBOLIC_FACTORIZATION (bool)",
+          "description": "Direct solvers KLU2, UMFPACK and MUMPS only: If true, the symbolic step of Amesos2 is skipped across solves as long as the sparsity pattern of the matrix is unchanged. KLU2 and MUMPS then repeat only the numeric factorization. UMFPACK still repeats its analysis in every solve, since Amesos2 releases it, only the reading of the matrix structure is saved. The pattern is verified at every solve. Set to false to always redo the symbolic step.",
+          "default": true,
+          "type": "boolean"
+        },
         "NAME": {
           "title": "NAME (string)",
           "description": "User specified name for solver block",
@@ -274056,6 +274062,12 @@
         "AUTO_DETECT_CONTIGUOUS_DOF_IDS": {
           "title": "AUTO_DETECT_CONTIGUOUS_DOF_IDS (bool)",
           "description": "Direct solvers only: If true, Amesos2 is told to skip its renumbering if the (serial) system has dof ids exactly [0, N) in the order of the local ids. Set to false to always use the general path, i.e., to opt out of this automatic detection.",
+          "default": true,
+          "type": "boolean"
+        },
+        "REUSE_SYMBOLIC_FACTORIZATION": {
+          "title": "REUSE_SYMBOLIC_FACTORIZATION (bool)",
+          "description": "Direct solvers KLU2, UMFPACK and MUMPS only: If true, the symbolic step of Amesos2 is skipped across solves as long as the sparsity pattern of the matrix is unchanged. KLU2 and MUMPS then repeat only the numeric factorization. UMFPACK still repeats its analysis in every solve, since Amesos2 releases it, only the reading of the matrix structure is saved. The pattern is verified at every solve. Set to false to always redo the symbolic step.",
           "default": true,
           "type": "boolean"
         },
@@ -274183,6 +274195,12 @@
           "default": true,
           "type": "boolean"
         },
+        "REUSE_SYMBOLIC_FACTORIZATION": {
+          "title": "REUSE_SYMBOLIC_FACTORIZATION (bool)",
+          "description": "Direct solvers KLU2, UMFPACK and MUMPS only: If true, the symbolic step of Amesos2 is skipped across solves as long as the sparsity pattern of the matrix is unchanged. KLU2 and MUMPS then repeat only the numeric factorization. UMFPACK still repeats its analysis in every solve, since Amesos2 releases it, only the reading of the matrix structure is saved. The pattern is verified at every solve. Set to false to always redo the symbolic step.",
+          "default": true,
+          "type": "boolean"
+        },
         "NAME": {
           "title": "NAME (string)",
           "description": "User specified name for solver block",
@@ -274304,6 +274322,12 @@
         "AUTO_DETECT_CONTIGUOUS_DOF_IDS": {
           "title": "AUTO_DETECT_CONTIGUOUS_DOF_IDS (bool)",
           "description": "Direct solvers only: If true, Amesos2 is told to skip its renumbering if the (serial) system has dof ids exactly [0, N) in the order of the local ids. Set to false to always use the general path, i.e., to opt out of this automatic detection.",
+          "default": true,
+          "type": "boolean"
+        },
+        "REUSE_SYMBOLIC_FACTORIZATION": {
+          "title": "REUSE_SYMBOLIC_FACTORIZATION (bool)",
+          "description": "Direct solvers KLU2, UMFPACK and MUMPS only: If true, the symbolic step of Amesos2 is skipped across solves as long as the sparsity pattern of the matrix is unchanged. KLU2 and MUMPS then repeat only the numeric factorization. UMFPACK still repeats its analysis in every solve, since Amesos2 releases it, only the reading of the matrix structure is saved. The pattern is verified at every solve. Set to false to always redo the symbolic step.",
           "default": true,
           "type": "boolean"
         },
@@ -274431,6 +274455,12 @@
           "default": true,
           "type": "boolean"
         },
+        "REUSE_SYMBOLIC_FACTORIZATION": {
+          "title": "REUSE_SYMBOLIC_FACTORIZATION (bool)",
+          "description": "Direct solvers KLU2, UMFPACK and MUMPS only: If true, the symbolic step of Amesos2 is skipped across solves as long as the sparsity pattern of the matrix is unchanged. KLU2 and MUMPS then repeat only the numeric factorization. UMFPACK still repeats its analysis in every solve, since Amesos2 releases it, only the reading of the matrix structure is saved. The pattern is verified at every solve. Set to false to always redo the symbolic step.",
+          "default": true,
+          "type": "boolean"
+        },
         "NAME": {
           "title": "NAME (string)",
           "description": "User specified name for solver block",
@@ -274552,6 +274582,12 @@
         "AUTO_DETECT_CONTIGUOUS_DOF_IDS": {
           "title": "AUTO_DETECT_CONTIGUOUS_DOF_IDS (bool)",
           "description": "Direct solvers only: If true, Amesos2 is told to skip its renumbering if the (serial) system has dof ids exactly [0, N) in the order of the local ids. Set to false to always use the general path, i.e., to opt out of this automatic detection.",
+          "default": true,
+          "type": "boolean"
+        },
+        "REUSE_SYMBOLIC_FACTORIZATION": {
+          "title": "REUSE_SYMBOLIC_FACTORIZATION (bool)",
+          "description": "Direct solvers KLU2, UMFPACK and MUMPS only: If true, the symbolic step of Amesos2 is skipped across solves as long as the sparsity pattern of the matrix is unchanged. KLU2 and MUMPS then repeat only the numeric factorization. UMFPACK still repeats its analysis in every solve, since Amesos2 releases it, only the reading of the matrix structure is saved. The pattern is verified at every solve. Set to false to always redo the symbolic step.",
           "default": true,
           "type": "boolean"
         },
@@ -274679,6 +274715,12 @@
           "default": true,
           "type": "boolean"
         },
+        "REUSE_SYMBOLIC_FACTORIZATION": {
+          "title": "REUSE_SYMBOLIC_FACTORIZATION (bool)",
+          "description": "Direct solvers KLU2, UMFPACK and MUMPS only: If true, the symbolic step of Amesos2 is skipped across solves as long as the sparsity pattern of the matrix is unchanged. KLU2 and MUMPS then repeat only the numeric factorization. UMFPACK still repeats its analysis in every solve, since Amesos2 releases it, only the reading of the matrix structure is saved. The pattern is verified at every solve. Set to false to always redo the symbolic step.",
+          "default": true,
+          "type": "boolean"
+        },
         "NAME": {
           "title": "NAME (string)",
           "description": "User specified name for solver block",
@@ -274803,6 +274845,12 @@
           "default": true,
           "type": "boolean"
         },
+        "REUSE_SYMBOLIC_FACTORIZATION": {
+          "title": "REUSE_SYMBOLIC_FACTORIZATION (bool)",
+          "description": "Direct solvers KLU2, UMFPACK and MUMPS only: If true, the symbolic step of Amesos2 is skipped across solves as long as the sparsity pattern of the matrix is unchanged. KLU2 and MUMPS then repeat only the numeric factorization. UMFPACK still repeats its analysis in every solve, since Amesos2 releases it, only the reading of the matrix structure is saved. The pattern is verified at every solve. Set to false to always redo the symbolic step.",
+          "default": true,
+          "type": "boolean"
+        },
         "NAME": {
           "title": "NAME (string)",
           "description": "User specified name for solver block",
@@ -274924,6 +274972,12 @@
         "AUTO_DETECT_CONTIGUOUS_DOF_IDS": {
           "title": "AUTO_DETECT_CONTIGUOUS_DOF_IDS (bool)",
           "description": "Direct solvers only: If true, Amesos2 is told to skip its renumbering if the (serial) system has dof ids exactly [0, N) in the order of the local ids. Set to false to always use the general path, i.e., to opt out of this automatic detection.",
+          "default": true,
+          "type": "boolean"
+        },
+        "REUSE_SYMBOLIC_FACTORIZATION": {
+          "title": "REUSE_SYMBOLIC_FACTORIZATION (bool)",
+          "description": "Direct solvers KLU2, UMFPACK and MUMPS only: If true, the symbolic step of Amesos2 is skipped across solves as long as the sparsity pattern of the matrix is unchanged. KLU2 and MUMPS then repeat only the numeric factorization. UMFPACK still repeats its analysis in every solve, since Amesos2 releases it, only the reading of the matrix structure is saved. The pattern is verified at every solve. Set to false to always redo the symbolic step.",
           "default": true,
           "type": "boolean"
         },
@@ -432945,5 +432999,5 @@
     "PROBLEM TYPE"
   ],
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "bc5f961f294335ce93dd97e00fcf173d2972ed99"
+  "$id": "1f2ed686d958fd955f82daaa3cd88620b20852ce"
 }
