@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 1f2ed686d958fd955f82daaa3cd88620b20852ce
+  commit_hash: b1bb73f80c1786d6c0cf66507a445d25edc19fa7
   version: 2026.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -14071,7 +14071,7 @@ sections:
             default: null
     - name: DESIGN LINE LOCSYS CONDITIONS
       type: list
-      description: 'Line local coordinate system, to be used with the corresponding dirichlet boundary condition'
+      description: Line local coordinate system, to be used with the corresponding dirichlet boundary condition
       required: false
       spec:
         type: all_of
@@ -15365,7 +15365,7 @@ sections:
               - name: "none"
     - name: DESIGN LINE THERMO INITIAL FIELD CONDITIONS
       type: list
-      description: 'Set the initial temperature field if the thermo field is solved using a ScaTra discretization (e.g. STI, SSTI) on lines'
+      description: Set the initial temperature field if the thermo field is solved using a ScaTra discretization (e.g. STI, SSTI) on lines
       required: false
       spec:
         type: all_of
@@ -16621,7 +16621,7 @@ sections:
             default: null
     - name: DESIGN POINT LOCSYS CONDITIONS
       type: list
-      description: 'Point local coordinate system, to be used with the corresponding dirichlet boundary condition'
+      description: Point local coordinate system, to be used with the corresponding dirichlet boundary condition
       required: false
       spec:
         type: all_of
@@ -17381,7 +17381,7 @@ sections:
               - name: "none"
     - name: DESIGN POINT THERMO INITIAL FIELD CONDITIONS
       type: list
-      description: 'Set the initial temperature field if the thermo field is solved using a ScaTra discretization (e.g. STI, SSTI) on points'
+      description: Set the initial temperature field if the thermo field is solved using a ScaTra discretization (e.g. STI, SSTI) on points
       required: false
       spec:
         type: all_of
@@ -21801,7 +21801,7 @@ sections:
             required: true
     - name: DESIGN SURF LOCSYS CONDITIONS
       type: list
-      description: 'Surface local coordinate system, to be used with the corresponding dirichlet boundary condition'
+      description: Surface local coordinate system, to be used with the corresponding dirichlet boundary condition
       required: false
       spec:
         type: all_of
@@ -22727,7 +22727,7 @@ sections:
               - name: "none"
     - name: DESIGN SURF THERMO INITIAL FIELD CONDITIONS
       type: list
-      description: 'Set the initial temperature field if the thermo field is solved using a ScaTra discretization (e.g. STI, SSTI) on surfaces'
+      description: Set the initial temperature field if the thermo field is solved using a ScaTra discretization (e.g. STI, SSTI) on surfaces
       required: false
       spec:
         type: all_of
@@ -24585,7 +24585,7 @@ sections:
             required: true
     - name: DESIGN VOL LOCSYS CONDITIONS
       type: list
-      description: 'Volume local coordinate system, to be used with the corresponding dirichlet boundary condition'
+      description: Volume local coordinate system, to be used with the corresponding dirichlet boundary condition
       required: false
       spec:
         type: all_of
@@ -25017,7 +25017,7 @@ sections:
               - name: "none"
     - name: DESIGN VOL THERMO INITIAL FIELD CONDITIONS
       type: list
-      description: 'Set the initial temperature field if the thermo field is solved using a ScaTra discretization (e.g. STI, SSTI) on volumes'
+      description: Set the initial temperature field if the thermo field is solved using a ScaTra discretization (e.g. STI, SSTI) on volumes
       required: false
       spec:
         type: all_of
@@ -33390,7 +33390,7 @@ sections:
                     required: true
                   - name: MAT_crystal_plasticity
                     type: group
-                    description: " Crystal plasticity "
+                    description: ' Crystal plasticity '
                     required: true
                     specs:
                       - type: all_of
@@ -34963,7 +34963,7 @@ sections:
                     required: true
                   - name: MAT_Kirchhoff_Love_shell
                     type: group
-                    description: "Material for an elastic Kichhhoff-Love shell "
+                    description: 'Material for an elastic Kichhhoff-Love shell '
                     required: true
                     specs:
                       - type: all_of
@@ -34987,7 +34987,7 @@ sections:
                     required: true
                   - name: MAT_BeamKirchhoffTorsionFreeElastHyper_ByModes
                     type: group
-                    description: 'material parameters for a torsion-free, isotropic Kirchhoff-Love type beam element based on hyperelastic stored energy function, specified for individual deformation modes'
+                    description: material parameters for a torsion-free, isotropic Kirchhoff-Love type beam element based on hyperelastic stored energy function, specified for individual deformation modes
                     required: true
                     specs:
                       - type: all_of
@@ -35021,7 +35021,7 @@ sections:
                     required: true
                   - name: MAT_BeamKirchhoffTorsionFreeElastHyper
                     type: group
-                    description: 'material parameters for a torsion-free, isotropic Kirchhoff-Love type beam element based on hyperelastic stored energy function'
+                    description: material parameters for a torsion-free, isotropic Kirchhoff-Love type beam element based on hyperelastic stored energy function
                     required: true
                     specs:
                       - type: all_of
@@ -35059,7 +35059,7 @@ sections:
                     required: true
                   - name: MAT_BeamKirchhoffElastHyper_ByModes
                     type: group
-                    description: 'material parameters for a Kirchhoff-Love type beam element based on hyperelastic stored energy function, specified for individual deformation modes'
+                    description: material parameters for a Kirchhoff-Love type beam element based on hyperelastic stored energy function, specified for individual deformation modes
                     required: true
                     specs:
                       - type: all_of
@@ -35169,7 +35169,7 @@ sections:
                     required: true
                   - name: MAT_BeamReissnerElastHyper_ByModes
                     type: group
-                    description: 'material parameters for a Simo-Reissner type beam element based on hyperelastic stored energy function, specified for individual deformation modes'
+                    description: material parameters for a Simo-Reissner type beam element based on hyperelastic stored energy function, specified for individual deformation modes
                     required: true
                     specs:
                       - type: all_of
@@ -36395,7 +36395,7 @@ sections:
                     required: true
                   - name: MAT_ElastHyper
                     type: group
-                    description: 'list/collection of hyperelastic materials, i.e. material IDs'
+                    description: list/collection of hyperelastic materials, i.e. material IDs
                     required: true
                     specs:
                       - type: all_of
@@ -37061,7 +37061,7 @@ sections:
                     required: true
                   - name: MAT_matlist_chemo_reac
                     type: group
-                    description: 'list/collection of materials, i.e. material IDs and list of reactive/chemotactic pairs'
+                    description: list/collection of materials, i.e. material IDs and list of reactive/chemotactic pairs
                     required: true
                     specs:
                       - type: all_of
@@ -37145,7 +37145,7 @@ sections:
                     required: true
                   - name: MAT_matlist_chemotaxis
                     type: group
-                    description: 'list/collection of materials, i.e. material IDs and list of chemotactic pairs'
+                    description: list/collection of materials, i.e. material IDs and list of chemotactic pairs
                     required: true
                     specs:
                       - type: all_of
@@ -37241,7 +37241,7 @@ sections:
                     required: true
                   - name: MAT_matlist_reactions
                     type: group
-                    description: 'list/collection of materials, i.e. material IDs and list of reactions'
+                    description: list/collection of materials, i.e. material IDs and list of reactions
                     required: true
                     specs:
                       - type: all_of
@@ -37338,7 +37338,7 @@ sections:
                     required: true
                   - name: MAT_matlist
                     type: group
-                    description: 'list/collection of materials, i.e. material IDs'
+                    description: list/collection of materials, i.e. material IDs
                     required: true
                     specs:
                       - type: all_of
@@ -37809,7 +37809,7 @@ sections:
                     required: true
                   - name: MAT_Ogden_TCA
                     type: group
-                    description: 'Hyperelastic Ogden material with tension-compression asymmetry control. The second Piola--Kirchhoff stress is computed as S = sum_{i=1}^{3} [c/m * (q * lambda_i^{m-2} - (1-q) * lambda_i^{-m-2}) N_i otimes N_i] + [kappa * J * (J-1) + c/m * (1-2q)] C^{-1}] with J being the determinant of the deformation gradient, lambda_i the principal stretches of the right Cauchy-Green deformation tensor C, and N_i the corresponding principal directions.'
+                    description: Hyperelastic Ogden material with tension-compression asymmetry control. The second Piola--Kirchhoff stress is computed as S = sum_{i=1}^{3} [c/m * (q * lambda_i^{m-2} - (1-q) * lambda_i^{-m-2}) N_i otimes N_i] + [kappa * J * (J-1) + c/m * (1-2q)] C^{-1}] with J being the determinant of the deformation gradient, lambda_i the principal stretches of the right Cauchy-Green deformation tensor C, and N_i the corresponding principal directions.
                     required: true
                     specs:
                       - type: all_of
@@ -38797,7 +38797,7 @@ sections:
                     required: true
                   - name: MAT_Solid_Superposition
                     type: group
-                    description: '3D solid material superposition. Each constituent material defined by MATIDS is evaluated independently, and its responses are accumulated, such that the stress S = sum_i S_i and the material tangent C = sum_i C_i'
+                    description: 3D solid material superposition. Each constituent material defined by MATIDS is evaluated independently, and its responses are accumulated, such that the stress S = sum_i S_i and the material tangent C = sum_i C_i
                     required: true
                     specs:
                       - type: all_of
@@ -40364,7 +40364,7 @@ sections:
                     required: true
                   - name: ELAST_CoupExpPol
                     type: group
-                    description: 'compressible, isochoric exponential material law for soft tissue'
+                    description: compressible, isochoric exponential material law for soft tissue
                     required: true
                     specs:
                       - type: all_of
@@ -41435,7 +41435,7 @@ sections:
                     required: true
                   - name: ELAST_CoupTransverselyIsotropic
                     type: group
-                    description: 'transversely part of a simple othotropic, transversely isotropic hyperelastic constitutive equation'
+                    description: transversely part of a simple othotropic, transversely isotropic hyperelastic constitutive equation
                     required: true
                     specs:
                       - type: all_of
@@ -41631,7 +41631,7 @@ sections:
                     required: true
                   - name: MAT_Membrane_ElastHyper
                     type: group
-                    description: 'list/collection of hyperelastic materials for membranes, i.e. material IDs'
+                    description: list/collection of hyperelastic materials for membranes, i.e. material IDs
                     required: true
                     specs:
                       - type: all_of
@@ -41662,7 +41662,7 @@ sections:
                     required: true
                   - name: MAT_InelasticDefgradPolyIntercalFracIso
                     type: group
-                    description: 'scalar dependent isotropic growth law; volume change nonlinearly dependent on the intercalation fraction, that is calculated using the scalar concentration (in material configuration)'
+                    description: scalar dependent isotropic growth law; volume change nonlinearly dependent on the intercalation fraction, that is calculated using the scalar concentration (in material configuration)
                     required: true
                     specs:
                       - type: all_of
@@ -41784,7 +41784,7 @@ sections:
                     required: true
                   - name: MAT_InelasticDefgradTransvIsotropElastViscoplast
                     type: group
-                    description: 'Versatile transversely isotropic (or isotropic) viscoplasticity model for finite deformations with isotropic hardening, using user-defined viscoplasticity laws (flow rule + hardening model)'
+                    description: Versatile transversely isotropic (or isotropic) viscoplasticity model for finite deformations with isotropic hardening, using user-defined viscoplasticity laws (flow rule + hardening model)
                     required: true
                     specs:
                       - type: all_of
@@ -42351,7 +42351,7 @@ sections:
                     required: true
                   - name: MAT_ViscoplasticLawReformulatedJohnsonCook
                     type: group
-                    description: 'Reformulation of the Johnson-Cook viscoplastic law (comprising flow rule $\dot{P} = \dot{P}_0 \exp \left( \frac{ \sigma_{eq}}{C \sigma_{\mathrm{Y}}} - \frac{1}{C} \right) - \dot{P}_0$ and hardening law $\sigma_{\mathrm{Y}} = (A_0 + B_0 \cdot P^{n}) \cdot (1 - \frac{T^m - T_{0}^m}{T_{\mathrm{melt}}^m - T_{0}^m})$), as shown in Mareau et al. (Mechanics of Materials 143, 2020)'
+                    description: Reformulation of the Johnson-Cook viscoplastic law (comprising flow rule $\dot{P} = \dot{P}_0 \exp \left( \frac{ \sigma_{eq}}{C \sigma_{\mathrm{Y}}} - \frac{1}{C} \right) - \dot{P}_0$ and hardening law $\sigma_{\mathrm{Y}} = (A_0 + B_0 \cdot P^{n}) \cdot (1 - \frac{T^m - T_{0}^m}{T_{\mathrm{melt}}^m - T_{0}^m})$), as shown in Mareau et al. (Mechanics of Materials 143, 2020)
                     required: true
                     specs:
                       - type: all_of
@@ -42497,7 +42497,7 @@ sections:
                     required: true
                   - name: MAT_InelasticDefgradNoGrowth
                     type: group
-                    description: 'no volume change, i.e. the inelastic deformation gradient is the identity tensor'
+                    description: no volume change, i.e. the inelastic deformation gradient is the identity tensor
                     required: true
                     specs:
                       - type: all_of
@@ -42600,7 +42600,7 @@ sections:
                     required: true
                   - name: MAT_InelasticDefgradPolyIntercalFracAniso
                     type: group
-                    description: 'scalar dependent anisotropic growth law; growth in direction as given in input-file; volume change nonlinearly dependent on the intercalation fraction, that is calculated using the scalar concentration (in material configuration)'
+                    description: scalar dependent anisotropic growth law; growth in direction as given in input-file; volume change nonlinearly dependent on the intercalation fraction, that is calculated using the scalar concentration (in material configuration)
                     required: true
                     specs:
                       - type: all_of
@@ -53397,7 +53397,7 @@ sections:
                                 maximum_exclusive: false
                     - name: volume_dependent_pleural_pressure
                       type: list
-                      description: 'Reusable definitions of a pleural pressure that follows the total volume of all terminal units. Every node carrying one of these ids has its pressure dof constrained to the pleural pressure, evaluated from the curve given below at the total terminal unit volume.'
+                      description: Reusable definitions of a pleural pressure that follows the total volume of all terminal units. Every node carrying one of these ids has its pressure dof constrained to the pleural pressure, evaluated from the curve given below at the total terminal unit volume.
                       required: false
                       spec:
                         type: all_of
@@ -53441,7 +53441,7 @@ sections:
                                 maximum_exclusive: false
                           - name: normalized_linear_exponential
                             type: group
-                            description: 'p_pl(xi) = pressure_offset + linear_coefficient * xi + exponential_coefficient * (exp(exponential_rate * xi) - 1), with the normalized volume xi = (V - residual_volume) / (total_lung_capacity - residual_volume).'
+                            description: p_pl(xi) = pressure_offset + linear_coefficient * xi + exponential_coefficient * (exp(exponential_rate * xi) - 1), with the normalized volume xi = (V - residual_volume) / (total_lung_capacity - residual_volume).
                             required: true
                             specs:
                               - type: all_of
