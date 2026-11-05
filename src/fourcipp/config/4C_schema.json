@@ -1,5 +1,5 @@
 {
-  "description": "Schema for 4C\nCommit hash: b1bb73f80c1786d6c0cf66507a445d25edc19fa7\nVersion: 2026.4.0-dev",
+  "description": "Schema for 4C\nCommit hash: c557d126d443481432b5f6a9529c2054868ff9d5\nVersion: 2026.4.0-dev",
   "type": "object",
   "properties": {
     "ALE DOMAIN": {
@@ -425817,11 +425817,11 @@
             },
             "nonlinear_solver": {
               "title": "nonlinear_solver (enum)",
-              "description": "Nonlinear solver workflow: Nox uses the legacy NOX solver, and NewtonTree uses the serial structured-tree linear solver.",
-              "default": "Nox",
+              "description": "Nonlinear solver workflow. NewtonSparse assembles a sparse Jacobian and solves it with linear_solver (MPI-parallel). NewtonTree uses the serial structured-tree linear solver and ignores linear_solver.",
+              "default": "NewtonSparse",
               "type": "string",
               "enum": [
-                "Nox",
+                "NewtonSparse",
                 "NewtonTree"
               ]
             },
@@ -432999,5 +432999,5 @@
     "PROBLEM TYPE"
   ],
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "b1bb73f80c1786d6c0cf66507a445d25edc19fa7"
+  "$id": "c557d126d443481432b5f6a9529c2054868ff9d5"
 }

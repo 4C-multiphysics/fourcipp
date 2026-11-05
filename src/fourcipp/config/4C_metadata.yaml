@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: b1bb73f80c1786d6c0cf66507a445d25edc19fa7
+  commit_hash: c557d126d443481432b5f6a9529c2054868ff9d5
   version: 2026.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -52223,11 +52223,11 @@ sections:
                       required: true
                     - name: nonlinear_solver
                       type: enum
-                      description: "Nonlinear solver workflow: Nox uses the legacy NOX solver, and NewtonTree uses the serial structured-tree linear solver."
+                      description: "Nonlinear solver workflow. NewtonSparse assembles a sparse Jacobian and solves it with linear_solver (MPI-parallel). NewtonTree uses the serial structured-tree linear solver and ignores linear_solver."
                       required: false
-                      default: Nox
+                      default: NewtonSparse
                       choices:
-                        - name: Nox
+                        - name: NewtonSparse
                         - name: NewtonTree
                     - name: max_nonlinear_iterations
                       type: int
