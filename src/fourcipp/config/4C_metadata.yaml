@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: c557d126d443481432b5f6a9529c2054868ff9d5
+  commit_hash: 26c9422ede669cfec5e469ddd8c238fbe476d51f
   version: 2026.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -42969,7 +42969,7 @@ sections:
                 - name: "TopDown"
             - name: SEARCH_PARAM
               type: double
-              description: "Radius / Bounding volume inflation for contact search"
+              description: "Inflation factor for the bounding volumes (k-DOPs) used in the contact search. The bounding volumes are enlarged by this factor times the minimum edge length of all contact pair elements."
               required: false
               default: 0.3
             - name: SEARCH_USE_AUX_POS

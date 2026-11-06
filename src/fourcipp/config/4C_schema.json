@@ -1,5 +1,5 @@
 {
-  "description": "Schema for 4C\nCommit hash: c557d126d443481432b5f6a9529c2054868ff9d5\nVersion: 2026.4.0-dev",
+  "description": "Schema for 4C\nCommit hash: 26c9422ede669cfec5e469ddd8c238fbe476d51f\nVersion: 2026.4.0-dev",
   "type": "object",
   "properties": {
     "ALE DOMAIN": {
@@ -196129,7 +196129,7 @@
         },
         "SEARCH_PARAM": {
           "title": "SEARCH_PARAM (double)",
-          "description": "Radius / Bounding volume inflation for contact search",
+          "description": "Inflation factor for the bounding volumes (k-DOPs) used in the contact search. The bounding volumes are enlarged by this factor times the minimum edge length of all contact pair elements.",
           "default": 0.3,
           "type": "number"
         },
@@ -432999,5 +432999,5 @@
     "PROBLEM TYPE"
   ],
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "c557d126d443481432b5f6a9529c2054868ff9d5"
+  "$id": "26c9422ede669cfec5e469ddd8c238fbe476d51f"
 }
