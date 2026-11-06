@@ -29,6 +29,7 @@ optional-dependencies = { safe = { file = [
 
 [tool.setuptools.package-data]
 "fourcipp.config" = ["*.json", "*.yaml"]
+"fourcipp.migration" = ["migrations/*.yaml", "migrations/README.md"]
 
 [project.optional-dependencies]
 dev = ["pre-commit", "pytest", "pytest-cov", "pip-tools", "pytest-xdist"]
