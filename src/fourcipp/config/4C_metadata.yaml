@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 26c9422ede669cfec5e469ddd8c238fbe476d51f
+  commit_hash: 4393b9bbb45a928158005da0e53689cfbf8c0c86
   version: 2026.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -41998,9 +41998,9 @@ sections:
                                     type: enum
                                     description: "strategy to deal with divergence in the Local Newton Loop"
                                     required: false
-                                    default: stop
+                                    default: stop_and_request_step_reduction
                                     choices:
-                                      - name: stop
+                                      - name: stop_and_request_step_reduction
                                       - name: continue_sim
                                       - name: continue_sim_with_safeguard
                           - name: ERROR_REGISTRATION_SETTINGS
@@ -42946,27 +42946,6 @@ sections:
                 - name: "pg"
                 - name: "standard"
                 - name: "std"
-            - name: SEARCH_ALGORITHM
-              type: enum
-              description: "Type of contact search"
-              required: false
-              default: "BinaryTree"
-              choices:
-                - name: "BinaryTree"
-                - name: "Binarytree"
-                - name: "BruteForce"
-                - name: "BruteForceEleBased"
-                - name: "binarytree"
-                - name: "bruteforce"
-                - name: "bruteforceelebased"
-            - name: BINARYTREE_UPDATETYPE
-              type: enum
-              description: "Type of binary tree update, which is either a bottom up or a top down approach."
-              required: false
-              default: "BottomUp"
-              choices:
-                - name: "BottomUp"
-                - name: "TopDown"
             - name: SEARCH_PARAM
               type: double
               description: "Inflation factor for the bounding volumes (k-DOPs) used in the contact search. The bounding volumes are enlarged by this factor times the minimum edge length of all contact pair elements."
@@ -48954,6 +48933,11 @@ sections:
                 - name: ignore
                 - name: adapt_step
                 - name: adapt_penaltycontact
+            - name: ALLOW_MATERIAL_TIME_STEP_REDUCTION
+              type: bool
+              description: "Reduce the time-step size according to the time_step_control settings when a material requests step reduction during evaluation"
+              required: false
+              default: false
             - name: NLNSOL
               type: enum
               description: "Nonlinear solution technique"
@@ -52241,7 +52225,7 @@ sections:
                       default: 1e-08
                     - name: nonlinear_increment_tolerance
                       type: double
-                      description: "Absolute increment norm tolerance for nonlinear convergence."
+                      description: "Absolute increment norm tolerance for nonlinear convergence. Ignored by NewtonTree, which converges on the residual alone."
                       required: false
                       default: 1e-10
                     - name: output_verbosity

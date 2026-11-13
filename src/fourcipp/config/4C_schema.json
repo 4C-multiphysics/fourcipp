@@ -1,5 +1,5 @@
 {
-  "description": "Schema for 4C\nCommit hash: 26c9422ede669cfec5e469ddd8c238fbe476d51f\nVersion: 2026.4.0-dev",
+  "description": "Schema for 4C\nCommit hash: 4393b9bbb45a928158005da0e53689cfbf8c0c86\nVersion: 2026.4.0-dev",
   "type": "object",
   "properties": {
     "ALE DOMAIN": {
@@ -194850,10 +194850,10 @@
                       "DIVER_CONT": {
                         "title": "DIVER_CONT (enum)",
                         "description": "strategy to deal with divergence in the Local Newton Loop",
-                        "default": "stop",
+                        "default": "stop_and_request_step_reduction",
                         "type": "string",
                         "enum": [
-                          "stop",
+                          "stop_and_request_step_reduction",
                           "continue_sim",
                           "continue_sim_with_safeguard"
                         ]
@@ -196100,31 +196100,6 @@
             "pg",
             "standard",
             "std"
-          ]
-        },
-        "SEARCH_ALGORITHM": {
-          "title": "SEARCH_ALGORITHM (enum)",
-          "description": "Type of contact search",
-          "default": "BinaryTree",
-          "type": "string",
-          "enum": [
-            "BinaryTree",
-            "Binarytree",
-            "BruteForce",
-            "BruteForceEleBased",
-            "binarytree",
-            "bruteforce",
-            "bruteforceelebased"
-          ]
-        },
-        "BINARYTREE_UPDATETYPE": {
-          "title": "BINARYTREE_UPDATETYPE (enum)",
-          "description": "Type of binary tree update, which is either a bottom up or a top down approach.",
-          "default": "BottomUp",
-          "type": "string",
-          "enum": [
-            "BottomUp",
-            "TopDown"
           ]
         },
         "SEARCH_PARAM": {
@@ -276797,6 +276772,12 @@
             "adapt_step",
             "adapt_penaltycontact"
           ]
+        },
+        "ALLOW_MATERIAL_TIME_STEP_REDUCTION": {
+          "title": "ALLOW_MATERIAL_TIME_STEP_REDUCTION (bool)",
+          "description": "Reduce the time-step size according to the time_step_control settings when a material requests step reduction during evaluation",
+          "default": false,
+          "type": "boolean"
         },
         "NLNSOL": {
           "title": "NLNSOL (enum)",
@@ -425839,7 +425820,7 @@
             },
             "nonlinear_increment_tolerance": {
               "title": "nonlinear_increment_tolerance (double)",
-              "description": "Absolute increment norm tolerance for nonlinear convergence.",
+              "description": "Absolute increment norm tolerance for nonlinear convergence. Ignored by NewtonTree, which converges on the residual alone.",
               "default": 1e-10,
               "type": "number"
             },
@@ -432999,5 +432980,5 @@
     "PROBLEM TYPE"
   ],
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "26c9422ede669cfec5e469ddd8c238fbe476d51f"
+  "$id": "4393b9bbb45a928158005da0e53689cfbf8c0c86"
 }
