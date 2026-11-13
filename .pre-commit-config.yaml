@@ -85,7 +85,7 @@ repos:
     hooks:
       - id: typos
         name: Run typo checker
-        exclude: "src/fourcipp/config/4C_metadata.yaml|src/fourcipp/config/4C_schema.json|clang18_fourc_assertions_trilinos_assertions_build-metadata/4C_metadata.yaml|clang18_fourc_assertions_trilinos_assertions_build-schema/4C_schema.json|clang18_fourc_assertions_trilinos_assertions_build-completion-schema/4C_schema_completion.json"
+        exclude: "src/fourcipp/config/4C_metadata.yaml|src/fourcipp/config/4C_schema.json|src/fourcipp/config/4C_schema_completion.json|clang18_fourc_assertions_trilinos_assertions_build-metadata/4C_metadata.yaml|clang18_fourc_assertions_trilinos_assertions_build-schema/4C_schema.json|clang18_fourc_assertions_trilinos_assertions_build-completion-schema/4C_schema_completion.json"
   - repo: https://github.com/pamoller/xmlformatter
     rev: v0.2.8
     hooks:
