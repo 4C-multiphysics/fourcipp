@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 4393b9bbb45a928158005da0e53689cfbf8c0c86
+  commit_hash: 342098c900db6f4042b6689f7843776368c92646
   version: 2026.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -52187,10 +52187,22 @@ sections:
                       type: double
                       description: "Time increment dt."
                       required: true
+                      validator:
+                        range:
+                          minimum: 0
+                          maximum: 1.7976931348623157e+308
+                          minimum_exclusive: true
+                          maximum_exclusive: false
                     - name: number_of_steps
                       type: int
                       description: "Number of time steps."
                       required: true
+                      validator:
+                        range:
+                          minimum: 0
+                          maximum: 2147483647
+                          minimum_exclusive: false
+                          maximum_exclusive: false
                     - name: restart_every
                       type: int
                       description: "Increment for writing restart."
@@ -52201,6 +52213,12 @@ sections:
                       description: "Increment for writing solution."
                       required: false
                       default: 1
+                      validator:
+                        range:
+                          minimum: 0
+                          maximum: 2147483647
+                          minimum_exclusive: true
+                          maximum_exclusive: false
                     - name: linear_solver
                       type: int
                       description: "Number of linear solver used for reduced dimensional lung simulation."
@@ -52218,6 +52236,12 @@ sections:
                       description: "Maximum number of nonlinear iterations."
                       required: false
                       default: 10
+                      validator:
+                        range:
+                          minimum: 0
+                          maximum: 2147483647
+                          minimum_exclusive: true
+                          maximum_exclusive: false
                     - name: nonlinear_residual_tolerance
                       type: double
                       description: "Absolute residual norm tolerance for nonlinear convergence."

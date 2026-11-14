@@ -1,5 +1,5 @@
 {
-  "description": "Schema for 4C\nCommit hash: 4393b9bbb45a928158005da0e53689cfbf8c0c86\nVersion: 2026.4.0-dev",
+  "description": "Schema for 4C\nCommit hash: 342098c900db6f4042b6689f7843776368c92646\nVersion: 2026.4.0-dev",
   "type": "object",
   "properties": {
     "ALE DOMAIN": {
@@ -425772,12 +425772,16 @@
             "time_increment": {
               "title": "time_increment (double)",
               "description": "Time increment dt.",
-              "type": "number"
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "maximum": 1.7976931348623157e+308
             },
             "number_of_steps": {
               "title": "number_of_steps (int)",
               "description": "Number of time steps.",
-              "type": "integer"
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2147483647
             },
             "restart_every": {
               "title": "restart_every (int)",
@@ -425789,7 +425793,9 @@
               "title": "results_every (int)",
               "description": "Increment for writing solution.",
               "default": 1,
-              "type": "integer"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 2147483647
             },
             "linear_solver": {
               "title": "linear_solver (int)",
@@ -425810,7 +425816,9 @@
               "title": "max_nonlinear_iterations (int)",
               "description": "Maximum number of nonlinear iterations.",
               "default": 10,
-              "type": "integer"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 2147483647
             },
             "nonlinear_residual_tolerance": {
               "title": "nonlinear_residual_tolerance (double)",
@@ -432980,5 +432988,5 @@
     "PROBLEM TYPE"
   ],
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "4393b9bbb45a928158005da0e53689cfbf8c0c86"
+  "$id": "342098c900db6f4042b6689f7843776368c92646"
 }
