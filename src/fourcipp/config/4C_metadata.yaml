@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 342098c900db6f4042b6689f7843776368c92646
+  commit_hash: 3c50d57677c4f92ed41753a3f559a0bd07cea2a6
   version: 2026.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -10398,58 +10398,6 @@ sections:
             - name: OUTPUT_GMSH
               type: bool
               description: "Do you want to write Gmsh postprocessing files?"
-              required: false
-              default: false
-    - name: BOUNDINGVOLUME STRATEGY
-      type: group
-      required: false
-      specs:
-        - type: all_of
-          specs:
-            - name: BEAM_BOUNDING_VOLUME
-              type: group
-              required: false
-              specs:
-                - type: all_of
-                  specs:
-                    - name: BOUNDING_VOLUME_TYPE
-                      type: enum
-                      description: "Type of bounding volume for beams."
-                      required: false
-                      default: centerline_kdop
-                      choices:
-                        - name: centerline_kdop
-                        - name: integration_points_surface
-                    - name: RADIUS_EXTENSION_FACTOR
-                      type: double
-                      description: "Beams radius is multiplied with the factor and then the bounding volume only depending on the beam centerline is extended in all directions (+ and -) by that value."
-                      required: false
-                      default: 2
-                    - name: INTEGRATION_POINTS_AXIAL
-                      noneable: true
-                      type: int
-                      description: "Number of axial Gauss points for the bounding volume of beams."
-                      required: false
-                      default: null
-                    - name: INTEGRATION_POINTS_CIRCUMFERENCE
-                      noneable: true
-                      type: int
-                      description: "Number of circumferential Gauss points for the bounding volume of beams."
-                      required: false
-                      default: null
-            - name: SPHERE_RADIUS_EXTENSION_FACTOR
-              type: double
-              description: "Bounding volume of the sphere is the sphere center extended by this factor times the sphere radius in all directions (+ and -)."
-              required: false
-              default: 2
-            - name: POINT_TOLERANCE
-              type: double
-              description: "Tolerance for point objects"
-              required: false
-              default: 1e-04
-            - name: WRITE_GEOMETRIC_SEARCH_VISUALIZATION
-              type: bool
-              description: "If visualization output for the geometric search should be written"
               required: false
               default: false
     - name: BROWNIAN DYNAMICS
@@ -32147,6 +32095,74 @@ sections:
                                 maximum: 1.7976931348623157e+308
                                 minimum_exclusive: true
                                 maximum_exclusive: false
+    - name: GEOMETRIC SEARCH
+      type: group
+      required: false
+      specs:
+        - type: all_of
+          specs:
+            - name: BEAM_BOUNDING_VOLUME
+              type: group
+              required: false
+              specs:
+                - type: all_of
+                  specs:
+                    - name: BOUNDING_VOLUME_TYPE
+                      type: enum
+                      description: "Type of bounding volume for beams."
+                      required: false
+                      default: centerline_kdop
+                      choices:
+                        - name: centerline_kdop
+                        - name: integration_points_surface
+                    - name: RADIUS_EXTENSION_FACTOR
+                      type: double
+                      description: "Beams radius is multiplied with the factor and then the bounding volume only depending on the beam centerline is extended in all directions (+ and -) by that value."
+                      required: false
+                      default: 2
+                    - name: INTEGRATION_POINTS_AXIAL
+                      noneable: true
+                      type: int
+                      description: "Number of axial Gauss points for the bounding volume of beams."
+                      required: false
+                      default: null
+                    - name: INTEGRATION_POINTS_CIRCUMFERENCE
+                      noneable: true
+                      type: int
+                      description: "Number of circumferential Gauss points for the bounding volume of beams."
+                      required: false
+                      default: null
+            - name: SPHERE_RADIUS_EXTENSION_FACTOR
+              type: double
+              description: "Bounding volume of the sphere is the sphere center extended by this factor times the sphere radius in all directions (+ and -)."
+              required: false
+              default: 2
+            - name: BOUNDING_VOLUME_INFLATION_FACTOR
+              type: double
+              description: "Extension factor for the bounding volumes used in the contact search. The bounding volumes are enlarged by this factor times the minimum edge length of all contact pair elements."
+              required: false
+              default: 0.3
+              validator:
+                range:
+                  minimum: 0
+                  maximum: 1.7976931348623157e+308
+                  minimum_exclusive: true
+                  maximum_exclusive: false
+            - name: USE_AUXILIARY_POSITION
+              type: bool
+              description: "Auxiliary position is used for computing bounding volumes."
+              required: false
+              default: true
+            - name: POINT_TOLERANCE
+              type: double
+              description: "Tolerance for point objects"
+              required: false
+              default: 1e-04
+            - name: WRITE_GEOMETRIC_SEARCH_VISUALIZATION
+              type: bool
+              description: "If visualization output for the geometric search should be written"
+              required: false
+              default: false
     - name: INCLUDES
       noneable: true
       type: vector
@@ -42946,16 +42962,6 @@ sections:
                 - name: "pg"
                 - name: "standard"
                 - name: "std"
-            - name: SEARCH_PARAM
-              type: double
-              description: "Inflation factor for the bounding volumes (k-DOPs) used in the contact search. The bounding volumes are enlarged by this factor times the minimum edge length of all contact pair elements."
-              required: false
-              default: 0.3
-            - name: SEARCH_USE_AUX_POS
-              type: bool
-              description: "If chosen auxiliary position is used for computing dops"
-              required: false
-              default: true
             - name: LM_QUAD
               type: enum
               description: "Type of LM interpolation for quadratic FE"
@@ -52249,7 +52255,7 @@ sections:
                       default: 1e-08
                     - name: nonlinear_increment_tolerance
                       type: double
-                      description: "Absolute increment norm tolerance for nonlinear convergence. Ignored by NewtonTree, which converges on the residual alone."
+                      description: "Absolute increment norm tolerance. NewtonTree uses it to detect stagnation. NewtonSparse converges on the residual alone and ignores it."
                       required: false
                       default: 1e-10
                     - name: output_verbosity

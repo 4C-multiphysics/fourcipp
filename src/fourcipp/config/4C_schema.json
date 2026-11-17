@@ -1,5 +1,5 @@
 {
-  "description": "Schema for 4C\nCommit hash: 342098c900db6f4042b6689f7843776368c92646\nVersion: 2026.4.0-dev",
+  "description": "Schema for 4C\nCommit hash: 3c50d57677c4f92ed41753a3f559a0bd07cea2a6\nVersion: 2026.4.0-dev",
   "type": "object",
   "properties": {
     "ALE DOMAIN": {
@@ -74572,74 +74572,6 @@
       },
       "additionalProperties": false
     },
-    "BOUNDINGVOLUME STRATEGY": {
-      "title": "BOUNDINGVOLUME STRATEGY (group)",
-      "description": "No description yet.",
-      "type": "object",
-      "properties": {
-        "BEAM_BOUNDING_VOLUME": {
-          "title": "BEAM_BOUNDING_VOLUME (group)",
-          "description": "No description yet.",
-          "type": "object",
-          "properties": {
-            "BOUNDING_VOLUME_TYPE": {
-              "title": "BOUNDING_VOLUME_TYPE (enum)",
-              "description": "Type of bounding volume for beams.",
-              "default": "centerline_kdop",
-              "type": "string",
-              "enum": [
-                "centerline_kdop",
-                "integration_points_surface"
-              ]
-            },
-            "RADIUS_EXTENSION_FACTOR": {
-              "title": "RADIUS_EXTENSION_FACTOR (double)",
-              "description": "Beams radius is multiplied with the factor and then the bounding volume only depending on the beam centerline is extended in all directions (+ and -) by that value.",
-              "default": 2,
-              "type": "number"
-            },
-            "INTEGRATION_POINTS_AXIAL": {
-              "title": "INTEGRATION_POINTS_AXIAL (int)",
-              "description": "Number of axial Gauss points for the bounding volume of beams.",
-              "default": null,
-              "type": [
-                "integer",
-                "null"
-              ]
-            },
-            "INTEGRATION_POINTS_CIRCUMFERENCE": {
-              "title": "INTEGRATION_POINTS_CIRCUMFERENCE (int)",
-              "description": "Number of circumferential Gauss points for the bounding volume of beams.",
-              "default": null,
-              "type": [
-                "integer",
-                "null"
-              ]
-            }
-          },
-          "additionalProperties": false
-        },
-        "SPHERE_RADIUS_EXTENSION_FACTOR": {
-          "title": "SPHERE_RADIUS_EXTENSION_FACTOR (double)",
-          "description": "Bounding volume of the sphere is the sphere center extended by this factor times the sphere radius in all directions (+ and -).",
-          "default": 2,
-          "type": "number"
-        },
-        "POINT_TOLERANCE": {
-          "title": "POINT_TOLERANCE (double)",
-          "description": "Tolerance for point objects",
-          "default": 0.0001,
-          "type": "number"
-        },
-        "WRITE_GEOMETRIC_SEARCH_VISUALIZATION": {
-          "title": "WRITE_GEOMETRIC_SEARCH_VISUALIZATION (bool)",
-          "description": "If visualization output for the geometric search should be written",
-          "default": false,
-          "type": "boolean"
-        }
-      },
-      "additionalProperties": false
-    },
     "BROWNIAN DYNAMICS": {
       "title": "BROWNIAN DYNAMICS (group)",
       "description": "No description yet.",
@@ -143070,6 +143002,88 @@
       },
       "additionalProperties": false
     },
+    "GEOMETRIC SEARCH": {
+      "title": "GEOMETRIC SEARCH (group)",
+      "description": "No description yet.",
+      "type": "object",
+      "properties": {
+        "BEAM_BOUNDING_VOLUME": {
+          "title": "BEAM_BOUNDING_VOLUME (group)",
+          "description": "No description yet.",
+          "type": "object",
+          "properties": {
+            "BOUNDING_VOLUME_TYPE": {
+              "title": "BOUNDING_VOLUME_TYPE (enum)",
+              "description": "Type of bounding volume for beams.",
+              "default": "centerline_kdop",
+              "type": "string",
+              "enum": [
+                "centerline_kdop",
+                "integration_points_surface"
+              ]
+            },
+            "RADIUS_EXTENSION_FACTOR": {
+              "title": "RADIUS_EXTENSION_FACTOR (double)",
+              "description": "Beams radius is multiplied with the factor and then the bounding volume only depending on the beam centerline is extended in all directions (+ and -) by that value.",
+              "default": 2,
+              "type": "number"
+            },
+            "INTEGRATION_POINTS_AXIAL": {
+              "title": "INTEGRATION_POINTS_AXIAL (int)",
+              "description": "Number of axial Gauss points for the bounding volume of beams.",
+              "default": null,
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "INTEGRATION_POINTS_CIRCUMFERENCE": {
+              "title": "INTEGRATION_POINTS_CIRCUMFERENCE (int)",
+              "description": "Number of circumferential Gauss points for the bounding volume of beams.",
+              "default": null,
+              "type": [
+                "integer",
+                "null"
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        "SPHERE_RADIUS_EXTENSION_FACTOR": {
+          "title": "SPHERE_RADIUS_EXTENSION_FACTOR (double)",
+          "description": "Bounding volume of the sphere is the sphere center extended by this factor times the sphere radius in all directions (+ and -).",
+          "default": 2,
+          "type": "number"
+        },
+        "BOUNDING_VOLUME_INFLATION_FACTOR": {
+          "title": "BOUNDING_VOLUME_INFLATION_FACTOR (double)",
+          "description": "Extension factor for the bounding volumes used in the contact search. The bounding volumes are enlarged by this factor times the minimum edge length of all contact pair elements.",
+          "default": 0.3,
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 1.7976931348623157e+308
+        },
+        "USE_AUXILIARY_POSITION": {
+          "title": "USE_AUXILIARY_POSITION (bool)",
+          "description": "Auxiliary position is used for computing bounding volumes.",
+          "default": true,
+          "type": "boolean"
+        },
+        "POINT_TOLERANCE": {
+          "title": "POINT_TOLERANCE (double)",
+          "description": "Tolerance for point objects",
+          "default": 0.0001,
+          "type": "number"
+        },
+        "WRITE_GEOMETRIC_SEARCH_VISUALIZATION": {
+          "title": "WRITE_GEOMETRIC_SEARCH_VISUALIZATION (bool)",
+          "description": "If visualization output for the geometric search should be written",
+          "default": false,
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
     "INCLUDES": {
       "title": "INCLUDES (vector)",
       "description": "Path to files that should be included into this file. The paths can be either absolute or relative to the file.",
@@ -196101,18 +196115,6 @@
             "standard",
             "std"
           ]
-        },
-        "SEARCH_PARAM": {
-          "title": "SEARCH_PARAM (double)",
-          "description": "Inflation factor for the bounding volumes (k-DOPs) used in the contact search. The bounding volumes are enlarged by this factor times the minimum edge length of all contact pair elements.",
-          "default": 0.3,
-          "type": "number"
-        },
-        "SEARCH_USE_AUX_POS": {
-          "title": "SEARCH_USE_AUX_POS (bool)",
-          "description": "If chosen auxiliary position is used for computing dops",
-          "default": true,
-          "type": "boolean"
         },
         "LM_QUAD": {
           "title": "LM_QUAD (enum)",
@@ -425828,7 +425830,7 @@
             },
             "nonlinear_increment_tolerance": {
               "title": "nonlinear_increment_tolerance (double)",
-              "description": "Absolute increment norm tolerance for nonlinear convergence. Ignored by NewtonTree, which converges on the residual alone.",
+              "description": "Absolute increment norm tolerance. NewtonTree uses it to detect stagnation. NewtonSparse converges on the residual alone and ignores it.",
               "default": 1e-10,
               "type": "number"
             },
@@ -432988,5 +432990,5 @@
     "PROBLEM TYPE"
   ],
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "342098c900db6f4042b6689f7843776368c92646"
+  "$id": "3c50d57677c4f92ed41753a3f559a0bd07cea2a6"
 }
