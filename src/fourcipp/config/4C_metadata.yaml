@@ -1,5 +1,5 @@
 metadata:
-  commit_hash: 3c50d57677c4f92ed41753a3f559a0bd07cea2a6
+  commit_hash: 82e3014007f7c776b80232fcdd968207180ee9ea
   version: 2026.4.0-dev
   description_section_name: TITLE
 legacy_element_specs:
@@ -49159,6 +49159,11 @@ sections:
               required: false
               default: false
             - name: ANALYTICAL_DISPLACEMENT_FUNCTION
+              type: int
+              description: "function ID of the analytical solution"
+              required: false
+              default: -1
+            - name: ANALYTICAL_MESHTYING_LAGRANGE_MULTIPLIER_FUNCTION
               type: int
               description: "function ID of the analytical solution"
               required: false

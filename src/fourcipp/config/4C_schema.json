@@ -1,5 +1,5 @@
 {
-  "description": "Schema for 4C\nCommit hash: 3c50d57677c4f92ed41753a3f559a0bd07cea2a6\nVersion: 2026.4.0-dev",
+  "description": "Schema for 4C\nCommit hash: 82e3014007f7c776b80232fcdd968207180ee9ea\nVersion: 2026.4.0-dev",
   "type": "object",
   "properties": {
     "ALE DOMAIN": {
@@ -277046,6 +277046,12 @@
           "description": "function ID of the analytical solution",
           "default": -1,
           "type": "integer"
+        },
+        "ANALYTICAL_MESHTYING_LAGRANGE_MULTIPLIER_FUNCTION": {
+          "title": "ANALYTICAL_MESHTYING_LAGRANGE_MULTIPLIER_FUNCTION (int)",
+          "description": "function ID of the analytical solution",
+          "default": -1,
+          "type": "integer"
         }
       },
       "additionalProperties": false
@@ -432990,5 +432996,5 @@
     "PROBLEM TYPE"
   ],
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "3c50d57677c4f92ed41753a3f559a0bd07cea2a6"
+  "$id": "82e3014007f7c776b80232fcdd968207180ee9ea"
 }
