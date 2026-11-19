@@ -12,7 +12,7 @@ readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
 requires-python = ">=3.10"
-dynamic = ["dependencies", "version"]
+dynamic = ["dependencies", "optional-dependencies", "version"]
 
 [project.urls]
 Repository = "https://github.com/4C-multiphysics/fourcipp/"
@@ -24,14 +24,13 @@ fourcipp = "fourcipp.utils.cli:main"
 [tool.setuptools.dynamic]
 dependencies = { file = ["requirements.in"] } # No versions fixed
 optional-dependencies = { safe = { file = [
-    "requirements.txt",
-] } } # Every package version is fixed
+    "requirements.txt", # Every package version is fixed
+] }, dev = { file = [
+    "requirements-dev.in",
+] } }
 
 [tool.setuptools.package-data]
 "fourcipp.config" = ["*.json", "*.yaml"]
-
-[project.optional-dependencies]
-dev = ["pre-commit", "pytest", "pytest-cov", "pip-tools", "pytest-xdist"]
 
 [tool.setuptools_scm]
 version_file = "src/fourcipp/version.py"
