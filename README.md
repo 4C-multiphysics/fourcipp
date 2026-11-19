@@ -14,6 +14,7 @@
 FourCIPP (**FourC** **I**nput **P**ython **P**arser) holds a Python Parser to simply interact with [4C](https://github.com/4C-multiphysics/4C) YAML input files. This tool provides a streamlined approach to data handling for third party tools.
 
 ## Overview <!-- omit from toc -->
+
 - [Installation](#installation)
   - [Python Environment](#python-environment)
   - [Installation from PyPI](#installation-from-pypi)
@@ -29,7 +30,7 @@ FourCIPP (**FourC** **I**nput **P**ython **P**arser) holds a Python Parser to si
 
 ### Python Environment
 
-FourCIPP is a Python project supporting Python versions 3.11 - 3.15. To use FourCIPP it is recommended to install it into a virtual Python environment such as [Conda](https://anaconda.org/anaconda/conda)/[Miniforge](https://conda-forge.org/download/) or [venv](https://docs.python.org/3/library/venv.html).
+FourCIPP is a Python project supporting Python versions 3.11 - 3.14. To use FourCIPP it is recommended to install it into a virtual Python environment such as [Conda](https://anaconda.org/anaconda/conda)/[Miniforge](https://conda-forge.org/download/) or [venv](https://docs.python.org/3/library/venv.html).
 
 An exemplary [Conda](https://anaconda.org/anaconda/conda)/[Miniforge](https://conda-forge.org/download/) environment can be created and loaded with
 
@@ -129,7 +130,9 @@ input_4C.dump(input_file_path, validate=True)
 <!--example, do not remove this comment-->
 
 ## Configuration
+
 FourCIPP utilizes the `4C_metadata.yaml` and `schema.json` files generated during the 4C build to remain up-to-date with your 4C build. By default, the files for the latest 4C input version can be found in `src/fourcipp/config`. You can add custom metadata and schema paths to the configuration file `src/fourcipp/config/config.yaml` by adding a new profile:
+
 ```yaml
 profile: your_custom_files
 profiles:
@@ -145,8 +148,8 @@ profiles:
     json_schema_path: /home/user/4C/build/4C_schema.json
     description: 4C metadata in the main 4C docker image
 ```
-and select it using the `profile` entry.
 
+and select it using the `profile` entry.
 
 ## Developing FourCIPP
 
@@ -168,13 +171,13 @@ To ease the dependency update process [`pip-tools`](https://github.com/jazzband/
 
 ```
 pip-compile --all-extras --output-file=requirements.txt requirements.in
-````
+```
 
 To upgrade the dependencies simply execute
 
 ```
 pip-compile --all-extras --output-file=requirements.txt --upgrade requirements.in
-````
+```
 
 ## License
 
