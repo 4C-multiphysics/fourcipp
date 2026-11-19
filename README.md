@@ -29,7 +29,7 @@ FourCIPP (**FourC** **I**nput **P**ython **P**arser) holds a Python Parser to si
 
 ### Python Environment
 
-FourCIPP is a Python project supporting Python versions 3.10 - 3.13. To use FourCIPP it is recommended to install it into a virtual Python environment such as [Conda](https://anaconda.org/anaconda/conda)/[Miniforge](https://conda-forge.org/download/) or [venv](https://docs.python.org/3/library/venv.html).
+FourCIPP is a Python project supporting Python versions 3.11 - 3.15. To use FourCIPP it is recommended to install it into a virtual Python environment such as [Conda](https://anaconda.org/anaconda/conda)/[Miniforge](https://conda-forge.org/download/) or [venv](https://docs.python.org/3/library/venv.html).
 
 An exemplary [Conda](https://anaconda.org/anaconda/conda)/[Miniforge](https://conda-forge.org/download/) environment can be created and loaded with
 
