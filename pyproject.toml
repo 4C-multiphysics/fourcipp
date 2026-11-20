@@ -31,6 +31,7 @@ optional-dependencies = { safe = { file = [
 
 [tool.setuptools.package-data]
 "fourcipp.config" = ["*.json", "*.yaml"]
+"fourcipp.migration" = ["migrations/*.yaml", "migrations/README.md"]
 
 [tool.setuptools_scm]
 version_file = "src/fourcipp/version.py"
